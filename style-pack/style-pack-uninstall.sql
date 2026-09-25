@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 -- Style-Pack – Deinstallation aller Theme Styles
--- Passepartout 1.0.0, Veedel 1.0.0, Frequenz 1.0.0, Kracherl 1.0.0, Passer 1.0.0
--- (5 Themes, 15 Theme Styles für das Universal Theme 42)
+-- Passepartout 1.0.0, Veedel 1.0.0, Frequenz 1.0.0, Kracherl 1.0.0, Passer 1.0.0, Orbit 1.0.0
+-- (6 Themes, 18 Theme Styles für das Universal Theme 42)
 --
 -- Erzeugt von _tools/build.mjs --pack – nicht von Hand bearbeiten.
 -- Ausführen als Parsing-Schema der Ziel-App (oder mit APEX_ADMINISTRATOR_ROLE)
@@ -18,7 +18,7 @@
 -- in Shared Components > Themes > Universal Theme > Theme Styles löschen.
 -- "Allow End Users to choose Theme Style" bleibt, wie es ist.
 --------------------------------------------------------------------------------
-prompt === Style-Pack: Deinstallation (5 Themes) ===
+prompt === Style-Pack: Deinstallation (6 Themes) ===
 set define on verify off feedback off serveroutput on
 whenever sqlerror exit sql.sqlcode rollback
 
@@ -58,29 +58,34 @@ begin
 end;
 /
 prompt
-prompt ##### 1/5 Passepartout #####
+prompt ##### 1/6 Passepartout #####
 undefine 1 2 3
 @@../Passepartout/install/passepartout-uninstall.sql &PACK_APP_ID.
 set define on verify off feedback off serveroutput on
 prompt
-prompt ##### 2/5 Veedel #####
+prompt ##### 2/6 Veedel #####
 undefine 1 2 3
 @@../Veedel/install/veedel-uninstall.sql &PACK_APP_ID.
 set define on verify off feedback off serveroutput on
 prompt
-prompt ##### 3/5 Frequenz #####
+prompt ##### 3/6 Frequenz #####
 undefine 1 2 3
 @@../Frequenz/install/frequenz-uninstall.sql &PACK_APP_ID.
 set define on verify off feedback off serveroutput on
 prompt
-prompt ##### 4/5 Kracherl #####
+prompt ##### 4/6 Kracherl #####
 undefine 1 2 3
 @@../Kracherl/install/kracherl-uninstall.sql &PACK_APP_ID.
 set define on verify off feedback off serveroutput on
 prompt
-prompt ##### 5/5 Passer #####
+prompt ##### 5/6 Passer #####
 undefine 1 2 3
 @@../Passer/install/passer-uninstall.sql &PACK_APP_ID.
+set define on verify off feedback off serveroutput on
+prompt
+prompt ##### 6/6 Orbit #####
+undefine 1 2 3
+@@../Orbit/install/orbit-uninstall.sql &PACK_APP_ID.
 set define on verify off feedback off serveroutput on
 set heading on pagesize 100 linesize 200
 column theme format a14
@@ -95,6 +100,7 @@ select case
          when name in ('Frequenz Light', 'Frequenz Dark', 'Frequenz Auto') then 'Frequenz'
          when name in ('Kracherl Light', 'Kracherl Dark', 'Kracherl Auto') then 'Kracherl'
          when name in ('Passer Light', 'Passer Dark', 'Passer Auto') then 'Passer'
+         when name in ('Orbit Light', 'Orbit Dark', 'Orbit Auto') then 'Orbit'
          else '(andere)' end theme,
        name,
        case when is_current = 'Yes' then 'ja' end aktiv,
@@ -118,7 +124,10 @@ select case
             when 'Passer Light' then 13
             when 'Passer Dark' then 14
             when 'Passer Auto' then 15
-            else 16 end, name;
+            when 'Orbit Light' then 16
+            when 'Orbit Dark' then 17
+            when 'Orbit Auto' then 18
+            else 19 end, name;
 declare
   l_current varchar2(255);
   l_user    varchar2(30);

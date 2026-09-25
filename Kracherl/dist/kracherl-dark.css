@@ -2230,6 +2230,10 @@ a:not([class]):hover {
   }
 }
 
+.t-TreeNav {
+  --a-treeview-toggle-opacity: 1;
+}
+
 .t-PageBody--login {
   --ut-login-page-background-color: var(--kr-band);
   --ut-login-region-background-color: var(--kr-surface);

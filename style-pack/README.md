@@ -1,7 +1,7 @@
 # Style-Pack
 
-Alle Theme Styles dieses Projekts mit einem Aufruf in eine APEX-App einspielen: **5 Themes mit je
-3 Styles, zusammen 15** für das Universal Theme 42.
+Alle Theme Styles dieses Projekts mit einem Aufruf in eine APEX-App einspielen: **6 Themes mit je
+3 Styles, zusammen 18** für das Universal Theme 42.
 Die App wird nicht umgebaut: Die Styles erscheinen unter *Shared Components › Themes › Universal Theme › Theme Styles*
 und lassen sich per Klick umschalten.
 
@@ -26,11 +26,14 @@ und lassen sich per Klick umschalten.
 | [Passer](../Passer/README.md) | **Passer Light** | `passer-light` | Vita | „Tagdruck“: Teal und Fluoreszenz-Pink mit Passerversatz auf kühlem Papier mit Korn, Text in Indigo-Tusche, Gelb als Marker; Bricolage Grotesque |
 |  | **Passer Dark** | `passer-dark` | Vita-Dark | „Nachtdruck“: Neonfarben auf indigo gefärbtem Papier, Teal hell leuchtend |
 |  | **Passer Auto** | `passer-auto` | Vita + UT-Delta | folgt der Hell/Dunkel-Einstellung des Betriebssystems – pixelgleich zu Light bzw. Dark |
+| [Orbit](../Orbit/README.md) | **Orbit Light** | `orbit-light` | Vita | „Kabine“: kabinengrauer Grund, weiße Panels, grafitgrauer Kopf wie ein Bedienfeld mit Teilstrich-Skala, Versal-Labels in Stahlpetrol; Barlow |
+|  | **Orbit Dark** | `orbit-dark` | Vita-Dark | „Konsole“: tiefes Navy, Panels mit feinen Haarlinien, eisblaue Labels, Telemetrie-Zahlen, Warnungen im Bernstein-Rahmen |
+|  | **Orbit Auto** | `orbit-auto` | Vita + UT-Delta | folgt der Hell/Dunkel-Einstellung des Betriebssystems – pixelgleich zu Light bzw. Dark |
 
 ## Installieren
 
 ```sql
--- alle 15 Styles anlegen, nichts umschalten
+-- alle 18 Styles anlegen, nichts umschalten
 @style-pack/style-pack-install.sql 100
 
 -- anlegen und Passepartout Dark aktivieren
@@ -49,7 +52,7 @@ und lassen sich per Klick umschalten.
 | 2 `STYLE` | optional: Style aktivieren, Schreibweise `<präfix>-<style>` wie in der Tabelle. Ohne Angabe oder `-` wird nichts umgeschaltet, ein aktiver Style bleibt aktiv. |
 | 3 `user` | optional: *Allow End Users to choose Theme Style* einschalten – in der Fußzeile der App erscheint dann *Customize*, dort wählt jeder Nutzer einen der öffentlichen Styles für sich. |
 
-Das Pack ruft nacheinander die Installer der Themes auf (Passepartout, Veedel, Frequenz, Kracherl, Passer). Jeder legt seine
+Das Pack ruft nacheinander die Installer der Themes auf (Passepartout, Veedel, Frequenz, Kracherl, Passer, Orbit). Jeder legt seine
 Dateien unter `#APP_FILES#<präfix>/` ab und registriert seine Styles; nur das Theme des gewählten Styles schaltet um.
 Ein unbekannter Wert bricht ab, bevor etwas geändert wird. Mehrfaches Ausführen ist erlaubt (Update, der aktive Style
 bleibt). Am Ende stehen alle Styles der App, der aktive Style und die Einstellung der Nutzerwahl.
@@ -83,7 +86,7 @@ aktiviert sie wieder. Die Nutzerwahl bleibt, wie sie ist (ausschalten: `apex_the
 
 ## Laufzeit
 
-5 Installer mit zusammen 18,2 MB SQL laden 61 Dateien (CSS, Schriften, Lizenz- und Hinweisdateien) in die App.
+6 Installer mit zusammen 22,0 MB SQL laden 79 Dateien (CSS, Schriften, Lizenz- und Hinweisdateien) in die App.
 Im Test (APEX 26.1, Datenbank im lokalen Netz, SQLcl) dauerte die Installation aller Styles 12 bis 16 Sekunden, die Deinstallation rund 7 Sekunden. Über langsame Verbindungen bestimmt vor allem die Größe der Skripte die Dauer.
 
 ## Einzelne Themes
@@ -97,5 +100,6 @@ Jedes Theme lässt sich auch allein installieren, Details, Bilder und Grenzen st
 | Frequenz 1.0.0 | `Frequenz/install/frequenz-install.sql` (3,5 MB) | 10 | [Frequenz/README.md](../Frequenz/README.md) |
 | Kracherl 1.0.0 | `Kracherl/install/kracherl-install.sql` (4,1 MB) | 19 | [Kracherl/README.md](../Kracherl/README.md) |
 | Passer 1.0.0 | `Passer/install/passer-install.sql` (3,7 MB) | 10 | [Passer/README.md](../Passer/README.md) |
+| Orbit 1.0.0 | `Orbit/install/orbit-install.sql` (3,8 MB) | 18 | [Orbit/README.md](../Orbit/README.md) |
 
 Nicht im Pack enthalten sind die Theme-Varianten (eigene Theme-Nummern, `<präfix>-theme-install.sql`, ab APEX 26.1).

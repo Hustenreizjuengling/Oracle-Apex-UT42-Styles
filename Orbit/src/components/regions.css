@@ -1,0 +1,542 @@
+/* ==========================================================================
+   Orbit – Regionen
+   Standard-Region (alle Template-Optionen), Akzente, Collapsible, Hero, Alert-Region,
+   Button Container, Carousel, Tabs Container (Container), Wizard-Container,
+   Content Block, Image Region, Title-Bar-Region im Inhalt.
+   Idee: Regionen sind Anzeige-Panels einer Konsole – eine Stufe heller als der Grund,
+   feine Haarlinie, 8 px Radius, kein Schatten. Der Titel ist eine klare Überschrift,
+   Warnungen sind „Caution“-Kästen mit Bernstein-Rahmen.
+   Regeln: nur Tokens (--ob-*, gemappte UT-/APEX-Tokens), modusneutral, kein @layer,
+   logische Eigenschaften; lokale Tokens: --ob-c-region-lamp*, --ob-c-region-toggle-*,
+   --ob-c-region-ring-room, --ob-c-region-title-pad, --ob-c-alert-*.
+   ========================================================================== */
+
+
+/* 1. Standard-Region: Panel mit Haarlinie ----------------------------------------
+   Fläche, Rahmen, Polster und Titelgröße setzt bridge.css (Abschnitt 7). */
+
+.t-Region-title {
+  font-weight: var(--ob-fw-semibold);
+  letter-spacing: var(--ob-tracking-heading);
+}
+/* Mit sichtbarem Titel rückt der Inhalt an den Titel heran */
+.t-Region-header + .t-Region-bodyWrap > .t-Region-body {
+  padding-block-start: var(--ob-space-1);
+}
+
+/* Titel als Schalter (Collapsible): Fokusring gerundet und mit etwas Luft zur Schrift;
+   die negative Marge hält den Text auf seiner Position. */
+.t-Region-titleButton {
+  --ob-c-region-title-pad: .125rem;
+  text-align: start;
+  padding-inline: var(--ob-c-region-title-pad);
+  margin-inline: calc(-1 * var(--ob-c-region-title-pad));
+  border-radius: var(--ob-r-sm);
+}
+
+/* Region-Icon: ruhig in Stahlgrau */
+.t-Region-headerIcon {
+  --ut-region-header-icon-spacing: var(--ob-space-2);
+  --ut-region-header-icon-padding: var(--ob-space-1) 0;
+  --ut-region-header-icon-border-radius: var(--ob-r-sm);
+  color: var(--ob-muted);
+}
+
+/* Kopf-Buttons: 32-px-Buttons in der Titelzeile */
+.t-Region-headerItems--buttons {
+  padding-block: var(--ob-space-2) 0;
+}
+
+/* Button-Zeilen oben/unten: die Gruppen brechen um (die rechte bleibt am Ende) */
+.t-Region-buttons {
+  flex-wrap: wrap;
+  column-gap: var(--ob-space-2);
+}
+.t-Region-buttons-left,
+.t-Region-buttons-right {
+  max-inline-size: 100%;
+}
+.t-Region-buttons-right {
+  margin-inline-start: auto;
+}
+
+/* Akzent 1–15: kein farbiger Kopfstreifen, sondern eine Statuslampe vor dem Titel –
+   ein kleiner Kreis in der Kategoriefarbe, wie die Anzeigen einer Instrumententafel.
+   UT setzt die Kategoriefarbe auf dem Kopf als --ut-region-header-background-color. */
+.t-Region[class*="t-Region--accent"] > .t-Region-header {
+  --ob-c-region-lamp: var(--ut-region-header-background-color);
+  --ob-c-region-lamp-size: .625rem;
+  --ob-c-region-lamp-gap: var(--ob-space-2);
+  background-color: transparent;
+  color: var(--ob-ink);
+}
+.t-Region-headerItems--title::before {
+  content: "";
+  flex: none;
+  inline-size: var(--ob-c-region-lamp-size, 0px);
+  block-size: var(--ob-c-region-lamp-size, 0px);
+  margin-inline-end: var(--ob-c-region-lamp-gap, 0px);
+  border-radius: var(--ob-r-pill);
+  background-color: var(--ob-c-region-lamp, transparent);
+}
+
+/* Body Overflow „Scroll“ (UT-Standard, t-Region--scrollBody): der Körper ist ein
+   Scroll-Container (overflow: auto) und schnitte den Fokusring (Abstand + Breite = 4 px
+   außen) an bündigem Inhalt ab. Der Körper bekommt deshalb seitlich Ring-Raum als
+   Polster und gibt ihn mit negativer Marge wieder ab: der Inhalt bleibt, wo er ist.
+   Jeder Körper setzt den Token neu, damit verschachtelte Regionen ihn nicht erben. */
+.t-Region-body {
+  --ob-c-region-ring-room: 0px;
+}
+.t-Region--scrollBody > .t-Region-bodyWrap > .t-Region-body,
+.t-Region--shadowScroll > .t-Region-bodyWrap > .t-Region-body {
+  --ob-c-region-ring-room: calc(var(--ob-focus-ring-offset) + var(--ob-focus-ring-width));
+  padding-inline: calc(var(--ut-region-body-padding-x, 1rem) + var(--ob-c-region-ring-room));
+  margin-inline: calc(-1 * var(--ob-c-region-ring-room));
+}
+.t-Region--noPadding > .t-Region-bodyWrap > .t-Region-body,
+.t-Region--noUI > .t-Region-bodyWrap > .t-Region-body {
+  padding-inline: var(--ob-c-region-ring-room);
+}
+/* Remove Body Padding: Inhalte liegen bündig im Panel. Bewusst ohne Beschnitt (overflow) –
+   breite Reports müssen im Körper waagerecht scrollen bzw. erreichbar bleiben. Inhalte mit
+   eigener Fläche (Karte, Bild, Kalender) bringen ihren Radius selbst mit. */
+
+/* Stack Region: UT erzwingt border-radius 0 !important – ein Stapel ist eine Liste von
+   Panels ohne Zwischenraum, getrennt durch Haarlinien. */
+.t-Region--stacked {
+  --ut-region-border-width: var(--ob-hairline);
+  --ut-region-border-color: var(--ob-line);
+}
+
+/* Maximieren: das Panel füllt das Fenster */
+.t-Region.is-maximized {
+  padding-block: var(--ob-page-pad-y);
+  padding-inline: var(--ob-page-pad-x);
+  border-radius: 0;
+  background-color: var(--ob-surface);
+}
+
+
+/* 2. Collapsible: ruhiger Chevron statt Dreieck im grauen Kästchen -------------- */
+
+/* Richtung des Chevrons: Drehung + optischer Ausgleich (der gedrehte Winkel sitzt sonst schief) */
+.t-Region--hideShow {
+  --ob-c-region-toggle-rot: 45deg;                 /* aufgeklappt: nach unten */
+  --ob-c-region-toggle-shift: 0 -15%;
+}
+.t-Region--hideShow.is-collapsed {
+  --ob-c-region-toggle-rot: -45deg;                /* zugeklappt: in Leserichtung */
+  --ob-c-region-toggle-shift: -15% 0;
+}
+.u-RTL .t-Region--hideShow.is-collapsed {
+  --ob-c-region-toggle-rot: 135deg;
+  --ob-c-region-toggle-shift: 15% 0;
+}
+.t-Region--controlsPosEnd.is-expanded {
+  --ob-c-region-toggle-rot: -135deg;               /* Schalter am Ende: auf = nach oben */
+  --ob-c-region-toggle-shift: 0 15%;
+}
+.t-Region--controlsPosEnd.is-collapsed,
+.u-RTL .t-Region--controlsPosEnd.is-collapsed {
+  --ob-c-region-toggle-rot: 45deg;
+  --ob-c-region-toggle-shift: 0 -15%;
+}
+/* zugeklappt: nur die Titelzeile – unten dasselbe Polster wie oben */
+.t-Region--hideShow.is-collapsed > .t-Region-header {
+  border-end-start-radius: inherit;
+  border-end-end-radius: inherit;
+}
+.t-Region-headerItems--controls {
+  padding-inline-start: var(--ut-region-header-padding-x);
+  padding-inline-end: var(--ob-space-1);
+}
+.t-Region--controlsPosEnd .t-Region-headerItems--controls {
+  padding-inline-start: var(--ob-space-2);
+  padding-inline-end: var(--ut-region-header-padding-x);
+}
+/* Mit Schalter vorn steht der Titel direkt dahinter (UT gibt dem Titel sonst den vollen Innenabstand) */
+.t-Region--hideShow:not(.t-Region--controlsPosEnd) > .t-Region-header > .t-Region-headerItems--title {
+  padding-inline-start: 0;
+}
+.t-Region-headerItems--controls .t-Button--hideShow {
+  --a-button-font-size: var(--ob-fs-xs);           /* UT: 11/14 px – hier die Skala (12/16) */
+  --a-button-line-height: var(--ob-lh-xs);
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-hover-border-color: transparent;
+  --a-button-active-border-color: transparent;
+  --a-button-focus-border-color: transparent;
+  --a-button-text-color: var(--ob-ink-2);
+  --a-button-hover-background-color: var(--ob-hover);
+  --a-button-hover-text-color: var(--ob-ink);
+  --a-button-active-background-color: var(--ob-press);
+  --a-button-focus-background-color: var(--ob-hover);
+  --a-button-border-radius: var(--ob-r-md);
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--ob-hit-min);
+  min-block-size: var(--ob-hit-min);
+  padding: 0;
+}
+.t-Button--hideShow .a-Collapsible-icon {
+  display: grid;
+  place-items: center;
+}
+/* Chevron als zwei Haarstriche; die Glyphe (Dreieck) wird auf 0 gesetzt.
+   Physische Kanten sind hier Absicht: die Drehung bestimmt die Richtung (RTL oben). */
+.t-Button--hideShow .a-Collapsible-icon::before {
+  font-size: 0;
+  inline-size: .5rem;
+  block-size: .5rem;
+  border-style: solid;
+  border-color: currentColor;
+  border-width: 0 1.5px 1.5px 0;
+  translate: var(--ob-c-region-toggle-shift, 0 -15%);
+  rotate: var(--ob-c-region-toggle-rot, 45deg);
+  transition: rotate var(--ob-duration) var(--ob-ease), translate var(--ob-duration) var(--ob-ease);
+}
+/* Option „Plus or Minus“: Glyphen von UT behalten */
+.t-Region--hideShowIconsMath .t-Button--hideShow .a-Collapsible-icon::before {
+  font-size: inherit;
+  inline-size: auto;
+  block-size: auto;
+  border-width: 0;
+  translate: none;
+  rotate: none;
+}
+
+
+/* 3. Hero: flach auf dem Grund, Titel groß ------------------------------------ */
+
+.t-HeroRegion {
+  --ut-hero-region-padding-x: 0rem;
+  --ut-hero-region-padding-y: var(--ob-space-4);
+  --ut-hero-region-title-font-size: var(--ob-fs-2xl);
+  --ut-hero-region-title-line-height: var(--ob-lh-2xl);
+  --ut-xs-hero-region-title-font-size: var(--ob-fs-xl);
+  --ut-xs-hero-region-title-line-height: var(--ob-lh-xl);
+  --ut-hero-region-font-size: var(--ob-fs-lg);
+  --ut-hero-region-line-height: var(--ob-lh-lg);
+  --ut-xs-hero-region-font-size: var(--ob-fs-md);
+  --ut-xs-hero-region-line-height: var(--ob-lh-md);
+  --ut-hero-region-icon-spacing: var(--ob-space-5);
+  --ut-xs-hero-region-icon-spacing: var(--ob-space-3);
+  --ut-hero-region-column-spacing: var(--ob-space-4);
+}
+.t-HeroRegion--noPadding {
+  --ut-hero-region-padding-y: 0rem;
+  --ut-hero-region-padding-x: 0rem;
+}
+.t-HeroRegion--iconsRounded {
+  --ut-hero-region-icon-border-radius: var(--ob-r-pill);
+}
+/* Icon: Fläche und Symbol immer als Paar; eine Haarlinie wie ein Instrumentenring */
+.t-HeroRegion-icon {
+  --ut-hero-region-icon-background-color: var(--ob-surface);
+  --ut-hero-region-icon-text-color: var(--ob-ink);
+  box-shadow: inset 0 0 0 var(--ob-hairline) var(--ob-line-strong);
+}
+.t-Body-title .t-HeroRegion {
+  --ut-hero-region-padding-x: var(--ob-page-pad-x);
+}
+.t-HeroRegion-title {
+  letter-spacing: var(--ob-tracking-title);
+}
+
+
+/* 4. Alert: umrandeter Kasten in der Statusfarbe – Warnung als „Caution“-Kasten ----
+   Ohne „Highlight Background“: Panel-Fläche, Rahmen und Titel in der Statusfarbe.
+   Mit „Highlight Background“ (t-Alert--colorBG): zusätzlich die Status-Tönung.
+   Warnung: auch der Text in Bernstein (Tönung/Panel ≥ 4,5 : 1). Icons in --ob-<s>-text. */
+
+.t-Alert {
+  --ob-c-alert-edge: var(--ob-line-strong);
+  --ob-c-alert-title: var(--ob-ink);
+  --ut-alert-background-color: var(--ob-surface);
+  --ut-alert-text-color: var(--ob-ink);
+  --ut-alert-border-width: var(--ob-hairline);
+  --ut-alert-border-color: var(--ob-c-alert-edge);
+  --ut-alert-box-shadow: none;
+  --ut-alert-title-font-weight: var(--ob-fw-semibold);
+  --ut-alert-horizontal-icon-size: 1.5rem;
+  --ut-alert-wizard-icon-size: 3rem;
+  --ut-alert-horizontal-border-radius: var(--ob-r-lg);
+  --ut-alert-wizard-border-radius: var(--ob-r-lg);
+  display: flow-root;
+}
+.t-Alert-icon {
+  background-color: transparent;
+}
+.t-Alert-title {
+  color: var(--ob-c-alert-title);
+  letter-spacing: var(--ob-tracking-heading);
+}
+
+.t-Alert--warning,
+.t-Alert--yellow {
+  --ob-c-alert-edge: var(--ob-warning);
+  --ob-c-alert-title: var(--ob-warning-text);
+  --ut-alert-icon-text-color: var(--ob-warning-text);
+  --ut-alert-text-color: var(--ob-warning-text);
+}
+.t-Alert--success {
+  --ob-c-alert-edge: var(--ob-success);
+  --ob-c-alert-title: var(--ob-success-text);
+  --ut-alert-icon-text-color: var(--ob-success-text);
+}
+.t-Alert--info {
+  --ob-c-alert-edge: var(--ob-info);
+  --ob-c-alert-title: var(--ob-info-text);
+  --ut-alert-icon-text-color: var(--ob-info-text);
+}
+.t-Alert--danger,
+.t-Alert--red {
+  --ob-c-alert-edge: var(--ob-danger);
+  --ob-c-alert-title: var(--ob-danger-text);
+  --ut-alert-icon-text-color: var(--ob-danger-text);
+}
+/* Highlight Background: Tönung (UT: --ut-palette-*-shade = --ob-<s>-tint) */
+.t-Alert--colorBG.t-Alert--warning,
+.t-Alert--colorBG.t-Alert--yellow {
+  --ut-alert-background-color: var(--ob-warning-tint);
+}
+.t-Alert--colorBG.t-Alert--success {
+  --ut-alert-background-color: var(--ob-success-tint);
+}
+.t-Alert--colorBG.t-Alert--info {
+  --ut-alert-background-color: var(--ob-info-tint);
+}
+.t-Alert--colorBG.t-Alert--danger,
+.t-Alert--colorBG.t-Alert--red {
+  --ut-alert-background-color: var(--ob-danger-tint);
+}
+
+/* Horizontal: Icon oben neben dem Titel, gleiche 16-px-Polster ringsum */
+.t-Alert--horizontal .t-Alert-icon {
+  align-items: flex-start;
+  padding-block: var(--ob-space-4);
+  padding-inline: var(--ob-space-4) 0;
+}
+.t-Alert--horizontal .t-Alert-icon .t-Icon {
+  margin-block: 0;
+}
+.t-Alert--horizontal .t-Alert-content {
+  padding: var(--ob-space-4);
+  gap: var(--ob-space-1);
+}
+.t-Alert--horizontal:is(.t-Alert--accessibleHeading, .t-Alert--removeHeading) .t-Alert-content {
+  gap: 0;
+}
+.t-Alert--horizontal .t-Alert-title {
+  --ut-alert-title-font-size: var(--ob-fs-lg);
+  --ut-alert-title-line-height: var(--ob-lh-lg);
+}
+
+/* Wizard: zentrierte Meldung (Bestätigung, Zugriff verweigert …) */
+.t-Alert--wizard .t-Alert-title {
+  --ut-alert-title-font-size: var(--ob-fs-xl);
+  --ut-alert-title-line-height: var(--ob-lh-xl);
+}
+.t-Alert--wizard .t-Alert-body {
+  font-size: var(--ob-fs-md);
+  line-height: var(--ob-lh-body);
+}
+.t-Alert--wizard .t-Alert-inset {
+  border-radius: var(--ob-r-md);
+}
+.t-Alert .t-ButtonRegion {
+  --ut-button-region-border-width: 0px;
+  --ut-button-region-background-color: transparent;
+}
+
+/* Seitenmeldungen (t-Alert--page, apex.message) gestaltet overlays.css. */
+
+
+/* 5. Button Container: Panel mit Haarlinie wie jede Region --------------------
+   Randbreite, Polster und Außenabstand bleiben UT-Hebel, damit „Borderless“,
+   „Remove UI Decoration“, „Slim/No Padding“ wirken. */
+
+:where(.t-ButtonRegion) {
+  --ut-button-region-padding: var(--ob-space-3);
+}
+.t-ButtonRegion {
+  --ut-button-region-title-font-size: var(--ob-fs-lg);
+  --ut-button-region-title-line-height: var(--ob-lh-lg);
+  --ut-button-region-title-font-weight: var(--ob-fw-semibold);
+}
+/* in Dialog-, Drawer- und Wizard-Fußzeilen und in der Title Bar: ohne eigene Fläche */
+.t-DialogRegion-buttons .t-ButtonRegion,
+.t-Wizard-footer .t-ButtonRegion,
+.t-Dialog-footer .t-ButtonRegion,
+.t-Drawer-footer .t-ButtonRegion,
+.t-Body-title .t-ButtonRegion,
+.t-ButtonRegion--dialogRegion,
+.t-ButtonRegion--wizard {
+  --ut-button-region-background-color: transparent;
+}
+/* mobil am unteren Rand verankert: ein Stück Panel über dem Inhalt */
+@media (max-width: 639px) {
+  .t-ButtonRegion--stickToBottom.is-anchored {
+    --ut-button-region-background-color: var(--ob-surface);
+  }
+}
+
+
+/* 6. Carousel: Pfeile und Punkte als kleine Tasten über dem Motiv -------------- */
+
+.t-Region--carousel {
+  --ut-carousel-button-icon-size: 1rem;
+  --ut-carousel-button-padding-y: calc((var(--ob-control-h) - 1rem) / 2);
+  --ut-carousel-button-padding-x: calc((var(--ob-control-h) - 1rem) / 2);
+  --ut-carousel-button-border-radius: var(--ob-r-pill);
+  --ut-carousel-button-background-color: var(--ob-surface);
+  --ut-carousel-button-text-color: var(--ob-ink);
+  --ut-carousel-button-opacity: 1;
+  --ut-carousel-button-offset-x: var(--ob-space-3);
+  --ut-carousel-nav-size: .5rem;
+  --ut-carousel-nav-offset-x: .1875rem;
+  --ut-carousel-nav-offset-y: .375rem;
+  --ut-carousel-nav-border-width: 0px;
+  --ut-carousel-nav-background-color: var(--ob-edge);
+  --ut-carousel-nav-selected-background-color: var(--ob-ink);
+}
+.t-Region--carousel > .t-Region-bodyWrap > .t-Region-body {
+  --ob-c-region-ring-room: 0px;
+}
+.t-Region--carousel .a-Region-carouselNav {
+  inline-size: fit-content;
+  margin-inline: auto;
+  inset-block-end: var(--ob-space-3);
+  padding-inline: var(--ob-space-1);
+  border-radius: var(--ob-r-pill);
+  background-color: var(--ob-surface);
+  box-shadow: inset 0 0 0 var(--ob-hairline) var(--ob-line);
+}
+.t-Region--carousel .a-Region-carouselLink {
+  transition: inline-size var(--ob-duration) var(--ob-ease);
+}
+/* Fokus über beliebigem Motiv: Doppelring (Lücke in Panel-Farbe + Marke) statt Outline */
+.a-Region-carouselControl .a-Tabs-button:focus-visible,
+.t-Region--carousel .a-Region-carouselLink:focus-visible {
+  --ut-focus-outline: none;
+  box-shadow: var(--ob-focus-shadow);
+}
+.t-Region--carousel .a-Tabs-selected .a-Region-carouselLink {
+  inline-size: 1.25rem;
+}
+
+
+/* 7. Tabs Container (t-TabsRegion) --------------------------------------------
+   Die Tab-Leiste gestaltet shell.css; hier nur der Abstand zwischen Leiste und Panel. */
+
+.t-TabsRegion-items > .t-Tabs {
+  margin-block-end: var(--ob-space-4);
+}
+
+
+/* 8. Wizard: Panel – Schritte oben, Haarlinie, Inhalt -------------------------- */
+
+.t-Wizard {
+  --ut-wizard-border-width: var(--ob-hairline);
+  --ut-wizard-border-color: var(--ob-line);
+  --ut-wizard-box-shadow: none;
+  --ut-wizard-background-color: var(--ob-surface);
+  --ut-wizard-controls-padding-x: var(--ob-panel-pad-x);
+  --ut-wizard-controls-padding-y: var(--ob-space-4);
+  --ut-wizard-body-padding-x: var(--ob-panel-pad-x);
+  --ut-wizard-body-padding-y: var(--ob-space-5);
+  --ut-wizard-title-font-size: var(--ob-fs-xl);
+  --ut-wizard-title-line-height: var(--ob-lh-xl);
+  --ut-wizard-title-padding-y: var(--ob-space-4);
+  border-radius: var(--ob-r-lg);
+}
+.t-Wizard-header {
+  border-block-end: var(--ob-hairline) solid var(--ob-line);
+}
+.t-Wizard-title {
+  font-weight: var(--ob-fw-semibold);
+  letter-spacing: var(--ob-tracking-heading);
+}
+
+/* Wizard-Fortschritt (t-WizardSteps, Listen-Template „Wizard Progress“) gestaltet
+   content.css – hier nur der Container. */
+
+
+/* 9. Content Block: Überschriften-Abschnitte auf der Skala 28 · 20 · 16 ---------- */
+
+.t-ContentBlock--h1 {
+  --ut-content-block-header-font-size: var(--ob-fs-2xl);
+  --ut-content-block-header-line-height: var(--ob-lh-2xl);
+  --ut-content-block-header-margin: var(--ob-space-3);
+}
+.t-ContentBlock--h2 {
+  --ut-content-block-header-font-size: var(--ob-fs-xl);
+  --ut-content-block-header-line-height: var(--ob-lh-xl);
+  --ut-content-block-header-margin: var(--ob-space-3);
+}
+.t-ContentBlock--h3 {
+  --ut-content-block-header-font-size: var(--ob-fs-lg);
+  --ut-content-block-header-line-height: var(--ob-lh-lg);
+  --ut-content-block-header-margin: var(--ob-space-2);
+}
+@media (max-width: 639px) {
+  .t-ContentBlock--h1,
+  .t-ContentBlock--h2 {
+    --ut-content-block-header-margin: var(--ob-space-2);
+  }
+  .t-ContentBlock--h3 {
+    --ut-content-block-header-margin: var(--ob-space-1);
+  }
+}
+.t-ContentBlock-title {
+  letter-spacing: var(--ob-tracking-heading);
+}
+.t-ContentBlock--h1 .t-ContentBlock-title {
+  letter-spacing: var(--ob-tracking-title);
+}
+.t-ContentBlock--h3 > .t-ContentBlock-header .t-ContentBlock-title {
+  color: var(--ob-ink-2);
+}
+.t-ContentBlock-headerIcon {
+  color: var(--ob-muted);
+}
+/* Shadow Background = abgesenkte Hinweisfläche mit Haarlinie */
+.t-ContentBlock--shadowBG {
+  --ut-content-block-border-width: var(--ob-hairline);
+  --ut-content-block-border-color: var(--ob-line);
+  --ut-content-block-box-shadow: none;
+  --ut-content-block-border-radius: var(--ob-r-lg);
+  --ut-content-block-padding-y: var(--ob-space-4);
+  --ut-content-block-padding-x: var(--ob-space-5);
+}
+/* Light Background: Panel wie eine Standard-Region */
+.t-ContentBlock--lightBG {
+  --ut-content-block-background-color: var(--ob-surface);
+  --ut-content-block-border-width: var(--ob-hairline);
+  --ut-content-block-border-color: var(--ob-line);
+  --ut-content-block-box-shadow: none;
+  --ut-content-block-border-radius: var(--ob-r-lg);
+}
+
+
+/* 10. Image Region, Title-Bar-Region im Inhalt ---------------------------------- */
+
+.t-ImageRegion {
+  --ut-image-region-border-radius: var(--ob-r-lg);
+}
+/* Eine Title-Bar-Region im Inhalt (statt in der Title Bar) steht bündig auf dem Inhaltsrand –
+   der Körper einer Region bringt sein Polster schon mit. In einem Panel ohne eigenes Polster
+   (Content Block „Light Background“ ohne „Add Body Padding“, Region „Remove Body Padding“)
+   rückt sie um das Panel-Polster ein, sonst klebte das Label an der Haarlinie (3810). */
+.t-Body-content .t-BreadcrumbRegion {
+  --ut-breadcrumb-padding-x: 0rem;
+}
+.t-ContentBlock--lightBG .t-BreadcrumbRegion,
+.t-Region--noPadding .t-BreadcrumbRegion {
+  --ut-breadcrumb-padding-x: var(--ob-panel-pad-x);
+}
+.t-ContentBlock--padded .t-BreadcrumbRegion,
+.t-Region--noUI .t-BreadcrumbRegion {
+  --ut-breadcrumb-padding-x: 0rem;
+}

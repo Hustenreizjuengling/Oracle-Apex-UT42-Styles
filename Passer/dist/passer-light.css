@@ -1969,6 +1969,10 @@ a:not([class]):hover {
   }
 }
 
+.t-TreeNav {
+  --a-treeview-toggle-opacity: 1;
+}
+
 .t-PageBody--login {
   --ut-login-page-background-color: var(--pa-surface);
   --ut-login-region-background-color: var(--pa-sheet);

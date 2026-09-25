@@ -1,0 +1,649 @@
+/* ==========================================================================
+   Orbit – Buttons
+   t-Button/a-Button/ui-button, Hot/Primary/Status, Größen, Icon-Buttons, Pills,
+   Gruppen (Radio-Pills, Ja/Nein), Zähler, Link-Stil, Buttons in Feldern, Disabled/Busy.
+   Regeln: nur Tokens (--ob-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Basis-Hebel (Höhe 32 px, Radius, Normal = umrandete Taste) setzt bridge.css §9;
+   hier stehen nur die Vita-Selektoren mit gleicher Spezifität (Vita.css 2029–2321).
+   Zustandsmodell (UT/app_ui): Fläche = state → type → Basis-Token; :hover/:active/:focus
+   setzen die state-Ebene, --simple/--noUI die type-Ebene, Typen (--hot …) die Basis.
+   ========================================================================== */
+
+/* 1. Grundform aller Button-Familien --------------------------------------- */
+.t-Button,
+.a-Button,
+.ui-button,
+.a-CardView-button,
+.t-Form-helpButton {
+  letter-spacing: var(--ob-tracking-ui);
+  transition-property: background-color, border-color, box-shadow, color;
+  transition-duration: var(--ob-duration);
+  transition-timing-function: var(--ob-ease);
+}
+
+/* Maus-Fokus: kein „hängender“ Hover-Zustand nach dem Klick (Ring regelt base.css).
+   UT schaltet .t-Button/.a-Button/.ui-button schon bei :focus auf die Fokus-Fläche;
+   nur Tastatur-Fokus (:focus-visible) soll sie zeigen. Hover/Active bleiben sichtbar. */
+.t-Button:focus:where(:not(:focus-visible)),
+.a-Button:focus:where(:not(:focus-visible)),
+.ui-button:focus:where(:not(:focus-visible)),
+.a-CardView-button:focus:where(:not(:focus-visible)),
+.t-Form-helpButton:focus:where(:not(:focus-visible)) {
+  --a-button-state-background-color: initial;
+  --a-button-state-text-color: initial;
+  --a-button-state-border-color: initial;
+  --a-button-state-shadow: initial;
+}
+.t-Button:focus:where(:not(:focus-visible)):hover,
+.a-Button:focus:where(:not(:focus-visible)):hover,
+.ui-button:focus:where(:not(:focus-visible)):hover,
+.a-CardView-button:focus:where(:not(:focus-visible)):hover,
+.t-Form-helpButton:focus:where(:not(:focus-visible)):hover {
+  --a-button-state-background-color: var(--a-button-hover-background-color);
+  --a-button-state-text-color: var(--a-button-hover-text-color);
+  --a-button-state-border-color: var(--a-button-hover-border-color);
+  --a-button-state-shadow: var(--a-button-hover-shadow);
+}
+.t-Button:focus:where(:not(:focus-visible)):active,
+.a-Button:focus:where(:not(:focus-visible)):active,
+.ui-button:focus:where(:not(:focus-visible)):active,
+.a-CardView-button:focus:where(:not(:focus-visible)):active,
+.t-Form-helpButton:focus:where(:not(:focus-visible)):active,
+.t-Button.is-active:focus:where(:not(:focus-visible)),
+.a-Button.is-active:focus:where(:not(:focus-visible)),
+.ui-button.ui-state-active:focus:where(:not(:focus-visible)) {
+  --a-button-state-background-color: var(--a-button-active-background-color, var(--a-button-hover-background-color));
+  --a-button-state-text-color: var(--a-button-active-text-color, var(--a-button-hover-text-color));
+}
+
+/* 2. Größen: Höhen aus den Dichte-Tokens (Desktop 24/32/40/48, Touch 32/40/48/56).
+      Polster = (Höhe − Zeilenhöhe) / 2, inkl. 1 px Rand (app_ui-Konvention).
+      tiny = Höhe von small (Trefferfläche ≥ 24 px, WCAG 2.5.8), nur engere Polster. */
+.t-Button--tiny,
+.t-Button--xsmall,
+.t-InlineActions--tiny,
+.t-InlineActions--xsmall {
+  --a-button-font-size: var(--ob-fs-xs);
+  --a-button-line-height: var(--ob-lh-xs);
+  --a-button-padding-y: calc((var(--ob-control-h-sm) - var(--ob-lh-xs)) / 2);
+  --a-button-padding-x: calc(var(--ob-space-1) + 2px);
+  --a-button-icon-size: .75rem;
+  --a-button-icon-spacing: var(--ob-space-1);
+  --a-button-border-radius: var(--ob-r-sm);
+}
+.t-Button--small,
+.t-InlineActions--small {
+  --a-button-font-size: var(--ob-fs-xs);
+  --a-button-line-height: var(--ob-lh-xs);
+  --a-button-padding-y: calc((var(--ob-control-h-sm) - var(--ob-lh-xs)) / 2);
+  --a-button-padding-x: var(--ob-space-2);
+  --a-button-icon-size: .875rem;
+  --a-button-icon-spacing: calc(var(--ob-space-1) + 2px);
+  --a-button-border-radius: calc(var(--ob-r-sm) + 1px);
+}
+.t-Button--large,
+.t-InlineActions--large {
+  --a-button-font-size: var(--ob-fs-md);
+  --a-button-line-height: var(--ob-control-lh);
+  --a-button-padding-y: calc((var(--ob-control-h-lg) - var(--ob-control-lh)) / 2);
+  --a-button-padding-x: var(--ob-space-4);
+}
+.t-Button--xlarge,
+.t-InlineActions--xlarge {
+  --a-button-font-size: var(--ob-fs-lg);
+  --a-button-line-height: var(--ob-lh-lg);
+  --a-button-padding-y: calc((var(--ob-control-h-lg) + var(--ob-space-2) - var(--ob-lh-lg)) / 2);
+  --a-button-padding-x: var(--ob-space-5);
+  --a-button-icon-size: 1.25rem;
+}
+.t-Button--xlarge.t-Button--withIcon,
+.t-InlineActions--xlarge.t-Button--withIcon {
+  --a-button-padding-y: calc((var(--ob-control-h-lg) + var(--ob-space-2) - var(--ob-lh-lg)) / 2);
+  --a-button-padding-x: var(--ob-space-5);
+}
+/* app_ui-Buttons mit Icon: UT rechnet 8/10 px Polster → 34 px; zurück auf die Control-Höhe */
+.a-Button--withIcon {
+  --a-button-padding-y: var(--ob-control-pad-y);
+  --a-button-padding-x: var(--ob-control-pad-x);
+}
+
+/* 3. Icon-Buttons: quadratisch in jeder Größe (Breite = Höhe).
+      Polster-x rechnet mit der Zeile als Inhaltshöhe: Seite = 2 × Polster-y + Zeilenhöhe. */
+.t-Button--noLabel,
+.a-Button--noLabel {
+  --a-button-padding-x: calc(var(--a-button-padding-y) + (var(--a-button-line-height) - var(--a-button-icon-size)) / 2);
+}
+/* app_ui-Buttons sind inline-flex (UT Core): Ohne Beschriftung bestimmt das Icon (16 px) die
+   Inhaltshöhe, nicht die Zeile (20 px) → 32 × 28 (Facetten-Menü ⋮). Mindesthöhe = Polster + Zeile
+   wie ein Text-Button derselben Größe, höchstens so hoch wie breit (2 × Polster-x + Icon).
+   Kontexte, die das Polster aus der Icon-Größe rechnen (Shuttle 24 px, Date-Picker-Pfeile), und
+   Knöpfe ohne Polster-y, deren Höhe der Container vorgibt (Suchfeld IR/IG), bleiben unverändert. */
+.a-Button--noLabel {
+  min-block-size: min(
+    calc(2 * var(--a-button-padding-y) + var(--a-button-line-height)),
+    calc(2 * var(--a-button-padding-x) + var(--a-icon-size, 1rem))
+  );
+}
+.t-Button--icon.t-Button--slim {
+  --a-button-padding-x: var(--ob-space-2);
+}
+/* 4. Stil-Modifier (neutral) -----------------------------------------------
+      Normal ist bereits umrandet (bridge.css §9). Simple = leiser: Kante als Haarlinie,
+      Beschriftung Label-Tinte; Hover wie Normal. */
+.t-Button--simple {
+  --a-button-type-background-color: transparent;
+  --a-button-type-shadow: none;
+  --a-button-border-color: var(--ob-line-strong);
+  --a-button-text-color: var(--ob-ink-2);
+  --a-button-hover-border-color: var(--ob-edge-hover);
+  --a-button-active-border-color: var(--ob-edge-hover);
+  --a-button-hover-background-color: var(--ob-soft);
+  --a-button-active-background-color: var(--ob-soft-hover);
+  --a-button-focus-background-color: var(--ob-soft);
+  --a-button-focus-border-color: var(--ob-line-strong);
+}
+/* Link: Tinte mit Unterstrich wie Fließtext-Links; nie eine Fläche */
+.t-Button--link {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+}
+.t-Button.t-Button--link {
+  --a-button-hover-text-color: var(--a-button-text-color);
+  --a-button-active-text-color: var(--a-button-text-color);
+  --a-button-focus-text-color: var(--a-button-text-color);
+  text-decoration-line: underline;
+  text-decoration-color: var(--ob-link-underline);
+  text-decoration-thickness: var(--ob-link-underline-width);
+  text-underline-offset: var(--ob-link-underline-offset);
+}
+.t-Button.t-Button--link:hover {
+  text-decoration-line: underline;
+  text-decoration-color: var(--ob-link-underline-hover);
+  text-decoration-thickness: var(--ob-link-underline-width-hover);
+}
+/* app_ui „Alle laden“-Link (Vita: Primärfarbe) */
+.a-Button--link {
+  --a-button-link-text-color: var(--ob-link-text);
+  text-decoration-color: var(--ob-link-underline);
+  text-decoration-thickness: var(--ob-link-underline-width);
+  text-underline-offset: var(--ob-link-underline-offset);
+}
+.a-Button--link:hover {
+  text-decoration-color: var(--ob-link-underline-hover);
+  text-decoration-thickness: var(--ob-link-underline-width-hover);
+}
+/* NoUI: keine Fläche, keine Kante; Hover nur als transparente Tönung (passt auf jede Fläche) */
+.t-Button--noUI,
+.t-Button--noUI:hover,
+.t-Button--noUI:active,
+.a-Button--noUI,
+.a-Button--noUI:hover,
+.a-Button--noUI:active {
+  --a-button-type-shadow: none;
+  --a-button-type-background-color: transparent;
+  --a-button-type-border-color: transparent;
+  --a-button-type-text-color: inherit;
+  color: inherit;
+  background-color: transparent;
+  text-shadow: none;
+}
+.t-Button--noUI:hover,
+.a-Button--noUI:hover {
+  background-color: var(--ob-frame-hover);
+}
+.t-Button--noUI:active,
+.a-Button--noUI:active {
+  background-color: var(--ob-frame-press);
+}
+
+/* 5. Hot = die eine gefüllte Taste: dunkel weiß mit Navy-Schrift, hell Navy mit Weiß
+      (vollständige Vita-Selektorliste) ---------------------------------------- */
+.t-Button--hot,
+.a-Button--hot,
+.ui-button--hot,
+.a-CardView-button--hot,
+.apex-button-group input:checked + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label {
+  --a-button-background-color: var(--ob-accent);
+  --a-button-text-color: var(--ob-accent-on);
+  --a-button-border-color: var(--ob-accent);
+  --a-button-hover-background-color: var(--ob-accent-hover);
+  --a-button-hover-text-color: var(--ob-accent-on);
+  --a-button-hover-border-color: var(--ob-accent-hover);
+  --a-button-active-background-color: var(--ob-accent-press);
+  --a-button-active-text-color: var(--ob-accent-on);
+  --a-button-active-border-color: var(--ob-accent-press);
+  --a-button-focus-background-color: var(--ob-accent-hover);
+  --a-button-focus-text-color: var(--ob-accent-on);
+  --a-button-focus-border-color: var(--ob-accent-hover);
+  --a-button-font-weight: var(--ob-fw-semibold);
+}
+.t-Button--hot.t-Button--simple,
+.a-Button--hot.t-Button--simple,
+.ui-button--hot.t-Button--simple,
+.a-CardView-button--hot.t-Button--simple,
+.apex-button-group input:checked + label.t-Button--simple,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--simple {
+  --a-button-border-color: var(--ob-accent-text);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--ob-accent-text);
+  --a-button-hover-text-color: var(--ob-accent-on);
+  --a-button-hover-border-color: var(--ob-accent-hover);
+  --a-button-active-border-color: var(--ob-accent-press);
+  --a-button-focus-border-color: var(--ob-accent-text);
+}
+.t-Button--hot.t-Button--link,
+.a-Button--hot.t-Button--link,
+.ui-button--hot.t-Button--link,
+.a-CardView-button--hot.t-Button--link,
+.apex-button-group input:checked + label.t-Button--link,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-shadow: none;
+  --a-button-text-color: var(--ob-accent-text);
+}
+.t-Button--hot.t-Button--noUI, .t-Button--hot.a-Button--noUI,
+.a-Button--hot.t-Button--noUI,
+.a-Button--hot.a-Button--noUI,
+.ui-button--hot.t-Button--noUI,
+.ui-button--hot.a-Button--noUI,
+.a-CardView-button--hot.t-Button--noUI,
+.a-CardView-button--hot.a-Button--noUI,
+.apex-button-group input:checked + label.t-Button--noUI,
+.apex-button-group input:checked + label.a-Button--noUI,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--noUI,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.a-Button--noUI {
+  --a-button-text-color: var(--ob-accent-text);
+  color: var(--ob-accent-text);
+}
+/* HUD-Dialog (app_ui: var(--a-button-primary-background-color, #0572CE)) */
+.ui-dialog--hud .ui-dialog-buttonset .ui-button--hot {
+  --a-button-background-color: var(--ob-accent);
+  --a-button-text-color: var(--ob-accent-on);
+}
+
+/* 6. Status wie in der Missionskontrolle: Kontur und Schrift in der Statusfarbe,
+      Hover mit Tönung – „Halt“ (Danger) ist eine rote Kontur, nie eine rote Fläche.
+      Kontur/Text = --ob-<s>-text (≥ 4,5 : 1 auf Panel und Tönung). */
+.t-Button--warning {
+  --a-button-background-color: transparent;
+  --a-button-border-color: var(--ob-warning-text);
+  --a-button-text-color: var(--ob-warning-text);
+  --a-button-hover-background-color: var(--ob-warning-tint);
+  --a-button-hover-border-color: var(--ob-warning-text);
+  --a-button-hover-text-color: var(--ob-warning-text);
+  --a-button-active-background-color: var(--ob-warning-tint);
+  --a-button-active-border-color: var(--ob-warning-text);
+  --a-button-active-text-color: var(--ob-warning-text);
+  --a-button-focus-background-color: var(--ob-warning-tint);
+  --a-button-focus-border-color: var(--ob-warning-text);
+  --a-button-focus-text-color: var(--ob-warning-text);
+}
+/* Vita setzt auf demselben Selektor eigene Schrift- und Hover-Schriftfarben (für gefüllte Hover-Flächen) –
+   hier bleiben Schrift und Hover-Schrift in der Statusfarbe, die Hover-Fläche ist die Tönung. */
+.t-Button--warning.t-Button--simple {
+  --a-button-border-color: var(--ob-warning-text);
+  --a-button-text-color: var(--ob-warning-text);
+  --a-button-hover-text-color: var(--ob-warning-text);
+  --a-button-active-text-color: var(--ob-warning-text);
+  --a-button-focus-text-color: var(--ob-warning-text);
+}
+.t-Button--warning.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-shadow: none;
+  --a-button-text-color: var(--ob-warning-text);
+}
+.t-Button--warning.t-Button--noUI, .t-Button--warning.a-Button--noUI {
+  --a-button-text-color: var(--ob-warning-text);
+  color: var(--ob-warning-text);
+}
+
+.t-Button--success {
+  --a-button-background-color: transparent;
+  --a-button-border-color: var(--ob-success-text);
+  --a-button-text-color: var(--ob-success-text);
+  --a-button-hover-background-color: var(--ob-success-tint);
+  --a-button-hover-border-color: var(--ob-success-text);
+  --a-button-hover-text-color: var(--ob-success-text);
+  --a-button-active-background-color: var(--ob-success-tint);
+  --a-button-active-border-color: var(--ob-success-text);
+  --a-button-active-text-color: var(--ob-success-text);
+  --a-button-focus-background-color: var(--ob-success-tint);
+  --a-button-focus-border-color: var(--ob-success-text);
+  --a-button-focus-text-color: var(--ob-success-text);
+}
+.t-Button--success.t-Button--simple {
+  --a-button-border-color: var(--ob-success-text);
+  --a-button-text-color: var(--ob-success-text);
+  --a-button-hover-text-color: var(--ob-success-text);
+  --a-button-active-text-color: var(--ob-success-text);
+  --a-button-focus-text-color: var(--ob-success-text);
+}
+.t-Button--success.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-shadow: none;
+  --a-button-text-color: var(--ob-success-text);
+}
+.t-Button--success.t-Button--noUI, .t-Button--success.a-Button--noUI {
+  --a-button-text-color: var(--ob-success-text);
+  color: var(--ob-success-text);
+}
+
+/* Danger = Halt-Taste: rote Kontur, rote Schrift; .a-Button--danger zusätzlich (sonst Hover = Grau) */
+.ui-button--danger,
+.t-Button--danger,
+.a-Button--danger {
+  --a-button-background-color: transparent;
+  --a-button-border-color: var(--ob-danger-text);
+  --a-button-text-color: var(--ob-danger-text);
+  --a-button-hover-background-color: var(--ob-danger-tint);
+  --a-button-hover-border-color: var(--ob-danger-text);
+  --a-button-hover-text-color: var(--ob-danger-text);
+  --a-button-active-background-color: var(--ob-danger-tint);
+  --a-button-active-border-color: var(--ob-danger-text);
+  --a-button-active-text-color: var(--ob-danger-text);
+  --a-button-focus-background-color: var(--ob-danger-tint);
+  --a-button-focus-border-color: var(--ob-danger-text);
+  --a-button-focus-text-color: var(--ob-danger-text);
+}
+.ui-button--danger.t-Button--simple,
+.t-Button--danger.t-Button--simple {
+  --a-button-border-color: var(--ob-danger-text);
+  --a-button-text-color: var(--ob-danger-text);
+  --a-button-hover-text-color: var(--ob-danger-text);
+  --a-button-active-text-color: var(--ob-danger-text);
+  --a-button-focus-text-color: var(--ob-danger-text);
+}
+.ui-button--danger.t-Button--link,
+.t-Button--danger.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-shadow: none;
+  --a-button-text-color: var(--ob-danger-text);
+}
+.ui-button--danger.t-Button--noUI, .ui-button--danger.a-Button--noUI,
+.t-Button--danger.t-Button--noUI,
+.t-Button--danger.a-Button--noUI {
+  --a-button-text-color: var(--ob-danger-text);
+  color: var(--ob-danger-text);
+}
+
+/* Primary (Alt) = leise Primäraktion: Kontur und Schrift in der Marke, Hover getönt */
+.t-Button--primary {
+  --a-button-background-color: transparent;
+  --a-button-border-color: var(--ob-accent-text);
+  --a-button-text-color: var(--ob-accent-text);
+  --a-button-hover-background-color: var(--ob-accent-tint);
+  --a-button-hover-border-color: var(--ob-accent-text);
+  --a-button-hover-text-color: var(--ob-accent-text);
+  --a-button-active-background-color: var(--ob-accent-tint-2);
+  --a-button-active-border-color: var(--ob-accent-text);
+  --a-button-active-text-color: var(--ob-accent-text);
+  --a-button-focus-background-color: var(--ob-accent-tint);
+  --a-button-focus-border-color: var(--ob-accent-text);
+  --a-button-focus-text-color: var(--ob-accent-text);
+  --a-button-font-weight: var(--ob-fw-semibold);
+}
+.t-Button--primary.t-Button--simple {
+  --a-button-border-color: var(--ob-line-strong);
+  --a-button-text-color: var(--ob-accent-text);
+  --a-button-hover-text-color: var(--ob-accent-text);
+  --a-button-active-text-color: var(--ob-accent-text);
+  --a-button-focus-text-color: var(--ob-accent-text);
+}
+.t-Button--primary.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-shadow: none;
+  --a-button-text-color: var(--ob-accent-text);
+}
+.t-Button--primary.t-Button--noUI, .t-Button--primary.a-Button--noUI {
+  --a-button-text-color: var(--ob-accent-text);
+  color: var(--ob-accent-text);
+}
+
+/* 7. Pill-Gruppen (t-Button--pillStart/pill/pillEnd): die Kanten stoßen aneinander –
+      eine gemeinsame Kante statt zwei. */
+.t-Button--pill,
+.t-Button--pillEnd {
+  margin-inline-start: calc(-1 * var(--ob-hairline));
+}
+.t-Button--pill:hover,
+.t-Button--pillEnd:hover,
+.t-Button--pill:focus-visible,
+.t-Button--pillEnd:focus-visible {
+  position: relative;
+  z-index: 1;
+}
+/* Ohne Fläche und Kante (noUI, Link) gibt es nichts zu überlappen */
+.t-Button--noUI.t-Button--pill,
+.t-Button--noUI.t-Button--pillEnd,
+.t-Button--link.t-Button--pill,
+.t-Button--link.t-Button--pillEnd {
+  margin-inline-start: 0;
+}
+
+/* 8. Button-Gruppen: Radio-Gruppe als Segmentleiste, Ja/Nein-Pill -------------
+      Ein Tastenfeld: gemeinsame Kante, Trennstriche als Haarlinien, gewählt = gefüllte Taste.
+      Zeilenhöhe/Polster kommen aus bridge.css (:root) und forms.css (Item Size large/xlarge). */
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input + label,
+.apex-button-group label {
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--ob-ink);
+  --a-button-border-color: transparent;
+  --a-button-hover-border-color: transparent;
+  --a-button-active-border-color: transparent;
+  --a-button-focus-border-color: transparent;
+  font-weight: var(--ob-fw-medium);
+}
+.apex-button-group .apex-item-option + .apex-item-option label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-option + .apex-item-option label {
+  border-inline-start-color: var(--ob-line);
+}
+.apex-button-group input:checked + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label {
+  font-weight: var(--ob-fw-semibold);
+  border-inline-start-color: transparent;
+}
+/* Fokus: UT zeichnet hart „outline: auto -webkit-focus-ring-color“ bei jedem :focus */
+.apex-button-group input:focus + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:focus + label {
+  outline: none;
+}
+.apex-button-group input:focus-visible + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:focus-visible + label {
+  outline: var(--ut-focus-outline, var(--ob-focus-outline));
+  outline-offset: var(--ut-focus-outline-offset, var(--ob-focus-ring-offset));
+  z-index: 2;
+}
+/* Die Gruppe trägt die gemeinsame Kante (UT: .apex-button-group ist ein Container ohne Rahmen) */
+.apex-button-group,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid {
+  border-radius: var(--a-button-border-radius);
+}
+.apex-button-group {
+  box-shadow: inset 0 0 0 var(--ob-hairline) var(--ob-edge);
+}
+
+/* Segmentleiste (eine Options-Zeile; UT: Tabelle, bricht nie um und läuft bei schmaler Spalte
+   oder Item Size Large/X Large über die Spalte ins Nachbar-Label): fließende Zeile, die nur
+   zwischen den Segmenten umbricht. Die Zeile trägt die Kante. Mehrzeilige Gitter
+   (Number of Columns) bleiben UT-Tabelle (Spalten fluchten). */
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid:where(:has(> .apex-item-grid-row:only-child)) {
+  display: block;
+}
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid-row:where(:only-child) {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: var(--ob-hairline);
+  border-radius: var(--a-button-border-radius);
+  box-shadow: inset 0 0 0 var(--ob-hairline) var(--ob-edge);
+}
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid-row:where(:only-child) > .apex-item-option {
+  flex: 1 1 max-content;
+  min-inline-size: 0;
+}
+/* Deaktivierte Optionen sind je Label halbtransparent (app_ui/UT): keine Kante um die Zeile */
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid-row:where(:only-child:has(input:disabled, label.is-disabled, label[disabled])) {
+  box-shadow: none;
+}
+
+/* Schmal (< 640 px): UT legt die Pills per float auf 50/33 % Breite – lange Beschriftungen
+   brechen dann in 2–3 Zeilen um (ungleich hohe Segmente). Stattdessen fließende Zeile:
+   jedes Segment so breit wie sein Text, gleich hoch, Umbruch nur zwischen Segmenten. */
+@media (max-width: 639px) {
+  .t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid-row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-option {
+    float: none;
+    flex: 1 0 max-content;
+  }
+  .t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input + label {
+    white-space: nowrap;
+  }
+}
+
+/* 9. Zähler (26.1 data-count) und Badge im Label: neutral, nie in der Marke ------ */
+.t-Button {
+  --a-button-count-background-color: var(--ob-soft);
+  --a-button-count-text-color: var(--ob-ink);
+}
+.t-Button[data-count]:after {
+  font-size: var(--ob-fs-xs);
+  font-weight: var(--ob-fw-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--ob-lh-xs);
+  border-radius: var(--ob-r-sm);
+  box-shadow: inset 0 0 0 var(--ob-hairline) var(--ob-line-strong);
+}
+.t-Button-badge {
+  min-inline-size: 1rem;
+  padding-inline: calc(var(--ob-space-1) + 1px);
+  border-radius: var(--ob-r-sm);
+  background-color: var(--a-button-count-background-color);
+  color: var(--a-button-count-text-color);
+  font-size: var(--ob-fs-xs);
+  font-weight: var(--ob-fw-semibold);
+  line-height: var(--ob-lh-xs);
+  vertical-align: baseline;
+}
+.t-Button--hot .t-Button-badge {
+  background-color: var(--ob-accent-on);
+  color: var(--ob-accent);
+}
+
+/* 10. Font-APEX-Modifier (.fa:after): ausgestanzter Kreis in der aktuellen Button-Fläche.
+       Umrandete Tasten haben keine Fläche – dort in der Farbe des Grundes (Panel, Dialog). */
+.t-Button .fa:after,
+.a-Button .fa:after {
+  background-color: var(--a-button-state-background-color, var(--ob-ground));
+}
+.t-Button.t-Button--noUI .fa:after,
+.t-Button.t-Button--link .fa:after,
+.t-Button.t-Button--simple .fa:after,
+.a-Button.a-Button--noUI .fa:after {
+  background-color: var(--ob-ground);
+}
+.t-Button.t-Button--simple .fa:after {
+  background-color: var(--a-button-state-background-color, var(--ob-ground));
+}
+.t-Button--danger .fa:after,
+.t-Button--simple.t-Button--danger:hover .fa:after { background-color: var(--a-button-state-background-color, var(--ob-ground)); }
+.t-Button--success .fa:after,
+.t-Button--simple.t-Button--success:hover .fa:after { background-color: var(--a-button-state-background-color, var(--ob-ground)); }
+.t-Button--primary .fa:after,
+.t-Button--simple.t-Button--primary:hover .fa:after { background-color: var(--a-button-state-background-color, var(--ob-ground)); }
+.t-Button--warning .fa:after,
+.t-Button--simple.t-Button--warning:hover .fa:after { background-color: var(--a-button-state-background-color, var(--ob-ground)); }
+.t-Button--hot .fa:after,
+.t-Button--simple.t-Button--hot:hover .fa:after { background-color: var(--a-button-state-background-color, var(--ob-accent)); }
+
+/* 11. Deaktiviert und beschäftigt ------------------------------------------ */
+.t-Button.is-disabled, .t-Button[disabled],
+.a-Button.is-disabled,
+.a-Button[disabled],
+.ui-button.is-disabled,
+.ui-button[disabled],
+.a-CardView-button.is-disabled,
+.a-CardView-button[disabled],
+.apex-button-group label.is-disabled,
+.apex-button-group label[disabled],
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input + label.is-disabled,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input + label[disabled],
+.t-Form-helpButton.is-disabled,
+.t-Form-helpButton[disabled] {
+  box-shadow: none;
+}
+/* Busy: aria-busy + apex.util.showSpinner() im Button → kleiner Kreisel in Schriftfarbe */
+.t-Button[aria-busy="true"],
+.a-Button[aria-busy="true"],
+.ui-button[aria-busy="true"] {
+  cursor: progress;
+}
+.t-Button .u-Processing,
+.a-Button .u-Processing,
+.ui-button .u-Processing {
+  --a-spinner-size: var(--a-button-icon-size, 1rem);
+  --a-spinner-container-padding: 0px;
+  --a-spinner-container-background-color: transparent;
+  --a-spinner-container-shadow: none;
+  --a-spinner-border-width: 2px;
+  --a-spinner-color: currentColor;
+  --a-spinner-border-color: color-mix(in srgb, currentColor 25%, transparent);
+  inset-block-start: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 12. Buttons IN Feldern (Popup LOV, Kalender, Farbwähler, Passwort): Teil des Feldes */
+.a-Button--popupLOV,
+.a-Button--calendar,
+.a-Button--colorPicker,
+.t-Button--passwordVisibility {
+  --a-button-background-color: var(--ob-field);
+  --a-button-border-color: var(--a-field-input-border-color);
+  --a-button-text-color: var(--ob-muted);
+  --a-button-hover-background-color: var(--ob-hover);
+  --a-button-hover-border-color: var(--a-field-input-border-color);
+  --a-button-hover-text-color: var(--ob-ink);
+  --a-button-active-background-color: var(--ob-soft);
+  --a-button-active-border-color: var(--a-field-input-border-color);
+  --a-button-focus-background-color: var(--ob-hover);
+  --a-button-focus-border-color: var(--a-field-input-border-color);
+  --a-button-shadow: none;
+  --a-button-font-weight: var(--ob-fw-regular);
+}
+.a-Button--comboSelect {
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-hover-border-color: transparent;
+  --a-button-active-border-color: transparent;
+  --a-button-focus-border-color: transparent;
+  --a-button-text-color: var(--ob-muted);
+  --a-button-hover-background-color: var(--ob-hover);
+  --a-button-shadow: none;
+}
+
+/* Hilfe-Button: leise, ohne Kante; Hover = neutrale Fläche */
+.t-Form-helpButton {
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-hover-border-color: transparent;
+  --a-button-active-border-color: transparent;
+  --a-button-focus-border-color: transparent;
+  --a-button-text-color: var(--ob-muted);
+  --a-button-hover-text-color: var(--ob-ink);
+  --a-button-hover-background-color: var(--ob-soft);
+  --a-button-active-background-color: var(--ob-soft-hover);
+}
+
+/* 13. IR/IG-Steuer-Buttons (Vita hart #f8f8f8 / Vita-Dark #494a4b) */
+.a-IG-button.a-IG-button--controls,
+.a-IRR-button.a-IRR-button--controls {
+  --a-button-background-color: var(--ob-soft);
+}

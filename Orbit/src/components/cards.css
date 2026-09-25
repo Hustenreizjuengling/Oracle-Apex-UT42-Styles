@@ -1,0 +1,152 @@
+/* ==========================================================================
+   Orbit – Cards
+   Card Regions (a-CardView) und Legacy Cards (t-Cards).
+   Regeln: nur Tokens (--ob-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Leitlinie: Eine Karte ist ein Anzeige-Panel – Haarlinie, 8 px Radius, kein
+   Schatten. Innere Trenner sehr zart (--ob-line-subtle), Titel in Tinte 600,
+   Nebentext in Stahlgrau. Icons/Initialen: mit Theme Colors aus der Kategorie-Palette
+   (--u-color-*, bridge.css §15), sonst neutral (--ob-soft). Fokus = der eine Ring.
+   Grundwerte (Fläche, Kante, Radius, Hex-Kopien Icon/Initialen/Fokus) setzt bridge.css §13.
+   ========================================================================== */
+
+/* 1. Card Regions (a-CardView) ------------------------------------------- */
+
+/* Typografie und innere Trenner – auf dem Widget (a-TMV--cards), damit sie auch in
+   Cards-Regionen mit anderem Region-Template gelten. Achtung Vererbung: Werte hier
+   schlagen die der Stile A/B/C (Vorfahr .t-CardsRegion) – darum keine Farben für
+   Titel/Text setzen (.has-media--background stellt die Schrift auf Weiß um). */
+.a-TMV--cards {
+  --ob-c-card-disc: color-mix(in srgb, currentColor 16%, transparent);
+  --a-cv-title-font-weight: var(--ob-fw-semibold);
+  --a-cv-subtitle-font-size: var(--ob-fs-xs);
+  --a-cv-subtitle-line-height: var(--ob-lh-xs);
+  --a-cv-maincontent-font-size: var(--ob-fs-md);
+  --a-cv-maincontent-line-height: var(--ob-lh-body);
+  --a-cv-subcontent-font-size: var(--ob-fs-xs);
+  --a-cv-subcontent-line-height: var(--ob-lh-xs);
+  --a-cv-badge-font-size: var(--ob-fs-xs);
+  --a-cv-badge-font-weight: var(--ob-fw-semibold);
+  --a-cv-badge-line-height: var(--ob-lh-xs);
+  --a-cv-badge-padding: .125rem var(--ob-space-2);
+  --a-cv-badge-border-radius: var(--ob-r-sm);
+  --a-cv-header-border-color: var(--ob-line-subtle);
+  --a-cv-actions-border-color: var(--ob-line-subtle);
+  --a-cv-initials-font-weight: var(--ob-fw-medium);
+}
+.a-CardView-title {
+  letter-spacing: var(--ob-tracking-heading);
+}
+.a-CardView-badge {
+  font-variant-numeric: tabular-nums;
+}
+/* Titel als Link: Farbe erbt (Tinte bzw. Weiß auf Bild), Unterstrich erst bei Hover */
+.a-CardView-titleLink {
+  text-decoration: none;
+}
+.a-CardView-titleLink:hover {
+  text-decoration-line: underline;
+  text-decoration-color: var(--ob-link-underline-hover);
+  text-decoration-thickness: var(--ob-link-underline-width-hover);
+  text-underline-offset: var(--ob-link-underline-offset);
+}
+
+/* Card-Button nur mit Icon (Beschriftung als aria-label): quadratisch wie die Icon-Buttons
+   (buttons.css §3, Breite = Höhe) statt Text-Polster (44 × 32). Icon-Größe: UT-Vorgabe 1rem. */
+.a-CardView-button:has(> .a-CardView-buttonIcon:only-child) {
+  --a-button-padding-x: calc(var(--a-button-padding-y) + (var(--a-button-line-height) - var(--a-button-icon-size, 1rem)) / 2);
+}
+
+/* Fokus: nur der Ring (Hook --a-cv-focus-outline), keine zusätzliche 1-px-Innenkante (Vita) */
+.a-CardView-fullLink:focus {
+  box-shadow: none;
+}
+.a-CardView.has-actions--full:focus-visible .a-CardView-fullLink {
+  box-shadow: none;
+}
+/* Tastatur-Navigation in der Kartenliste (app_ui: „outline: auto“ in Primärfarbe) */
+.a-TMV--cards .a-CardView-item.is-focused .a-CardView,
+.a-TMV--cards .a-CardView-item:focus-visible .a-CardView {
+  outline: var(--ut-focus-outline);
+  outline-offset: var(--ut-focus-outline-offset);
+}
+
+/* Stile A/B/C: Vita (und das Dunkel-Delta) setzen hier eigene Flächen per Selektor */
+.t-CardsRegion--styleA,
+.t-CardsRegion--styleB,
+.t-CardsRegion--styleC {
+  --a-cv-media-background-color: var(--ob-surface-sunken);
+}
+.t-CardsRegion--styleA,
+.t-CardsRegion--styleB {
+  --a-cv-icon-border-radius: var(--ob-r-md);
+  --a-cv-initials-border-radius: var(--ob-r-md);
+}
+.t-CardsRegion--styleA .has-media--body,
+.t-CardsRegion--styleA .has-media--first {
+  --a-cv-media-border-radius: var(--ob-r-md);
+}
+.t-CardsRegion--styleA .has-icon--top,
+.t-CardsRegion--styleB .has-icon--top {
+  --a-cv-icon-border-radius: var(--ob-r-lg);
+}
+.t-CardsRegion--styleB {
+  --a-cv-title-font-size: var(--ob-fs-lg);
+  --a-cv-title-line-height: var(--ob-lh-lg);
+}
+/* Stil B, Icon oben: Farbfeld mit ruhiger Scheibe aus der Icon-Farbe selbst
+   (Vita: schwarze 10-%-Scheibe mit Textschatten) */
+.t-CardsRegion--styleB .has-icon--top .a-CardView-icon:before {
+  background-color: var(--ob-c-card-disc);
+  text-shadow: none;
+}
+
+/* 2. Legacy Cards (t-Cards, Listen-/Report-Template „Cards“) ---------------- */
+.t-Cards {
+  --ob-c-card-disc: color-mix(in srgb, currentColor 16%, transparent);
+  --ut-cardlist-grid-gap: var(--ob-space-4);
+  --ut-cardlist-title-font-weight: var(--ob-fw-semibold);
+  --ut-cardlist-title-text-color: var(--ob-ink);
+  --ut-cardlist-subtitle-text-color: var(--ob-muted);
+  --ut-cardlist-desc-color: var(--ob-ink-2);
+  --ut-cardlist-info-font-size: var(--ob-fs-xs);
+  --ut-cardlist-info-line-height: var(--ob-lh-xs);
+  --ut-cardlist-body-border-border-color: var(--ob-line-subtle);
+  --ut-cardlist-initial-font-weight: var(--ob-fw-semibold);   /* UT liest „initial“ (sic) */
+  /* Scheibe hinter dem Icon im Farbblock (Stil Block): aus der Icon-Farbe gemischt,
+     statt der deckenden Randlinie (--ut-component-border-color) */
+  --ut-cardlist-icon-overlay-background-color: var(--ob-c-card-disc);
+  /* Farbstreifen (Theme Colors ohne Icon): bündig an der Oberkante, 3 px */
+  --ut-cardlist-colorfill-size: .1875rem;
+  --ut-cardlist-colorfill-offset: 0;
+}
+.t-Cards--basic,
+.t-Cards--featured {
+  --ut-cardlist-subtitle-font-size: var(--ob-fs-xs);
+  --ut-cardlist-desc-font-size: var(--ob-fs-md);
+  --ut-cardlist-desc-line-height: var(--ob-lh-body);
+}
+.t-Cards--compact {
+  --ut-cardlist-title-font-size: var(--ob-fs-md);
+  --ut-cardlist-title-line-height: var(--ob-lh-md);
+  --ut-cardlist-subtitle-font-size: var(--ob-fs-xs);
+  --ut-cardlist-subtitle-line-height: var(--ob-lh-xs);
+  --ut-cardlist-desc-font-size: var(--ob-fs-sm);
+  --ut-cardlist-desc-line-height: var(--ob-lh-sm);
+}
+/* Icon-/Initialen-Kachel ohne Theme Colors als PAAR am Element: --ob-soft + Tinte
+   (dieselben Werte wie der Fallback --ut-component-icon-* der Brücke). Setzt eine App per
+   :root nur die Fläche (--ut-cardlist-icon-background-color, Vita-Gewohnheit mit weißem
+   Symbol), stünde sonst Tinte auf Mittelgrau (--u-color-15 dunkel 2,55 : 1). Theme Colors
+   (.u-colors / u-color-N) gewinnen weiter über --u-color und ihre Kontrastschrift; eigene
+   Kachelfarben app-seitig als Paar auf diesem Selektor. Vgl. content.css .t-MediaList-icon. */
+.t-Card-icon {
+  --ut-cardlist-icon-background-color: var(--ob-soft);
+  --ut-cardlist-icon-color: var(--ob-ink);
+}
+.t-Card-title {
+  letter-spacing: var(--ob-tracking-heading);
+}
+/* Karte als Link: Hover = kräftigere Kante (kein Schatten, kein Hub) */
+a.t-Card-wrap:hover {
+  border-color: var(--ob-line-strong);
+}

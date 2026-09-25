@@ -1,0 +1,38 @@
+{
+  "name": "Orbit",
+  "prefix": "orbit",
+  "tokenPrefix": "ob",
+  "version": "1.0.0",
+  "description": "Orbit – Theme Styles für das Universal Theme 42 im Stil einer Raumschiff-Konsole: Kopf als dunkles Bedienfeld mit Skala an der Unterkante, Navigation als schmale Instrumentenleiste mit Eis-Kante am aktiven Eintrag, Regionen als Anzeige-Panels mit feiner Haarlinie, Abschnitts-Labels in gesperrten Versalien, Kennzahlen groß und leicht wie Telemetrie, umrandete Tasten und eine gefüllte Hauptaktion, Warnungen als Caution-Kasten in Bernstein. Dark „Konsole“ in tiefem Navy mit Eisblau, Light „Kabine“ in Weiß und Kabinengrau mit graphitgrauem Kopf, Auto folgt dem Betriebssystem. Die Anmeldung zeigt ein Rundinstrument mit gebogener Zeitleiste aus reinem CSS. Schrift: Barlow und Barlow Semi Condensed (OFL).",
+  "license": "Theme: MIT. Schriften Barlow und Barlow Semi Condensed: SIL Open Font License 1.1 (assets/fonts/LICENSE-Barlow-OFL.txt).",
+  "styles": [
+    {
+      "id": "light",
+      "name": "Orbit Light",
+      "staticId": "orbit-light",
+      "base": "Vita",
+      "entry": "src/orbit-light.css"
+    },
+    {
+      "id": "dark",
+      "name": "Orbit Dark",
+      "staticId": "orbit-dark",
+      "base": "Vita-Dark",
+      "entry": "src/orbit-dark.css"
+    },
+    {
+      "id": "auto",
+      "name": "Orbit Auto",
+      "staticId": "orbit-auto",
+      "base": "Vita",
+      "entry": "src/orbit-auto.css"
+    }
+  ],
+  "themeVariant": {
+    "number": 147,
+    "name": "Orbit",
+    "internalName": "ORBIT",
+    "staticId": "orbit",
+    "defaultStyle": "light"
+  }
+}

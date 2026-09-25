@@ -1,0 +1,137 @@
+/* ==========================================================================
+   Orbit – Tokens MODUSNEUTRAL (Maße, Schrift, Dichte, Fokus-Geometrie)
+   Gilt für hell, dunkel und auto gleichermaßen; wird von index.css als Erstes geladen.
+   Nur :root-Deklarationen eigener Tokens (--ob-*). Farben stehen in light.css/dark.css.
+   Abgeleitete Tokens (calc/var) werden auf :root aufgelöst: Wer einen Basis-Token lokal
+   ändert, muss die daraus abgeleiteten Hebel dort mitsetzen (siehe docs/ARCHITECTURE.md).
+   ========================================================================== */
+:root {
+  /* Schrift ---------------------------------------------------------------- */
+  --ob-font: "Orbit Sans", "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ob-font-label: "Orbit Label", "Barlow Semi Condensed", "Orbit Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --ob-font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --ob-fw-light: 300;              /* Telemetrie-Ziffern: Metric Cards, Badge-Listen, Login-Titel */
+  --ob-fw-regular: 400;            /* Fließtext, Zellen, Felder */
+  --ob-fw-medium: 500;             /* Labels, Buttons, Navigation */
+  --ob-fw-semibold: 600;           /* Titel, aktive Einträge, Versal-Labels */
+  --ob-fw-bold: 600;               /* „fett“ im Fließtext (<b>, <strong>) = Semibold (statischer Schnitt) */
+
+  /* Größen-Skala 12 · 13 · 14 · 16 · 20 · 28 · Telemetrie 36 --------------- */
+  --ob-fs-xs: .75rem;              /* 12  Klein: Hilfe, Badges, Zähler */
+  --ob-fs-sm: .8125rem;            /* 13  Tabellenzellen, Labels, Menüs klein */
+  --ob-fs-md: .875rem;             /* 14  UI, Fließtext, Felder, Buttons */
+  --ob-fs-lg: 1rem;                /* 16  Region-Titel */
+  --ob-fs-xl: 1.25rem;             /* 20  Abschnitt (Content Block h2) */
+  --ob-fs-2xl: 1.75rem;            /* 28  Seitentitel */
+  --ob-fs-tele: 2.25rem;           /* 36  Telemetrie-Wert (Metric Card, Badge-Liste), leicht (300) */
+  --ob-lh-xs: 1rem;                /* zu 12 */
+  --ob-lh-sm: 1.25rem;             /* zu 13 (Tabellenzellen 13/20) */
+  --ob-lh-md: 1.25rem;             /* zu 14 */
+  --ob-lh-body: 1.375rem;          /* zu 14 im Fließtext (Regionen, Content Blocks) */
+  --ob-lh-lg: 1.5rem;              /* zu 16 */
+  --ob-lh-xl: 1.75rem;             /* zu 20 */
+  --ob-lh-2xl: 2.125rem;           /* zu 28 */
+  --ob-lh-tele: 2.5rem;            /* zu 36 */
+  --ob-tracking-title: -.005em;    /* Seitentitel, Login-Titel */
+  --ob-tracking-heading: 0em;      /* Region-/Abschnittstitel, h1–h4 */
+  --ob-tracking-ui: .01em;         /* Buttons */
+
+  /* Versal-Label (Abschnitts-Labels, Tabellenköpfe, App-Name): Barlow Semi Condensed 600,
+     gesperrt – wie die Beschriftung einer Konsole. Nie für Fließtext oder Formular-Labels. */
+  --ob-fs-label: .75rem;           /* 12  Abschnitts-Label über dem Seitentitel, Metric-Card-Label */
+  --ob-lh-label: 1rem;
+  --ob-fs-head: .71875rem;         /* 11,5 Tabellenköpfe (Versalien) */
+  --ob-tracking-caps: .1em;        /* Sperrung der Versal-Labels */
+  --ob-tracking-head: .06em;       /* Sperrung der Tabellenköpfe (dichter) */
+
+  /* Geometrie: Konsole, Grund und Panels ---------------------------------- */
+  --ob-page-pad-x: 1.5rem;         /* Seiteninnenabstand waagerecht (Title Bar, Inhalt) */
+  --ob-page-pad-y: 1.25rem;        /* Seiteninnenabstand senkrecht */
+  --ob-panel-pad-x: 1rem;          /* Innenabstand der Panels (Regionen, Karten) */
+  --ob-panel-pad-y: .875rem;
+  --ob-r-lg: .5rem;                /* 8  Panels: Regionen, Tabellen, Karten, Menüs, Alerts */
+  --ob-r-md: .3125rem;             /* 5  Controls: Buttons, Felder, Nav-Einträge, Tabs */
+  --ob-r-sm: .1875rem;             /* 3  Checkbox, Badges, Chips */
+  --ob-r-dialog: .625rem;          /* 10 Dialoge/Drawer */
+  --ob-r-pill: 62rem;              /* Pillen (Zähler, Avatare rund) */
+  --ob-header-h: 3.5rem;           /* Kopfzeile (statisch – nie per JS/Font verändern) */
+  --ob-brand-lh: 1.5rem;           /* feste Zeilenhöhe Logo/Branding: Font-Swap verschiebt nichts */
+  --ob-nav-w: 15rem;               /* aufgeklappte Side-Navigation */
+  --ob-nav-rail-w: 3.5rem;         /* eingeklappte Icon-Leiste (wie die Leiste einer Konsole) */
+  --ob-float-inset: .5rem;         /* Abstand schwebender Panels (Drawer) zum Fensterrand */
+
+  /* Skala: Teilstriche an der Kopfkante und unter dem Seitentitel ----------- */
+  --ob-tick-step: .375rem;         /* 6 px zwischen zwei Teilstrichen */
+  --ob-tick-major: 3.75rem;        /* 60 px: jeder zehnte Strich ist lang */
+  --ob-tick-h: .25rem;             /* 4 px kurzer Strich */
+  --ob-tick-h-major: .5rem;        /* 8 px langer Strich */
+  --ob-mark-w: 2px;                /* Akzentkante: aktiver Nav-Eintrag, aktiver Tab, Menüleiste */
+
+  /* Abstände (4er-Raster) -------------------------------------------------- */
+  --ob-space-1: .25rem;            /* 4 */
+  --ob-space-2: .5rem;             /* 8 */
+  --ob-space-3: .75rem;            /* 12 */
+  --ob-space-4: 1rem;              /* 16 */
+  --ob-space-5: 1.25rem;           /* 20 */
+  --ob-space-6: 1.5rem;            /* 24 */
+  --ob-space-8: 2rem;              /* 32 */
+  --ob-space-12: 3rem;             /* 48 */
+  --ob-region-gap: 1rem;           /* Abstand zwischen Panels */
+
+  /* Dichte (Desktop 32 px; unter pointer: coarse 40 px – siehe bridge.css) --- */
+  --ob-control-h: 2rem;            /* Höhe Buttons, Felder, Selects, Pillen (inkl. Rand) */
+  --ob-control-h-sm: 1.5rem;       /* kleine Buttons (t-Button--small), Toolbar-Icons */
+  --ob-control-h-lg: 2.5rem;       /* große Buttons (t-Button--large), Login */
+  --ob-control-lh: 1.25rem;        /* Zeilenhöhe im Control */
+  --ob-control-pad-x: .75rem;      /* Innenabstand waagerecht (Felder); Buttons +2 px */
+  --ob-control-pad-y: calc((var(--ob-control-h) - var(--ob-control-lh)) / 2);  /* inkl. 1 px Rand (app_ui-Konvention) */
+  --ob-row-h: 2.125rem;            /* Tabellenzeile 34 px inkl. Haarlinie */
+  --ob-row-lh: 1.25rem;            /* Zeilenhöhe in Zellen (13/20) */
+  --ob-row-pad-x: .75rem;          /* Zellen-Innenabstand waagerecht */
+  --ob-row-pad-y: calc((var(--ob-row-h) - var(--ob-row-lh) - 1px) / 2);        /* = 6,5 px */
+  --ob-head-h: 2.25rem;            /* Tabellenkopf 36 px */
+  --ob-hit-min: 1.5rem;            /* Mindest-Trefferfläche (WCAG 2.5.8); coarse: 2.5rem */
+  --ob-checkbox-size: 1.125rem;    /* Checkbox/Radio */
+  --ob-meter-h: .25rem;            /* dünne Balken wie Tankanzeigen: Fortschritt, Prozent, Meter */
+
+  /* Linien-Geometrie ------------------------------------------------------ */
+  --ob-hairline: 1px;              /* Haarlinie: Panel-Kante, Zeilen, Trenner */
+  --ob-head-rule-width: 1px;       /* Grundlinie unter Tabellenköpfen */
+  --ob-rule-strong: 2px;           /* kräftige Linie (Summenzeile, betonte Köpfe) */
+
+  /* Fokus-Geometrie (Farben: --ob-focus-ring-color / --ob-focus-gap) ------ */
+  --ob-focus-ring-width: 2px;
+  --ob-focus-ring-offset: 2px;
+  --ob-focus-outline: var(--ob-focus-ring-width) solid var(--ob-focus-ring-color);
+  /* Doppelring als Schatten (wo outline abgeschnitten würde): innen Grundfläche (--ob-focus-gap),
+     außen die Marke. Beide Schatten stehen für schwebende Ebenen noch einmal in bridge.css §18. */
+  --ob-focus-shadow: 0 0 0 var(--ob-focus-ring-offset) var(--ob-focus-gap), 0 0 0 calc(var(--ob-focus-ring-offset) + var(--ob-focus-ring-width)) var(--ob-focus-ring-color);
+  /* nach innen (Zeilen, Zellen, Nav-Einträge in overflow-Containern) */
+  --ob-focus-shadow-inset: inset 0 0 0 var(--ob-focus-ring-width) var(--ob-focus-ring-color), inset 0 0 0 calc(var(--ob-focus-ring-width) + 1px) var(--ob-focus-gap);
+  /* Felder: Randfarbe = Ringfarbe + 1 px Schatten = 2 px Ring ohne Layoutsprung */
+  --ob-focus-field-shadow: 0 0 0 1px var(--ob-focus-ring-color);
+
+  /* Links (Farben in light/dark) ----------------------------------------- */
+  --ob-link-underline-width: 1px;
+  --ob-link-underline-width-hover: 2px;
+  --ob-link-underline-offset: .2em;
+
+  /* Pflichtfeld ----------------------------------------------------------- */
+  --ob-required-mark: "*";         /* in Textschrift, nicht als Icon */
+  --ob-required-gap: .25rem;       /* Abstand Label-Text → Markierung */
+
+  /* Bewegung -------------------------------------------------------------- */
+  --ob-duration: .12s;
+  --ob-ease: cubic-bezier(.2, 0, 0, 1);
+  --ob-sweep-duration: 1.6s;       /* einzige Inszenierung: der Bogen des Login-Instruments läuft ein */
+}
+
+/* Mobil (< 640 px): kleinerer Seiteninnenabstand, engere Panels -------------- */
+@media (max-width: 639px) {
+  :root {
+    --ob-page-pad-x: .75rem;       /* 12 px – Panel-Breite bei 390 px: 366 px */
+    --ob-page-pad-y: .75rem;       /* 12 px */
+    --ob-panel-pad-x: .75rem;      /* 12 px im Panel */
+    --ob-region-gap: .75rem;       /* 12 px zwischen Panels */
+  }
+}

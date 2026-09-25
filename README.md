@@ -1,6 +1,6 @@
 # Oracle APEX UT42 Styles
 
-Fünf eigenständige Designs für Oracle APEX, gebaut als **Theme Styles für das Universal Theme (Theme 42)**.
+Sechs eigenständige Designs für Oracle APEX, gebaut als **Theme Styles für das Universal Theme (Theme 42)**.
 Jedes Design bringt einen hellen, einen dunklen und einen automatischen Style mit (Auto folgt der Hell/Dunkel-Einstellung
 des Betriebssystems) und lässt sich per SQL-Skript in jede bestehende UT-App einspielen – ohne eine einzige Seite zu ändern.
 
@@ -11,6 +11,7 @@ des Betriebssystems) und lässt sich per SQL-Skript in jede bestehende UT-App ei
 | [**Frequenz**](Frequenz/README.md) | Weiße Seite, hellgraue Tafeln mit großen Radien, ein Magenta-Block mit dem App-Namen oben links, Kontur-Buttons und runde Icon-Buttons. | Onest | Light · Dark · Auto |
 | [**Kracherl**](Kracherl/README.md) | Sonniges Biergarten-Theme: gelbes Kopfband mit Wellenkante und Sprudelblasen, weiße Etiketten-Karten auf Lavendel, Überschriften in Violett. | Bitter, PT Sans | Light · Dark · Auto |
 | [**Passer**](Passer/README.md) | Zweifarbendruck auf kühlem Papier: Teal und Fluoreszenz-Pink mit leichtem Passerversatz, Text in Indigo-Tusche, dezentes Papierkorn. | Bricolage Grotesque | Light · Dark · Auto |
+| [**Orbit**](Orbit/README.md) | Bedienkonsole eines Raumschiffs: Navy-Panels mit feinen Haarlinien, gesperrte Versal-Labels, Telemetrie-Zahlen, Warnungen im Bernstein-Rahmen; hell als weiße Kabine. | Barlow | Light · Dark · Auto |
 
 Alle Schriften stehen unter der SIL Open Font License und werden selbst gehostet; es werden keine externen Dienste geladen.
 
@@ -18,10 +19,10 @@ Alle Schriften stehen unter der SIL Open Font License und werden selbst gehostet
 
 ## Screenshots
 
-Alle 15 Styles auf der Seite *Standard Region* der Universal Theme Reference App – je Zeile ein Theme, von links
+Alle 18 Styles auf der Seite *Standard Region* der Universal Theme Reference App – je Zeile ein Theme, von links
 Light, Dark und Auto bei dunklem Betriebssystem:
 
-![Alle 15 Styles im Überblick](style-pack/alle-styles.png)
+![Alle 18 Styles im Überblick](style-pack/alle-styles.png)
 
 Die Anmeldeseiten aller Styles: [style-pack/alle-logins.png](style-pack/alle-logins.png).
 Jede Theme-README zeigt weitere Bilder (Navigation, Formulare, Interactive Report und Grid, Karten, Diagramme,
@@ -52,6 +53,11 @@ Kalender, Template Components, Smartphone).
 ![Passer – Interactive Report, hell und dunkel](Passer/screenshots/interactive-report.webp)
 ![Passer – Anmeldung, hell und dunkel](Passer/screenshots/login.webp)
 
+### Orbit
+
+![Orbit – Interactive Report, hell und dunkel](Orbit/screenshots/interactive-report.png)
+![Orbit – Anmeldung, hell und dunkel](Orbit/screenshots/login.png)
+
 ---
 
 ## Installation
@@ -73,7 +79,7 @@ sql <benutzer>@<datenbank>        # als Parsing-Schema der App anmelden
 
 ### Alle Styles auf einmal (Style-Pack)
 
-Das Style-Pack spielt alle 15 Styles mit einem Aufruf in eine App ein:
+Das Style-Pack spielt alle 18 Styles mit einem Aufruf in eine App ein:
 
 ```sql
 -- Aufbau: @style-pack/style-pack-install.sql <APP_ID> [<präfix>-<style>] [user]
@@ -82,8 +88,8 @@ Das Style-Pack spielt alle 15 Styles mit einem Aufruf in eine App ein:
 @style-pack/style-pack-install.sql 100 veedel-auto user         -- zusätzlich Nutzerwahl einschalten
 ```
 
-- **Parameter 2** aktiviert einen Style. Möglich sind `passepartout-`, `veedel-`, `frequenz-`, `kracherl-` und
-  `passer-` jeweils mit `light`, `dark` oder `auto`. Ohne Angabe (oder mit `-`) bleibt der aktive Style unverändert.
+- **Parameter 2** aktiviert einen Style. Möglich sind `passepartout-`, `veedel-`, `frequenz-`, `kracherl-`,
+  `passer-` und `orbit-` jeweils mit `light`, `dark` oder `auto`. Ohne Angabe (oder mit `-`) bleibt der aktive Style unverändert.
   Ein unbekannter Wert bricht ab, bevor etwas geändert wird.
 - **Parameter 3** `user` schaltet *Allow End Users to choose Theme Style* ein; dann wählt jeder Benutzer seinen Style selbst.
 
@@ -100,6 +106,7 @@ Jedes Theme hat einen eigenen Installer mit derselben Logik:
 @Frequenz/install/frequenz-install.sql 100 dark
 @Kracherl/install/kracherl-install.sql 100 auto
 @Passer/install/passer-install.sql 100 light
+@Orbit/install/orbit-install.sql 100 dark
 ```
 
 Das Skript prüft die Parameter und die Ziel-App, legt die CSS-, Schrift- und Lizenzdateien als *Static Application Files*
@@ -121,7 +128,7 @@ obwohl APEX App-Dateien mit langer Cache-Dauer ausliefert.
 ### Deinstallation
 
 ```sql
-@style-pack/style-pack-uninstall.sql 100                        -- alle fünf Themes
+@style-pack/style-pack-uninstall.sql 100                        -- alle Themes
 @Veedel/install/veedel-uninstall.sql 100                        -- ein einzelnes Theme
 ```
 
@@ -148,7 +155,7 @@ Die genaue Tabelle steht im Abschnitt *Installation* der jeweiligen Theme-README
 ### Optional: als eigenes Theme (Theme-Variante)
 
 Jedes Design gibt es zusätzlich als eigenständiges Theme (ab APEX 26.1; Passepartout 142, Veedel 143, Frequenz 144,
-Kracherl 145, Passer 146): `@<Theme>/install/<präfix>-theme-install.sql <APP_ID>`. Es erscheint unter
+Kracherl 145, Passer 146, Orbit 147): `@<Theme>/install/<präfix>-theme-install.sql <APP_ID>`. Es erscheint unter
 *Shared Components › Themes*. Das Umschalten per *Switch Theme* hat in APEX 26.1 aber deutliche Nebenwirkungen
 (unter anderem wird das Spaltenlayout zurückgesetzt). Für bestehende Apps sind die Theme Styles der empfohlene Weg;
 Details in [Passepartout/docs/THEME-VARIANTE.md](Passepartout/docs/THEME-VARIANTE.md).
@@ -169,7 +176,7 @@ node _tools/setup-testbed.mjs                 # lädt die Exportdatei nach _tmp/
 @style-pack/style-pack-install.sql 9000 passepartout-light
 ```
 
-In der App schaltet das Menü **Theme Style** oben rechts für die eigene Sitzung zwischen allen 15 Styles und den
+In der App schaltet das Menü **Theme Style** oben rechts für die eigene Sitzung zwischen allen 18 Styles und den
 Standard-Styles des Universal Themes um.
 
 ---
@@ -252,7 +259,7 @@ Hintergrundwissen zum Universal Theme (alle CSS-Variablen, Shell, Komponenten, R
 ## Projektstruktur
 
 ```
-├── Passepartout/ Veedel/ Frequenz/ Kracherl/ Passer/
+├── Passepartout/ Veedel/ Frequenz/ Kracherl/ Passer/ Orbit/
 │   ├── README.md            Bilder, Designsystem, Installation, Anpassen, Grenzen
 │   ├── theme.json           Name, Präfix, Version, Styles, Theme-Variante
 │   ├── src/                 Quell-CSS: tokens/, bridge.css, base.css, components/*.css
@@ -262,7 +269,7 @@ Hintergrundwissen zum Universal Theme (alle CSS-Variablen, Shell, Komponenten, R
 │   ├── docs/                ARCHITECTURE.md (Token-Vertrag), THEME-VARIANTE.md
 │   ├── screenshots/         Bilder für die README
 │   └── tools/               theme-eigene Prüfskripte
-├── style-pack/              alle 15 Styles in einem Aufruf, Übersichtsbilder
+├── style-pack/              alle 18 Styles in einem Aufruf, Übersichtsbilder
 ├── _concepts/               Design-Prototypen
 ├── _docs/                   Anatomie des Universal Themes
 ├── _shared/                 theme-übergreifend: ut-dark-delta.css (für Auto-Styles)

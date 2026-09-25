@@ -211,6 +211,7 @@ export async function launchLab({
     async open(target, { waitUntil = 'networkidle2' } = {}) {
       await page.goto(lab.url(target), { waitUntil, timeout: 90000 });
       await settle();
+      if (NEUTRAL) await neutralizeDemoText(page);
       const s = await page.evaluate(() => window.apex && apex.env && apex.env.APP_SESSION).catch(() => null);
       if (s) lab.session = s;
       return page;
@@ -223,6 +224,45 @@ export async function launchLab({
     },
   };
   return lab;
+}
+
+// Die Demo-Daten der Reference App nennen echte Firmen und Produkte (Metric Cards: Börsenkürzel mit
+// Firmenname; Card Regions: Karte 4 wirbt für ein Chat-Produkt). Für Screenshots werden sie ohne
+// Namensliste ersetzt: Kürzel und Firmenname nach Reihenfolge durch Fantasienamen, in Karte 4 das erste
+// Wort des Titels durch „Chat“. LAB_NEUTRAL=0 schaltet das ab.
+const NEUTRAL = process.env.LAB_NEUTRAL !== '0';
+async function neutralizeDemoText(page) {
+  await page
+    .evaluate(() => {
+      const TICKER = ['NRDW', 'SLTN', 'OSTH', 'BRTL', 'LNDQ', 'HVLD', 'KRMT', 'WSTF'];
+      const FIRMA = ['Nordwerk', 'Silbertann', 'Ostholm', 'Brandtal', 'Lindquist', 'Havelund', 'Karmat', 'Westfeld'];
+      const seen = new Map();
+      for (const card of document.querySelectorAll('.t-MetricCard')) {
+        const title = card.querySelector('.t-MetricCard-title');
+        const key = title && title.textContent.trim();
+        if (!key || !/^[A-Z]{2,5}$/.test(key)) continue;
+        if (!seen.has(key)) seen.set(key, seen.size % TICKER.length);
+        const i = seen.get(key);
+        title.textContent = TICKER[i];
+        const meta = card.querySelector('.t-MetricCard-meta');
+        if (meta) meta.textContent = FIRMA[i];
+      }
+      for (const label of document.querySelectorAll('.a-CardView [id$="_4_card_label"]')) {
+        const card = label.closest('.a-CardView');
+        const title = card.querySelector('.a-CardView-title');
+        const word = title && title.textContent.trim().split(/\s+/)[0];
+        if (!word || word.length < 3) continue;
+        const rx = new RegExp('\\b' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'g');
+        const w = document.createTreeWalker(card, NodeFilter.SHOW_TEXT);
+        while (w.nextNode()) w.currentNode.nodeValue = w.currentNode.nodeValue.replace(rx, 'Chat');
+        for (const el of [card, ...card.querySelectorAll('[title],[alt],[aria-label]')])
+          for (const a of ['title', 'alt', 'aria-label']) {
+            const v = el.getAttribute(a);
+            if (v) el.setAttribute(a, v.replace(rx, 'Chat'));
+          }
+      }
+    })
+    .catch(() => {});
 }
 
 export { ROOT };

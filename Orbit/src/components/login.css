@@ -1,0 +1,253 @@
+/* ==========================================================================
+   Orbit – Login
+   Die Anmeldung als Instrumententafel: Hinter dem Panel steht ein großes Rundinstrument
+   (feine Ringe, Teilstriche, Fadenkreuz, ein Bogen in der Marke), am unteren Rand eine
+   gebogene Zeitleiste mit Ereignispunkten – Instrumente und Telemetrie einer
+   Missionskontrolle. Alles nur aus CSS-Verläufen und Masken, ohne Bild, ohne Text, ohne Werte.
+   Einzige Bewegung: der Bogen läuft beim Laden ein (nicht bei prefers-reduced-motion).
+   Regeln: nur Tokens (--ob-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Lokale Tokens (--ob-c-*):
+     --ob-c-dial      Durchmesser des Instruments        --ob-c-dial-x  waagerechte Mitte
+     --ob-c-arc-*     Bogen: Radius, Start, Sweep-Winkel  --ob-c-sweep   laufender Winkel (animiert)
+     --ob-c-tl-*      Zeitleiste: Radius, Höhe über dem unteren Rand
+     --ob-c-ink-*     Farben der Zeichnung (Ringe, Striche, Marke)
+   ========================================================================== */
+
+/* Der laufende Winkel des Bogens ist registriert, damit er sich animieren lässt. */
+@property --ob-c-sweep {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+
+/* 1. Seite und Panel ------------------------------------------------------------ */
+.t-PageBody--login {
+  --ut-login-page-background-color: var(--ob-frame);
+  --ut-login-region-background-color: var(--ob-surface);
+  --ut-login-region-filter: none;
+  --ut-login-region-border-width: var(--ob-hairline);
+  --ut-login-region-border-color: var(--ob-line);
+  --ut-login-region-border-radius: var(--ob-r-dialog);
+  --ut-login-region-box-shadow: var(--ob-panel-shadow);
+  --ut-login-region-padding: var(--ob-space-8) var(--ob-space-8) var(--ob-space-6);
+  --ut-login-logo-border-radius: var(--ob-r-lg);
+  --ut-login-container-item-spacing: var(--ob-space-4);
+  background-color: var(--ob-frame);
+}
+/* UT zeichnet die Kante des Login-Panels als Schatten aus --ut-component-border-* */
+.t-Login-region {
+  box-shadow: inset 0 0 0 var(--ob-hairline) var(--ob-line);
+}
+@media (max-width: 639px) {
+  .t-PageBody--login {
+    --ut-login-region-padding: var(--ob-space-6) var(--ob-space-4) var(--ob-space-4);
+  }
+  .t-PageBody--login .t-Login-container {
+    padding-inline: var(--ob-space-3);
+  }
+}
+/* Hintergrund-Varianten: kein Bild – immer das Instrument */
+.t-LoginPage--bg1,
+.t-LoginPage--bg2,
+.t-LoginPage--bg3 {
+  --ut-body-background-color: var(--ob-frame);
+}
+.t-LoginPage--bg1 .t-Login-bgImg,
+.t-LoginPage--bg2 .t-Login-bgImg,
+.t-LoginPage--bg3 .t-Login-bgImg,
+.t-LoginPage--bg1:before,
+.t-LoginPage--bg2:before,
+.t-LoginPage--bg3:before {
+  background-image: none;
+}
+
+/* Kopf: Logo, Titel groß und leicht wie ein Telemetrie-Wert */
+.t-Login-header {
+  padding-block: var(--ob-space-2) var(--ob-space-5);
+}
+.t-Login-title {
+  font-size: var(--ob-fs-2xl);
+  line-height: var(--ob-lh-2xl);
+  font-weight: var(--ob-fw-light);
+  letter-spacing: var(--ob-tracking-title);
+  margin-block: var(--ob-space-3) 0;
+}
+
+/* Anmelde-Button: große Control-Höhe (40 px, Touch 48 px) aus den Dichte-Tokens */
+.t-Login-buttons {
+  --a-button-padding-y: calc((var(--ob-control-h-lg) - var(--ob-control-lh)) / 2);
+  --a-button-font-size: var(--ob-fs-md);
+  --a-button-line-height: var(--ob-control-lh);
+  --a-button-font-weight: var(--ob-fw-semibold);
+}
+.t-Login-containerFooter {
+  color: var(--ob-muted);
+}
+
+/* Fehlerseite (Error Page Template, gleiches Login-Gerüst): die Meldung ist wie die Anmeldung
+   ein Panel vor dem Instrument */
+.t-Login-containerBody > .t-Alert--wizard {
+  --ut-alert-background-color: var(--ob-surface);
+  --ut-alert-wizard-border-radius: var(--ob-r-dialog);
+}
+
+/* Geteilte Ansicht: das Panel als Spalte am Rand, das Instrument in der freien Fläche */
+.t-LoginPage--split .t-Login-container {
+  box-shadow: inset calc(-1 * var(--ob-hairline)) 0 0 var(--ob-line);
+}
+.u-RTL .t-LoginPage--split .t-Login-container {
+  box-shadow: inset var(--ob-hairline) 0 0 var(--ob-line);
+}
+.t-LoginPage--split .t-Login-region {
+  box-shadow: none;
+}
+@media (max-width: 639px) {
+  .t-LoginPage--split .t-Login-container {
+    max-width: none;
+    padding-inline: 0;
+  }
+}
+
+
+/* 2. Das Rundinstrument (Ebene .t-Login-bg: fest, bildschirmfüllend, ohne Zeiger) ------
+   ::before  Gehäuse: Außenring, Innenring, lange Teilstriche alle 30°, Fadenkreuz
+   ::after   feine Teilstriche alle 3° (Maske: schmaler Kranz am Außenrand)
+   .t-Login-bgImg::before  der Bogen in der Marke (Maske: 2-px-Kranz), läuft ein
+   .t-Login-bgImg::after   Marke an der Spitze des Bogens
+   .t-Login-bgImg          gebogene Zeitleiste mit Ereignispunkten (Hintergrund) */
+.t-Login-bg {
+  --ob-c-dial: min(78vh, 86vw, 50rem);
+  --ob-c-dial-x: 50%;
+  --ob-c-ink-ring: var(--ob-line-strong);
+  --ob-c-ink-tick: var(--ob-line-strong);
+  --ob-c-ink-major: var(--ob-edge);
+  --ob-c-ink-cross: var(--ob-line);
+  --ob-c-ink-mark: var(--ob-accent-text);
+  --ob-c-arc-r: calc(var(--ob-c-dial) / 2 - 1.75rem);
+  --ob-c-arc-from: -135deg;
+  --ob-c-arc-to: 205deg;
+  --ob-c-sweep: var(--ob-c-arc-to);
+  --ob-c-tl-r: 120vw;
+  --ob-c-tl-rise: 8vh;
+  --ob-c-dot: .75rem;
+  background-color: var(--ob-frame);
+}
+/* geteilte Ansicht: Mitte der freien Fläche neben der Spalte (UT: max. 28,75rem breit) */
+@media (min-width: 640px) {
+  .t-LoginPage--split .t-Login-bg {
+    --ob-c-dial: min(76vh, calc(86vw - 28.75rem), 48rem);
+    --ob-c-dial-x: calc(50% + var(--ut-login-region-max-width, 28.75rem) / 2);
+  }
+  .u-RTL .t-LoginPage--split .t-Login-bg {
+    --ob-c-dial-x: calc(50% - var(--ut-login-region-max-width, 28.75rem) / 2);
+  }
+}
+.t-Login-bg::before,
+.t-Login-bg::after,
+.t-Login-bgImg::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  left: var(--ob-c-dial-x);
+  inline-size: var(--ob-c-dial);
+  block-size: var(--ob-c-dial);
+  translate: -50% -50%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+/* Gehäuse: Außenring als Kante; darin (von oben nach unten) Fadenkreuz, Innenring, eine Scheibe
+   in Grundfarbe bis kurz vor den Rand und darunter die langen Teilstriche – die Scheibe lässt von
+   ihnen nur die äußeren 18 px stehen. */
+.t-Login-bg::before {
+  border: var(--ob-hairline) solid var(--ob-c-ink-ring);
+  background:
+    linear-gradient(var(--ob-c-ink-cross), var(--ob-c-ink-cross)) 50% 50% / 100% var(--ob-hairline) no-repeat,
+    linear-gradient(var(--ob-c-ink-cross), var(--ob-c-ink-cross)) 50% 50% / var(--ob-hairline) 100% no-repeat,
+    radial-gradient(closest-side, transparent calc(62% - 1px), var(--ob-c-ink-ring) calc(62% - .5px), var(--ob-c-ink-ring) calc(62% + .5px), transparent calc(62% + 1px)),
+    radial-gradient(closest-side, transparent calc(24% - 1px), var(--ob-c-ink-ring) calc(24% - .5px), var(--ob-c-ink-ring) calc(24% + .5px), transparent calc(24% + 1px)),
+    radial-gradient(closest-side, var(--ob-frame) calc(100% - 1.125rem), transparent calc(100% - 1.125rem + .5px)),
+    repeating-conic-gradient(from -.4deg, var(--ob-c-ink-major) 0 .8deg, transparent .8deg 30deg);
+}
+/* feine Teilstriche: Kranz von 8 px am Außenrand, 1 Strich je 3° */
+.t-Login-bg::after {
+  background: repeating-conic-gradient(from -.2deg, var(--ob-c-ink-tick) 0 .4deg, transparent .4deg 3deg);
+  mask: radial-gradient(closest-side, transparent calc(100% - .5rem), currentColor calc(100% - .5rem + .5px), currentColor calc(100% - 1px), transparent 100%);
+}
+/* Bogen: 2-px-Kranz innerhalb der Teilstriche, von unten links im Uhrzeigersinn */
+.t-Login-bgImg {
+  position: relative;
+}
+/* Vita-Dark invertiert Hintergrundbilder (--ut-base-filter) – die Zeichnung ist schon modusrichtig */
+.t-Login-bg .t-Login-bgImg {
+  filter: none;
+}
+.t-Login-bgImg::before {
+  inline-size: calc(2 * var(--ob-c-arc-r));
+  block-size: calc(2 * var(--ob-c-arc-r));
+  background: conic-gradient(from var(--ob-c-arc-from), var(--ob-c-ink-mark) 0 var(--ob-c-sweep), transparent var(--ob-c-sweep));
+  mask: radial-gradient(closest-side, transparent calc(100% - 2.5px), currentColor calc(100% - 2px), currentColor calc(100% - .5px), transparent 100%);
+}
+/* Gebogene Zeitleiste am unteren Rand: ein Kreisbogen (Radius 120vw) mit Ereignispunkten –
+   zurückliegende Ereignisse gefüllt in der Marke, kommende als Ring. Position eines Punktes
+   im Winkel a: Mitte + (sin a, −cos a) × Radius. Der Bogen selbst braucht keine Trigonometrie. */
+.t-Login-bg .t-Login-bgImg {
+  --ob-c-tl-cy: calc(100% + var(--ob-c-tl-r) - var(--ob-c-tl-rise));
+  background: radial-gradient(circle at var(--ob-c-dial-x) var(--ob-c-tl-cy), transparent calc(var(--ob-c-tl-r) - 1px), var(--ob-c-ink-ring) calc(var(--ob-c-tl-r) - .5px) calc(var(--ob-c-tl-r) + .5px), transparent calc(var(--ob-c-tl-r) + 1px));
+}
+/* Punkt an der Bogenspitze und Ereignispunkte nur mit CSS-Trigonometrie (sin/cos) */
+@supports (inset-block-start: calc(sin(1deg) * 1px)) {
+  /* Marke an der Spitze des Bogens: Punkt in der Marke, freigestellt vom Grund */
+  .t-Login-bgImg::after {
+    content: "";
+    position: absolute;
+    left: calc(var(--ob-c-dial-x) + sin(var(--ob-c-arc-from) + var(--ob-c-sweep)) * (var(--ob-c-arc-r) - 1px));
+    inset-block-start: calc(50% - cos(var(--ob-c-arc-from) + var(--ob-c-sweep)) * (var(--ob-c-arc-r) - 1px));
+    inline-size: var(--ob-c-dot);
+    block-size: var(--ob-c-dot);
+    translate: -50% -50%;
+    border-radius: 50%;
+    background-color: var(--ob-c-ink-mark);
+    box-shadow: 0 0 0 .3125rem var(--ob-frame);
+    pointer-events: none;
+  }
+  .t-Login-bg .t-Login-bgImg {
+    --ob-c-dot-past: radial-gradient(closest-side, var(--ob-c-ink-mark) 0 calc(100% - 3px), transparent calc(100% - 2.5px));
+    --ob-c-dot-next: radial-gradient(closest-side, transparent calc(100% - 4px), var(--ob-c-ink-major) calc(100% - 3.5px) calc(100% - 2.5px), transparent calc(100% - 2px));
+    background:
+      var(--ob-c-dot-past) calc(var(--ob-c-dial-x) + sin(-14deg) * var(--ob-c-tl-r)) calc(100% + var(--ob-c-tl-r) - var(--ob-c-tl-rise) - cos(-14deg) * var(--ob-c-tl-r) + var(--ob-c-dot) / 2) / var(--ob-c-dot) var(--ob-c-dot) no-repeat,
+      var(--ob-c-dot-past) calc(var(--ob-c-dial-x) + sin(-9deg) * var(--ob-c-tl-r)) calc(100% + var(--ob-c-tl-r) - var(--ob-c-tl-rise) - cos(-9deg) * var(--ob-c-tl-r) + var(--ob-c-dot) / 2) / var(--ob-c-dot) var(--ob-c-dot) no-repeat,
+      var(--ob-c-dot-past) calc(var(--ob-c-dial-x) + sin(-4deg) * var(--ob-c-tl-r)) calc(100% + var(--ob-c-tl-r) - var(--ob-c-tl-rise) - cos(-4deg) * var(--ob-c-tl-r) + var(--ob-c-dot) / 2) / var(--ob-c-dot) var(--ob-c-dot) no-repeat,
+      var(--ob-c-dot-next) calc(var(--ob-c-dial-x) + sin(2deg) * var(--ob-c-tl-r)) calc(100% + var(--ob-c-tl-r) - var(--ob-c-tl-rise) - cos(2deg) * var(--ob-c-tl-r) + var(--ob-c-dot) / 2) / var(--ob-c-dot) var(--ob-c-dot) no-repeat,
+      var(--ob-c-dot-next) calc(var(--ob-c-dial-x) + sin(8deg) * var(--ob-c-tl-r)) calc(100% + var(--ob-c-tl-r) - var(--ob-c-tl-rise) - cos(8deg) * var(--ob-c-tl-r) + var(--ob-c-dot) / 2) / var(--ob-c-dot) var(--ob-c-dot) no-repeat,
+      var(--ob-c-dot-next) calc(var(--ob-c-dial-x) + sin(13deg) * var(--ob-c-tl-r)) calc(100% + var(--ob-c-tl-r) - var(--ob-c-tl-rise) - cos(13deg) * var(--ob-c-tl-r) + var(--ob-c-dot) / 2) / var(--ob-c-dot) var(--ob-c-dot) no-repeat,
+      radial-gradient(circle at var(--ob-c-dial-x) var(--ob-c-tl-cy), transparent calc(var(--ob-c-tl-r) - 1px), var(--ob-c-ink-ring) calc(var(--ob-c-tl-r) - .5px) calc(var(--ob-c-tl-r) + .5px), transparent calc(var(--ob-c-tl-r) + 1px));
+  }
+}
+
+/* Die eine Inszenierung: der Bogen läuft ein, die Marke fährt mit */
+@keyframes ob-arc-sweep {
+  from { --ob-c-sweep: 0deg; }
+  to { --ob-c-sweep: var(--ob-c-arc-to); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .t-Login-bgImg::before,
+  .t-Login-bgImg::after {
+    animation: ob-arc-sweep var(--ob-sweep-duration) var(--ob-ease) .15s both;
+  }
+}
+
+/* Schmal: kleineres Instrument hinter dem Panel, Zeitleiste flacher */
+@media (max-width: 639px) {
+  .t-Login-bg {
+    --ob-c-dial: min(94vw, 70vh);
+    --ob-c-tl-r: 160vw;
+    --ob-c-tl-rise: 6vh;
+  }
+}
+
+/* Druck: nur das Panel */
+@media print {
+  .t-Login-bg {
+    display: none;
+  }
+}

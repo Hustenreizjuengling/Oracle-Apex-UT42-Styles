@@ -11,7 +11,9 @@
     "kracherl-light": "sonnengelbes Kopfband mit Wellenkante und Sprudelblasen, weiße Etiketten-Karten auf Lavendel, Überschriften in Violett; Bitter und PT Sans",
     "kracherl-dark": "„Biergarten bei Nacht“: Violett-Schwarz mit Laternengelb",
     "passer-light": "„Tagdruck“: Teal und Fluoreszenz-Pink mit Passerversatz auf kühlem Papier mit Korn, Text in Indigo-Tusche, Gelb als Marker; Bricolage Grotesque",
-    "passer-dark": "„Nachtdruck“: Neonfarben auf indigo gefärbtem Papier, Teal hell leuchtend"
+    "passer-dark": "„Nachtdruck“: Neonfarben auf indigo gefärbtem Papier, Teal hell leuchtend",
+    "orbit-light": "„Kabine“: kabinengrauer Grund, weiße Panels, grafitgrauer Kopf wie ein Bedienfeld mit Teilstrich-Skala, Versal-Labels in Stahlpetrol; Barlow",
+    "orbit-dark": "„Konsole“: tiefes Navy, Panels mit feinen Haarlinien, eisblaue Labels, Telemetrie-Zahlen, Warnungen im Bernstein-Rahmen"
   },
   "hinweise": {},
   "laufzeit": "Im Test (APEX 26.1, Datenbank im lokalen Netz, SQLcl) dauerte die Installation aller Styles 12 bis 16 Sekunden, die Deinstallation rund 7 Sekunden. Über langsame Verbindungen bestimmt vor allem die Größe der Skripte die Dauer."

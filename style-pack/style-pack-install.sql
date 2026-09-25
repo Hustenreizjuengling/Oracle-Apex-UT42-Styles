@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 -- Style-Pack – Installation aller Theme Styles
--- Passepartout 1.0.0, Veedel 1.0.0, Frequenz 1.0.0, Kracherl 1.0.0, Passer 1.0.0
--- (5 Themes, 15 Theme Styles für das Universal Theme 42)
+-- Passepartout 1.0.0, Veedel 1.0.0, Frequenz 1.0.0, Kracherl 1.0.0, Passer 1.0.0, Orbit 1.0.0
+-- (6 Themes, 18 Theme Styles für das Universal Theme 42)
 --
 -- Erzeugt von _tools/build.mjs --pack – nicht von Hand bearbeiten.
 -- Ausführen als Parsing-Schema der Ziel-App (oder mit APEX_ADMINISTRATOR_ROLE)
@@ -18,6 +18,7 @@
 --               frequenz-light | frequenz-dark | frequenz-auto
 --               kracherl-light | kracherl-dark | kracherl-auto
 --               passer-light | passer-dark | passer-auto
+--               orbit-light | orbit-dark | orbit-auto
 --             Ohne Angabe oder "-": nichts umschalten (ein aktiver Style bleibt aktiv).
 --   user      optional: zusätzlich "Allow End Users to choose Theme Style" einschalten,
 --             z. B. @style-pack/style-pack-install.sql 100 passepartout-dark user
@@ -27,7 +28,7 @@
 -- Styles aktiviert ihn, alle anderen legen ihre Styles nur an. Ein unbekannter Wert
 -- bricht vor jeder Änderung ab. Mehrfaches Ausführen ist erlaubt (Update).
 --------------------------------------------------------------------------------
-prompt === Style-Pack: Installation (5 Themes, 15 Styles) ===
+prompt === Style-Pack: Installation (6 Themes, 18 Styles) ===
 set define on verify off feedback off serveroutput on
 whenever sqlerror exit sql.sqlcode rollback
 
@@ -57,9 +58,9 @@ declare
          + nvl(to_number(regexp_substr(p_version, '^\d+\.(\d+)', 1, 1, null, 1)), 0);
   end num;
 begin
-  if l_style is not null and l_style not in ('-', 'n', 'no', 'nein', 'passepartout-light', 'passepartout-dark', 'passepartout-auto', 'veedel-light', 'veedel-dark', 'veedel-auto', 'frequenz-light', 'frequenz-dark', 'frequenz-auto', 'kracherl-light', 'kracherl-dark', 'kracherl-auto', 'passer-light', 'passer-dark', 'passer-auto') then
+  if l_style is not null and l_style not in ('-', 'n', 'no', 'nein', 'passepartout-light', 'passepartout-dark', 'passepartout-auto', 'veedel-light', 'veedel-dark', 'veedel-auto', 'frequenz-light', 'frequenz-dark', 'frequenz-auto', 'kracherl-light', 'kracherl-dark', 'kracherl-auto', 'passer-light', 'passer-dark', 'passer-auto', 'orbit-light', 'orbit-dark', 'orbit-auto') then
     raise_application_error(-20002, 'Unbekannter Style "' || l_style || '" – erlaubt: '
-      || 'passepartout-light, passepartout-dark, passepartout-auto, veedel-light, veedel-dark, veedel-auto, frequenz-light, frequenz-dark, frequenz-auto, kracherl-light, kracherl-dark, kracherl-auto, passer-light, passer-dark, passer-auto' || ' oder "-" (keinen aktivieren). Es wurde nichts geändert.'
+      || 'passepartout-light, passepartout-dark, passepartout-auto, veedel-light, veedel-dark, veedel-auto, frequenz-light, frequenz-dark, frequenz-auto, kracherl-light, kracherl-dark, kracherl-auto, passer-light, passer-dark, passer-auto, orbit-light, orbit-dark, orbit-auto' || ' oder "-" (keinen aktivieren). Es wurde nichts geändert.'
       || ' Hinweis: SQL*Plus/SQLcl behalten Parameter früherer Skriptaufrufe – ggf. "undefine 2 3" oder neue Sitzung.');
   end if;
   if l_user is not null and l_user <> 'user' then
@@ -96,7 +97,7 @@ begin
 end;
 /
 prompt
-prompt ##### 1/5 Passepartout 1.0.0 #####
+prompt ##### 1/6 Passepartout 1.0.0 #####
 set termout off
 column pack_act new_value PACK_ACT noprint
 select case lower(trim('&PACK_STYLE.'))
@@ -110,7 +111,7 @@ undefine 1 2 3
 @@../Passepartout/install/passepartout-install.sql &PACK_APP_ID. &PACK_ACT.
 set define on verify off feedback off serveroutput on
 prompt
-prompt ##### 2/5 Veedel 1.0.0 #####
+prompt ##### 2/6 Veedel 1.0.0 #####
 set termout off
 column pack_act new_value PACK_ACT noprint
 select case lower(trim('&PACK_STYLE.'))
@@ -124,7 +125,7 @@ undefine 1 2 3
 @@../Veedel/install/veedel-install.sql &PACK_APP_ID. &PACK_ACT.
 set define on verify off feedback off serveroutput on
 prompt
-prompt ##### 3/5 Frequenz 1.0.0 #####
+prompt ##### 3/6 Frequenz 1.0.0 #####
 set termout off
 column pack_act new_value PACK_ACT noprint
 select case lower(trim('&PACK_STYLE.'))
@@ -138,7 +139,7 @@ undefine 1 2 3
 @@../Frequenz/install/frequenz-install.sql &PACK_APP_ID. &PACK_ACT.
 set define on verify off feedback off serveroutput on
 prompt
-prompt ##### 4/5 Kracherl 1.0.0 #####
+prompt ##### 4/6 Kracherl 1.0.0 #####
 set termout off
 column pack_act new_value PACK_ACT noprint
 select case lower(trim('&PACK_STYLE.'))
@@ -152,7 +153,7 @@ undefine 1 2 3
 @@../Kracherl/install/kracherl-install.sql &PACK_APP_ID. &PACK_ACT.
 set define on verify off feedback off serveroutput on
 prompt
-prompt ##### 5/5 Passer 1.0.0 #####
+prompt ##### 5/6 Passer 1.0.0 #####
 set termout off
 column pack_act new_value PACK_ACT noprint
 select case lower(trim('&PACK_STYLE.'))
@@ -164,6 +165,20 @@ select case lower(trim('&PACK_STYLE.'))
 set termout on
 undefine 1 2 3
 @@../Passer/install/passer-install.sql &PACK_APP_ID. &PACK_ACT.
+set define on verify off feedback off serveroutput on
+prompt
+prompt ##### 6/6 Orbit 1.0.0 #####
+set termout off
+column pack_act new_value PACK_ACT noprint
+select case lower(trim('&PACK_STYLE.'))
+         when 'orbit-light' then 'light'
+         when 'orbit-dark' then 'dark'
+         when 'orbit-auto' then 'auto'
+         else 'N' end pack_act
+  from dual;
+set termout on
+undefine 1 2 3
+@@../Orbit/install/orbit-install.sql &PACK_APP_ID. &PACK_ACT.
 set define on verify off feedback off serveroutput on
 
 prompt
@@ -199,6 +214,7 @@ select case
          when name in ('Frequenz Light', 'Frequenz Dark', 'Frequenz Auto') then 'Frequenz'
          when name in ('Kracherl Light', 'Kracherl Dark', 'Kracherl Auto') then 'Kracherl'
          when name in ('Passer Light', 'Passer Dark', 'Passer Auto') then 'Passer'
+         when name in ('Orbit Light', 'Orbit Dark', 'Orbit Auto') then 'Orbit'
          else '(andere)' end theme,
        name,
        case when is_current = 'Yes' then 'ja' end aktiv,
@@ -222,7 +238,10 @@ select case
             when 'Passer Light' then 13
             when 'Passer Dark' then 14
             when 'Passer Auto' then 15
-            else 16 end, name;
+            when 'Orbit Light' then 16
+            when 'Orbit Dark' then 17
+            when 'Orbit Auto' then 18
+            else 19 end, name;
 declare
   l_current varchar2(255);
   l_user    varchar2(30);

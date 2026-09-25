@@ -875,3 +875,9 @@
     display: none;
   }
 }
+
+/* Aufklapp-Pfeile im Seitenbaum: app_ui dimmt sie auf 50 % Deckkraft; mit der gedämpften Theme-Farbe
+   läge der Pfeil unter 3:1 (WCAG 1.4.11). Volle Deckkraft, die Farbe bleibt gedämpft. */
+.t-TreeNav {
+  --a-treeview-toggle-opacity: 1;
+}

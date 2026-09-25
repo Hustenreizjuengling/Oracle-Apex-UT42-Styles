@@ -1,0 +1,19 @@
+/* ==========================================================================
+   Orbit – Tokens DRUCK (wird von index.css mit Media „print“ geladen)
+   Der Druck ist immer hell: orbit-dark.css lädt zusätzlich tokens/light.css unter
+   „print“ (Light braucht es nicht, Auto bleibt über „screen and (…dark)“ im Druck hell);
+   diese Datei macht aus dem Bedienfeld Papier und nimmt Skalen, Schatten und Grund weg.
+   Nur :root, nur Werte.
+   ========================================================================== */
+:root {
+  --ob-frame: #FFFFFF;             /* Grund = Papier */
+  --ob-console: #FFFFFF;           /* Kopf ohne Bedienfeld */
+  --ob-console-ink: #0F1A2A;
+  --ob-console-muted: #526074;
+  --ob-console-line: #B3BECA;
+  --ob-console-tick: transparent;  /* keine Skala */
+  --ob-page-pad-x: 0px;
+  --ob-panel-shadow: none;
+  --ob-float-shadow: none;
+  --ob-scrim: transparent;
+}

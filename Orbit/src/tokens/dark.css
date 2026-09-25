@@ -1,0 +1,145 @@
+/* ==========================================================================
+   Orbit – Farb-Tokens DUNKEL „Konsole“ (Basis Vita-Dark; im Auto-Style unter prefers-color-scheme: dark)
+   Tiefes Navy als Grund, Panels eine Stufe heller mit feinen, hellen Haarlinien, weiße
+   Schrift, Eisblau für Marken und Fokus. Die Hauptaktion ist eine weiße Fläche mit
+   Navy-Schrift; Statusfarben wie in einer Missionskontrolle (Grün, Bernstein, Rot) sind
+   hell mit dunkler Schrift. Linien und Stahlgrau bleiben gering gesättigt – so liegt keine
+   Farbe in der Nähe des Oracle-Blaus (check-tokens.mjs, ΔE00 ≥ 12).
+   Exakt dieselben Namen wie light.css; nur :root, nur Werte.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: dark;
+
+  /* Flächen -------------------------------------------------------------- */
+  --ob-frame: #0A1424;             /* Grund: tiefes Navy – Seite, Navigation, Title Bar */
+  --ob-frame-hover: rgb(238 243 248 / .06);
+  --ob-frame-press: rgb(238 243 248 / .10);
+  --ob-surface: #101D31;           /* Panel: eine Stufe heller als der Grund */
+  --ob-surface-sunken: #0D192B;
+  --ob-surface-raised: #17263D;    /* schwebend: heller als das Panel */
+  --ob-raised-hover: #22344F;      /* Hover auf schwebender Fläche (1.3 schwebend) */
+  --ob-ground: var(--ob-surface);
+  --ob-hover: #16253C;
+  --ob-press: #1B2B44;
+  --ob-soft: #1C2C45;              /* neutrale Fläche: Chips, aktiver Tab, Button-Hover */
+  --ob-soft-hover: #24354F;
+  --ob-soft-press: #2B3D59;
+  --ob-field: #0A1526;             /* Felder liegen als Vertiefung im Panel */
+  --ob-field-readonly: #0E1A2D;
+  --ob-scrim: rgb(2 6 14 / .66);
+  --ob-paper: #FFFFFF;             /* immer weiß: Grund für Codes (QR-Ruhezone) */
+
+  /* Bedienfeld: Kopf (in beiden Modi dunkel) ------------------------------ */
+  --ob-console: #060D19;           /* Konsolenrahmen – dunkler als der Grund */
+  --ob-console-ink: #EEF3F8;
+  --ob-console-muted: #97A6B8;
+  --ob-console-line: #26354B;
+  --ob-console-tick: #3D4C62;
+  --ob-console-hover: rgb(238 243 248 / .08);
+  --ob-console-press: rgb(238 243 248 / .14);
+  --ob-console-accent: #9FD3E8;
+
+  /* Text ------------------------------------------------------------------ */
+  --ob-ink: #EEF3F8;               /* Weiß: Text, Titel, Icons */
+  --ob-ink-2: #C9D4E1;             /* Labels, Nav-Text */
+  --ob-muted: #8C9FB4;             /* Stahlgrau: Sekundärtext, Tabellenköpfe */
+  --ob-placeholder: #8094A9;       /* Platzhalter */
+  --ob-disabled: #5A6778;          /* deaktivierte Beschriftung (bewusst < 4.5, WCAG-Ausnahme) */
+  --ob-on-dark: #FFFFFF;
+  --ob-on-light: #0F1A2A;
+
+  /* Linien ---------------------------------------------------------------- */
+  --ob-line-subtle: #1C2B41;
+  --ob-line: #2A3B53;              /* Haarlinie: Panel-Kante, Tabellenzeilen, Trenner */
+  --ob-line-strong: #3E4E66;       /* kräftig: Skala, Container-Kanten */
+  --ob-edge: #687891;              /* Kante von Feldern und Buttons – WCAG 1.4.11 */
+  --ob-edge-hover: #8C9CB3;
+  --ob-head-rule: #5A6576;         /* Grundlinie unter Tabellenköpfen */
+
+  /* Akzent: weiße Hauptaktion, Eisblau für Marken ------------------------- */
+  --ob-accent: #E6EEF6;            /* Fläche der Hauptaktion (Navy darauf) */
+  --ob-accent-hover: #C9DCEA;
+  --ob-accent-press: #B2CADE;
+  --ob-accent-on: #0A1424;
+  --ob-accent-text: #9FD3E8;       /* Eisblau: Labels, Fokus, Auswahl, Marken */
+  --ob-accent-tint: #15303F;       /* Auswahl-Fläche */
+  --ob-accent-tint-2: #1C3C4E;     /* kräftigere Auswahl */
+  --ob-accent-ring: rgb(159 211 232 / .28);
+
+  /* Fokus (ein System, überall >= 3:1) ------------------------------------ */
+  --ob-focus-ring-color: #9FD3E8;
+  --ob-focus-gap: var(--ob-ground);
+
+  /* Links ----------------------------------------------------------------- */
+  --ob-link-text: #EEF3F8;
+  --ob-link-underline: #687891;
+  --ob-link-underline-hover: #9FD3E8;
+
+  /* Textauswahl ----------------------------------------------------------- */
+  --ob-selection: #25495C;
+  --ob-selection-text: #FFFFFF;
+
+  /* Pflichtfeld-Markierung ------------------------------------------------ */
+  --ob-required-color: #FF9A94;
+
+  /* Status: Fläche · Hover · on · Text · Tönung ---------------------------- */
+  --ob-success: #4CC48E;           /* Nominal */
+  --ob-success-hover: #6BD3A3;
+  --ob-success-on: #0A1424;
+  --ob-success-text: #6FD6A5;
+  --ob-success-tint: #112E2B;
+
+  --ob-warning: #F2B544;           /* Vorsicht */
+  --ob-warning-hover: #F6C766;
+  --ob-warning-on: #0A1424;
+  --ob-warning-text: #F4BF5C;
+  --ob-warning-tint: #2A2518;
+
+  --ob-danger: #FF7A72;            /* Halt */
+  --ob-danger-hover: #FF968F;
+  --ob-danger-on: #0A1424;
+  --ob-danger-text: #FF9A94;
+  --ob-danger-tint: #33191F;
+
+  --ob-info: #7CC6DC;
+  --ob-info-hover: #9AD4E6;
+  --ob-info-on: #0A1424;
+  --ob-info-text: #9FD3E8;
+  --ob-info-tint: #13293A;
+
+  /* Code ------------------------------------------------------------------ */
+  --ob-code-keyword: #C3AEFA;      /* Violett */
+  --ob-code-string: #6FD6A5;       /* Grün */
+  --ob-code-number: #F4BF5C;       /* Bernstein */
+
+  /* Tiefe ----------------------------------------------------------------- */
+  --ob-panel-shadow: none;
+  --ob-float-shadow: 0 20px 48px -12px rgb(0 0 0 / .72), 0 0 0 1px rgb(238 243 248 / .10);
+  --ob-tooltip-bg: #EEF3F8;
+  --ob-tooltip-text: #0A1424;
+
+  /* Scrollbars ------------------------------------------------------------ */
+  --ob-scrollbar-thumb: rgb(238 243 248 / .24);
+  --ob-scrollbar-thumb-hover: rgb(238 243 248 / .40);
+  --ob-scrollbar-track: transparent;
+
+  /* Icons ----------------------------------------------------------------- */
+  --ob-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M12 6l4 4 4-4' fill='none' stroke='%238C9FB4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Kategorie-/Diagrammpalette: aufgehellt, gleiche Farbfamilien wie hell ------ */
+  --ob-cat-1: #40BFCC;  --ob-cat-1-on: #0A1424;   /* Serie 1  Eiscyan */
+  --ob-cat-2: #AFC06A;  --ob-cat-2-on: #0A1424;   /* Serie 9  Moos */
+  --ob-cat-3: #7D8BA1;  --ob-cat-3-on: #0A1424;   /* Serie 6  Stahl */
+  --ob-cat-4: #F2B84B;  --ob-cat-4-on: #0A1424;   /* Serie 2  Bernstein */
+  --ob-cat-5: #4FCBB6;  --ob-cat-5-on: #0A1424;   /* Serie 10 Türkis */
+  --ob-cat-6: #A3ACB8;  --ob-cat-6-on: #0A1424;   /* Serie 12 Schiefer */
+  --ob-cat-7: #A992F2;  --ob-cat-7-on: #0A1424;   /* Serie 3  Lila */
+  --ob-cat-8: #D2BA86;  --ob-cat-8-on: #0A1424;   /* Serie 7  Sand */
+  --ob-cat-9: #3FB27A;  --ob-cat-9-on: #0A1424;   /* Serie 4  Nominalgrün */
+  --ob-cat-10: #D06A8C; --ob-cat-10-on: #0A1424;  /* Serie 8  Weinrot */
+  --ob-cat-11: #F5A56E; --ob-cat-11-on: #0A1424;  /* Serie 11 Glut */
+  --ob-cat-12: #F58A95; --ob-cat-12-on: #0A1424;  /* Serie 5  Koralle */
+  --ob-cat-13: #A585B8; --ob-cat-13-on: #0A1424;  /* Pflaume */
+  --ob-cat-14: #B0B9C5; --ob-cat-14-on: #0A1424;  /* Nebel */
+  --ob-cat-15: #7F8998; --ob-cat-15-on: #0A1424;  /* Graphit */
+}
