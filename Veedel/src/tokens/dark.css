@@ -1,0 +1,159 @@
+/* ==========================================================================
+   Veedel – Farb-Tokens DUNKEL (Basis Vita-Dark; im Auto-Style unter prefers-color-scheme: dark)
+   Nachtblau statt Schwarz: Seitengrund #081E35, Flächen in hellerem Blaugrau darüber
+   (Erhebung = Licht). Das Markenband bleibt Blau, nur tiefer; Blau als Schrift und Marke
+   aufgehellt (Himmelblau). Das Signalrot bleibt Aktion mit weißer Schrift, Gefahr wird ein
+   helles Korallrot mit dunkler Schrift – so bleiben beide Rottöne klar getrennt.
+   Exakt dieselben Namen wie light.css; nur :root, nur Werte.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: dark;
+
+  /* Flächen -------------------------------------------------------------- */
+  --ve-page: #081E35;              /* Nachtblau: Seitengrund */
+  --ve-surface: #0D2742;           /* Regionen, Karten, Navigation (1.17:1 gegen die Seite) */
+  --ve-surface-sunken: #0A2139;
+  --ve-surface-raised: #12304F;
+  --ve-raised-hover: #1B3D62;      /* Hover auf schwebender Fläche (1.2 schwebend) */
+  --ve-ground: var(--ve-surface);
+  --ve-hover: #12304F;
+  --ve-press: #173659;
+  --ve-soft: #173659;
+  --ve-soft-hover: #1E4066;
+  --ve-soft-press: #264B74;
+  --ve-field: #0A2139;             /* Felder liegen als Vertiefung in der Fläche */
+  --ve-field-readonly: #0F2B48;
+  --ve-scrim: rgb(0 8 18 / .65);
+  --ve-tint-hover: rgb(242 246 250 / .07);
+  --ve-tint-press: rgb(242 246 250 / .12);
+
+  /* Markenband: Kopf ------------------------------------------------------- */
+  --ve-header: #003466;            /* tiefer als hell, bleibt klar Blau (Weiß 12.4) */
+  --ve-header-text: #FFFFFF;
+  --ve-header-hover: rgb(255 255 255 / .12);
+  --ve-header-press: rgb(255 255 255 / .2);
+  --ve-header-focus: #FFFFFF;
+
+  /* Signatur: Verlaufsband ------------------------------------------------- */
+  --ve-band-from: #00427F;
+  --ve-band-mid: #00569E;
+  --ve-band-to: #0077D6;           /* (Weiß 4.6) */
+  --ve-band-text: #FFFFFF;
+  --ve-band-muted: rgb(255 255 255 / .9);
+
+  /* Text ------------------------------------------------------------------ */
+  --ve-ink: #F2F6FA;               /* 14.0 Fläche, 15.5 Seite */
+  --ve-ink-2: #D3DEE9;
+  --ve-muted: #9DB1C6;             /* 6.9 Fläche */
+  --ve-placeholder: #8BA0B6;       /* 6.1 im Feld */
+  --ve-disabled: #5E7690;
+  --ve-on-dark: #FFFFFF;
+  --ve-on-light: #081E35;
+  --ve-heading: #6EC1FF;           /* Himmelblau (7.8 Fläche) */
+
+  /* Linien ---------------------------------------------------------------- */
+  --ve-line-subtle: #163352;
+  --ve-line: #1F3E5E;
+  --ve-line-strong: #2E5174;
+  --ve-edge: #6A89A8;              /* Feldkante (4.2 Fläche, 4.5 Feld) */
+  --ve-edge-hover: #8FAAC4;
+  --ve-head-rule: #C9D6E3;
+
+  /* Akzent Blau ------------------------------------------------------------ */
+  --ve-accent: #2474C4;            /* Weiß darauf 4.8; Block gegen Fläche/Navigation 3.2 (1.4.11) */
+  --ve-accent-hover: #0B65B1;      /* dunkler: Rückmeldung unter dem Zeiger (Weiß 6.0) */
+  --ve-accent-press: #005A9F;
+  --ve-accent-on: #FFFFFF;
+  --ve-accent-text: #6EC1FF;       /* 7.8 Fläche, 6.9 schwebend */
+  --ve-accent-bright: #3AA8FF;
+  --ve-accent-tint: #103A63;
+  --ve-accent-tint-2: #164B7D;
+  --ve-accent-ring: rgb(110 193 255 / .32);
+
+  /* Aktion Rot ------------------------------------------------------------- */
+  --ve-action: #E3250C;            /* Weiß darauf 4.6 – gleiches Signal wie hell */
+  --ve-action-hover: #CD2319;
+  --ve-action-press: #B01C12;
+  --ve-action-on: #FFFFFF;
+  --ve-action-text: #FF7A66;       /* Rot als Schrift auf Nachtblau */
+  --ve-action-tint: #3A2030;
+
+  /* Fokus ----------------------------------------------------------------- */
+  --ve-focus-ring-color: #6EC1FF;
+  --ve-focus-gap: var(--ve-ground);
+
+  /* Links ----------------------------------------------------------------- */
+  --ve-link-text: #7CC6FF;
+  --ve-link-underline: #7CC6FF;
+  --ve-link-underline-hover: #B5DEFF;
+
+  /* Textauswahl ----------------------------------------------------------- */
+  --ve-selection: #1D5288;
+  --ve-selection-text: #FFFFFF;
+
+  /* Pflichtfeld ----------------------------------------------------------- */
+  --ve-required-color: #FF8A95;
+
+  /* Status (helle Flächen, dunkle Schrift) -------------------------------- */
+  --ve-success: #3DBE72;
+  --ve-success-hover: #58CC88;
+  --ve-success-on: #081E35;
+  --ve-success-text: #5FD08C;
+  --ve-success-tint: #0E3436;
+
+  --ve-warning: #F5B000;
+  --ve-warning-hover: #FFC23D;
+  --ve-warning-on: #081E35;
+  --ve-warning-text: #FFC94D;
+  --ve-warning-tint: #2F3226;
+
+  --ve-danger: #FF8A95;            /* Korallrot, Nachtblau darauf 7.5 – klar anders als das Signalrot */
+  --ve-danger-hover: #FFA3AC;
+  --ve-danger-on: #081E35;
+  --ve-danger-text: #FF8A95;
+  --ve-danger-tint: #3A2236;
+
+  --ve-info: #6EC1FF;
+  --ve-info-hover: #8DCEFF;
+  --ve-info-on: #081E35;
+  --ve-info-text: #7CC6FF;
+  --ve-info-tint: #103A63;
+
+  /* Code: Syntax-Hervorhebung (Zuordnung: bridge.css §17) ------------------ */
+  --ve-code-keyword: #7CC6FF;
+  --ve-code-string: #5FD08C;
+  --ve-code-number: #FFC94D;
+
+  /* Tiefe ----------------------------------------------------------------- */
+  --ve-card-shadow: none;
+  --ve-lift-shadow: 0 10px 24px -12px rgb(0 0 0 / .7);
+  --ve-float-shadow: 0 18px 40px -10px rgb(0 0 0 / .65), 0 0 0 1px rgb(255 255 255 / .08);
+  --ve-tooltip-bg: #F2F6FA;
+  --ve-tooltip-text: #081E35;
+
+  /* Scrollbars ------------------------------------------------------------ */
+  --ve-scrollbar-thumb: rgb(242 246 250 / .26);
+  --ve-scrollbar-thumb-hover: rgb(242 246 250 / .42);
+  --ve-scrollbar-track: transparent;
+
+  /* Icons ----------------------------------------------------------------- */
+  --ve-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M11.5 5.5l4.5 4.5 4.5-4.5' fill='none' stroke='%239DB1C6' stroke-width='1.75' stroke-linecap='square'/%3E%3C/svg%3E");
+
+  /* Kategorie-/Diagrammpalette dunkel: gleiche Farbfamilien, aufgehellt (>= 3:1 gegen die
+     Fläche), Serie 2 wird vom Nachtblau zum hellen Stahlblau. */
+  --ve-cat-1: #3AA8FF;  --ve-cat-1-on: #081E35;
+  --ve-cat-2: #9AA9BA;  --ve-cat-2-on: #081E35;
+  --ve-cat-3: #E6C488;  --ve-cat-3-on: #081E35;
+  --ve-cat-4: #C3D6EE;  --ve-cat-4-on: #081E35;
+  --ve-cat-5: #4FC2B8;  --ve-cat-5-on: #081E35;
+  --ve-cat-6: #62B076;  --ve-cat-6-on: #081E35;
+  --ve-cat-7: #FF9F1C;  --ve-cat-7-on: #081E35;
+  --ve-cat-8: #CDB8FF;  --ve-cat-8-on: #081E35;
+  --ve-cat-9: #1F9E68;  --ve-cat-9-on: #081E35;
+  --ve-cat-10: #B5AE62; --ve-cat-10-on: #081E35;
+  --ve-cat-11: #F5A9C6; --ve-cat-11-on: #081E35;
+  --ve-cat-12: #E26AAE; --ve-cat-12-on: #081E35;
+  --ve-cat-13: #3FA6AE; --ve-cat-13-on: #081E35;
+  --ve-cat-14: #B7C2CD; --ve-cat-14-on: #081E35;
+  --ve-cat-15: #7F90A3; --ve-cat-15-on: #081E35;
+}

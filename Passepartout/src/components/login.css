@@ -1,0 +1,84 @@
+/* ==========================================================================
+   Passepartout – Login
+   Login-Seite: die Anmeldung ist eine Leinwand auf dem Passepartout.
+   Regeln: nur Tokens (--pp-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   ========================================================================== */
+
+/* Login: Leinwand auf dem Passepartout */
+.t-PageBody--login {
+  --ut-login-page-background-color: var(--pp-frame);
+  --ut-login-region-background-color: var(--pp-surface);
+  --ut-login-region-filter: none;
+  --ut-login-region-border-width: 0px;
+  --ut-login-region-border-radius: var(--pp-r-canvas);
+  --ut-login-region-box-shadow: var(--pp-canvas-shadow);
+  --ut-login-region-padding: var(--pp-space-8) var(--pp-space-8) var(--pp-space-6);
+  --ut-login-logo-border-radius: var(--pp-r-lg);
+  --ut-login-container-item-spacing: var(--pp-space-4);
+}
+@media (max-width: 639px) {
+  .t-PageBody--login {
+    --ut-login-region-padding: var(--pp-space-6) var(--pp-space-4) var(--pp-space-4);
+  }
+  .t-PageBody--login .t-Login-container {
+    padding-inline: var(--pp-gutter);
+  }
+}
+/* Hintergrund-Varianten: kein Bild, kein Verlauf – nur der Rahmen */
+.t-LoginPage--bg1,
+.t-LoginPage--bg2,
+.t-LoginPage--bg3 {
+  --ut-body-background-color: var(--pp-frame);
+}
+.t-LoginPage--bg1 .t-Login-bgImg,
+.t-LoginPage--bg2 .t-Login-bgImg,
+.t-LoginPage--bg3 .t-Login-bgImg,
+.t-LoginPage--bg1:before,
+.t-LoginPage--bg2:before,
+.t-LoginPage--bg3:before {
+  background-image: none;
+}
+
+/* Kopf: Logo, Titel in Seitentitel-Laufweite */
+.t-Login-header {
+  padding-block: var(--pp-space-2) var(--pp-space-4);
+}
+.t-Login-title {
+  font-size: var(--pp-fs-xl);
+  line-height: var(--pp-lh-xl);
+  font-weight: var(--pp-fw-semibold);
+  letter-spacing: var(--pp-tracking-title);
+  margin-block: var(--pp-space-3) 0;
+}
+
+/* Anmelde-Button: große Control-Höhe (40 px, Touch 48 px) aus den Dichte-Tokens */
+.t-Login-buttons {
+  --a-button-padding-y: calc((var(--pp-control-h-lg) - var(--pp-control-lh)) / 2);
+  --a-button-font-size: var(--pp-fs-md);
+  --a-button-line-height: var(--pp-control-lh);
+  --a-button-font-weight: var(--pp-fw-semibold);
+}
+
+/* Fehlerseite (Error Page Template, gleiches Login-Gerüst): die Meldung ist wie die Anmeldung eine
+   Leinwand auf dem Passepartout – nicht die abgesenkte Hinweisfläche der Alerts (regions.css, 0,1,0) */
+.t-Login-containerBody > .t-Alert--wizard {
+  --ut-alert-background-color: var(--pp-surface);
+  --ut-alert-wizard-border-radius: var(--pp-r-canvas);
+  --ut-alert-box-shadow: var(--pp-canvas-shadow);
+}
+.t-LoginPage--split .t-Login-containerBody > .t-Alert--wizard {
+  --ut-alert-box-shadow: none;     /* steht dort schon auf der Leinwand des Containers */
+}
+
+/* Geteilte Ansicht: die Anmeldung als Leinwand mit Rahmen rundum statt einer Kante am Fensterrand */
+.t-LoginPage--split .t-Login-container {
+  margin: var(--pp-gutter);
+  border-radius: var(--pp-r-canvas);
+  box-shadow: var(--pp-canvas-shadow);
+}
+@media (max-width: 639px) {
+  .t-LoginPage--split .t-Login-container {
+    max-width: none;
+    padding-inline: 0;
+  }
+}

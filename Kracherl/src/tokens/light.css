@@ -1,0 +1,152 @@
+/* ==========================================================================
+   Kracherl – Farb-Tokens HELL (Basis Vita) · „Sommer im Biergarten“
+   Nur :root-Deklarationen eigener Tokens (--kr-*) + --ut-color-scheme.
+   dark.css definiert exakt dieselben Namen. Kontrastwerte (WCAG 2.x) in Klammern,
+   geprüft mit Kracherl/tools/check-tokens.mjs.
+   Rollen: Sonnengelb = Band (Kopf, Login) und Etikett (aktueller Nav-Eintrag) – nie Lesefläche.
+           Violett = Tinte der Überschriften und Primäraktion. Orange = Fokus und „hier bin ich“-Marken.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: light;
+
+  /* Band: der sonnengelbe Kopf mit Wellenkante --------------------------- */
+  --kr-band: #FFC400;              /* Sonnengelb: Kopf, Login-Himmel, Wellenkante */
+  --kr-band-ink: #2D1D6A;          /* Text/Icons auf dem Band (8.8) – Weiß wäre zu schwach (1.6) */
+  --kr-band-brand: #2D1D6A;        /* Logo-Schriftzug auf dem Band */
+  --kr-band-hover: rgb(45 29 106 / .10);   /* Hover auf dem Band */
+  --kr-band-press: rgb(45 29 106 / .17);   /* gedrückt/aktiv auf dem Band */
+  --kr-bubble: rgb(255 255 255 / .34);     /* Sprudelblase (gefüllt) */
+  --kr-bubble-ring: rgb(255 255 255 / .62);/* Sprudelblase (Ring) */
+  --kr-sun: #FFC400;               /* Etikett: aktueller Nav-Eintrag, aktuelle Seite */
+  --kr-sun-ink: #2D1D6A;           /* Schrift auf dem Etikett (8.8) */
+
+  /* Flächen -------------------------------------------------------------- */
+  --kr-page: #F5F3FA;              /* Seitengrund: Lavendel-Hell (Navigation, Title Bar, zwischen den Regionen) */
+  --kr-page-hover: rgb(45 29 106 / .07);   /* Hover auf dem Seitengrund (Nav, Actions) */
+  --kr-page-press: rgb(45 29 106 / .12);   /* gedrückt auf dem Seitengrund */
+  --kr-surface: #FFFFFF;           /* Region, Karte, Tabelle */
+  --kr-surface-sunken: #F7F5FB;    /* abgesenkt: Hinweisblöcke, Toolbars, Tabellenköpfe, Readonly */
+  --kr-surface-raised: #FFFFFF;    /* schwebend: Menüs, Dialoge, Popups */
+  --kr-raised-hover: #EEEAF7;      /* Hover/Fokus auf schwebender Fläche */
+  --kr-ground: var(--kr-surface);  /* aktuelle Grundfläche: Region; in schwebenden Ebenen = --kr-surface-raised (bridge §18) */
+  --kr-hover: #F4F1FA;             /* Zeilen-/Listen-Hover auf der Region */
+  --kr-press: #EAE5F4;             /* gedrückt auf der Region */
+  --kr-soft: #EEEAF8;              /* Sekundär-Button (Lavendel-Pille) */
+  --kr-soft-hover: #E3DDF3;
+  --kr-soft-press: #D8D0EE;
+  --kr-field: #FFFFFF;             /* Eingabefelder */
+  --kr-field-readonly: #F7F5FB;    /* schreibgeschützte Felder */
+  --kr-scrim: rgb(33 26 58 / .42); /* Abdunklung hinter Dialogen/Schublade */
+
+  /* Text ------------------------------------------------------------------ */
+  --kr-ink: #211A3A;               /* Tinte: Fließtext, Zellen, Icons (16.5 Region, 15.0 Seitengrund) */
+  --kr-ink-2: #3A3157;             /* Labels, Nav-Text */
+  --kr-heading: #2D1D6A;           /* Etikett-Violett: Seitentitel, Region-Titel, Dialog-Titel (14.0) */
+  --kr-brand-ink: #2D1D6A;         /* Markentinte: Sekundär-Buttons, Tabellenköpfe, aktive Tabs, Nav-Icons (hell = Überschriften) */
+  --kr-muted: #5E5578;             /* Sekundärtext, Breadcrumb (6.9 Region, 6.3 Seitengrund) */
+  --kr-placeholder: #6E6689;       /* Platzhalter */
+  --kr-disabled: #9A93AE;          /* deaktivierte Beschriftung (bewusst < 4.5, WCAG-Ausnahme) */
+  --kr-on-dark: #FFFFFF;           /* Text auf dunklen/gesättigten Flächen (in beiden Modi gleich) */
+  --kr-on-light: #211A3A;          /* Text auf hellen Flächen (in beiden Modi gleich) */
+
+  /* Linien ---------------------------------------------------------------- */
+  --kr-line-subtle: #ECE8F4;       /* sehr zart: innere Trenner in Karten/Listen */
+  --kr-line: #DFDAEB;              /* Haarlinie: Region-Kante, Tabellenzeilen, Trenner */
+  --kr-line-strong: #C6BEDA;       /* kräftig: Rahmen von Simple-Buttons, Containern */
+  --kr-edge: #857CA0;              /* Feldkante (3.6 Region, 3.3 Seitengrund) – WCAG 1.4.11 */
+  --kr-edge-hover: #5E5578;        /* Feldkante Hover */
+  --kr-head-rule: #C6BEDA;         /* Grundlinie unter Tabellenköpfen */
+
+  /* Akzent: Etikett-Violett (Primäraktion, Auswahl-Marken) ----------------- */
+  --kr-accent: #2D1D6A;            /* Fläche der Primäraktion – mit gelber Schrift */
+  --kr-accent-hover: #40308C;
+  --kr-accent-press: #1F1250;
+  --kr-accent-on: #FFC400;         /* Sonnengelb auf Violett (8.8) – das Etikett */
+  --kr-accent-text: #2D1D6A;       /* Marken: Checkbox/Radio/Switch, Sterne, Akzent-Text (14.0) */
+  --kr-accent-tint: #FFF4CC;       /* Auswahl-Fläche: ein Sonnenstrahl (Zeile, Menüeintrag) */
+  --kr-accent-tint-2: #FFE88F;     /* kräftigere Auswahl, ::selection */
+  --kr-accent-ring: rgb(194 65 10 / .18);  /* weicher Halo – nur Zusatz, nie einziger Fokus-Hinweis */
+
+  /* Marke: Brause-Orange („hier bin ich“: aktiver Tab, Wizard-Schritt, heute) */
+  --kr-mark: #C2410A;              /* 5.2 Region, 4.7 Seitengrund, 3.2 auf Gelb */
+
+  /* Fokus (ein System, überall >= 3:1) ------------------------------------ */
+  --kr-focus-ring-color: #C2410A;  /* Brause-Orange (5.2 Region, 3.2 auf dem gelben Band) */
+  --kr-focus-gap: var(--kr-ground); /* Innenring/Lücke des Doppelrings = aktuelle Grundfläche */
+
+  /* Links: Violett mit Unterstrich, Hover-Unterstrich in Orange ------------ */
+  --kr-link-text: #3A2A8C;
+  --kr-link-underline: #8B80B8;    /* 3.4 Region, 3.1 abgesenkt */
+  --kr-link-underline-hover: #C2410A;
+
+  /* Textauswahl ----------------------------------------------------------- */
+  --kr-selection: #FFE88F;
+  --kr-selection-text: #211A3A;
+
+  /* Pflichtfeld-Markierung ------------------------------------------------ */
+  --kr-required-color: #B3122E;    /* = Danger-Text */
+
+  /* Status: Fläche · Hover · on (Text auf Fläche) · Text · Tönung (Alert-Grund) --- */
+  --kr-success: #1D7A45;           /* Kastaniengrün – Weiß darauf 5.4 */
+  --kr-success-hover: #17653A;
+  --kr-success-on: #FFFFFF;
+  --kr-success-text: #17693B;
+  --kr-success-tint: #E6F4EC;
+
+  --kr-warning: #EE9A0A;           /* Bernstein – Tinte darauf; bewusst orangestichiger als das Band */
+  --kr-warning-hover: #F5AE3A;
+  --kr-warning-on: #211A3A;
+  --kr-warning-text: #8A4B00;
+  --kr-warning-tint: #FFF1D9;
+
+  --kr-danger: #C8102E;            /* Himbeerrot – Weiß darauf 5.9 */
+  --kr-danger-hover: #A80D26;
+  --kr-danger-on: #FFFFFF;
+  --kr-danger-text: #B3122E;
+  --kr-danger-tint: #FDE9EC;
+
+  --kr-info: #0E6E72;              /* Petrol statt APEX-Blau – Weiß darauf 6.0 */
+  --kr-info-hover: #0B5B5E;
+  --kr-info-on: #FFFFFF;
+  --kr-info-text: #0D686C;
+  --kr-info-tint: #E3F3F2;
+
+  /* Code: Syntax-Hervorhebung (Prism – Code-Blöcke, Markdown-Editor) ------ */
+  --kr-code-keyword: #0D686C;      /* Schlüsselwörter, Selektoren, Klassen: Petrol */
+  --kr-code-string: #17693B;       /* Zeichenketten: Kastaniengrün */
+  --kr-code-number: #8A4B00;       /* Zahlen, Wahrheitswerte, Konstanten: Bernstein */
+
+  /* Tiefe ----------------------------------------------------------------- */
+  --kr-card-shadow: 0 1px 2px rgb(45 29 106 / .05);   /* Region/Karte: nur ein Hauch unter der Kante */
+  --kr-float-shadow: 0 18px 40px -14px rgb(33 26 58 / .30), 0 2px 6px rgb(33 26 58 / .07), 0 0 0 1px rgb(33 26 58 / .07);
+  --kr-tooltip-bg: #211A3A;
+  --kr-tooltip-text: #FFFFFF;
+
+  /* Scrollbars ------------------------------------------------------------ */
+  --kr-scrollbar-thumb: rgb(45 29 106 / .26);
+  --kr-scrollbar-thumb-hover: rgb(45 29 106 / .42);
+  --kr-scrollbar-track: transparent;
+
+  /* Icons ----------------------------------------------------------------- */
+  --kr-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M11.5 6l4.5 4.5 4.5-4.5' fill='none' stroke='%232D1D6A' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Kategorie-/Diagrammpalette (--u-color-1…15): „Biergarten“ – Petrol, Brause-Orange, Flieder,
+     Colabraun, Himbeere, Blattgrün … Chart-Reihenfolge des UT: 1,4,7,9,12,3,8,10,2,5,11,6.
+     Die ersten 6 Serien sind auch bei Protan-/Deuteranopie unterscheidbar (check-tokens.mjs).
+     Bewusst KEINE Folge Gelb–Orange–Rot–Pink–Lila. -on = Text darauf. */
+  --kr-cat-1: #127A7C;  --kr-cat-1-on: #FFFFFF;   /* Serie 1  Petrol */
+  --kr-cat-2: #9A6A3C;  --kr-cat-2-on: #FFFFFF;   /* Serie 9  Brezel */
+  --kr-cat-3: #4E9E66;  --kr-cat-3-on: #211A3A;   /* Serie 6  Blattgrün */
+  --kr-cat-4: #DB7016;  --kr-cat-4-on: #211A3A;   /* Serie 2  Brause-Orange */
+  --kr-cat-5: #4FA59E;  --kr-cat-5-on: #211A3A;   /* Serie 10 Minze */
+  --kr-cat-6: #8C9A3C;  --kr-cat-6-on: #211A3A;   /* Serie 12 Hopfen */
+  --kr-cat-7: #7B5CC9;  --kr-cat-7-on: #FFFFFF;   /* Serie 3  Flieder */
+  --kr-cat-8: #5F6472;  --kr-cat-8-on: #FFFFFF;   /* Serie 7  Schiefer */
+  --kr-cat-9: #6B3A22;  --kr-cat-9-on: #FFFFFF;   /* Serie 4  Colabraun */
+  --kr-cat-10: #D48B9C; --kr-cat-10-on: #211A3A;  /* Serie 8  Rosé */
+  --kr-cat-11: #B8866A; --kr-cat-11-on: #211A3A;  /* Serie 11 Sand */
+  --kr-cat-12: #C4336B; --kr-cat-12-on: #FFFFFF;  /* Serie 5  Himbeere */
+  --kr-cat-13: #2F5A45; --kr-cat-13-on: #FFFFFF;  /* Tanne */
+  --kr-cat-14: #8C8799; --kr-cat-14-on: #211A3A;  /* Nebel */
+  --kr-cat-15: #5D566E; --kr-cat-15-on: #FFFFFF;  /* Dämmerung */
+}

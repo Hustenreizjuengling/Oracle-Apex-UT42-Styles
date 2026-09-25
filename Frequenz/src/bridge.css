@@ -1,0 +1,649 @@
+/* ==========================================================================
+   Frequenz – Brücke: --fq-* → Universal Theme (--ut-*), APEX (--a-*, --jui-*), JET (--oj-*)
+   Modusneutral: ausschließlich var()-Verweise auf eigene Tokens (keine Farbwerte), gilt für
+   hell, dunkel und auto. Enthält
+     · alle 102 Kern-Hebel aus _docs/ut-tokens.json (lever: true, Tier 1),
+     · alle :root-Hex-Kopien der Vita-Primärfarbe #056AC8 (hardcodedPrimary, ut-tokens.md §8.1).
+       Die Selektor-Kopien (Hot-Buttons, TreeNav Style B) deklarieren components/buttons.css und
+       components/shell.css mit gleicher Spezifität neu.
+     · die Dichte (36 px Desktop, 44 px bei pointer: coarse) und die Fokus-Hooks.
+   Reihenfolge der Abschnitte = Reihenfolge in docs/ARCHITECTURE.md.
+   ========================================================================== */
+:root {
+  /* 1. Typografie ---------------------------------------------------------- */
+  --a-base-font-family: var(--fq-font);                         /* ◆ */
+  --ut-base-font-family: var(--fq-font);
+  --a-base-font-family-mono: var(--fq-font-mono);               /* ◆ */
+  --a-base-font-family-serif: var(--fq-font);                   /* keine Serifenschrift im Theme */
+  --ut-alternate-heading-font-family: var(--fq-font);
+  --a-base-font-weight-normal: var(--fq-fw-regular);
+  --a-base-font-weight-semibold: var(--fq-fw-semibold);         /* ◆ */
+  --a-base-font-weight-bold: var(--fq-fw-bold);                 /* ◆ Hook */
+  --a-base-font-weight-heavy: var(--fq-fw-heavy);
+  --ut-base-font-size: var(--fq-fs-md);                         /* body: 14 statt 16 px */
+
+  /* 2. Palette und Status (UT Core spiegelt auf --a-palette-*) ------------- */
+  --ut-palette-primary: var(--fq-accent);                       /* ◆ */
+  --ut-palette-primary-contrast: var(--fq-accent-on);           /* ◆ */
+  --ut-palette-primary-shade: var(--fq-accent-tint);            /* ◆ */
+  --ut-palette-primary-text: var(--fq-accent-text);             /* ◆ */
+  --ut-palette-primary-alt: var(--fq-accent);                   /* ◆ t-Button--primary = Magenta-Kontur (buttons.css) */
+  --ut-palette-primary-alt-contrast: var(--fq-accent-on);       /* ◆ auch „Zum Inhalt springen“ (UT Core) */
+  --ut-palette-primary-alt-shade: var(--fq-accent-tint);
+  --ut-palette-primary-alt-text: var(--fq-accent-text);
+  --ut-palette-success: var(--fq-success);                      /* ◆ */
+  --ut-palette-success-contrast: var(--fq-success-on);          /* ◆ */
+  --ut-palette-success-shade: var(--fq-success-tint);           /* ◆ */
+  --ut-palette-success-text: var(--fq-success-text);            /* ◆ */
+  --ut-palette-info: var(--fq-info);                            /* ◆ Vita: Hex-Kopie #056AC8 */
+  --ut-palette-info-contrast: var(--fq-info-on);                /* ◆ */
+  --ut-palette-info-shade: var(--fq-info-tint);                 /* ◆ */
+  --ut-palette-info-text: var(--fq-info-text);
+  --ut-palette-warning: var(--fq-warning);                      /* ◆ */
+  --ut-palette-warning-contrast: var(--fq-warning-on);          /* ◆ */
+  --ut-palette-warning-shade: var(--fq-warning-tint);           /* ◆ */
+  --ut-palette-warning-text: var(--fq-warning-text);            /* ◆ */
+  --ut-palette-danger: var(--fq-danger);                        /* ◆ */
+  --ut-palette-danger-contrast: var(--fq-danger-on);            /* ◆ */
+  --ut-palette-danger-shade: var(--fq-danger-tint);             /* ◆ */
+  --ut-palette-danger-text: var(--fq-danger-text);              /* ◆ */
+  --ut-palette-generic: var(--fq-soft);
+  --ut-palette-generic-contrast: var(--fq-ink);
+  --ut-palette-generic-shade: var(--fq-panel);
+  --ut-palette-generic-text: var(--fq-ink);
+
+  /* 3. Global: Links, Fokus, Text ----------------------------------------- */
+  --ut-link-text-color: var(--fq-link-text);                    /* ◆ Vita: Hex-Kopie */
+  --ut-link-text-decoration: underline;
+  --a-base-link-hover-text-color: var(--fq-link-text);
+  --ut-body-text-color: var(--fq-ink);                          /* ◆ */
+  /* EIN Fokus-System: Anthrazit-Ring (dunkel: hell) + Lücke, überall ≥ 3:1 */
+  --ut-focus-outline-color: var(--fq-focus-ring-color);         /* ◆ Vita: Hex-Kopie */
+  --ut-focus-outline: var(--fq-focus-outline);                  /* Hook (*:focus in UT Core) */
+  --ut-focus-outline-offset: var(--fq-focus-ring-offset);       /* Hook */
+  --a-combo-select-focus-outline-color: var(--fq-focus-ring-color);
+  --a-combo-select-focus-border-color: var(--fq-focus-ring-color);
+  --a-combo-select-item-hover-background-color: var(--fq-raised-hover);
+  --a-combo-select-item-preselected-background-color: var(--fq-raised-hover);
+  --a-combo-select-item-preselected-hover-background-color: var(--fq-soft-hover);
+  --a-combo-select-item-focus-box-shadow: var(--fq-focus-shadow-inset);
+  --a-combo-select-focus-outline: var(--fq-focus-outline);
+  --a-combo-select-item-focus-outline-color: var(--fq-focus-ring-color);
+  --a-gv-focus-outline: var(--fq-focus-outline);                /* Hook: IR-Icon-Ansicht, Zellen */
+  --a-gv-focus-outline-offset: calc(-1 * var(--fq-focus-ring-width));
+  --a-cv-focus-outline: var(--fq-focus-outline);                /* Hook: Card-Volllink */
+  --a-cv-focus-outline-offset: var(--fq-focus-ring-offset);
+  --a-checkbox-outline-color: var(--fq-focus-ring-color);
+  --a-chat-transcript-outline-color: var(--fq-focus-ring-color);
+  --oj-core-focus-border-color: var(--fq-focus-ring-color);
+
+  /* 4. Generische Komponente (Fallback vieler Widgets) --------------------- */
+  --ut-component-background-color: var(--fq-surface);           /* ◆ innere Fläche (weiß auf der Tafel) */
+  --ut-component-border-color: var(--fq-line);                  /* ◆ */
+  --ut-component-border-width: var(--fq-hairline);              /* ◆ */
+  --ut-component-border-radius: var(--fq-r-box);                /* ◆ */
+  --ut-component-box-shadow: var(--fq-float-shadow);            /* ◆ */
+  --ut-component-highlight-background-color: var(--fq-hover);   /* ◆ */
+  --ut-component-toolbar-background-color: var(--fq-surface-sunken); /* ◆ */
+  --ut-component-inner-border-color: var(--fq-line-subtle);     /* ◆ */
+  --ut-component-inner-border-width: var(--fq-hairline);
+  --ut-component-text-default-color: var(--fq-ink);             /* ◆ */
+  --ut-component-text-title-color: var(--fq-ink);               /* ◆ */
+  --ut-component-text-subtitle-color: var(--fq-ink-2);          /* ◆ */
+  --ut-component-text-muted-color: var(--fq-muted);             /* ◆ */
+  --ut-component-icon-background-color: var(--fq-soft);         /* ◆ Icon-Kacheln: neutral statt Akzent */
+  --ut-component-icon-color: var(--fq-ink);                     /* ◆ */
+  --ut-component-badge-background-color: var(--fq-soft);        /* ◆ */
+  --ut-component-badge-text-color: var(--fq-ink);               /* ◆ */
+  --ut-component-badge-border-radius: var(--fq-r-pill);         /* ◆ */
+  --ut-component-pre-background-color: var(--fq-surface-sunken);
+
+  /* 5. Schatten und Radien ------------------------------------------------ */
+  --ut-shadow-sm: none;                                         /* ◆ keine Deko-Schatten */
+  --ut-shadow-md: var(--fq-float-shadow);                       /* ◆ */
+  --ut-shadow-lg: var(--fq-float-shadow);                       /* ◆ */
+  --ut-border-radius-sm: var(--fq-r-control);
+  --ut-border-radius-md: var(--fq-r-box);
+  --ut-border-radius-lg: var(--fq-r-card);
+  --ut-border-radius: var(--fq-r-control);
+
+  /* 6. Shell: Kopf, Navigation, Title Bar, Inhalt – alles auf der weißen Seite */
+  --ut-body-background-color: var(--fq-surface);                /* ◆ Seite */
+  --ut-body-main-background-color: transparent;
+  --ut-body-sidebar-background-color: var(--fq-surface);
+  --ut-body-sidebar-text-color: var(--fq-ink);
+  --ut-body-sidebar-border-color: var(--fq-line-subtle);
+  --ut-body-actions-background-color: var(--fq-surface);
+  --ut-body-actions-text-color: var(--fq-ink);
+  --ut-body-actions-border-width: var(--fq-hairline);
+  --ut-body-actions-border-color: var(--fq-line-subtle);
+  --ut-body-actionstoggle-background-color: var(--fq-surface);
+  --ut-body-actionstoggle-hover-background-color: var(--fq-hover);
+  --ut-body-actionstoggle-text-color: var(--fq-ink);
+  --ut-footer-background-color: transparent;
+  --ut-footer-border-color: var(--fq-line-subtle);
+  --ut-footer-text-color: var(--fq-muted);
+  --ut-login-page-background-color: var(--fq-surface);
+  --ut-login-region-background-color: var(--fq-panel);
+
+  /* Kopf (Höhe statisch; der Markenblock füllt die volle Höhe, siehe shell.css) */
+  --ut-header-height: var(--fq-header-h);
+  --ut-header-padding-y: 0rem;
+  --ut-header-padding-x: var(--fq-space-4);
+  --ut-header-item-spacing: var(--fq-space-3);
+  --ut-header-logo-height: 2rem;                                /* Bild-Logo im Block (weiß gefiltert) */
+  --ut-header-background-color: var(--fq-surface);              /* ◆ Vita: Hex-Kopie */
+  --ut-header-text-color: var(--fq-ink);                        /* ◆ */
+  --ut-header-border-color: transparent;                        /* ◆ Kante = Schatten an .t-Header (shell.css) */
+  --ut-header-border-width: 0px;
+  --ut-header-box-shadow: none;                                 /* ◆ */
+  --ut-logo-font-size: var(--fq-fs-brand);
+  --ut-logo-line-height: var(--fq-lh-brand);
+  --ut-logo-font-weight: var(--fq-fw-heavy);
+  --ut-logo-text-color: var(--fq-brand-on);
+  --ut-navbar-button-badge-background-color: var(--fq-accent);  /* Zähler an Kopf-Symbolen: Akzentpunkt */
+  --ut-navbar-button-badge-text-color: var(--fq-accent-on);
+  --ut-header-menubar-background-color: var(--fq-surface);      /* ◆ */
+  --ut-header-menubar-item-text-color: var(--fq-ink);           /* ◆ */
+  --ut-header-menubar-item-border-color: transparent;
+  --ut-header-menubar-item-current-background-color: transparent; /* ◆ aktiv = Akzentschrift + Unterstrich */
+  --ut-header-menubar-item-current-text-color: var(--fq-accent-text); /* ◆ */
+  --ut-header-menubar-item-split-border-color: transparent;
+  --ut-header-menubar-item-split-icon-color: var(--fq-muted);
+  --ut-navtabs-background-color: var(--fq-surface);
+  --ut-navtabs-text-color: var(--fq-ink);
+  --ut-navtabs-item-border-color: transparent;
+  --ut-navtabs-item-active-background-color: transparent;
+  --ut-navtabs-item-active-text-color: var(--fq-accent-text);
+  --ut-navtabs-item-active-highlight-color: var(--fq-accent);
+
+  /* Navigation (Tree Nav auf der weißen Seite, Haarlinie zum Inhalt) */
+  --ut-nav-width: var(--fq-nav-w);
+  --ut-nav-collapsed-icon-width: var(--fq-nav-rail-w);
+  --ut-body-nav-background-color: var(--fq-surface);            /* ◆ */
+  --ut-body-nav-text-color: var(--fq-ink);                      /* ◆ */
+  --ut-body-nav-border-width: var(--fq-hairline);
+  --ut-body-nav-border-color: var(--fq-line-subtle);
+  --ut-body-nav-scrollbar-thumb-background-color: var(--fq-scrollbar-thumb);
+  --ut-body-nav-scrollbar-track-background-color: var(--fq-scrollbar-track);
+  --a-treeview-node-selected-background-color: transparent;     /* ◆ Marke zeichnet shell.css */
+  --a-treeview-node-selected-text-color: var(--fq-ink);         /* ◆ */
+  --a-treeview-node-selected-icon-color: var(--fq-ink);
+  --a-treeview-node-focused-background-color: transparent;
+  --a-treeview-node-focused-text-color: var(--fq-ink);
+  --a-treeview-node-focused-shadow: var(--fq-focus-shadow-inset);
+  --a-treeview-node-hover-background-color: var(--fq-hover);
+  --a-treeview-node-icon-color: var(--fq-ink);
+  --ut-treeview-badge-background-color: var(--fq-soft);         /* Vita: Hex-Kopie; Zähler neutral */
+  --ut-treeview-badge-text-color: var(--fq-ink);
+
+  /* Title Bar / Breadcrumb */
+  --ut-body-title-background-color: var(--fq-surface);          /* ◆ */
+  --ut-body-title-text-color: var(--fq-ink);                    /* ◆ */
+  --ut-body-title-box-shadow: none;                             /* ◆ */
+  --ut-body-title-border-width: 0px;
+  --ut-body-title-border-color: var(--fq-line-subtle);
+  --ut-body-title-backdrop-filter: none;
+  --ut-breadcrumb-padding-x: var(--fq-page-pad-x);
+  --ut-breadcrumb-padding-y: var(--fq-page-pad-y);
+  --ut-breadcrumb-item-text-color: var(--fq-muted);             /* ◆ */
+  --ut-breadcrumb-item-font-size: var(--fq-fs-sm);
+  --ut-breadcrumb-item-line-height: var(--fq-lh-sm);
+  --ut-breadcrumb-item-font-weight: var(--fq-fw-medium);
+  --ut-breadcrumb-item-active-text-color: var(--fq-ink);
+  --ut-breadcrumb-item-sep-opacity: 1;
+  --ut-breadcrumb-item-sep-spacing: .5rem;
+  --ut-breadcrumb-title-font-size: var(--fq-fs-3xl);
+  --ut-breadcrumb-title-line-height: var(--fq-lh-3xl);          /* Seitentitel 36/44, 800 */
+  --ut-breadcrumb-title-font-weight: var(--fq-fw-heavy);
+
+  /* Inhalt */
+  --ut-body-content-padding-x: var(--fq-page-pad-x);
+  --ut-body-content-padding-y: var(--fq-page-pad-y);
+  --ut-xs-body-content-padding-x: var(--fq-page-pad-x);         /* < 640 px folgt scale.css */
+  --ut-xs-body-content-padding-y: var(--fq-page-pad-y);
+  --ut-xs-breadcrumb-padding-x: var(--fq-page-pad-x);
+
+  /* 7. Regionen: hellgraue Tafel, großer Radius, Titel 20/800 ------------- */
+  --ut-region-background-color: var(--fq-panel);                /* ◆ */
+  --ut-region-text-color: var(--fq-ink);                        /* ◆ */
+  --ut-region-header-background-color: transparent;             /* ◆ */
+  --ut-region-header-text-color: var(--fq-ink);                 /* ◆ */
+  --ut-region-border-color: transparent;                        /* ◆ Hook */
+  --ut-region-border-width: 0px;
+  --ut-region-border-radius: var(--fq-r-panel);                 /* ◆ */
+  --ut-region-box-shadow: none;                                 /* ◆ */
+  --ut-region-header-border-width: 0px;
+  --ut-region-header-border-color: transparent;
+  --ut-region-header-padding-x: var(--fq-panel-pad);
+  --ut-region-header-padding-y: var(--fq-space-4);
+  --ut-region-header-font-size: var(--fq-fs-xl);
+  --ut-region-header-line-height: var(--fq-lh-xl);
+  --ut-region-body-padding-x: var(--fq-panel-pad);
+  --ut-region-body-padding-y: var(--fq-space-4);
+  --ut-region-buttons-padding-x: var(--fq-panel-pad);
+  --ut-region-font-size: var(--fq-fs-md);
+  --ut-region-line-height: var(--fq-lh-body);
+  --ut-region-margin: var(--fq-region-gap);
+  --ut-region-hideshow-header-padding-x: var(--fq-panel-pad);
+
+  --ut-content-block-shadow-background-color: var(--fq-panel);
+  --ut-content-block-light-background-color: var(--fq-surface);
+  --ut-content-block-border-color: transparent;
+  --ut-content-block-font-size: var(--fq-fs-md);
+  --ut-content-block-line-height: var(--fq-lh-body);
+
+  --ut-button-region-border-radius: var(--fq-r-panel);
+  --ut-button-region-border-color: transparent;
+  --ut-button-region-box-shadow: none;
+  --ut-button-region-background-color: transparent;
+
+  --ut-alert-horizontal-border-radius: var(--fq-r-card);
+  --ut-alert-wizard-border-radius: var(--fq-r-panel);
+  --ut-alert-box-shadow: none;
+  --ut-alert-border-color: transparent;
+
+  --ut-hero-region-icon-border-radius: var(--fq-r-pill);
+  --ut-wizard-header-background-color: transparent;
+  --ut-wp-marker-color: var(--fq-line-strong);
+  --ut-wp-track-color: var(--fq-line);
+  --ut-linkslist-hover-background-color: var(--fq-wash-hover);   /* Schleier: sichtbar auf Seite und Tafel */
+  --ut-linkslist-arrow-color: var(--fq-muted);
+  --ut-comment-chat-background-color: var(--fq-panel);
+  --ut-comment-chat-active-background-color: var(--fq-soft);
+  --ut-carousel-nav-background-color: var(--fq-line);
+  --ut-carousel-nav-selected-background-color: var(--fq-accent); /* Punkte: aktiv Akzent */
+
+  /* 8. Tabs / Region Display Selector: Unterstrich-Tabs ------------------- */
+  --ut-tabs-item-text-color: var(--fq-muted);
+  --ut-tabs-item-active-text-color: var(--fq-ink);
+  --ut-tabs-item-active-background-color: transparent;
+  --ut-tabs-item-active-highlight-color: var(--fq-accent);
+  --ut-tabs-item-hint-highlight-color: transparent;
+  --ut-tabs-item-hint-highlight-width: 0px;
+  --ut-tabs-item-hover-background-color: transparent;
+  --ut-tabs-item-font-size: var(--fq-fs-md);
+  --ut-tabs-item-line-height: var(--fq-lh-md);
+  --ut-tabs-item-font-weight: var(--fq-fw-bold);
+  --ut-tabs-item-active-font-weight: var(--fq-fw-bold);
+
+  /* 9. Buttons: Kontur 1 px, 4 px Radius, fette Schrift ------------------- */
+  --a-button-border-radius: var(--fq-r-control);                /* ◆ */
+  --a-button-padding-y: var(--fq-control-pad-y);
+  --a-button-padding-x: var(--fq-button-pad-x);
+  --a-button-font-size: var(--fq-fs-md);
+  --a-button-line-height: var(--fq-control-lh);
+  --a-button-font-weight: var(--fq-fw-bold);
+  --a-button-gap-x: var(--fq-space-2);
+  --a-button-icon-spacing: var(--fq-space-2);
+  --a-button-background-color: var(--fq-button-fill);           /* ◆ Standard = Kontur (dunkel mit Tafelgrau hinterlegt) */
+  --a-button-text-color: var(--fq-ink);                         /* ◆ */
+  --a-button-border-color: var(--fq-button-edge);               /* ◆ */
+  --a-button-shadow: none;                                      /* ◆ */
+  --a-button-hover-background-color: var(--fq-button-fill-hover); /* ◆ */
+  --a-button-hover-text-color: var(--fq-ink);
+  --a-button-hover-border-color: var(--fq-ink);
+  --a-button-hover-shadow: none;
+  --a-button-active-background-color: var(--fq-button-fill-press); /* ◆ */
+  --a-button-active-border-color: var(--fq-ink);
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--fq-button-fill-hover);
+  --a-button-focus-border-color: var(--fq-ink);                 /* ◆ Fokus zeigt der Ring */
+  --a-button-focus-shadow: none;
+  --a-button-count-background-color: var(--fq-accent);          /* Vita: Hex-Kopie (26.1); Zähler-Punkt */
+  --a-button-count-text-color: var(--fq-accent-on);
+
+  /* 10. Formulare (36 px, Kontur, 4 px Radius) ----------------------------- */
+  --a-field-input-background-color: var(--fq-field);            /* ◆ */
+  --a-field-input-text-color: var(--fq-ink);                    /* ◆ */
+  --a-field-input-border-color: var(--fq-edge);                 /* ◆ */
+  --a-field-input-border-width: 1px;
+  --a-field-input-border-style: solid;
+  --a-field-input-border-radius: var(--fq-r-control);           /* ◆ */
+  --a-field-input-padding-y: var(--fq-control-pad-y);
+  --a-field-input-padding-x: var(--fq-control-pad-x);
+  --a-field-input-font-size: var(--fq-fs-md);
+  --a-field-input-line-height: var(--fq-control-lh);
+  --a-field-input-hover-background-color: var(--fq-field);
+  --a-field-input-hover-border-color: var(--fq-edge-hover);
+  --a-field-input-focus-background-color: var(--fq-field);      /* ◆ */
+  --a-field-input-focus-border-color: var(--fq-focus-ring-color); /* ◆ Vita: Hex-Kopie */
+  --a-field-input-focus-text-color: var(--fq-ink);
+  --a-field-placeholder-text-color: var(--fq-placeholder);
+  --a-field-placeholder-opacity: 1;
+  --a-field-select-background-image: var(--fq-select-arrow);
+  --a-filedrop-border-radius: var(--fq-r-card);
+  --a-filedrop-progress-background-color: var(--fq-line);
+  --a-filedrop-progress-bar-background-color: var(--fq-accent);
+  --a-filedrop-icon-action-background-color: var(--fq-field);     /* Vita-Dark: hart #000 */
+
+  /* Prozentbalken (Items + Reports): Daten, keine Aktion → Kategorie-Farbe statt Akzent */
+  --a-percent-chart-background-color: var(--fq-soft);
+  --a-percent-chart-bar-background-color: var(--fq-cat-1);
+  --a-percent-chart-bar-text-color: var(--fq-cat-1-on);
+  --ut-field-label-text-color: var(--fq-ink-2);                 /* ◆ */
+  --ut-field-label-font-size: var(--fq-fs-sm);
+  --ut-field-label-line-height: var(--fq-lh-sm);
+  --ut-field-label-font-weight: var(--fq-fw-semibold);
+  --ut-field-input-focus-icon-color: var(--fq-ink);             /* Vita: Hex-Kopie */
+  --ut-field-fl-input-focus-icon-background-color: var(--fq-soft); /* Vita: Hex-Kopie */
+  --ut-field-fl-input-focus-icon-color: var(--fq-ink);
+  --ut-field-input-icon-color: var(--fq-muted);
+  --ut-prepost-text-color: var(--fq-muted);
+  --a-form-required-asterisk-text-color: var(--fq-required-color);
+  --a-form-error-text-color: var(--fq-danger-text);
+  --ut-field-inline-help-text-color: var(--fq-muted);
+  --ut-pillbutton-padding-y: var(--fq-control-pad-y);
+  --ut-pillbutton-padding-x: var(--fq-space-4);
+  --ut-pillbutton-font-size: var(--fq-fs-md);
+  --ut-pillbutton-line-height: var(--fq-control-lh);            /* Pill-Gruppen = Control-Höhe */
+
+  --a-checkbox-size: var(--fq-checkbox-size);
+  --a-checkbox-icon-size: .8125rem;
+  --a-checkbox-border-radius: var(--fq-r-control);
+  --a-checkbox-background-color: var(--fq-field);
+  --a-checkbox-border-color: var(--fq-edge);                    /* ◆ */
+  --a-checkbox-hover-background-color: var(--fq-field);
+  --a-checkbox-checked-background-color: var(--fq-accent);      /* ◆ Vita: Hex-Kopie; Akzent ≥ 3:1 auf Seite und Tafel */
+  --a-checkbox-checked-text-color: var(--fq-accent-on);
+  --a-checkbox-text-color: var(--fq-accent-on);
+  --a-checkbox-label-font-size: var(--fq-fs-md);
+  --a-checkbox-label-spacing-x: var(--fq-space-2);
+  --a-cr-checkbox-background-color: var(--fq-field);
+
+  --a-switch-background-color: var(--fq-edge);
+  --a-switch-checked-background-color: var(--fq-accent);
+  --a-switch-checked-hover-background-color: var(--fq-accent-hover);
+  --a-switch-toggle-background-color: var(--fq-on-dark);
+  --a-switch-toggle-checked-background-color: var(--fq-on-dark);
+  --a-switch-width: 2.75rem;
+  --a-switch-toggle-width: 1.25rem;
+  --a-switch-toggle-height: 1.25rem;
+  --a-switch-padding-y: .1875rem;
+  --a-switch-padding-x: .1875rem;
+
+  --a-starrating-stars-fg-color: var(--fq-accent);
+  --a-starrating-stars-bg-color: var(--fq-edge);                 /* leere Sterne ≥ 3:1 */
+
+  --a-chip-border-radius: var(--fq-r-pill);
+  --a-chip-font-size: var(--fq-fs-sm);
+  --a-chip-line-height: 1.125rem;
+  --a-chip-hover-background-color: var(--fq-soft-hover);
+  --a-chip-active-background-color: var(--fq-soft-press);
+  --a-chip-applied-background-color: var(--fq-soft);
+  --a-chip-applied-hover-background-color: var(--fq-soft-hover);
+  --a-chip-remove-hover-background-color: var(--fq-wash-hover);
+  --a-chip-remove-active-background-color: var(--fq-wash-press);
+  --a-combo-select-item-selected-background-color: var(--fq-accent-tint);
+  --a-popuplov-chip-background-color: var(--fq-soft);
+
+  /* Date Picker */
+  --a-datepicker-background-color: var(--fq-surface-raised);
+  --a-datepicker-border-radius: var(--fq-r-card);
+  --a-datepicker-header-background-color: var(--fq-surface-raised);
+  --a-datepicker-calendar-background-color: var(--fq-surface-raised);
+  --a-datepicker-border-color: var(--fq-line);
+  --a-datepicker-calendar-title-background-color: transparent;
+  --a-datepicker-calendar-header-background-color: transparent;
+  --a-datepicker-calendar-header-text-color: var(--fq-muted);
+  --a-datepicker-calendar-day-hover-background-color: var(--fq-raised-hover); /* Popup = schwebende Fläche */
+  --a-datepicker-calendar-day-selected-background-color: var(--fq-accent);
+  --a-datepicker-calendar-day-selected-text-color: var(--fq-accent-on);
+  --a-datepicker-calendar-day-selected-border-color: var(--fq-accent);
+  --a-datepicker-calendar-day-current-background-color: transparent;
+  --a-datepicker-calendar-day-current-text-color: var(--fq-accent-text);
+  --a-datepicker-calendar-day-current-border-color: var(--fq-accent-text);
+  --a-datepicker-calendar-week-background-color: transparent;
+  --a-datepicker-footer-background-color: transparent;
+  --a-datepicker-footer-border-color: var(--fq-line-subtle);
+
+  /* 11. Menüs, Dialoge, Tooltips ------------------------------------------ */
+  --a-menu-background-color: var(--fq-surface-raised);          /* ◆ */
+  --a-menu-text-color: var(--fq-ink);                           /* ◆ */
+  --a-menu-border-color: var(--fq-line-subtle);
+  --a-menu-border-radius: var(--fq-r-box);
+  --a-menu-shadow: var(--fq-float-shadow);
+  --a-menu-padding-y: .375rem;
+  --a-menu-padding-x: .375rem;
+  --a-menu-item-border-radius: var(--fq-r-item);
+  --a-menu-font-size: var(--fq-fs-md);
+  --a-menu-focused-background-color: var(--fq-raised-hover);    /* ◆ Vita: Hex-Kopie; Hover auf schwebender Fläche */
+  --a-menu-focused-text-color: var(--fq-ink);                   /* ◆ */
+
+  --jui-dialog-background-color: var(--fq-surface-raised);
+  --jui-dialog-text-color: var(--fq-ink);
+  --jui-dialog-border-radius: var(--fq-r-card);
+  --jui-dialog-shadow: var(--fq-float-shadow);
+  --jui-dialog-titlebar-background-color: transparent;
+  --jui-dialog-titlebar-text-color: var(--fq-ink);
+  --jui-dialog-titlebar-border-color: transparent;
+  --jui-dialog-titlebar-padding-y: var(--fq-space-4);
+  --jui-dialog-font-size: var(--fq-fs-md);                      /* Vita: 12 px */
+  --jui-dialog-titlebar-padding-x: var(--fq-space-6);
+  --jui-dialog-title-font-size: var(--fq-fs-xl);
+  --jui-dialog-title-font-weight: var(--fq-fw-heavy);
+  --jui-dialog-buttonpane-background-color: transparent;
+  --jui-dialog-buttonpane-border-color: var(--fq-line-subtle);
+  --jui-overlay-background-color: var(--fq-scrim);
+  --jui-tooltip-background-color: var(--fq-tooltip-bg);
+  --jui-tooltip-text-color: var(--fq-tooltip-text);
+  --jui-tooltip-border-color: transparent;
+  --jui-tooltip-border-radius: var(--fq-r-item);
+  --a-tooltip-background-color: var(--fq-tooltip-bg);
+  --a-tooltip-text-color: var(--fq-tooltip-text);
+
+  /* 12. Reports / IR / IG (Zeile 36 px, Kopf 40 px, weiß auf der Tafel) ---- */
+  --a-gv-background-color: var(--fq-surface);                   /* ◆ */
+  --a-gv-border-color: var(--fq-line);
+  --a-gv-font-size: var(--fq-fs-sm);
+  --a-gv-line-height: var(--fq-row-lh);
+  --a-gv-cell-height: var(--fq-row-h);                          /* Hook */
+  --a-gv-cell-padding-y: var(--fq-row-pad-y);
+  --a-gv-cell-padding-x: var(--fq-row-pad-x);
+  --a-gv-header-cell-height: var(--fq-head-h);                  /* Hook */
+  --a-gv-header-cell-padding-x: var(--fq-row-pad-x);
+  --a-gv-cell-border-color: var(--fq-line-subtle);              /* ◆ */
+  --a-gv-header-cell-border-color: var(--fq-line-subtle);       /* ◆ */
+  --a-gv-header-background-color: var(--fq-surface-sunken);     /* ◆ Kopfband in Tafelgrau */
+  --a-gv-header-text-color: var(--fq-ink);
+  --a-gv-row-hover-background-color: var(--fq-hover);
+  --a-gv-selected-background-color: var(--fq-accent-tint);
+  --a-gv-selected-text-color: var(--fq-ink);
+  --a-gv-deleted-background-color: var(--fq-surface-sunken);
+  --a-gv-grandtotal-background-color: var(--fq-surface-sunken);
+  --a-gv-row-disabled-background-color: var(--fq-surface-sunken);
+  --a-gv-pagination-button-selected-background-color: var(--fq-strong);
+  --a-gv-pagination-button-selected-text-color: var(--fq-strong-on);
+  --a-toolbar-background-color: transparent;
+  --a-toolbar-border-color: var(--fq-line-subtle);
+  --a-toolbar-sep-border-color: var(--fq-line);
+  --a-report-controls-cell-label-background-color: var(--fq-surface);
+  --a-report-controls-cell-label-text-color: var(--fq-ink);
+  --a-splitter-bar-background-color: var(--fq-surface-sunken);
+  --a-resultsitem-background-color: var(--fq-surface);
+  --a-resultsitem-badge-background-color: var(--fq-soft);
+  --ut-resultsregion-background-color: var(--fq-surface);
+  --ut-resultsregion-search-background-color: var(--fq-surface-sunken);
+  --ut-resultsregion-search-border-color: var(--fq-line);
+  --a-kb-shortcut-background-color: var(--fq-soft);
+  --a-kb-shortcut-border-color: var(--fq-line-strong);
+
+  --ut-report-cell-border-color: var(--fq-line-subtle);
+  --ut-report-cell-hover-background-color: var(--fq-hover);
+  --ut-report-cell-alt-background-color: var(--fq-surface-sunken);
+  --ut-report-header-background-color: var(--fq-surface-sunken);
+  --ut-report-header-cell-background-color: var(--fq-surface-sunken);
+  --ut-report-header-cell-font-weight: var(--fq-fw-bold);
+  --ut-report-header-cell-font-size: var(--fq-fs-head);
+  --ut-report-header-cell-padding-y: calc((var(--fq-head-h) - var(--fq-lh-sm) - var(--fq-head-rule-width)) / 2);
+  --ut-report-header-cell-padding-x: var(--fq-row-pad-x);
+  --ut-report-cell-font-size: var(--fq-fs-sm);
+  --ut-report-cell-line-height: var(--fq-row-lh);
+  --ut-report-cell-padding-y: var(--fq-row-pad-y);
+  --ut-report-cell-padding-x: var(--fq-row-pad-x);
+
+  /* 13. Cards: weiß, 16 px, zarte Kante ------------------------------------ */
+  --a-cv-background-color: var(--fq-surface);                   /* ◆ */
+  --a-cv-border-color: var(--fq-line-subtle);                   /* ◆ */
+  --a-cv-border-radius: var(--fq-r-card);                       /* ◆ */
+  --a-cv-shadow: none;                                          /* ◆ */
+  --a-cv-hover-shadow: var(--fq-card-shadow);
+  --a-cv-header-border-color: var(--fq-line-subtle);
+  --a-cv-actions-border-color: var(--fq-line-subtle);
+  --a-cv-subtitle-text-color: var(--fq-muted);
+  --a-cv-subcontent-text-color: var(--fq-muted);
+  --a-cv-badge-background-color: var(--fq-soft);
+  --a-cv-badge-border-radius: var(--fq-r-pill);
+  --a-cv-icon-background-color: var(--fq-soft);                 /* Vita: Hex-Kopie */
+  --a-cv-icon-text-color: var(--fq-ink);
+  --a-cv-initials-background-color: var(--fq-soft);             /* Vita: Hex-Kopie */
+  --a-cv-initials-text-color: var(--fq-ink);
+  --a-cv-focus-border-color: var(--fq-focus-ring-color);        /* Vita: Hex-Kopie */
+  --ut-cardlist-box-shadow: none;
+  --ut-cardlist-border-radius: var(--fq-r-card);
+
+  /* 14. Badges / Avatare: Pillen und Kreise ------------------------------- */
+  --ut-badge-border-radius: var(--fq-r-pill);
+  --ut-avatar-border-radius: var(--fq-r-pill);
+
+  /* 15. Akzentpalette --u-color-1…45 (Charts, Avatare, Karten-Icons, u-colors).
+         1–15 aus den Kategorie-Tokens; 16–30 heller (60 % + Weiß, Text Anthrazit),
+         31–45 dunkler (55 % + Schwarz, Text Weiß) – so scheint keine Vita-Farbe durch. */
+  --u-color-1: var(--fq-cat-1);   --u-color-1-contrast: var(--fq-cat-1-on);
+  --u-color-2: var(--fq-cat-2);   --u-color-2-contrast: var(--fq-cat-2-on);
+  --u-color-3: var(--fq-cat-3);   --u-color-3-contrast: var(--fq-cat-3-on);
+  --u-color-4: var(--fq-cat-4);   --u-color-4-contrast: var(--fq-cat-4-on);
+  --u-color-5: var(--fq-cat-5);   --u-color-5-contrast: var(--fq-cat-5-on);
+  --u-color-6: var(--fq-cat-6);   --u-color-6-contrast: var(--fq-cat-6-on);
+  --u-color-7: var(--fq-cat-7);   --u-color-7-contrast: var(--fq-cat-7-on);
+  --u-color-8: var(--fq-cat-8);   --u-color-8-contrast: var(--fq-cat-8-on);
+  --u-color-9: var(--fq-cat-9);   --u-color-9-contrast: var(--fq-cat-9-on);
+  --u-color-10: var(--fq-cat-10); --u-color-10-contrast: var(--fq-cat-10-on);
+  --u-color-11: var(--fq-cat-11); --u-color-11-contrast: var(--fq-cat-11-on);
+  --u-color-12: var(--fq-cat-12); --u-color-12-contrast: var(--fq-cat-12-on);
+  --u-color-13: var(--fq-cat-13); --u-color-13-contrast: var(--fq-cat-13-on);
+  --u-color-14: var(--fq-cat-14); --u-color-14-contrast: var(--fq-cat-14-on);
+  --u-color-15: var(--fq-cat-15); --u-color-15-contrast: var(--fq-cat-15-on);
+  --u-color-16: color-mix(in srgb, var(--fq-cat-1) 60%, #fff);  --u-color-16-contrast: var(--fq-on-light);
+  --u-color-17: color-mix(in srgb, var(--fq-cat-2) 60%, #fff);  --u-color-17-contrast: var(--fq-on-light);
+  --u-color-18: color-mix(in srgb, var(--fq-cat-3) 60%, #fff);  --u-color-18-contrast: var(--fq-on-light);
+  --u-color-19: color-mix(in srgb, var(--fq-cat-4) 60%, #fff);  --u-color-19-contrast: var(--fq-on-light);
+  --u-color-20: color-mix(in srgb, var(--fq-cat-5) 60%, #fff);  --u-color-20-contrast: var(--fq-on-light);
+  --u-color-21: color-mix(in srgb, var(--fq-cat-6) 60%, #fff);  --u-color-21-contrast: var(--fq-on-light);
+  --u-color-22: color-mix(in srgb, var(--fq-cat-7) 60%, #fff);  --u-color-22-contrast: var(--fq-on-light);
+  --u-color-23: color-mix(in srgb, var(--fq-cat-8) 60%, #fff);  --u-color-23-contrast: var(--fq-on-light);
+  --u-color-24: color-mix(in srgb, var(--fq-cat-9) 60%, #fff);  --u-color-24-contrast: var(--fq-on-light);
+  --u-color-25: color-mix(in srgb, var(--fq-cat-10) 60%, #fff); --u-color-25-contrast: var(--fq-on-light);
+  --u-color-26: color-mix(in srgb, var(--fq-cat-11) 60%, #fff); --u-color-26-contrast: var(--fq-on-light);
+  --u-color-27: color-mix(in srgb, var(--fq-cat-12) 60%, #fff); --u-color-27-contrast: var(--fq-on-light);
+  --u-color-28: color-mix(in srgb, var(--fq-cat-13) 60%, #fff); --u-color-28-contrast: var(--fq-on-light);
+  --u-color-29: color-mix(in srgb, var(--fq-cat-14) 60%, #fff); --u-color-29-contrast: var(--fq-on-light);
+  --u-color-30: color-mix(in srgb, var(--fq-cat-15) 60%, #fff); --u-color-30-contrast: var(--fq-on-light);
+  --u-color-31: color-mix(in srgb, var(--fq-cat-1) 55%, #000);  --u-color-31-contrast: var(--fq-on-dark);
+  --u-color-32: color-mix(in srgb, var(--fq-cat-2) 55%, #000);  --u-color-32-contrast: var(--fq-on-dark);
+  --u-color-33: color-mix(in srgb, var(--fq-cat-3) 55%, #000);  --u-color-33-contrast: var(--fq-on-dark);
+  --u-color-34: color-mix(in srgb, var(--fq-cat-4) 55%, #000);  --u-color-34-contrast: var(--fq-on-dark);
+  --u-color-35: color-mix(in srgb, var(--fq-cat-5) 55%, #000);  --u-color-35-contrast: var(--fq-on-dark);
+  --u-color-36: color-mix(in srgb, var(--fq-cat-6) 55%, #000);  --u-color-36-contrast: var(--fq-on-dark);
+  --u-color-37: color-mix(in srgb, var(--fq-cat-7) 55%, #000);  --u-color-37-contrast: var(--fq-on-dark);
+  --u-color-38: color-mix(in srgb, var(--fq-cat-8) 55%, #000);  --u-color-38-contrast: var(--fq-on-dark);
+  --u-color-39: color-mix(in srgb, var(--fq-cat-9) 55%, #000);  --u-color-39-contrast: var(--fq-on-dark);
+  --u-color-40: color-mix(in srgb, var(--fq-cat-10) 55%, #000); --u-color-40-contrast: var(--fq-on-dark);
+  --u-color-41: color-mix(in srgb, var(--fq-cat-11) 55%, #000); --u-color-41-contrast: var(--fq-on-dark);
+  --u-color-42: color-mix(in srgb, var(--fq-cat-12) 55%, #000); --u-color-42-contrast: var(--fq-on-dark);
+  --u-color-43: color-mix(in srgb, var(--fq-cat-13) 55%, #000); --u-color-43-contrast: var(--fq-on-dark);
+  --u-color-44: color-mix(in srgb, var(--fq-cat-14) 55%, #000); --u-color-44-contrast: var(--fq-on-dark);
+  --u-color-45: color-mix(in srgb, var(--fq-cat-15) 55%, #000); --u-color-45-contrast: var(--fq-on-dark);
+
+  /* 16. Charts (Oracle JET) ------------------------------------------------ */
+  --oj-core-text-color-primary: var(--fq-ink);
+  --oj-core-text-color-secondary: var(--fq-muted);
+  --oj-heading-text-color: var(--fq-ink);
+  --oj-link-text-color: var(--fq-link-text);
+  --oj-core-divider-color: var(--fq-line-subtle);
+  --oj-popup-bg-color: var(--fq-surface-raised);
+  --oj-collection-bg-color: var(--fq-surface);
+  --oj-collection-header-bg-color: var(--fq-surface-sunken);
+  --oj-collection-free-space-bg-color: var(--fq-surface);
+  /* Datatip: Vita lässt die Textfarben schwarz – auf der inversen Tooltip-Fläche unlesbar */
+  --ojet-tooltip-primary-text-color: var(--fq-tooltip-text);
+  --ojet-tooltip-secondary-text-color: var(--fq-tooltip-text);
+  --ojet-tooltip-disabled-text-color: var(--fq-tooltip-text);
+
+  /* 17. Code (PrismJS) und Markdown ---------------------------------------- */
+  /* app_ui (hell) und Vita-Dark bringen die VS-Code-Paletten Light+/Dark+ mit (Violett, Navy,
+     Rot, pinkfarbene Schlüsselwörter nahe der Akzentfarbe). Hier: drei --fq-code-*-Töne, Kommentare Grau, Namen in
+     Anthrazit. Die abgeleiteten Namen aus app_ui folgen von selbst. */
+  --prism-comment: var(--fq-muted);
+  --prism-keyword: var(--fq-code-keyword);
+  --prism-class: var(--fq-code-keyword);
+  --prism-namespace: var(--fq-code-keyword);
+  --prism-string: var(--fq-code-string);
+  --prism-number: var(--fq-code-number);
+  --prism-boolean: var(--fq-code-number);
+  --prism-constant: var(--fq-code-number);
+  --prism-function: var(--fq-ink);
+  --prism-builtin: var(--fq-ink);                               /* auch HTML-Tags */
+  --prism-literal: var(--fq-ink-2);
+  --prism-property: var(--fq-ink-2);                            /* auch HTML-Attribute */
+  --prism-variable: var(--fq-ink-2);
+  --prism-symbol: var(--fq-ink-2);                              /* auch URLs im Markdown-Editor */
+  --prism-interpolation: var(--fq-ink-2);
+  --prism-deleted: var(--fq-danger-text);
+
+  /* Markdown-Inhalte (.is-markdownified, Markdown-Vorschau): Überschriften auf der Skala statt
+     40/32/28/24/20/16 px – eine #-Überschrift im Feld darf nicht größer sein als der Seitentitel. */
+  --a-md-h1-font-size: var(--fq-fs-2xl);
+  --a-md-h1-line-height: var(--fq-lh-2xl);
+  --a-md-h2-font-size: var(--fq-fs-xl);
+  --a-md-h2-line-height: var(--fq-lh-xl);
+  --a-md-h3-font-size: var(--fq-fs-lg);
+  --a-md-h3-line-height: var(--fq-lh-lg);
+  --a-md-h4-font-size: var(--fq-fs-md);
+  --a-md-h4-line-height: var(--fq-lh-md);
+  --a-md-h5-font-size: var(--fq-fs-sm);
+  --a-md-h5-line-height: var(--fq-lh-sm);
+  --a-md-h6-font-size: var(--fq-fs-xs);
+  --a-md-h6-line-height: var(--fq-lh-xs);
+  --a-md-blockquote-font-size: var(--fq-fs-lg);                 /* app_ui: 18 px */
+  --a-md-blockquote-line-height: var(--fq-lh-lg);
+  /* Vorschau-Panel und CodeMirror mit Feldpolster (app_ui: 8 px rundum) – Text steht wie im Feld */
+  --a-mdeditor-padding: var(--fq-control-pad-y) var(--fq-control-pad-x);
+}
+
+/* 18. Schwebende Ebenen: aktuelle Grundfläche ----------------------------------
+   Menüs (.a-Menu, auch Mega Menu), jQuery-UI-Dialoge (.ui-dialog: IR/IG-Dialoge, Popup-LOV,
+   Date-Picker- und Combobox-Popup, Inline-Dialoge, Drawer, Hülle der Seiten-Dialoge), das
+   Sortier-Widget der Spaltenköpfe (.a-IRR-sortWidget, hängt an <body>) und der Inhalt der
+   Seiten-Dialoge/-Drawer (eigenes iframe-Dokument) liegen auf --fq-surface-raised. Was „in der
+   Farbe des Grundes“ gezeichnet wird, folgt dort der schwebenden Fläche:
+     · --fq-ground        z. B. die Mitte des aktiven Wizard-Schritts im Modal-Wizard,
+     · --fq-focus-gap     die Lücke des Fokus-Doppelrings.
+   Abgeleitete Tokens werden auf dem Element aufgelöst, auf dem sie deklariert sind (:root) –
+   darum stehen die Lücke und die beiden Fokus-Schatten hier noch einmal. Die Formeln sind
+   dieselben wie in tokens/scale.css (check-tokens.mjs vergleicht sie).
+   Spezifität 0,1,0: Komponenten können einen eigenen Grund lokal setzen. */
+.a-Menu,
+.ui-dialog,
+.a-IRR-sortWidget,
+.t-Dialog-page,
+.t-Drawer-page {
+  --fq-ground: var(--fq-surface-raised);
+  --fq-focus-gap: var(--fq-ground);
+  --fq-focus-shadow: 0 0 0 var(--fq-focus-ring-offset) var(--fq-focus-gap), 0 0 0 calc(var(--fq-focus-ring-offset) + var(--fq-focus-ring-width)) var(--fq-focus-ring-color);
+  --fq-focus-shadow-inset: inset 0 0 0 var(--fq-focus-ring-width) var(--fq-focus-ring-color), inset 0 0 0 calc(var(--fq-focus-ring-width) + 1px) var(--fq-focus-gap);
+}
+
+/* Dichte für Touch (Tablets, Außendienst): Bedienelemente und Zeilen 44 px.
+   Nur Token-Werte – die Hebel oben (Polster, Zellenhöhen) rechnen sich daraus neu. */
+@media (pointer: coarse) {
+  :root {
+    --fq-control-h: 2.75rem;
+    --fq-control-h-sm: 2.25rem;
+    --fq-control-h-lg: 3rem;
+    --fq-row-h: 2.75rem;
+    --fq-head-h: 2.75rem;
+    --fq-hit-min: 2.75rem;
+    --fq-checkbox-size: 1.25rem;
+  }
+}

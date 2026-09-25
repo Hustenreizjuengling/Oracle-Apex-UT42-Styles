@@ -1,0 +1,147 @@
+/* ==========================================================================
+   Kracherl – Farb-Tokens DUNKEL (Basis Vita-Dark) · „Biergarten bei Nacht“
+   Exakt dieselben Namen wie light.css; nur :root. Tiefes Violett-Schwarz mit gestuften
+   Flächen, das Band wird Nachthimmel-Violett, Sonnengelb leuchtet als Laterne:
+   Primäraktion, Etikett, Seitentitel. Kontraste: Kracherl/tools/check-tokens.mjs.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: dark;
+
+  /* Band ------------------------------------------------------------------ */
+  --kr-band: #2D1D6A;              /* Nachthimmel-Violett (Kopf, Login) */
+  --kr-band-ink: #F1ECFF;          /* Text/Icons auf dem Band (12.3) */
+  --kr-band-brand: #FFC400;        /* Logo in Sonnengelb (8.8) */
+  --kr-band-hover: rgb(255 255 255 / .10);
+  --kr-band-press: rgb(255 255 255 / .17);
+  --kr-bubble: rgb(255 255 255 / .06);
+  --kr-bubble-ring: rgb(255 255 255 / .13);
+  --kr-sun: #FFC400;
+  --kr-sun-ink: #1A1033;           /* 11.3 */
+
+  /* Flächen -------------------------------------------------------------- */
+  --kr-page: #110A26;              /* Seitengrund: Violett-Schwarz */
+  --kr-page-hover: rgb(241 236 255 / .08);
+  --kr-page-press: rgb(241 236 255 / .13);
+  --kr-surface: #291E52;           /* Region (1.3 gegen den Seitengrund) */
+  --kr-surface-sunken: #1E1540;
+  --kr-surface-raised: #31265E;
+  --kr-raised-hover: #403374;      /* Hover auf schwebender Fläche (1.2) */
+  --kr-ground: var(--kr-surface);
+  --kr-hover: #2F2359;
+  --kr-press: #372A62;
+  --kr-soft: #372B66;              /* Sekundär-Button */
+  --kr-soft-hover: #413474;
+  --kr-soft-press: #4B3E82;
+  --kr-field: #1C1340;
+  --kr-field-readonly: #211746;
+  --kr-scrim: rgb(6 3 16 / .66);
+
+  /* Text ------------------------------------------------------------------ */
+  --kr-ink: #EEEAF8;
+  --kr-ink-2: #D8D1EC;
+  --kr-heading: #FFD24D;           /* Laternengelb: Seitentitel, Region-Titel */
+  --kr-brand-ink: #D6CBFF;         /* Flieder-Hell: Sekundär-Buttons, Tabellenköpfe, aktive Tabs – Gelb bleibt den Titeln */
+  --kr-muted: #B4ABCD;
+  --kr-placeholder: #A198BE;
+  --kr-disabled: #716894;
+  --kr-on-dark: #FFFFFF;
+  --kr-on-light: #211A3A;
+
+  /* Linien ---------------------------------------------------------------- */
+  --kr-line-subtle: #2F2458;
+  --kr-line: #3A2E68;
+  --kr-line-strong: #54478A;
+  --kr-edge: #8A7EB0;
+  --kr-edge-hover: #ABA0CF;
+  --kr-head-rule: #54478A;
+
+  /* Akzent: Laternengelb -------------------------------------------------- */
+  --kr-accent: #FFC400;
+  --kr-accent-hover: #FFD447;
+  --kr-accent-press: #E9B000;
+  --kr-accent-on: #1A1033;
+  --kr-accent-text: #FFC400;
+  --kr-accent-tint: #463646;       /* Auswahl-Fläche: Colabraun im Laternenlicht */
+  --kr-accent-tint-2: #5C4548;
+  --kr-accent-ring: rgb(255 155 84 / .28);
+
+  /* Marke: Brause-Orange -------------------------------------------------- */
+  --kr-mark: #FF9B54;
+
+  /* Fokus ----------------------------------------------------------------- */
+  --kr-focus-ring-color: #FF9B54;
+  --kr-focus-gap: var(--kr-ground);
+
+  /* Links ----------------------------------------------------------------- */
+  --kr-link-text: #CDBEFF;
+  --kr-link-underline: #8A7EB0;
+  --kr-link-underline-hover: #FF9B54;
+
+  /* Textauswahl ----------------------------------------------------------- */
+  --kr-selection: #5C4548;
+  --kr-selection-text: #FFFFFF;
+
+  /* Pflichtfeld-Markierung ------------------------------------------------ */
+  --kr-required-color: #FF8C9A;
+
+  /* Status ---------------------------------------------------------------- */
+  --kr-success: #4CC282;
+  --kr-success-hover: #66CF96;
+  --kr-success-on: #1A1033;
+  --kr-success-text: #6DD49C;
+  --kr-success-tint: #1D3A42;
+
+  --kr-warning: #F5A524;
+  --kr-warning-hover: #F8B94F;
+  --kr-warning-on: #1A1033;
+  --kr-warning-text: #F7BA55;
+  --kr-warning-tint: #3F3035;
+
+  --kr-danger: #FF6B7D;
+  --kr-danger-hover: #FF8593;
+  --kr-danger-on: #1A1033;
+  --kr-danger-text: #FF8C9A;
+  --kr-danger-tint: #46203F;
+
+  --kr-info: #4CC3C3;
+  --kr-info-hover: #6BD0D0;
+  --kr-info-on: #1A1033;
+  --kr-info-text: #6FD3D3;
+  --kr-info-tint: #1B3548;
+
+  /* Code ------------------------------------------------------------------ */
+  --kr-code-keyword: #6FD3D3;
+  --kr-code-string: #6DD49C;
+  --kr-code-number: #F7BA55;
+
+  /* Tiefe ----------------------------------------------------------------- */
+  --kr-card-shadow: 0 0 0 transparent;   /* nachts kein Schatten – als gültiger Schatten, damit Listen (Hover) funktionieren */
+  --kr-float-shadow: 0 18px 44px -12px rgb(0 0 0 / .72), 0 0 0 1px rgb(255 255 255 / .09);
+  --kr-tooltip-bg: #EEEAF8;
+  --kr-tooltip-text: #211A3A;
+
+  /* Scrollbars ------------------------------------------------------------ */
+  --kr-scrollbar-thumb: rgb(241 236 255 / .24);
+  --kr-scrollbar-thumb-hover: rgb(241 236 255 / .40);
+  --kr-scrollbar-track: transparent;
+
+  /* Icons ----------------------------------------------------------------- */
+  --kr-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M11.5 6l4.5 4.5 4.5-4.5' fill='none' stroke='%23D8D1EC' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Kategorie-/Diagrammpalette: gleiche Farbfamilien, für die Nacht aufgehellt ---- */
+  --kr-cat-1: #3BB5B2;  --kr-cat-1-on: #1A1033;   /* Serie 1  Petrol */
+  --kr-cat-2: #C48A5E;  --kr-cat-2-on: #1A1033;   /* Serie 9  Brezel */
+  --kr-cat-3: #7FD196;  --kr-cat-3-on: #1A1033;   /* Serie 6  Blattgrün */
+  --kr-cat-4: #FF9848;  --kr-cat-4-on: #1A1033;   /* Serie 2  Brause-Orange */
+  --kr-cat-5: #8AD3CC;  --kr-cat-5-on: #1A1033;   /* Serie 10 Minze */
+  --kr-cat-6: #BFCB70;  --kr-cat-6-on: #1A1033;   /* Serie 12 Hopfen */
+  --kr-cat-7: #AB8DF2;  --kr-cat-7-on: #1A1033;   /* Serie 3  Flieder */
+  --kr-cat-8: #A5A9B6;  --kr-cat-8-on: #1A1033;   /* Serie 7  Schiefer */
+  --kr-cat-9: #B77A5C;  --kr-cat-9-on: #1A1033;   /* Serie 4  Colabraun */
+  --kr-cat-10: #F3B1C0; --kr-cat-10-on: #1A1033;  /* Serie 8  Rosé */
+  --kr-cat-11: #E0B39A; --kr-cat-11-on: #1A1033;  /* Serie 11 Sand */
+  --kr-cat-12: #F2719F; --kr-cat-12-on: #1A1033;  /* Serie 5  Himbeere */
+  --kr-cat-13: #6FA88C; --kr-cat-13-on: #1A1033;  /* Tanne */
+  --kr-cat-14: #B7B2C6; --kr-cat-14-on: #1A1033;  /* Nebel */
+  --kr-cat-15: #8F88A3; --kr-cat-15-on: #1A1033;  /* Dämmerung */
+}

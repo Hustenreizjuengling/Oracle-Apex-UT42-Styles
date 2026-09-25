@@ -1,0 +1,83 @@
+/* ==========================================================================
+   Loden – Tokens DUNKEL (Basis: Vita-Dark)
+   Gleiche Rollen wie hell, eigene Werte: Ebenen steigen zum Licht auf
+   (Rahmen am dunkelsten, Regionen/Felder heller), Primär wird helles Minzgrün.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: dark;
+
+  /* --- Tonale Ebenen -------------------------------------------------------- */
+  --tonal-frame: #0C110E;          /* Nachtwald */
+  --tonal-sheet: #19201C;          /* Tannenschatten – Arbeitsbogen */
+  --tonal-panel: #212A25;          /* Moos – Regionen, Karten */
+  --tonal-panel-2: #27312C;
+  --tonal-field: #2D3832;
+  --tonal-field-hover: #323E38;
+  --tonal-float: #262F2A;
+
+  /* --- Linien --------------------------------------------------------------- */
+  --tonal-line: #333C37;
+  --tonal-line-strong: #424C46;
+  --tonal-outline: #7C8A82;
+
+  /* --- Text ----------------------------------------------------------------- */
+  --tonal-text: #E4ECE7;           /* Nebel */
+  --tonal-text-muted: #B2BEB7;
+  --tonal-text-inverse: #141D18;
+
+  /* --- Primär (Minze) ---------------------------------------------------- */
+  --tonal-primary: #8CCEB6;
+  --tonal-primary-hover: #A1DDC7;
+  --tonal-primary-active: #80C1AA;
+  --tonal-on-primary: #062619;
+  --tonal-primary-container: #254E3E;   /* Salbei dunkel */
+  --tonal-primary-container-hover: #2E5A48;
+  --tonal-on-primary-container: #C2EDD6;
+  --tonal-primary-soft: #223A30;
+  --tonal-link: #92D9BF;
+  --tonal-focus: #8CCEB6;
+
+  /* --- Tonale (sekundäre) Buttons ------------------------------------------ */
+  --tonal-secondary: #34443C;
+  --tonal-secondary-hover: #3C4E44;
+  --tonal-secondary-active: #43574C;
+  --tonal-on-secondary: #DDECE4;
+
+  /* --- Zustandsschleier ---------------------------------------------------- */
+  --tonal-hover: rgb(228 236 231 / .07);
+  --tonal-pressed: rgb(228 236 231 / .12);
+  --tonal-scrim: rgb(0 0 0 / .55);
+
+  /* --- Status --------------------------------------------------------------- */
+  --tonal-success: #7BC772;  --tonal-on-success: #062619;  --tonal-success-container: #223D20;  --tonal-success-text: #90D189;
+  --tonal-warning: #F8C153;  --tonal-on-warning: #1F1605;  --tonal-warning-container: #48340E;  --tonal-warning-text: #F8C970;
+  --tonal-danger:  #F47B74;  --tonal-on-danger:  #2A0706;  --tonal-danger-container:  #5A2522;  --tonal-danger-text:  #FF9E96;
+  --tonal-info:    #7CB9E1;  --tonal-on-info:    #06202F;  --tonal-info-container:    #1A394C;  --tonal-info-text:    #9ACBED;
+
+  /* --- Schalter ------------------------------------------------------------- */
+  --tonal-switch-track: #7C8A82;
+  --tonal-switch-thumb: #19201C;
+  --tonal-switch-thumb-on: #062619;
+
+  /* --- Schatten ------------------------------------------------------------- */
+  --tonal-shadow-float: 0 1px 2px rgb(0 0 0 / .4), 0 12px 32px -6px rgb(0 0 0 / .6);
+  --tonal-shadow-dialog: 0 2px 8px rgb(0 0 0 / .45), 0 28px 64px -12px rgb(0 0 0 / .7);
+
+  /* --- Auswahlpfeil --------------------------------------------------------- */
+  --tonal-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 16'%3E%3Cpath d='M11.5 6l4.5 4.5L20.5 6' fill='none' stroke='%23B2BEB7' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* --- Akzentpalette -------------------------------------------------------- */
+  --tonal-accent-1: #58B292;  --tonal-accent-2: #41B2B2;  --tonal-accent-3: #83AD6D;
+  --tonal-accent-4: #C19652;  --tonal-accent-5: #4CACCB;  --tonal-accent-6: #A8A255;
+  --tonal-accent-7: #6DA3DA;  --tonal-accent-8: #CF8D60;  --tonal-accent-9: #D58679;
+  --tonal-accent-10: #D38496; --tonal-accent-11: #C586B7; --tonal-accent-12: #AD8ED1;
+  --tonal-accent-13: #8C99DD; --tonal-accent-14: #8CA698; --tonal-accent-15: #89A3B0;
+  --tonal-accent-on: #0F1A14;
+  --tonal-accent-light-mix: white;
+  --tonal-accent-dark-mix: #0C110E;
+
+  /* --- Nur Vita-Dark: „heute“ im Date Picker (sonst weiß transparent) ------- */
+  --a-datepicker-calendar-day-current-background-color: var(--tonal-primary-soft);
+  --a-datepicker-calendar-day-current-text-color: var(--tonal-primary);
+  --a-datepicker-calendar-day-current-border-color: var(--tonal-primary);
+}

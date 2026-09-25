@@ -1,0 +1,116 @@
+/* ==========================================================================
+   Veedel – Login
+   Wie der Einstieg einer Stadtwerke-Seite: oben das Verlaufsband (tief → Leuchtazur) über die
+   volle Breite, darunter der hellgraue Seitengrund; die weiße, eckige Anmeldefläche sitzt auf
+   der Kante zwischen beiden. Titel groß in Figtree Black und Leuchtblau, Felder groß und
+   eckig, „Anmelden“ als roter Balken über die volle Breite.
+   Regeln: nur Tokens (--ve-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   ========================================================================== */
+
+.t-PageBody--login {
+  --ut-login-page-background-color: var(--ve-page);
+  --ut-login-region-background-color: var(--ve-surface);
+  --ut-login-region-filter: none;
+  --ut-login-region-border-width: 0px;
+  --ut-login-region-border-radius: 0px;
+  --ut-login-region-box-shadow: var(--ve-float-shadow);
+  --ut-login-region-padding: var(--ve-space-8) var(--ve-space-8) var(--ve-space-6);
+  --ut-login-logo-border-radius: 0px;
+  --ut-login-container-item-spacing: var(--ve-space-4);
+  background-color: var(--ve-page);
+}
+/* Hintergrund-Ebene (UT: fixiert, volle Fläche): Verlaufsband über der oberen Hälfte.
+   Eine Image Region im Hintergrund (App-Option) liegt weiter darüber. */
+.t-Login-bg {
+  background:
+    linear-gradient(var(--ve-band-angle), var(--ve-band-from) 0%, var(--ve-band-mid) 45%, var(--ve-band-to) 100%) top / 100% 52% no-repeat,
+    var(--ve-page);
+}
+@media (max-width: 639px) {
+  .t-PageBody--login {
+    --ut-login-region-padding: var(--ve-space-6) var(--ve-space-5) var(--ve-space-5);
+  }
+  .t-PageBody--login .t-Login-container {
+    padding-inline: var(--ve-space-3);
+  }
+}
+/* Hintergrund-Varianten: kein Bild – immer das Band */
+.t-LoginPage--bg1,
+.t-LoginPage--bg2,
+.t-LoginPage--bg3 {
+  --ut-body-background-color: var(--ve-page);
+}
+.t-LoginPage--bg1 .t-Login-bgImg,
+.t-LoginPage--bg2 .t-Login-bgImg,
+.t-LoginPage--bg3 .t-Login-bgImg,
+.t-LoginPage--bg1:before,
+.t-LoginPage--bg2:before,
+.t-LoginPage--bg3:before {
+  background-image: none;
+}
+
+/* Kopf: Logo als Kästchen, Titel groß und schwer in Leuchtblau (32 px/900 = großer Text) */
+.t-Login-header {
+  padding-block: 0 var(--ve-space-6);
+}
+.t-Login-logo {
+  --ut-login-logo-background-color: var(--ve-accent);
+  --ut-login-logo-text-color: var(--ve-accent-on);
+}
+.t-Login-title {
+  color: var(--ve-heading);
+  font-size: var(--ve-fs-3xl);
+  line-height: var(--ve-lh-3xl);
+  font-weight: var(--ve-fw-black);
+  letter-spacing: var(--ve-tracking-title);
+  margin-block: var(--ve-space-4) 0;
+}
+@media (max-width: 639px) {
+  .t-Login-title {
+    font-size: var(--ve-fs-2xl);
+    line-height: var(--ve-lh-2xl);
+  }
+}
+
+/* Anmelde-Button: große Control-Höhe (44 px, Touch 52 px) aus den Dichte-Tokens */
+.t-Login-buttons {
+  --a-button-padding-y: calc((var(--ve-control-h-lg) - var(--ve-control-lh)) / 2);
+  --a-button-font-size: var(--ve-fs-lg);
+  --a-button-line-height: var(--ve-control-lh);
+  --a-button-font-weight: var(--ve-fw-heavy);
+}
+/* Fußzeile unter der Fläche (Version, Links) auf dem Seitengrund */
+.t-Login-containerFooter {
+  color: var(--ve-muted);
+}
+
+/* Fehlerseite (Error Page Template, gleiches Login-Gerüst): die Meldung ist wie die
+   Anmeldung eine weiße Fläche auf dem Band */
+.t-Login-containerBody > .t-Alert--wizard {
+  --ut-alert-background-color: var(--ve-surface);
+  --ut-alert-wizard-border-radius: 0px;
+  --ut-alert-box-shadow: var(--ut-login-region-box-shadow);
+}
+.t-LoginPage--split .t-Login-containerBody > .t-Alert--wizard {
+  --ut-alert-box-shadow: none;     /* steht dort schon auf der weißen Spalte */
+}
+
+/* Geteilte Ansicht: weiße Spalte in voller Höhe neben dem Band, das hier die ganze Höhe füllt */
+.t-LoginPage--split .t-Login-bg {
+  background: linear-gradient(135deg, var(--ve-band-from) 0%, var(--ve-band-mid) 45%, var(--ve-band-to) 100%);
+}
+.t-LoginPage--split .t-Login-container {
+  background-color: var(--ve-surface);
+  box-shadow: none;
+}
+@media (max-width: 639px) {
+  /* Die weiße Spalte füllt das Phone ganz – das Band bleibt als Streifen an der Oberkante
+     sichtbar (wie auf 1114 oben), sonst wäre die Anmeldung ohne jedes Markenzeichen. */
+  .t-LoginPage--split .t-Login-container {
+    max-width: none;
+    padding-inline: 0;
+    background-image: linear-gradient(var(--ve-band-angle), var(--ve-band-from) 0%, var(--ve-band-mid) 100%);
+    background-size: 100% var(--ve-space-2);
+    background-repeat: no-repeat;
+  }
+}

@@ -1,0 +1,704 @@
+/* ==========================================================================
+   Passepartout – Visualisierung
+   Charts (Oracle JET), Kalender (FullCalendar), Karte (MapLibre), Tree im Inhalt.
+   Regeln: nur Tokens (--pp-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Leitbild: Daten auf der Leinwand ordnen Haarlinien und Weißraum – keine Kästen,
+   kein Oracle-Grau/-Blau, Magenta nur für Auswahl, Fokus und „heute“.
+   ========================================================================== */
+
+/* 1. Charts (Oracle JET) ------------------------------------------------------
+   JET liest Farben beim Rendern aus CSS (Hilfs-Elemente IM Diagramm mit den Klassen
+   oj-chart-*, oj-gauge-*, oj-dvt-*) und brennt sie als SVG-Attribute ein. Deshalb:
+   · JET-Hebel lokal auf .oj-dvtbase (Wurzel jeder JET-Komponente) – sie sind beim
+     Rendern gesetzt, weil die Hilfs-Elemente im Element hängen;
+   · feste JS-Standardwerte (Alta-Skin, Redwood-Neutraltöne), für die es keinen Hebel
+     gibt, per Attribut-Selektor mit CSS übermalen. Die Selektoren ERKENNEN nur JETs
+     eingebrannte Standardwerte (keine Farbe wird gesetzt); eigene Farben aus der App
+     (Serien-/Achsen-Optionen) bleiben unberührt. CSS schlägt SVG-Attribute immer.
+   Grenze: Wechselt im Auto-Style das OS-Schema bei offener Seite, behalten die von JET
+   eingebrannten Textfarben ihren alten Wert bis zum Neu-Rendern (UT-Grenze, braucht JS). */
+.oj-dvtbase {
+  --pp-c-chart-grid: var(--pp-line-subtle);          /* Gitter: Haarlinie, sehr zart */
+  --pp-c-chart-axis: var(--pp-edge);                 /* Achse/Nulllinie: deutlich, nicht schwer */
+  --pp-c-chart-gap: var(--pp-surface);               /* Fuge zwischen Datenflächen = Leinwand */
+  --pp-c-chart-track: var(--pp-soft);                /* Skala/Spur von Gauges = Stück Rahmen */
+  --pp-c-chart-value: var(--u-color-1);              /* Wert eines Gauges = erste Serie */
+
+  --oj-statusmeter-gauge-bar-plotarea-color: var(--pp-c-chart-track);
+  --oj-statusmeter-gauge-bar-plotarea-border-color: transparent;
+  --oj-gauge-metric-label-font-weight: var(--pp-fw-semibold);
+  --oj-dvt-danger-color: var(--pp-danger);            /* Schwellen 1–3 (Gauges) */
+  --oj-dvt-warning-color: var(--pp-warning);
+  --oj-dvt-success-color: var(--pp-success);
+  --oj-dvt-item-border-color-selected: var(--pp-ink);
+  --oj-dvt-contrast-line-color: var(--pp-surface);
+  --oj-dvt-reference-object-line-color: var(--pp-muted);
+  --oj-dvt-reference-object-area-color: color-mix(in srgb, var(--pp-ink) 6%, transparent);
+  --oj-dvt-marquee-color: color-mix(in srgb, var(--pp-ink) 8%, transparent);
+  --oj-dvt-marquee-border-color: var(--pp-muted);
+  --oj-dvt-overview-bg-color: var(--pp-surface-sunken);
+  --oj-dvt-overview-window-bg-color: var(--pp-surface);
+  --oj-dvt-overview-window-border-color: var(--pp-edge);
+  --oj-chart-data-cursor-line-color: var(--pp-muted);
+  --oj-chart-stock-range-bg-color: var(--pp-muted);
+  --oj-chart-animation-marker-color: var(--pp-ink);
+  --oj-rating-gauge-color-selected: var(--u-color-1);
+  --oj-rating-gauge-border-color-selected: var(--u-color-1);
+  --oj-rating-gauge-border-color-unselected: var(--pp-edge);
+  --oj-rating-gauge-color-selected-readonly: var(--u-color-1);
+  --oj-rating-gauge-border-color-selected-readonly: var(--u-color-1);
+  --oj-rating-gauge-color-unselected-readonly: var(--pp-soft);
+}
+
+/* Zahlen in Achsen, Legenden und Gauges stehen in Spalten */
+.oj-dvtbase text {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Gitter (Alta-Standard rgba(196,206,215,.4|.2)) und Achsen (#9E9E9E, Nulllinie = abgedunkeltes Gitter) */
+.oj-dvtbase [stroke="rgba(196,206,215,0.4)"],
+.oj-dvtbase [stroke="rgba(196,206,215,0.2)"] {
+  stroke: var(--pp-c-chart-grid);
+}
+.oj-dvtbase [stroke="#9E9E9E" i],
+.oj-dvtbase [stroke="rgba(78,82,86,0.4)"] {
+  stroke: var(--pp-c-chart-axis);
+}
+.oj-dvtbase [stroke="rgba(138,141,172,0.4)"] {
+  stroke: var(--pp-c-chart-grid);              /* Gruppen-Trenner (hierarchische Achse) */
+}
+
+/* Datenflächen (Balken, Segmente, Flächen, Marker): 1 px Fuge in Leinwandfarbe trennt
+   Nachbarn (gruppierte Balken, Torten-Segmente) – auch bei Farbfehlsichtigkeit. Eine
+   dunkle Kontur als Kontrast-Krücke für helle Serien (Lagune, Salbei, Lavendel, Koralle,
+   hell < 3:1) trägt nicht: JET zeichnet crispEdges, die 1-px-Kante liegt links AUSSERHALB
+   der Fläche (gemessen 2:1) – Abhilfe gehört in die Palette (Token-Anfrage). */
+.oj-chart :is(polygon, path, rect, circle, ellipse)[fill^="rgb("] {
+  stroke: var(--pp-c-chart-gap);
+  stroke-width: 1px;
+}
+/* Legenden-Symbole (Gruppe aria-hidden) ohne Fuge – sonst wirken sie kleiner */
+.oj-chart g[aria-hidden="true"] :is(path, rect)[fill^="rgb("] {
+  stroke: none;
+}
+/* Hover-/Auswahl-Innenring: JET zeichnet ihn weiß (#ffffff) – als Lücke in Leinwandfarbe */
+.oj-dvtbase [fill="#ffffff" i][pointer-events="visiblePainted"] {
+  fill: var(--pp-surface);
+  stroke: none;
+}
+/* Tastatur-Fokus/Auswahl eines Datenpunkts: JET zeichnet den Außenring in Redwood-Grau
+   (selectedOuterColor #5a5a5a, im Dunkeln 2:1 auf der Leinwand) → EIN Fokus-System:
+   Ringfarbe außen, Leinwand-Lücke innen (Regel darüber) = derselbe Doppelring wie überall. */
+.oj-dvtbase [fill="#5a5a5a" i] {
+  fill: var(--pp-focus-ring-color);
+}
+.oj-dvtbase [stroke="#5a5a5a" i] {
+  stroke: var(--pp-focus-ring-color);
+}
+
+/* Gauges: Redwood-Wert #393737 (JS-Standard, kein Hebel) → erste Serie; Spur via Hebel oben */
+.oj-dvtbase [fill="#393737"] {
+  fill: var(--pp-c-chart-value);
+}
+.oj-gauge-metric-label {
+  color: var(--pp-ink);
+  font-weight: var(--pp-fw-semibold);
+}
+/* Tastatur-Fokus der Gauges (Redwood: 1 px gepunktet) → EIN Fokus-System */
+.oj-statusmetergauge.oj-focus-highlight,
+.oj-ledgauge.oj-focus-highlight,
+.oj-ratinggauge.oj-focus-highlight {
+  outline: var(--ut-focus-outline);
+  outline-offset: var(--ut-focus-outline-offset);
+}
+
+/* Datatip: invertiert wie alle Tooltips. Vita setzt die JET-Tooltip-Schrift fest auf
+   Schwarz (--ojet-tooltip-*-text-color) – auf der Tusche-Fläche unlesbar. */
+.oj-dvt-datatip {
+  --ojet-tooltip-primary-text-color: var(--pp-tooltip-text);
+  --ojet-tooltip-secondary-text-color: color-mix(in srgb, var(--pp-tooltip-text) 72%, transparent);
+  --ojet-tooltip-disabled-text-color: color-mix(in srgb, var(--pp-tooltip-text) 50%, transparent);
+  border-radius: var(--jui-tooltip-border-radius);
+  padding: var(--pp-space-2) var(--pp-space-3);
+  line-height: var(--pp-lh-xs);
+  font-variant-numeric: tabular-nums;
+}
+.oj-dvt-datatip-value {
+  font-weight: var(--pp-fw-semibold);
+}
+
+/* 2. Kalender (FullCalendar 5/6, APEX: .apex-fullcalendar-5) --------------------
+   UT setzt die --fc-*-Hebel auf .apex-fullcalendar-5 (nicht :root) – gleiche Stelle, später
+   geladen. Look: offenes Raster aus Haarlinien (kein Außenkasten), Wochentage klein in
+   Graphit, Termine als getönte Chips mit Farbkante, „heute“ als Magenta-Kreis. */
+.apex-fullcalendar-5 {
+  --pp-c-cal-event: var(--u-color-1);                /* Standard-Termin: erste Kategorie (UT: Primärfarbe) */
+  --fc-small-font-size: var(--pp-fs-xs);
+  --fc-page-bg-color: var(--pp-surface);
+  --fc-neutral-bg-color: var(--pp-surface-sunken);
+  --fc-neutral-text-color: var(--pp-muted);
+  --fc-border-color: var(--pp-line-subtle);
+  --fc-event-bg-color: var(--pp-c-cal-event);
+  --fc-event-border-color: var(--pp-c-cal-event);
+  --fc-event-text-color: var(--pp-ink);
+  --fc-event-selected-overlay-color: color-mix(in srgb, var(--pp-ink) 10%, transparent);
+  --fc-more-link-bg-color: var(--pp-soft);
+  --fc-more-link-text-color: var(--pp-ink);
+  --fc-non-business-color: color-mix(in srgb, var(--pp-ink) 3%, transparent);
+  --fc-bg-event-color: var(--u-color-5);
+  --fc-bg-event-opacity: .18;
+  --fc-highlight-color: var(--pp-accent-tint);        /* Auswahl = Akzent-Tönung */
+  --fc-today-bg-color: transparent;                   /* Vita: Gelb – hier nur der Magenta-Kreis */
+  --fc-now-indicator-color: var(--pp-accent);
+  --fc-list-event-hover-bg-color: var(--pp-hover);
+  --fc-daygrid-event-dot-width: .5rem;
+  --fc-list-event-dot-width: .5rem;
+  --fc5-toolbar-padding-y: 0;
+  --fc5-header-title-font-weight: var(--pp-fw-semibold);
+  font-size: var(--pp-fs-sm);
+}
+
+/* Kopfzeile: keine Kastenkante (UT Core .fc-toolbar), Titel als Abschnittstitel */
+.apex-fullcalendar-5 .fc-toolbar {
+  border-width: 0;
+  gap: var(--pp-space-3);
+  flex-wrap: wrap;
+}
+.apex-fullcalendar-5 .fc-toolbar.fc-header-toolbar {
+  margin-block-end: var(--pp-space-4);
+}
+.apex-fullcalendar-5 .fc-toolbar-chunk {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  padding: 0;
+}
+.fc-direction-ltr.apex-fullcalendar-5 .fc-toolbar > * > :not(:first-child),
+.fc-direction-rtl.apex-fullcalendar-5 .fc-toolbar > * > :not(:first-child) {
+  margin-inline: 0;
+}
+.apex-fullcalendar-5 .fc-toolbar-title {
+  font-size: var(--pp-fs-xl);
+  line-height: var(--pp-lh-xl);
+  letter-spacing: var(--pp-tracking-heading);
+  color: var(--pp-ink);
+}
+
+/* Knöpfe: „heute“ = Sekundär (Stück Rahmen, UT-Hebel); Gruppen (Blättern, Ansichten)
+   als ruhige Segmente – aktive Ansicht = Stück Rahmen wie der aktive Tab. */
+.apex-fullcalendar-5 .fc-button {
+  min-block-size: var(--pp-control-h);
+  font-size: var(--pp-fs-md);
+  font-weight: var(--pp-fw-medium);
+  letter-spacing: var(--pp-tracking-ui);
+  line-height: var(--pp-control-lh);
+  box-shadow: none;
+}
+.apex-fullcalendar-5 .fc-button .fc-icon {
+  font-size: 1.25em;
+}
+.apex-fullcalendar-5 .fc-button-group {
+  --fc-button-bg-color: transparent;
+  --fc-button-border-color: transparent;
+  --fc-button-text-color: var(--pp-muted);
+  --fc-button-hover-bg-color: var(--pp-hover);
+  --fc-button-hover-border-color: transparent;
+  --fc-button-active-bg-color: var(--pp-soft);
+  --fc-button-active-border-color: transparent;
+  --a-button-active-background-color: var(--pp-soft);
+  --a-button-active-text-color: var(--pp-ink);
+  --a-button-active-border-color: transparent;
+  gap: 2px;
+}
+/* Segmente rundum gerundet, ohne Überlappung: FullCalendar (.fc-direction-* … :not(:first-child|
+   :last-child), 0,4,0) und UT Core (.apex-fullcalendar-5.fc-direction-* …, 0,5,0) nullen die inneren
+   Radien und ziehen um 1 px zusammen – gleiche Selektorstruktur wie UT Core, später geladen. */
+.apex-fullcalendar-5 .fc-button-group > .fc-button,
+.apex-fullcalendar-5.fc-direction-ltr .fc-button-group > .fc-button:not(:first-child),
+.apex-fullcalendar-5.fc-direction-ltr .fc-button-group > .fc-button:not(:last-child),
+.apex-fullcalendar-5.fc-direction-rtl .fc-button-group > .fc-button:not(:first-child),
+.apex-fullcalendar-5.fc-direction-rtl .fc-button-group > .fc-button:not(:last-child) {
+  border-radius: var(--pp-r-md);
+  margin-inline: 0;
+}
+.apex-fullcalendar-5 .fc-button-primary:hover {
+  color: var(--pp-ink);
+}
+.apex-fullcalendar-5 .fc-button-primary.fc-button-active,
+.apex-fullcalendar-5 .fc-button-primary.fc-button-active:disabled {
+  color: var(--pp-ink);
+  font-weight: var(--pp-fw-semibold);
+  opacity: 1;
+}
+/* Die aktive Ansicht ist in FullCalendar 6 „disabled“ (auch APEX' eigener Listen-Knopf) */
+.apex-fullcalendar-5 .fc-toolbar-chunk:last-child .fc-button-group > .fc-button:disabled {
+  background-color: var(--pp-soft);
+  color: var(--pp-ink);
+  font-weight: var(--pp-fw-semibold);
+  opacity: 1;
+}
+.apex-fullcalendar-5 .fc-today-button:disabled {
+  opacity: 1;
+  color: var(--pp-disabled);
+}
+/* FullCalendar zeichnet Fokus als eigenen Schatten (Blaugrau) und löscht den Umriss */
+.fc .fc-button:focus,
+.fc .fc-button-primary:focus,
+.fc .fc-button-primary:not(:disabled).fc-button-active:focus,
+.fc .fc-button-primary:not(:disabled):active:focus {
+  box-shadow: none;
+}
+.fc .fc-button:focus-visible {
+  outline: var(--ut-focus-outline);
+  outline-offset: var(--ut-focus-outline-offset);
+}
+
+/* Raster: offen, nur Haarlinien; Wochentage klein in Graphit ohne senkrechte Striche */
+.fc-theme-standard.apex-fullcalendar-5 .fc-scrollgrid,
+.apex-fullcalendar-5 .fc-scrollgrid-section > * {
+  border-width: 0;
+}
+.apex-fullcalendar-5 .fc-col-header-cell {
+  border-inline-color: transparent;
+  border-block-end-color: var(--pp-line);
+}
+/* Kopf- und Tageszeile knapp: FullCalendar rechnet die Rasterhöhe aus der Breite (aspectRatio,
+   Inline-Stil) – jede Zeile, die hier gespart wird, bleibt für Termine (sonst Scrollen im Monat). */
+.apex-fullcalendar-5 .fc-col-header-cell-cushion {
+  padding: var(--pp-space-1) var(--pp-space-2);
+  font-size: var(--pp-fs-head);
+  font-weight: var(--pp-fw-semibold);
+  line-height: var(--pp-lh-xs);
+  color: var(--pp-muted);
+  text-decoration: none;
+}
+.apex-fullcalendar-5 .fc-day {
+  color: var(--pp-muted);
+}
+/* Tageszahl ist ein <a> ohne href: UT Core „.apex-fullcalendar-5 a:not([href]) { color: inherit }“
+   (0,2,1) – deshalb die Farbregeln mit a.… (0,2,1 bzw. 0,3,1, später geladen). */
+.apex-fullcalendar-5 .fc-daygrid-day-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 1.625rem;
+  block-size: 1.625rem;
+  margin: 2px var(--pp-space-1);
+  padding: 0 var(--pp-space-1);
+  border-radius: var(--pp-r-pill);
+  font-size: var(--pp-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--pp-ink);
+  text-decoration: none;
+}
+.apex-fullcalendar-5 a.fc-daygrid-day-number {
+  color: var(--pp-ink);
+}
+.apex-fullcalendar-5 a.fc-daygrid-day-number:hover {
+  background-color: var(--pp-hover);
+}
+/* Tage außerhalb des Monats: Graphit statt 30 % Deckkraft (FC: 1,8:1) */
+.fc.apex-fullcalendar-5 .fc-day-other .fc-daygrid-day-top {
+  opacity: 1;
+}
+.apex-fullcalendar-5 .fc-day-other .fc-daygrid-day-number,
+.apex-fullcalendar-5 .fc-day-other a.fc-daygrid-day-number {
+  color: var(--pp-muted);
+}
+/* heute: Magenta-Kreis (Akzent-Regel „heute im Kalender“) – auch als Nachbarmonatstag */
+.apex-fullcalendar-5 .fc-day-today .fc-daygrid-day-number,
+.apex-fullcalendar-5 .fc-day-today a.fc-daygrid-day-number,
+.apex-fullcalendar-5 .fc-day-today a.fc-daygrid-day-number:hover {
+  background-color: var(--pp-accent);
+  color: var(--pp-accent-on);
+  font-weight: var(--pp-fw-semibold);
+}
+/* Woche/Tag: Kopf des heutigen Tages in Akzent-Schrift (kein Unterstrich – das wäre Vita) */
+.apex-fullcalendar-5 .fc-col-header-cell.fc-day-today .fc-col-header-cell-cushion {
+  color: var(--pp-accent-text);
+}
+
+/* Termin-Farben (app_ui: .fc .fc-event.apex-cal-* mit harten Flächen, Weiß auf Grün 2,1:1,
+   Schwarz im Dunkeln unsichtbar) → Palette/Status; gleiche Selektoren, später geladen.
+   Die Klasse setzt nur die Farbe (--pp-c-cal-event), die Chip-Form folgt darunter. */
+.fc .fc-event.apex-cal-black      { --pp-c-cal-event: var(--pp-ink); }
+.fc .fc-event.apex-cal-white      { --pp-c-cal-event: var(--pp-line-strong); }
+.fc .fc-event.apex-cal-gray       { --pp-c-cal-event: var(--u-color-15); }
+.fc .fc-event.apex-cal-silver     { --pp-c-cal-event: var(--u-color-14); }
+.fc .fc-event.apex-cal-blue       { --pp-c-cal-event: var(--u-color-1); }
+.fc .fc-event.apex-cal-darkblue   { --pp-c-cal-event: var(--u-color-13); }
+.fc .fc-event.apex-cal-bluesky    { --pp-c-cal-event: var(--u-color-3); }
+.fc .fc-event.apex-cal-cyan       { --pp-c-cal-event: var(--u-color-7); }
+.fc .fc-event.apex-cal-green      { --pp-c-cal-event: var(--pp-success); }
+.fc .fc-event.apex-cal-lime       { --pp-c-cal-event: var(--u-color-6); }
+.fc .fc-event.apex-cal-yellow     { --pp-c-cal-event: var(--pp-warning); }
+.fc .fc-event.apex-cal-orange     { --pp-c-cal-event: var(--u-color-4); }
+.fc .fc-event.apex-cal-brown      { --pp-c-cal-event: var(--u-color-2); }
+.fc .fc-event.apex-cal-red        { --pp-c-cal-event: var(--pp-danger); }
+.fc-event.fc-apex-events-default    { --pp-c-cal-event: var(--u-color-1); }
+.fc-event.fc-apex-events-gcal       { --pp-c-cal-event: var(--u-color-7); }
+.fc-event.fc-apex-events-webservice { --pp-c-cal-event: var(--u-color-4); }
+.fc .fc-event[class*="apex-cal-"],
+.fc-event.fc-apex-events-default,
+.fc-event.fc-apex-events-gcal,
+.fc-event.fc-apex-events-webservice {
+  --fc-event-bg-color: var(--pp-c-cal-event);
+  --fc-event-border-color: var(--pp-c-cal-event);
+  --fc-event-text-color: var(--pp-ink);
+  background-color: transparent;               /* Punkt-Termine, Listenzeilen */
+  border-color: var(--pp-c-cal-event);
+  color: var(--pp-ink);
+}
+/* Zieh-/Größen-Hilfsfläche (FullCalendar ≤ 4; app_ui: Oracle-Blau mit !important) = Auswahl.
+   !important nur gegen das !important von app_ui, gleicher Selektor. */
+.fc .fc-helper {
+  background-color: var(--pp-accent-tint) !important;
+  border-color: var(--pp-focus-ring-color) !important;
+  color: var(--pp-ink) !important;
+}
+
+/* Termine: getönter Chip mit Farbkante am Anfang, Tusche-Schrift (in hell UND dunkel lesbar).
+   Farbe je Klasse über --pp-c-cal-event; Standard = erste Kategorie. */
+.apex-fullcalendar-5 .fc-daygrid-event.fc-event,
+.apex-fullcalendar-5 .fc-h-event.fc-event,
+.apex-fullcalendar-5 .fc-v-event.fc-event {
+  background-color: color-mix(in srgb, var(--pp-c-cal-event) 18%, var(--pp-surface));
+  border-width: 0;
+  border-inline-start: 3px solid var(--pp-c-cal-event);
+  border-radius: var(--pp-r-sm);
+  color: var(--pp-ink);
+}
+.apex-fullcalendar-5 .fc-h-event .fc-event-main,
+.apex-fullcalendar-5 .fc-v-event .fc-event-main {
+  color: var(--pp-ink);
+}
+/* Monatsraster: knappe Chips (1 px Abstand wie FullCalendar, 2 px Farbkante), damit Titel nicht
+   öfter umbrechen als in Vita – die Rasterhöhe ist fest, jede Zeile mehr muss man scrollen. */
+.apex-fullcalendar-5 .fc-daygrid-event {
+  margin-block-start: 1px;
+  font-size: var(--pp-fs-xs);
+  line-height: var(--pp-lh-xs);
+  font-weight: var(--pp-fw-medium);
+}
+.apex-fullcalendar-5 .fc-daygrid-event.fc-event {
+  border-inline-start-width: 2px;
+}
+.apex-fullcalendar-5 .fc-daygrid-block-event .fc-event-time,
+.apex-fullcalendar-5 .fc-daygrid-block-event .fc-event-title {
+  padding: 2px var(--pp-space-1);
+}
+.apex-fullcalendar-5 .fc-daygrid-block-event .fc-event-time {
+  font-weight: var(--pp-fw-semibold);
+}
+.fc-direction-ltr.apex-fullcalendar-5 .fc-daygrid-block-event:not(.fc-event-start),
+.fc-direction-rtl.apex-fullcalendar-5 .fc-daygrid-block-event:not(.fc-event-end) {
+  border-inline-start-width: 0;
+}
+/* APEX rendert Monats-Termine als „dot-event“ ohne Punkt (nur Titel) – als Chip gepolstert */
+.apex-fullcalendar-5 .fc-daygrid-dot-event {
+  padding: 2px var(--pp-space-1);
+  color: var(--pp-ink);
+}
+.apex-fullcalendar-5 .fc-daygrid-dot-event .fc-event-title {
+  font-weight: var(--pp-fw-medium);
+}
+@media (max-width: 639px) {                   /* schmale Tagesspalten: Platz für den Titel */
+  .apex-fullcalendar-5 .fc-daygrid-dot-event {
+    padding-inline: 3px;
+  }
+}
+.apex-fullcalendar-5 .fc-daygrid-event.fc-event:hover,
+.apex-fullcalendar-5 .fc-v-event.fc-event:hover {
+  background-color: color-mix(in srgb, var(--pp-c-cal-event) 28%, var(--pp-surface));
+}
+.apex-fullcalendar-5 .fc-timegrid-event .fc-event-main {
+  padding: 2px var(--pp-space-1);
+}
+.apex-fullcalendar-5 .fc-timegrid-event-harness-inset .fc-timegrid-event {
+  box-shadow: 0 0 0 1px var(--pp-surface);
+}
+.apex-fullcalendar-5 .fc-daygrid-more-link {
+  padding: 2px var(--pp-space-1);
+  border-radius: var(--pp-r-sm);
+  color: var(--pp-ink-2);
+  font-weight: var(--pp-fw-medium);
+}
+.apex-fullcalendar-5 .fc-daygrid-more-link:hover {
+  background-color: var(--pp-hover);
+}
+/* Fokus auf Terminen: Ring statt FullCalendar-Schatten */
+.apex-fullcalendar-5 .fc-event:focus {
+  box-shadow: none;
+}
+.apex-fullcalendar-5 .fc-event:focus-visible {
+  outline: var(--ut-focus-outline);
+  outline-offset: 1px;
+}
+
+/* Zeitraster (Woche/Tag): Uhrzeiten klein in Graphit, halbe Stunden kaum sichtbar */
+.apex-fullcalendar-5 .fc-timegrid-slot-label-cushion,
+.apex-fullcalendar-5 .fc-timegrid-axis-cushion {
+  font-size: var(--pp-fs-xs);
+  color: var(--pp-muted);
+  font-variant-numeric: tabular-nums;
+}
+.apex-fullcalendar-5 .fc-timegrid-slot-minor {
+  border-block-start-color: transparent;
+}
+.apex-fullcalendar-5 .fc-timegrid-divider {
+  padding: 0;
+  background-color: transparent;
+  border-block-end: 1px solid var(--pp-line);   /* Ganztägig | Zeitraster */
+}
+
+/* Liste: Tagesköpfe abgesenkt, Zeilen mit Haarlinie, Punkt in Terminfarbe */
+.fc-theme-standard.apex-fullcalendar-5 .fc-list {
+  border-color: var(--pp-line);
+  border-radius: var(--pp-r-lg);
+  overflow: clip;
+}
+.fc-theme-standard.apex-fullcalendar-5 .fc-list-day-cushion {
+  background-color: var(--pp-surface-sunken);
+  font-size: var(--pp-fs-head);
+  font-weight: var(--pp-fw-semibold);
+  color: var(--pp-ink-2);
+}
+.apex-fullcalendar-5 .fc-list-day-cushion a {
+  color: inherit;
+  text-decoration: none;
+}
+.apex-fullcalendar-5 .fc-list-table td {
+  border-color: var(--pp-line-subtle);
+  font-size: var(--pp-fs-sm);
+  color: var(--pp-ink);
+}
+.apex-fullcalendar-5 .fc-list-event-time {
+  color: var(--pp-muted);
+  font-variant-numeric: tabular-nums;
+}
+.apex-fullcalendar-5 .fc-list-event-dot {
+  border-color: var(--pp-c-cal-event);
+}
+
+/* Popover „+ mehr“: schwebende Ebene */
+.fc-theme-standard.apex-fullcalendar-5 .fc-popover {
+  --fc-page-bg-color: var(--pp-surface-raised);
+  border-color: transparent;
+  border-radius: var(--pp-r-lg);
+  box-shadow: var(--pp-float-shadow);
+  overflow: clip;
+}
+.fc-theme-standard.apex-fullcalendar-5 .fc-popover-header {
+  background-color: transparent;
+  padding: var(--pp-space-2) var(--pp-space-3);
+  border-block-end: 1px solid var(--pp-line);
+  font-weight: var(--pp-fw-semibold);
+}
+
+/* 3. Karte (MapLibre, APEX: .a-MapRegion) ------------------------------------------
+   Kacheln sind Bilder (nicht färbbar). Bedienelemente, Zuschreibung und Maßstab = schwebende
+   Ebene der App (hell/dunkel wie Menüs, deckend – lesbar auf jeder Kachel).
+   maplibre-gl-apex.css lädt NACH dem Theme → Selektoren mit vorangestelltem .a-MapRegion. */
+.a-MapRegion {
+  --mg-ctrl-group-border-radius: var(--pp-r-md);
+  --mg-ctrl-group-background-color: var(--pp-surface-raised);
+  --mg-ctrl-group-text-color: var(--pp-ink);
+  --mg-ctrl-group-box-shadow: var(--pp-float-shadow);
+  --mg-ctrl-group-button-text-color: var(--pp-ink);
+  --mg-ctrl-group-button-border-color: var(--pp-line-subtle);
+  --mg-ctrl-group-button-hover-background-color: var(--pp-soft);   /* Hover auf schwebender Fläche wie Menüs */
+  --mg-ctrl-group-botton-size: var(--pp-control-h);   /* sic: Name so in maplibre-gl-apex.css */
+  --mg-ctrl-attrib-background-color: var(--pp-surface-raised);
+  --mg-ctrl-attrib-compact-background-color: var(--pp-surface-raised);
+  --mg-ctrl-attrib-link-color: var(--pp-ink-2);
+  --mg-ctrl-attrib-button-background-color: transparent;
+  --mg-ctrl-attrib-compact-border-radius: var(--pp-r-pill);
+  --mg-ctrl-attrib-border-radius: var(--pp-r-sm);
+  --mg-ctrl-scale-background-color: var(--pp-surface-raised);
+  --mg-ctrl-scale-border-color: var(--pp-ink-2);
+  --mg-ctrl-scale-color: var(--pp-ink);
+  --mg-popup-background-color: var(--pp-surface-raised);
+  --mg-popup-text-color: var(--pp-ink);
+  --mg-popup-content-border-radius: var(--pp-r-lg);
+  --mg-popup-box-shadow: var(--pp-float-shadow);
+  --mg-popup-font-size: var(--pp-fs-sm);
+  --mg-popup-line-height: var(--pp-lh-sm);
+  --mg-popup-close-button-size: 1.25rem;
+  --mg-popup-close-button-border-radius: var(--pp-r-sm);
+  --mg-popup-close-button-text-color: var(--pp-muted);
+  --mg-popup-close-button-hover-background-color: var(--pp-soft);
+  --mg-popup-close-button-hover-text-color: var(--pp-ink);
+  --a-map-control-icon-color: var(--pp-ink);
+  --a-map-legend-title-text-color: var(--pp-muted);
+  --a-map-legend-font-size: var(--pp-fs-sm);
+  --a-map-popup-title-font-size: var(--pp-fs-md);
+  --a-map-popup-title-line-height: var(--pp-lh-md);
+  --a-map-message-background-color: var(--pp-warning-tint);
+  --a-map-message-text-color: var(--pp-ink);
+  --a-map-message-icon-color: var(--pp-warning-text);
+  --a-map-message-border-radius: var(--pp-r-md);
+  --a-map-zoom-overview-background-color: var(--pp-surface-raised);
+  --a-map-zoom-overview-border-radius: var(--pp-r-md);
+  --a-map-zoom-overview-box-shadow: var(--pp-float-shadow);
+  --a-map-zoom-overview-square-background-color: color-mix(in srgb, var(--pp-accent) 16%, transparent);
+  --a-map-zoom-overview-square-border-color: var(--pp-accent);
+  --a-map-zoom-overlay-background-color: color-mix(in srgb, var(--pp-accent) 10%, transparent);
+  --a-map-zoom-overlay-border-color: var(--pp-accent);
+  --a-map-distance-border-radius: var(--pp-r-md);
+  --a-map-distance-light-background-color: var(--pp-surface-raised);
+  --a-map-distance-light-text-color: var(--pp-ink);
+  --a-map-distance-dark-background-color: var(--pp-tooltip-bg);
+  --a-map-distance-dark-text-color: var(--pp-tooltip-text);
+}
+/* Die Karte als gerundetes Fenster in der Leinwand */
+.a-MapRegion .a-MapRegion-map.maplibregl-map {
+  border-radius: var(--pp-r-lg);
+}
+/* maplibre setzt bei Hover die Symbolfarbe auf die Hover-FLÄCHE (Tippfehler im Original) */
+.a-MapRegion .maplibregl-ctrl button:hover {
+  --mg-ctrl-group-button-text-color: var(--pp-ink);
+}
+/* Fokus: Ring nach innen (die Gruppe schneidet ab) statt Browser-Ring */
+.a-MapRegion .maplibregl-ctrl-group button:focus-visible {
+  outline: var(--ut-focus-outline);
+  outline-offset: calc(-1 * var(--pp-focus-ring-width));
+}
+/* Symbole: maplibre malt sie als schwarzes Hintergrundbild – im Dunkeln unsichtbar.
+   Gleiche Formen als Maske in currentColor (Tusche hell/dunkel). Die Masken verwenden die Pfaddaten der
+   Steuerelement-Symbole von MapLibre GL JS (BSD-3-Clause, © MapLibre contributors, © Mapbox),
+   das APEX für Karten-Regionen mitliefert; Lizenz: https://github.com/maplibre/maplibre-gl-js/blob/main/LICENSE.txt */
+.a-MapRegion .maplibregl-ctrl button .maplibregl-ctrl-icon {
+  -webkit-mask: var(--pp-c-map-icon) center / contain no-repeat;
+  mask: var(--pp-c-map-icon) center / contain no-repeat;
+}
+.a-MapRegion .maplibregl-ctrl button.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon {
+  --pp-c-map-icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 29 29' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14.5 8.5c-.75 0-1.5.75-1.5 1.5v3h-3c-.75 0-1.5.75-1.5 1.5S9.25 16 10 16h3v3c0 .75.75 1.5 1.5 1.5S16 19.75 16 19v-3h3c.75 0 1.5-.75 1.5-1.5S19.75 13 19 13h-3v-3c0-.75-.75-1.5-1.5-1.5z'/%3E%3C/svg%3E");
+  background-image: none;
+  background-color: currentColor;
+}
+.a-MapRegion .maplibregl-ctrl button.maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon {
+  --pp-c-map-icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 29 29' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 13c-.75 0-1.5.75-1.5 1.5S9.25 16 10 16h9c.75 0 1.5-.75 1.5-1.5S19.75 13 19 13h-9z'/%3E%3C/svg%3E");
+  background-image: none;
+  background-color: currentColor;
+}
+.a-MapRegion .maplibregl-ctrl button.maplibregl-ctrl-compass .maplibregl-ctrl-icon {
+  --pp-c-map-icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 29 29' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.5 14l4-8 4 8h-8z'/%3E%3Cpath d='M10.5 16l4 8 4-8h-8z' opacity='.3'/%3E%3C/svg%3E");
+  background-image: none;
+  background-color: currentColor;
+}
+.a-MapRegion .maplibregl-ctrl button.maplibregl-ctrl-fullscreen .maplibregl-ctrl-icon {
+  --pp-c-map-icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 29 29' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 16v5.5c0 1.75-.75 2.5-2.5 2.5H16v-1l3-1.5-4-5.5 1-1 5.5 4 1.5-3h1zM6 16l1.5 3 5.5-4 1 1-4 5.5 3 1.5v1H7.5C5.75 24 5 23.25 5 21.5V16h1zm7-11v1l-3 1.5 4 5.5-1 1-5.5-4L6 13H5V7.5C5 5.75 5.75 5 7.5 5H13zm11 2.5c0-1.75-.75-2.5-2.5-2.5H16v1l3 1.5-4 5.5 1 1 5.5-4 1.5 3h1V7.5z'/%3E%3C/svg%3E");
+  background-image: none;
+  background-color: currentColor;
+}
+.a-MapRegion .maplibregl-ctrl button.maplibregl-ctrl-shrink .maplibregl-ctrl-icon {
+  --pp-c-map-icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 29 29' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.5 16c-1.75 0-2.5.75-2.5 2.5V24h1l1.5-3 5.5 4 1-1-4-5.5 3-1.5v-1h-5.5zM13 18.5c0-1.75-.75-2.5-2.5-2.5H5v1l3 1.5L4 24l1 1 5.5-4 1.5 3h1v-5.5zm3-8c0 1.75.75 2.5 2.5 2.5H24v-1l-3-1.5L25 5l-1-1-5.5 4L17 5h-1v5.5zM10.5 13c1.75 0 2.5-.75 2.5-2.5V5h-1l-1.5 3L5 4 4 5l4 5.5L5 12v1h5.5z'/%3E%3C/svg%3E");
+  background-image: none;
+  background-color: currentColor;
+}
+/* Zuschreibung: Schrift in Graphit, Info-Knopf (schwarzes Hintergrundbild) als Maske */
+.a-MapRegion .maplibregl-ctrl-attrib {
+  color: var(--pp-muted);
+}
+.a-MapRegion .maplibregl-ctrl-attrib .maplibregl-ctrl-attrib-button {
+  background-image: none;
+  background-color: var(--pp-ink-2);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill-rule='evenodd'%3E%3Cpath d='M4 10a6 6 0 1 0 12 0 6 6 0 1 0-12 0m5-3a1 1 0 1 0 2 0 1 1 0 1 0-2 0m0 3a1 1 0 1 1 2 0v3a1 1 0 1 1-2 0'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill-rule='evenodd'%3E%3Cpath d='M4 10a6 6 0 1 0 12 0 6 6 0 1 0-12 0m5-3a1 1 0 1 0 2 0 1 1 0 1 0-2 0m0 3a1 1 0 1 1 2 0v3a1 1 0 1 1-2 0'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.a-MapRegion .maplibregl-ctrl-attrib-button:focus-visible {
+  outline: var(--ut-focus-outline);
+  outline-offset: 0;
+}
+/* Popup */
+.a-MapRegion-popupTitle {
+  font-weight: var(--pp-fw-semibold);
+  letter-spacing: var(--pp-tracking-heading);
+}
+.a-MapRegion .maplibregl-popup-close-button:focus-visible {
+  outline: var(--ut-focus-outline);
+  outline-offset: 0;
+}
+/* Legende: ruhig, Titel in Graphit */
+.a-MapRegion-legendTitle {
+  font-weight: var(--pp-fw-semibold);
+}
+.a-MapRegion-legendItem {
+  border-radius: var(--pp-r-md);
+}
+
+/* 4. Tree im Inhalt (Tree-Region, nicht die Navigation) -----------------------------
+   Die Brücke legt --a-treeview-* auf :root für die Navigation (Lasche zeichnet shell.css,
+   Auswahl dort transparent). Im Inhalt eigene Werte: Zeilen 32 px (Touch 40 px),
+   Hover = Leinwand-Hover, Auswahl = Akzent-Tönung, Fokus nur bei Tastatur. */
+.a-TreeView:not(.t-TreeNav) {
+  --a-treeview-node-font-size: var(--pp-fs-md);
+  --a-treeview-node-line-height: var(--pp-lh-md);
+  --a-treeview-node-padding-y: calc((var(--pp-control-h) - var(--pp-lh-md)) / 2);
+  --a-treeview-node-padding-x: var(--pp-space-2);
+  --a-treeview-node-icon-size: 1rem;
+  --a-treeview-toggle-size: 1rem;
+  --a-treeview-toggle-opacity: 1;
+  --a-treeview-toggle-text-color: var(--pp-muted);
+  --a-treeview-node-text-color: var(--pp-ink);
+  --a-treeview-node-icon-color: var(--pp-muted);
+  --a-treeview-node-hover-background-color: var(--pp-hover);
+  --a-treeview-node-active-background-color: var(--pp-press);
+  --a-treeview-node-selected-background-color: var(--pp-accent-tint);
+  --a-treeview-node-selected-text-color: var(--pp-ink);
+  --a-treeview-node-selected-icon-color: var(--pp-accent-text);
+  --a-treeview-toggle-selected-text-color: var(--pp-ink-2);
+  --a-treeview-node-focused-background-color: transparent;
+  --a-treeview-node-focused-text-color: var(--pp-ink);
+  --a-treeview-node-focused-shadow: none;
+  --a-treeview-node-placeholder-background-color: var(--pp-accent-tint);
+  --a-treeview-node-placeholder-fill-background-color: var(--pp-accent-tint);
+  --a-treeview-drag-helper-background-color: var(--pp-surface-raised);
+  --a-treeview-drag-helper-text-color: var(--pp-ink);
+  --a-treeview-drag-helper-border-color: transparent;
+  --a-treeview-drag-helper-border-radius: var(--pp-r-md);
+  --a-treeview-drag-helper-shadow: var(--pp-float-shadow);
+}
+.a-TreeView:not(.t-TreeNav) .a-TreeView-row {
+  border-radius: var(--pp-r-md);
+}
+/* Aufklapper: derselbe Outline-Chevron wie Navigation, Collapsible, Menüs (UT Core .t-TreeNav:
+   \e0c2, zu = −90°, RTL +90°, offen = 0°) statt der app_ui-Dreiecke \e126/\e002/\e123.
+   ::before als Block, sonst greift transform am Inline-Glyph nicht. */
+.a-TreeView:not(.t-TreeNav) .is-expandable > .a-TreeView-toggle::before,
+.a-TreeView:not(.t-TreeNav) .is-collapsible > .a-TreeView-toggle::before {
+  content: "\e0c2";
+  display: block;
+  transform: rotate(-90deg);
+  transition: transform var(--pp-duration) var(--pp-ease);
+}
+.a-TreeView.u-RTL:not(.t-TreeNav) .is-expandable > .a-TreeView-toggle::before,
+.u-RTL .a-TreeView:not(.t-TreeNav) .is-expandable > .a-TreeView-toggle::before {
+  transform: rotate(90deg);
+}
+.a-TreeView:not(.t-TreeNav) .is-collapsible > .a-TreeView-toggle::before {
+  transform: none;
+}
+/* Nachladen: app_ui dreht den ganzen Aufklapper mit dem Spinner-Glyph – der bleibt */
+.a-TreeView:not(.t-TreeNav) .is-processing > .a-TreeView-toggle::before {
+  content: "\e01e";
+  transform: none;
+}
+/* Label: kein eigener Ring (base.css) – den Fokus zeigt die Zeile */
+.a-TreeView:not(.t-TreeNav) .a-TreeView-label {
+  --ut-focus-outline: none;
+}
+.a-TreeView:not(.t-TreeNav) .a-TreeView-row.is-selected.is-focused {
+  background-color: var(--a-treeview-node-selected-background-color);
+}
+/* Tastatur-Fokus: Ring nach innen auf der Zeile (Label selbst ist outline:none, app_ui) */
+.a-TreeView:not(.t-TreeNav) .a-TreeView-row.is-focused:has(~ .a-TreeView-content .a-TreeView-label:focus-visible) {
+  box-shadow: var(--pp-focus-shadow-inset);
+}
+.a-TreeView:not(.t-TreeNav) .a-TreeView-content.is-selected .a-TreeView-label {
+  font-weight: var(--pp-fw-medium);
+}
+.a-TreeView:not(.t-TreeNav) .a-TreeView-content .a-Icon,
+.a-TreeView:not(.t-TreeNav) .a-TreeView-content .fa {
+  font-size: var(--a-treeview-node-icon-size);
+}

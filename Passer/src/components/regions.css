@@ -1,0 +1,562 @@
+/* ==========================================================================
+   Passer – Regionen
+   Standard-Region (alle Template-Optionen), Akzente, Collapsible, Hero, Alert-Region,
+   Button Container, Carousel, Tabs Container (Container), Wizard-Container,
+   Content Block, Image Region, Title-Bar-Region im Inhalt.
+   Idee: Regionen sind keine Kästen. Titel + Haarlinie ordnen, Weißraum trennt,
+   Flächen (abgesenkt oder Status-Tönung) nur dort, wo ein Block als Ganzes gemeint ist.
+   Jede sichtbare Fläche hat den Container-Radius --pa-r-lg.
+   Regeln: nur Tokens (--pa-*, gemappte UT-/APEX-Tokens), modusneutral, kein @layer,
+   logische Eigenschaften; lokale Tokens: --pa-c-region-mark*, --pa-c-region-toggle-*,
+   --pa-c-region-ring-room, --pa-c-region-title-pad, --pa-c-btnregion-pad-x.
+   ========================================================================== */
+
+
+/* 1. Standard-Region: Titel + Haarlinie ---------------------------------------
+   Fläche, Rahmen, Polster und Titelgröße setzt bridge.css (Abschnitt 7). */
+
+.t-Region-title {
+  font-weight: var(--pa-fw-semibold);
+  letter-spacing: var(--pa-tracking-heading);
+}
+
+/* Titel als Schalter (Collapsible): Fokusring gerundet und mit etwas Luft zur Schrift;
+   die negative Marge hält den Text auf seiner Position. */
+.t-Region-titleButton {
+  --pa-c-region-title-pad: .125rem;
+  padding-inline: var(--pa-c-region-title-pad);
+  margin-inline: calc(-1 * var(--pa-c-region-title-pad));
+  border-radius: var(--pa-r-sm);
+}
+
+/* Region-Icon: ruhig in Nebenschrift, bündig am Inhaltsrand */
+.t-Region-headerIcon {
+  --ut-region-header-icon-spacing: var(--pa-space-2);
+  --ut-region-header-icon-padding: var(--pa-space-1) 0;
+  --ut-region-header-icon-border-radius: var(--pa-r-sm);
+  color: var(--pa-muted);
+}
+
+/* Kopf-Buttons: 32-px-Buttons passen in die 44-px-Kopfzeile der Titel */
+.t-Region-headerItems--buttons {
+  padding-block: var(--pa-space-1);
+}
+
+/* Button-Zeilen oben/unten (Positionen Previous/Next/Close/Create …): UT legt die linke
+   und rechte Gruppe unumbrechbar nebeneinander. Mit bündigem Rand und Touch-Buttons
+   stießen sie auf dem Phone aneinander und ragten über die Region. Hier brechen die
+   Gruppen um (die rechte bleibt am Ende), eine zu breite Gruppe umbricht in sich. */
+.t-Region-buttons {
+  flex-wrap: wrap;
+  column-gap: var(--pa-space-2);
+}
+.t-Region-buttons-left,
+.t-Region-buttons-right {
+  max-inline-size: 100%;
+}
+.t-Region-buttons-right {
+  margin-inline-start: auto;
+}
+
+/* Akzent 1–15: kein farbiger Kopfstreifen, sondern eine Legenden-Marke vor dem Titel –
+   wie das Farbfeld einer Kartenlegende. Die Linie bleibt neutral, der Titel in Tusche.
+   UT setzt die Kategoriefarbe auf dem Kopf als --ut-region-header-background-color. */
+.t-Region[class*="t-Region--accent"] > .t-Region-header {
+  --pa-c-region-mark: var(--ut-region-header-background-color);
+  --pa-c-region-mark-size: .75rem;
+  --pa-c-region-mark-gap: var(--pa-space-2);
+  background-color: transparent;
+  color: var(--pa-ink);
+}
+.t-Region-headerItems--title::before {
+  content: "";
+  flex: none;
+  inline-size: var(--pa-c-region-mark-size, 0px);
+  block-size: var(--pa-c-region-mark-size, 0px);
+  margin-inline-end: var(--pa-c-region-mark-gap, 0px);
+  border-radius: .1875rem;
+  background-color: var(--pa-c-region-mark, transparent);
+}
+
+/* Body Overflow „Scroll“ (UT-Standard, t-Region--scrollBody): der Körper ist ein
+   Scroll-Container (overflow: auto). Weil der Inhalt bündig auf dem Rand steht
+   (Körper-Polster 0), schnitte er den Fokusring (Abstand + Breite = 4 px außen) an den
+   Seiten ab. Der Körper bekommt deshalb seitlich Ring-Raum als Polster und gibt ihn mit
+   negativer Marge wieder ab: der Inhalt bleibt bündig, der Ring passt in den Clip.
+   Gilt auch für Remove Body Padding / Remove UI Decoration (UT: padding 0) – dort
+   bleibt es beim Ring-Raum. Jeder Körper setzt den Token neu, damit verschachtelte
+   Regionen ihn nicht erben. */
+.t-Region-body {
+  --pa-c-region-ring-room: 0px;
+}
+.t-Region--scrollBody > .t-Region-bodyWrap > .t-Region-body,
+.t-Region--shadowScroll > .t-Region-bodyWrap > .t-Region-body {
+  --pa-c-region-ring-room: calc(var(--pa-focus-ring-offset) + var(--pa-focus-ring-width));
+  padding-inline: calc(var(--ut-region-body-padding-x, 1rem) + var(--pa-c-region-ring-room));
+  margin-inline: calc(-1 * var(--pa-c-region-ring-room));
+}
+.t-Region--noPadding > .t-Region-bodyWrap > .t-Region-body,
+.t-Region--noUI > .t-Region-bodyWrap > .t-Region-body {
+  padding-inline: var(--pa-c-region-ring-room);
+}
+
+/* Body-Höhe 240…640 px (i-h…): der Scrollbereich endet an einer Haarlinie,
+   damit abgeschnittener Inhalt als „scrollt weiter“ lesbar ist. Als Hintergrund
+   gezeichnet (steht beim Scrollen still), genau so breit wie die Region – ohne den
+   seitlichen Ring-Raum. */
+[class*=" i-h"] > .t-Region-bodyWrap > .t-Region-body {
+  background-image: linear-gradient(var(--pa-line), var(--pa-line));
+  background-repeat: no-repeat;
+  background-position: var(--pa-c-region-ring-room) 100%;
+  background-size: calc(100% - 2 * var(--pa-c-region-ring-room)) var(--pa-hairline);
+}
+
+/* Remove Borders / Remove UI Decoration / Text Content: auch unten keine Linie */
+.t-Region--noBorder > .t-Region-bodyWrap > .t-Region-body,
+.t-Region--noUI > .t-Region-bodyWrap > .t-Region-body,
+.t-Region--textContent > .t-Region-bodyWrap > .t-Region-body {
+  background-image: none;
+}
+
+/* Remove Body Padding: kein Beschnitt mit Radius. Die Region ist flach (keine Fläche,
+   kein Rahmen) – ein unsichtbarer Radius schnitte nur die Enden von Linien ab, die auf
+   der Unterkante liegen (Abschluss-Haarlinie eines Reports). Inhalte mit eigener Fläche
+   (Karte, Karten, Bild-Region, Kalender-Liste) bringen ihren Radius selbst mit. */
+
+/* Stack Region: UT erzwingt border-radius 0 !important – bewusst so: ein Stapel ist eine
+   Liste ohne Kasten. Haarlinien zwischen den Einträgen (UT: oben/unten, erster ohne oben),
+   kein zusätzlicher Strich unter dem Titel. Grundlage für Akkordeons. */
+.t-Region--stacked {
+  --ut-region-border-width: var(--pa-hairline);
+  --ut-region-border-color: var(--pa-line);
+}
+.t-Region--stacked > .t-Region-header {
+  --ut-region-header-border-width: 0px;
+}
+
+/* Maximieren: die Region liegt als eigenes Blatt Papier über der Seite */
+.t-Region.is-maximized {
+  padding-block: var(--pa-page-pad-y);
+  padding-inline: var(--pa-page-pad-x);
+  background-color: var(--pa-surface);
+  background-image: var(--pa-grain);
+  background-size: var(--pa-grain-size) var(--pa-grain-size);
+}
+
+
+/* 2. Collapsible: ruhiger Chevron statt Dreieck im grauen Kästchen -------------- */
+
+/* Richtung des Chevrons: Drehung + optischer Ausgleich (der gedrehte Winkel sitzt sonst schief) */
+.t-Region--hideShow {
+  --pa-c-region-toggle-rot: 45deg;                 /* aufgeklappt: nach unten */
+  --pa-c-region-toggle-shift: 0 -15%;
+}
+.t-Region--hideShow.is-collapsed {
+  --pa-c-region-toggle-rot: -45deg;                /* zugeklappt: in Leserichtung */
+  --pa-c-region-toggle-shift: -15% 0;
+  --ut-region-header-border-width: var(--pa-hairline);   /* Abschnittslinie bleibt stehen */
+}
+.u-RTL .t-Region--hideShow.is-collapsed {
+  --pa-c-region-toggle-rot: 135deg;
+  --pa-c-region-toggle-shift: 15% 0;
+}
+.t-Region--controlsPosEnd.is-expanded {
+  --pa-c-region-toggle-rot: -135deg;               /* Schalter am Ende: auf = nach oben */
+  --pa-c-region-toggle-shift: 0 15%;
+}
+.t-Region--controlsPosEnd.is-collapsed,
+.u-RTL .t-Region--controlsPosEnd.is-collapsed {
+  --pa-c-region-toggle-rot: 45deg;
+  --pa-c-region-toggle-shift: 0 -15%;
+}
+
+/* UT rundet den zugeklappten Kopf unten – die Haarlinie würde sich an den Enden hochbiegen */
+.t-Region--hideShow.is-collapsed > .t-Region-header {
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+
+.t-Region-headerItems--controls {
+  padding-inline-start: 0;
+  padding-inline-end: var(--pa-space-1);
+}
+.t-Region--controlsPosEnd .t-Region-headerItems--controls {
+  padding-inline-start: var(--pa-space-2);
+  padding-inline-end: 0;
+}
+.t-Region-headerItems--controls .t-Button--hideShow {
+  --a-button-font-size: var(--pa-fs-xs);           /* UT: 11/14 px – hier die Skala (12/16) */
+  --a-button-line-height: var(--pa-lh-xs);
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-hover-border-color: transparent;
+  --a-button-active-border-color: transparent;
+  --a-button-focus-border-color: transparent;
+  --a-button-text-color: var(--pa-ink-2);
+  --a-button-hover-background-color: var(--pa-hover);
+  --a-button-hover-text-color: var(--pa-ink);
+  --a-button-active-background-color: var(--pa-press);
+  --a-button-focus-background-color: var(--pa-hover);
+  --a-button-border-radius: var(--pa-r-md);
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--pa-hit-min);
+  min-block-size: var(--pa-hit-min);
+  padding: 0;
+}
+.t-Button--hideShow .a-Collapsible-icon {
+  display: grid;
+  place-items: center;
+}
+/* Chevron als zwei Haarstriche; die Glyphe (Dreieck) wird auf 0 gesetzt.
+   Physische Kanten sind hier Absicht: die Drehung bestimmt die Richtung (RTL oben). */
+.t-Button--hideShow .a-Collapsible-icon::before {
+  font-size: 0;
+  inline-size: .5rem;
+  block-size: .5rem;
+  border-style: solid;
+  border-color: currentColor;
+  border-width: 0 1.5px 1.5px 0;
+  translate: var(--pa-c-region-toggle-shift, 0 -15%);
+  rotate: var(--pa-c-region-toggle-rot, 45deg);
+  transition: rotate var(--pa-duration) var(--pa-ease), translate var(--pa-duration) var(--pa-ease);
+}
+/* Option „Plus or Minus“: Glyphen von UT behalten */
+.t-Region--hideShowIconsMath .t-Button--hideShow .a-Collapsible-icon::before {
+  font-size: inherit;
+  inline-size: auto;
+  block-size: auto;
+  border-width: 0;
+  translate: none;
+  rotate: none;
+}
+
+
+/* 3. Hero: flach auf dem Papier, bündig auf dem Inhaltsrand ------------------- */
+
+.t-HeroRegion {
+  --ut-hero-region-padding-x: 0rem;
+  --ut-hero-region-padding-y: var(--pa-space-4);
+  --ut-hero-region-title-font-size: var(--pa-fs-2xl);
+  --ut-hero-region-title-line-height: var(--pa-lh-2xl);
+  --ut-xs-hero-region-title-font-size: var(--pa-fs-xl);
+  --ut-xs-hero-region-title-line-height: var(--pa-lh-xl);
+  --ut-hero-region-font-size: var(--pa-fs-lg);
+  --ut-hero-region-line-height: var(--pa-lh-lg);
+  --ut-xs-hero-region-font-size: var(--pa-fs-md);
+  --ut-xs-hero-region-line-height: var(--pa-lh-md);
+  --ut-hero-region-icon-spacing: var(--pa-space-5);
+  --ut-xs-hero-region-icon-spacing: var(--pa-space-3);
+  --ut-hero-region-column-spacing: var(--pa-space-4);
+}
+.t-HeroRegion--noPadding {
+  --ut-hero-region-padding-y: 0rem;
+  --ut-hero-region-padding-x: 0rem;
+}
+.t-HeroRegion--iconsRounded {
+  --ut-hero-region-icon-border-radius: var(--pa-r-lg);
+}
+/* Icon: Fläche und Symbol immer als Paar (sonst Tusche auf Mittelgrau, wenn eine App nur die Fläche umfärbt) */
+.t-HeroRegion-icon {
+  --ut-hero-region-icon-background-color: var(--pa-soft);
+  --ut-hero-region-icon-text-color: var(--pa-ink);
+}
+.t-Body-title .t-HeroRegion {
+  --ut-hero-region-padding-x: var(--pa-page-pad-x);
+}
+.t-HeroRegion-title {
+  letter-spacing: var(--pa-tracking-title);
+}
+
+
+/* 4. Alert: gerundete Flächen statt Icon-Spalte + weißem Kasten + Rahmen ---------
+   Ohne „Highlight Background“: abgesenkte Hinweisfläche, Status nur im Icon.
+   Mit „Highlight Background“ (t-Alert--colorBG): Status-Tönung (--ut-palette-*-shade
+   = --pa-<status>-tint, siehe bridge.css). Icons immer in --pa-<status>-text (≥ 3:1). */
+
+.t-Alert {
+  --ut-alert-background-color: var(--pa-surface-sunken);
+  --ut-alert-text-color: var(--pa-ink);
+  --ut-alert-border-width: 0px;
+  --ut-alert-box-shadow: none;
+  --ut-alert-title-font-weight: var(--pa-fw-semibold);
+  --ut-alert-horizontal-icon-size: 1.5rem;
+  --ut-alert-wizard-icon-size: 3rem;
+  --ut-alert-horizontal-border-radius: var(--pa-r-lg);
+  --ut-alert-wizard-border-radius: var(--pa-r-lg);
+  display: flow-root;            /* ohne Rahmen fielen die Innenabstände des Wizard-Alerts nach außen */
+}
+.t-Alert-icon {
+  background-color: transparent;
+}
+.t-Alert-title {
+  letter-spacing: var(--pa-tracking-heading);
+}
+
+.t-Alert--warning,
+.t-Alert--yellow {
+  --ut-alert-icon-text-color: var(--pa-warning-text);
+}
+.t-Alert--success {
+  --ut-alert-icon-text-color: var(--pa-success-text);
+}
+.t-Alert--info {
+  --ut-alert-icon-text-color: var(--pa-info-text);
+}
+.t-Alert--danger,
+.t-Alert--red {
+  --ut-alert-icon-text-color: var(--pa-danger-text);
+}
+
+/* Horizontal: Icon oben neben dem Titel, gleiche 16-px-Polster ringsum */
+.t-Alert--horizontal .t-Alert-icon {
+  align-items: flex-start;
+  padding-block: var(--pa-space-4);
+  padding-inline: var(--pa-space-4) 0;
+}
+.t-Alert--horizontal .t-Alert-icon .t-Icon {
+  margin-block: 0;               /* UT zentriert senkrecht (margin: auto) – hier: auf der Titelzeile */
+}
+.t-Alert--horizontal .t-Alert-content {
+  padding: var(--pa-space-4);
+  gap: var(--pa-space-1);
+}
+/* Titel „Hidden but accessible“ / „Hidden“: der leere .t-Alert-header bleibt Flex-Element –
+   ohne Lücke steht der Text mit denselben 16 px oben wie unten (sonst 20/16). */
+.t-Alert--horizontal:is(.t-Alert--accessibleHeading, .t-Alert--removeHeading) .t-Alert-content {
+  gap: 0;
+}
+.t-Alert--horizontal .t-Alert-title {
+  --ut-alert-title-font-size: var(--pa-fs-lg);
+  --ut-alert-title-line-height: var(--pa-lh-lg);
+}
+
+/* Wizard: zentrierte Meldung (Bestätigung, Zugriff verweigert …) */
+.t-Alert--wizard .t-Alert-title {
+  --ut-alert-title-font-size: var(--pa-fs-xl);
+  --ut-alert-title-line-height: var(--pa-lh-xl);
+}
+.t-Alert--wizard .t-Alert-body {
+  font-size: var(--pa-fs-md);
+  line-height: var(--pa-lh-body);
+  color: var(--pa-ink-2);
+}
+.t-Alert--wizard .t-Alert-inset {
+  border-radius: var(--pa-r-md);
+}
+.t-Alert .t-ButtonRegion {
+  --ut-button-region-border-width: 0px;
+}
+
+/* Seitenmeldungen (t-Alert--page, apex.message) gestaltet overlays.css. */
+
+
+/* 5. Button Container: kein Kasten, eine Haarlinie darüber (Formular-Fußleiste) ----
+   Buttons bündig auf dem Inhaltsrand. Randbreite, Polster und Außenabstand bleiben
+   UT-Hebel, damit „Borderless“, „Remove UI Decoration“, „Slim/No Padding“ wirken. */
+
+:where(.t-ButtonRegion) {
+  --ut-button-region-padding: var(--pa-space-3);
+}
+.t-ButtonRegion {
+  --pa-c-btnregion-pad-x: 0rem;
+  --ut-button-region-title-font-size: var(--pa-fs-lg);
+  --ut-button-region-title-line-height: var(--pa-lh-lg);
+  --ut-button-region-title-font-weight: var(--pa-fw-semibold);
+  border-block-end-width: 0;
+  border-inline-width: 0;
+  border-start-start-radius: 0;      /* sonst biegt sich die obere Haarlinie an den Enden */
+  border-start-end-radius: 0;
+}
+.t-ButtonRegion-col--left .t-ButtonRegion-buttons,
+.t-ButtonRegion-col--right .t-ButtonRegion-buttons {
+  padding-inline: var(--pa-c-btnregion-pad-x);
+}
+/* in Dialog-, Drawer- und Wizard-Fußzeilen und in der Title Bar: UT-Polster behalten */
+.t-DialogRegion-buttons .t-ButtonRegion,
+.t-Wizard-footer .t-ButtonRegion,
+.t-Dialog-footer .t-ButtonRegion,
+.t-Drawer-footer .t-ButtonRegion,
+.t-Body-title .t-ButtonRegion,
+.t-ButtonRegion--dialogRegion,
+.t-ButtonRegion--wizard {
+  --pa-c-btnregion-pad-x: var(--ut-button-region-padding, 1rem);
+}
+/* mobil am unteren Rand verankert: ein Bogen über dem Inhalt */
+@media (max-width: 639px) {
+  .t-ButtonRegion--stickToBottom.is-anchored {
+    --pa-c-btnregion-pad-x: var(--pa-page-pad-x);
+    --ut-button-region-background-color: var(--pa-surface);
+  }
+}
+
+
+/* 6. Carousel: Pfeile und Punkte als kleine Bögen über dem Motiv ------ */
+
+.t-Region--carousel {
+  --ut-carousel-button-icon-size: 1rem;
+  --ut-carousel-button-padding-y: calc((var(--pa-control-h) - 1rem) / 2);
+  --ut-carousel-button-padding-x: calc((var(--pa-control-h) - 1rem) / 2);
+  --ut-carousel-button-border-radius: var(--pa-r-pill);
+  --ut-carousel-button-background-color: var(--pa-surface);
+  --ut-carousel-button-text-color: var(--pa-ink);
+  --ut-carousel-button-opacity: 1;
+  --ut-carousel-button-offset-x: var(--pa-space-3);
+  --ut-carousel-nav-size: .5rem;
+  --ut-carousel-nav-offset-x: .1875rem;
+  --ut-carousel-nav-offset-y: .375rem;
+  --ut-carousel-nav-border-width: 0px;
+  --ut-carousel-nav-background-color: var(--pa-edge);
+  --ut-carousel-nav-selected-background-color: var(--pa-ink);
+}
+/* das Motiv ist selbst die Fläche: keine Haarlinie darüber, alle vier Ecken gerundet.
+   Radius und Beschnitt sitzen auf der Folie (t-Region-body), nicht auf bodyWrap – der
+   enthält bei Buttons oben/unten auch die Button-Zeilen. Kein Ring-Raum: die Region
+   selbst schneidet ab (UT overflow: hidden), die Folie bleibt so breit wie die Region. */
+.t-Region--carousel > .t-Region-header {
+  --ut-region-header-border-width: 0px;
+}
+.t-Region--carousel > .t-Region-bodyWrap > .t-Region-body {
+  --pa-c-region-ring-room: 0px;
+  padding-inline: 0;
+  border-radius: var(--ut-region-border-radius, var(--pa-r-lg));
+  overflow: clip;
+}
+.t-Region--carousel .a-Region-carouselNav {
+  inline-size: fit-content;
+  margin-inline: auto;
+  inset-block-end: var(--pa-space-3);
+  padding-inline: var(--pa-space-1);
+  border-radius: var(--pa-r-pill);
+  background-color: var(--pa-surface);
+}
+.t-Region--carousel .a-Region-carouselLink {
+  transition: inline-size var(--pa-duration) var(--pa-ease);
+}
+/* Fokus über beliebigem Motiv: Doppelring (Papier-Lücke + Teal) statt Outline,
+   damit der Ring auf jeder Bildfarbe ≥ 3:1 gegen seine Lücke hat */
+.a-Region-carouselControl .a-Tabs-button:focus-visible,
+.t-Region--carousel .a-Region-carouselLink:focus-visible {
+  --ut-focus-outline: none;
+  box-shadow: var(--pa-focus-shadow);
+}
+.t-Region--carousel .a-Tabs-selected .a-Region-carouselLink {
+  inline-size: 1.25rem;
+}
+
+
+/* 7. Tabs Container (t-TabsRegion) --------------------------------------------
+   Die Tab-Leiste selbst (einfach und „Pill“ als Segment-Leiste, Marke, Fokus nach innen)
+   gestaltet shell.css für Tabs-Liste und Tabs Container gemeinsam. Hier nur der
+   Container: Abstand zwischen Leiste und Panel. */
+
+.t-TabsRegion-items > .t-Tabs {
+  margin-block-end: var(--pa-space-4);
+}
+
+
+/* 8. Wizard: flach wie eine Region – Schritte oben, Haarlinie, Inhalt ----------- */
+
+.t-Wizard {
+  --ut-wizard-border-width: 0px;
+  --ut-wizard-box-shadow: none;
+  --ut-wizard-background-color: transparent;
+  --ut-wizard-controls-padding-x: 0rem;
+  --ut-wizard-controls-padding-y: var(--pa-space-4);
+  --ut-wizard-body-padding-x: 0rem;
+  --ut-wizard-body-padding-y: var(--pa-space-6);
+  --ut-wizard-title-font-size: var(--pa-fs-xl);
+  --ut-wizard-title-line-height: var(--pa-lh-xl);
+  --ut-wizard-title-padding-y: var(--pa-space-5);
+  border-radius: var(--pa-r-lg);
+}
+.t-Wizard-header {
+  border-block-end: var(--pa-hairline) solid var(--pa-line);
+}
+.t-Wizard-title {
+  font-weight: var(--pa-fw-semibold);
+  letter-spacing: var(--pa-tracking-heading);
+}
+
+/* Wizard-Fortschritt (t-WizardSteps, Listen-Template „Wizard Progress“) gestaltet
+   content.css – hier nur der Container. */
+
+
+/* 9. Content Block: Überschriften-Abschnitte auf der Skala 28 · 20 · 16 ----------
+   Die Skala hat nur drei Überschriftenstufen; h3 hat dieselbe Größe wie ein Region-Titel.
+   Damit Gruppe und Gruppiertes unterscheidbar bleiben, steht die h3 als Gruppen-
+   überschrift in Nebenschrift, der folgende Region-Titel führt in Tusche. Mobil bleiben die
+   Größen stehen (28/20 passen auf 390 px) – nur die Abstände werden enger. */
+
+.t-ContentBlock--h1 {
+  --ut-content-block-header-font-size: var(--pa-fs-2xl);
+  --ut-content-block-header-line-height: var(--pa-lh-2xl);
+  --ut-content-block-header-margin: var(--pa-space-3);
+}
+.t-ContentBlock--h2 {
+  --ut-content-block-header-font-size: var(--pa-fs-xl);
+  --ut-content-block-header-line-height: var(--pa-lh-xl);
+  --ut-content-block-header-margin: var(--pa-space-3);
+}
+.t-ContentBlock--h3 {
+  --ut-content-block-header-font-size: var(--pa-fs-lg);
+  --ut-content-block-header-line-height: var(--pa-lh-lg);
+  --ut-content-block-header-margin: var(--pa-space-2);
+}
+@media (max-width: 639px) {
+  .t-ContentBlock--h1,
+  .t-ContentBlock--h2 {
+    --ut-content-block-header-margin: var(--pa-space-2);
+  }
+  .t-ContentBlock--h3 {
+    --ut-content-block-header-margin: var(--pa-space-1);
+  }
+}
+.t-ContentBlock-title {
+  letter-spacing: var(--pa-tracking-heading);
+}
+.t-ContentBlock--h1 .t-ContentBlock-title {
+  letter-spacing: var(--pa-tracking-title);
+}
+.t-ContentBlock--h3 > .t-ContentBlock-header .t-ContentBlock-title {
+  color: var(--pa-muted);
+}
+.t-ContentBlock-headerIcon {
+  color: var(--pa-muted);
+}
+/* Shadow Background = abgesenkte Hinweisfläche, ohne Rahmen */
+.t-ContentBlock--shadowBG {
+  --ut-content-block-border-width: 0px;
+  --ut-content-block-box-shadow: none;
+  --ut-content-block-border-radius: var(--pa-r-lg);
+  --ut-content-block-padding-y: var(--pa-space-4);
+  --ut-content-block-padding-x: var(--pa-space-5);
+}
+/* Light Background: UT legt den Inhalt in einen weißen Kasten mit Rahmen und Schatten.
+   In Passer ist das Papier selbst der Grund – der Block wird wie eine
+   Standard-Region gesetzt: Titel, Haarlinie, Inhalt bündig (auch mit „Padded“). */
+.t-ContentBlock--lightBG {
+  --ut-content-block-background-color: transparent;
+  --ut-content-block-border-width: 0px;
+  --ut-content-block-box-shadow: none;
+  --ut-content-block-padding-y: var(--ut-region-body-padding-y);
+  --ut-content-block-padding-x: 0rem;
+}
+.t-ContentBlock--lightBG > .t-ContentBlock-header {
+  margin-block-end: 0;
+  padding-block-end: var(--ut-region-header-padding-y);
+  border-block-end: var(--pa-hairline) solid var(--pa-line);
+}
+
+
+/* 10. Image Region, Title-Bar-Region im Inhalt ---------------------------------- */
+
+.t-ImageRegion {
+  --ut-image-region-border-radius: var(--pa-r-lg);
+}
+/* Eine Title-Bar-Region im Inhalt (statt in der Title Bar) steht bündig auf dem Rand –
+   wie jeder Region-Inhalt. Steht sie in einer Fläche (Shadow Background, Alert), bringt
+   die Fläche ihr eigenes Polster mit; Light Background ist flach (Abschnitt 9). */
+.t-Body-content .t-BreadcrumbRegion {
+  --ut-breadcrumb-padding-x: 0rem;
+}

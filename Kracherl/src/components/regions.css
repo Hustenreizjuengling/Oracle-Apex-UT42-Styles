@@ -1,0 +1,510 @@
+/* ==========================================================================
+   Kracherl – Regionen
+   Standard-Region (alle Template-Optionen), Akzente, Collapsible, Hero, Alert-Region,
+   Button Container, Carousel, Tabs Container (Container), Wizard-Container,
+   Content Block, Image Region, Title-Bar-Region im Inhalt.
+   Idee: Regionen sind weiße Etiketten-Karten auf dem Lavendel-Grund – weiche 16-px-Ecken,
+   eine Haarlinie als Kante, Titel in Bitter und Etikett-Violett. Keine Kopfbänder, keine
+   Trennlinie unter dem Titel: der Weißraum trennt Titel und Inhalt.
+   Regeln: nur Tokens (--kr-*, gemappte UT-/APEX-Tokens), modusneutral, kein @layer,
+   logische Eigenschaften; lokale Tokens: --kr-c-region-mark*, --kr-c-region-toggle-*,
+   --kr-c-region-ring-room, --kr-c-region-title-pad.
+   ========================================================================== */
+
+
+/* 1. Standard-Region: Karte + Slab-Titel ---------------------------------------
+   Fläche, Kante, Radius, Polster und Titelgröße setzt bridge.css (Abschnitt 7). */
+
+.t-Region-title {
+  font-family: var(--kr-font-slab);
+  font-weight: var(--kr-fw-slab);
+  letter-spacing: var(--kr-tracking-heading);
+}
+/* der Kopf sitzt dichter am Inhalt als das Körperpolster (Titel und Inhalt gehören zusammen) */
+.t-Region-header + .t-Region-bodyWrap > .t-Region-body {
+  padding-block-start: var(--kr-space-1);
+}
+
+/* Titel als Schalter (Collapsible): Fokusring gerundet und mit etwas Luft zur Schrift;
+   die negative Marge hält den Text auf seiner Position. */
+.t-Region-titleButton {
+  --kr-c-region-title-pad: .25rem;
+  padding-inline: var(--kr-c-region-title-pad);
+  margin-inline: calc(-1 * var(--kr-c-region-title-pad));
+  border-radius: var(--kr-r-sm);
+}
+
+/* Region-Icon: in Etikett-Violett, bündig vor dem Titel */
+.t-Region-headerIcon {
+  --ut-region-header-icon-spacing: var(--kr-space-2);
+  --ut-region-header-icon-padding: var(--kr-space-1) 0;
+  --ut-region-header-icon-border-radius: var(--kr-r-sm);
+  color: var(--kr-brand-ink);
+}
+
+/* Kopf-Buttons: 32-px-Buttons passen in die Kopfzeile der Titel */
+.t-Region-headerItems--buttons {
+  padding-block: var(--kr-space-1);
+}
+
+/* Button-Zeilen oben/unten (Positionen Previous/Next/Close/Create …): UT legt die linke
+   und rechte Gruppe unumbrechbar nebeneinander – mit Touch-Buttons stießen sie auf dem
+   Phone aneinander. Hier brechen die Gruppen um (die rechte bleibt am Ende). */
+.t-Region-buttons {
+  flex-wrap: wrap;
+  column-gap: var(--kr-space-2);
+}
+.t-Region-buttons-left,
+.t-Region-buttons-right {
+  max-inline-size: 100%;
+}
+.t-Region-buttons-right {
+  margin-inline-start: auto;
+}
+
+/* Akzent 1–15: kein farbiger Kopfstreifen, sondern ein Kronkorken-Punkt vor dem Titel.
+   UT setzt die Kategoriefarbe auf dem Kopf als --ut-region-header-background-color. */
+.t-Region[class*="t-Region--accent"] > .t-Region-header {
+  --kr-c-region-mark: var(--ut-region-header-background-color);
+  --kr-c-region-mark-size: .75rem;
+  --kr-c-region-mark-gap: var(--kr-space-2);
+  background-color: transparent;
+  color: var(--kr-heading);
+}
+.t-Region-headerItems--title::before {
+  content: "";
+  flex: none;
+  inline-size: var(--kr-c-region-mark-size, 0px);
+  block-size: var(--kr-c-region-mark-size, 0px);
+  margin-inline-end: var(--kr-c-region-mark-gap, 0px);
+  border-radius: var(--kr-r-pill);
+  background-color: var(--kr-c-region-mark, transparent);
+}
+
+/* Body Overflow „Scroll“ (t-Region--scrollBody): der Körper ist ein Scroll-Container.
+   Steht der Inhalt bündig am Rand (Remove Body Padding), schnitte er den Fokusring
+   (Abstand + Breite = 4 px außen) ab. Der Körper bekommt deshalb seitlich Ring-Raum als
+   Polster und gibt ihn mit negativer Marge wieder ab. Jeder Körper setzt den Token neu,
+   damit verschachtelte Regionen ihn nicht erben. */
+.t-Region-body {
+  --kr-c-region-ring-room: 0px;
+}
+.t-Region--noPadding.t-Region--scrollBody > .t-Region-bodyWrap > .t-Region-body,
+.t-Region--noUI.t-Region--scrollBody > .t-Region-bodyWrap > .t-Region-body {
+  --kr-c-region-ring-room: calc(var(--kr-focus-ring-offset) + var(--kr-focus-ring-width));
+  padding-inline: var(--kr-c-region-ring-room);
+  margin-inline: calc(-1 * var(--kr-c-region-ring-room));
+}
+
+/* Remove UI Decoration / Text Content: keine Karte, der Inhalt steht auf dem Grund */
+.t-Region--noUI,
+.t-Region--textContent {
+  --ut-region-box-shadow: none;
+}
+
+/* Stack Region: UT erzwingt border-radius 0 !important – ein Stapel ist eine Liste von
+   Streifen: Haarlinien zwischen den Einträgen, weiße Fläche. */
+.t-Region--stacked {
+  --ut-region-border-color: var(--kr-line);
+  --ut-region-box-shadow: none;
+}
+
+/* Maximieren: die Region wird zur großen Karte über der ganzen Seite */
+.t-Region.is-maximized {
+  inset: var(--kr-space-3);
+  border-radius: var(--kr-r-xl);
+  background-color: var(--kr-surface);
+  box-shadow: var(--kr-float-shadow);
+}
+
+
+/* 2. Collapsible: runder Chevron statt Dreieck im grauen Kästchen --------------- */
+
+.t-Region--hideShow {
+  --kr-c-region-toggle-rot: 45deg;                 /* aufgeklappt: nach unten */
+  --kr-c-region-toggle-shift: 0 -15%;
+}
+.t-Region--hideShow.is-collapsed {
+  --kr-c-region-toggle-rot: -45deg;                /* zugeklappt: in Leserichtung */
+  --kr-c-region-toggle-shift: -15% 0;
+}
+.u-RTL .t-Region--hideShow.is-collapsed {
+  --kr-c-region-toggle-rot: 135deg;
+  --kr-c-region-toggle-shift: 15% 0;
+}
+.t-Region--controlsPosEnd.is-expanded {
+  --kr-c-region-toggle-rot: -135deg;               /* Schalter am Ende: auf = nach oben */
+  --kr-c-region-toggle-shift: 0 15%;
+}
+.t-Region--controlsPosEnd.is-collapsed,
+.u-RTL .t-Region--controlsPosEnd.is-collapsed {
+  --kr-c-region-toggle-rot: 45deg;
+  --kr-c-region-toggle-shift: 0 -15%;
+}
+.t-Region-headerItems--controls {
+  padding-inline-start: 0;
+  padding-inline-end: var(--kr-space-1);
+}
+.t-Region--controlsPosEnd .t-Region-headerItems--controls {
+  padding-inline-start: var(--kr-space-2);
+  padding-inline-end: 0;
+}
+.t-Region-headerItems--controls .t-Button--hideShow {
+  --a-button-font-size: var(--kr-fs-xs);
+  --a-button-line-height: var(--kr-lh-xs);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--kr-brand-ink);
+  --a-button-hover-background-color: var(--kr-soft);
+  --a-button-hover-text-color: var(--kr-brand-ink);
+  --a-button-active-background-color: var(--kr-soft-hover);
+  --a-button-focus-background-color: var(--kr-soft);
+  --a-button-border-radius: var(--kr-r-pill);
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--kr-hit-min);
+  min-block-size: var(--kr-hit-min);
+  padding: 0;
+}
+.t-Button--hideShow .a-Collapsible-icon {
+  display: grid;
+  place-items: center;
+}
+/* Chevron aus zwei runden Strichen; die Glyphe (Dreieck) wird auf 0 gesetzt.
+   Physische Kanten sind hier Absicht: die Drehung bestimmt die Richtung. */
+.t-Button--hideShow .a-Collapsible-icon::before {
+  font-size: 0;
+  inline-size: .5rem;
+  block-size: .5rem;
+  border-style: solid;
+  border-color: currentColor;
+  border-width: 0 2px 2px 0;
+  border-end-end-radius: 1px;
+  translate: var(--kr-c-region-toggle-shift, 0 -15%);
+  rotate: var(--kr-c-region-toggle-rot, 45deg);
+  transition: rotate var(--kr-duration) var(--kr-ease), translate var(--kr-duration) var(--kr-ease);
+}
+/* Option „Plus or Minus“: Glyphen von UT behalten */
+.t-Region--hideShowIconsMath .t-Button--hideShow .a-Collapsible-icon::before {
+  font-size: inherit;
+  inline-size: auto;
+  block-size: auto;
+  border-width: 0;
+  translate: none;
+  rotate: none;
+}
+
+
+/* 3. Hero: steht offen auf dem Grund, Titel in Bitter 800 ----------------------- */
+
+.t-HeroRegion {
+  --ut-hero-region-padding-x: 0rem;
+  --ut-hero-region-padding-y: var(--kr-space-4);
+  --ut-hero-region-title-font-size: var(--kr-fs-2xl);
+  --ut-hero-region-title-line-height: var(--kr-lh-2xl);
+  --ut-hero-region-title-font-weight: var(--kr-fw-slab-heavy);
+  --ut-hero-region-title-text-color: var(--kr-heading);
+  --ut-xs-hero-region-title-font-size: var(--kr-fs-xl);
+  --ut-xs-hero-region-title-line-height: var(--kr-lh-xl);
+  --ut-hero-region-font-size: var(--kr-fs-lg);
+  --ut-hero-region-line-height: var(--kr-lh-lg);
+  --ut-xs-hero-region-font-size: var(--kr-fs-md);
+  --ut-xs-hero-region-line-height: var(--kr-lh-md);
+  --ut-hero-region-icon-spacing: var(--kr-space-5);
+  --ut-xs-hero-region-icon-spacing: var(--kr-space-3);
+  --ut-hero-region-column-spacing: var(--kr-space-4);
+}
+.t-HeroRegion--noPadding {
+  --ut-hero-region-padding-y: 0rem;
+  --ut-hero-region-padding-x: 0rem;
+}
+.t-HeroRegion--iconsRounded {
+  --ut-hero-region-icon-border-radius: var(--kr-r-pill);
+}
+/* Icon: Fläche und Symbol immer als Paar – ein sonnengelbes Etikett mit violettem Symbol */
+.t-HeroRegion-icon {
+  --ut-hero-region-icon-background-color: var(--kr-sun);
+  --ut-hero-region-icon-text-color: var(--kr-sun-ink);
+}
+.t-Body-title .t-HeroRegion {
+  --ut-hero-region-padding-x: var(--kr-content-pad-x);
+}
+.t-HeroRegion-title {
+  font-family: var(--kr-font-slab);
+  letter-spacing: var(--kr-tracking-title);
+  color: var(--kr-heading);
+}
+
+
+/* 4. Alert: Karte mit farbigem Symbol; mit „Highlight Background“ die Status-Tönung ------
+   Ohne Hervorhebung: weiße Karte, Status nur im Symbol. Mit t-Alert--colorBG:
+   --ut-palette-*-shade = --kr-<status>-tint (bridge.css). Icons in --kr-<status>-text (≥ 3:1). */
+
+.t-Alert {
+  --ut-alert-background-color: var(--kr-surface);
+  --ut-alert-text-color: var(--kr-ink);
+  --ut-alert-border-width: var(--kr-hairline);
+  --ut-alert-border-color: var(--kr-line);
+  --ut-alert-box-shadow: var(--kr-card-shadow);
+  --ut-alert-title-font-weight: var(--kr-fw-slab);
+  --ut-alert-horizontal-icon-size: 1.5rem;
+  --ut-alert-wizard-icon-size: 3rem;
+  --ut-alert-horizontal-border-radius: var(--kr-r-lg);
+  --ut-alert-wizard-border-radius: var(--kr-r-lg);
+  display: flow-root;
+}
+.t-Alert--colorBG {
+  --ut-alert-border-width: 0px;
+  --ut-alert-box-shadow: none;
+}
+.t-Alert-icon {
+  background-color: transparent;
+}
+.t-Alert-title {
+  font-family: var(--kr-font-slab);
+  letter-spacing: var(--kr-tracking-heading);
+}
+.t-Alert--warning,
+.t-Alert--yellow {
+  --ut-alert-icon-text-color: var(--kr-warning-text);
+}
+.t-Alert--success {
+  --ut-alert-icon-text-color: var(--kr-success-text);
+}
+.t-Alert--info {
+  --ut-alert-icon-text-color: var(--kr-info-text);
+}
+.t-Alert--danger,
+.t-Alert--red {
+  --ut-alert-icon-text-color: var(--kr-danger-text);
+}
+
+/* Horizontal: Icon oben neben dem Titel, gleiche 16-px-Polster ringsum */
+.t-Alert--horizontal .t-Alert-icon {
+  align-items: flex-start;
+  padding-block: var(--kr-space-4);
+  padding-inline: var(--kr-space-4) 0;
+}
+.t-Alert--horizontal .t-Alert-icon .t-Icon {
+  margin-block: 0;
+}
+.t-Alert--horizontal .t-Alert-content {
+  padding: var(--kr-space-4);
+  gap: var(--kr-space-1);
+}
+.t-Alert--horizontal:is(.t-Alert--accessibleHeading, .t-Alert--removeHeading) .t-Alert-content {
+  gap: 0;
+}
+.t-Alert--horizontal .t-Alert-title {
+  --ut-alert-title-font-size: var(--kr-fs-lg);
+  --ut-alert-title-line-height: var(--kr-lh-lg);
+}
+
+/* Wizard: zentrierte Meldung (Bestätigung, Zugriff verweigert …) */
+.t-Alert--wizard .t-Alert-title {
+  --ut-alert-title-font-size: var(--kr-fs-xl);
+  --ut-alert-title-line-height: var(--kr-lh-xl);
+}
+.t-Alert--wizard .t-Alert-body {
+  font-size: var(--kr-fs-md);
+  line-height: var(--kr-lh-body);
+  color: var(--kr-ink-2);
+}
+.t-Alert--wizard .t-Alert-inset {
+  border-radius: var(--kr-r-md);
+}
+.t-Alert .t-ButtonRegion {
+  --ut-button-region-border-width: 0px;
+  --ut-button-region-background-color: transparent;
+  box-shadow: none;
+}
+
+/* Seitenmeldungen (t-Alert--page, apex.message) gestaltet overlays.css. */
+
+
+/* 5. Button Container: eine flache Karte, Buttons am Innenrand ------------------
+   Randbreite, Polster und Außenabstand bleiben UT-Hebel, damit „Borderless“,
+   „Remove UI Decoration“, „Slim/No Padding“ wirken. */
+
+:where(.t-ButtonRegion) {
+  --ut-button-region-padding: var(--kr-space-3);
+}
+.t-ButtonRegion {
+  --ut-button-region-background-color: var(--kr-surface);
+  --ut-button-region-border-width: var(--kr-hairline);
+  --ut-button-region-border-radius: var(--kr-r-lg);
+  --ut-button-region-title-font-size: var(--kr-fs-lg);
+  --ut-button-region-title-line-height: var(--kr-lh-lg);
+  --ut-button-region-title-font-weight: var(--kr-fw-slab);
+}
+.t-ButtonRegion-title {
+  font-family: var(--kr-font-slab);
+  color: var(--kr-heading);
+}
+.t-ButtonRegion--noUI,
+.t-ButtonRegion--noBorder {
+  --ut-button-region-background-color: transparent;
+}
+/* in Dialog-, Drawer- und Wizard-Fußzeilen, in Regionen und in der Title Bar: keine eigene Karte */
+.t-DialogRegion-buttons .t-ButtonRegion,
+.t-Wizard-footer .t-ButtonRegion,
+.t-Dialog-footer .t-ButtonRegion,
+.t-Drawer-footer .t-ButtonRegion,
+.t-Body-title .t-ButtonRegion,
+.t-Region .t-ButtonRegion,
+.t-ButtonRegion--dialogRegion,
+.t-ButtonRegion--wizard {
+  --ut-button-region-background-color: transparent;
+}
+/* mobil am unteren Rand verankert: ein weißer Streifen über dem Inhalt */
+@media (max-width: 639px) {
+  .t-ButtonRegion--stickToBottom.is-anchored {
+    --ut-button-region-background-color: var(--kr-surface);
+  }
+}
+
+
+/* 6. Carousel: Pfeile und Punkte als weiße Etiketten über dem Motiv ------------- */
+
+.t-Region--carousel {
+  --ut-carousel-button-icon-size: 1rem;
+  --ut-carousel-button-padding-y: calc((var(--kr-control-h) - 1rem) / 2);
+  --ut-carousel-button-padding-x: calc((var(--kr-control-h) - 1rem) / 2);
+  --ut-carousel-button-border-radius: var(--kr-r-pill);
+  --ut-carousel-button-background-color: var(--kr-surface);
+  --ut-carousel-button-text-color: var(--kr-brand-ink);
+  --ut-carousel-button-opacity: 1;
+  --ut-carousel-button-offset-x: var(--kr-space-3);
+  --ut-carousel-nav-size: .5rem;
+  --ut-carousel-nav-offset-x: .1875rem;
+  --ut-carousel-nav-offset-y: .375rem;
+  --ut-carousel-nav-border-width: 0px;
+  --ut-carousel-nav-background-color: var(--kr-edge);
+  --ut-carousel-nav-selected-background-color: var(--kr-brand-ink);
+}
+.t-Region--carousel > .t-Region-bodyWrap > .t-Region-body {
+  --kr-c-region-ring-room: 0px;
+  overflow: clip;
+}
+.t-Region--carousel .a-Region-carouselNav {
+  inline-size: fit-content;
+  margin-inline: auto;
+  inset-block-end: var(--kr-space-3);
+  padding-inline: var(--kr-space-1);
+  border-radius: var(--kr-r-pill);
+  background-color: var(--kr-surface);
+}
+.t-Region--carousel .a-Region-carouselLink {
+  transition: inline-size var(--kr-duration) var(--kr-ease);
+}
+/* Fokus über beliebigem Motiv: Doppelring (Lücke + Orange) statt Outline */
+.a-Region-carouselControl .a-Tabs-button:focus-visible,
+.t-Region--carousel .a-Region-carouselLink:focus-visible {
+  --ut-focus-outline: none;
+  box-shadow: var(--kr-focus-shadow);
+}
+.t-Region--carousel .a-Tabs-selected .a-Region-carouselLink {
+  inline-size: 1.25rem;
+}
+
+
+/* 7. Tabs Container (t-TabsRegion) --------------------------------------------
+   Die Tab-Leiste selbst gestaltet shell.css für Tabs-Liste und Tabs Container gemeinsam.
+   Hier nur der Container: Abstand zwischen Leiste und Panel. */
+
+.t-TabsRegion-items > .t-Tabs {
+  margin-block-end: var(--kr-space-4);
+}
+
+
+/* 8. Wizard: eine Karte – Schritte oben, Haarlinie, Inhalt ----------------------- */
+
+.t-Wizard {
+  --ut-wizard-border-width: var(--kr-hairline);
+  --ut-wizard-border-color: var(--kr-line);
+  --ut-wizard-box-shadow: var(--kr-card-shadow);
+  --ut-wizard-background-color: var(--kr-surface);
+  --ut-wizard-controls-padding-x: var(--kr-region-pad-x);
+  --ut-wizard-controls-padding-y: var(--kr-space-4);
+  --ut-wizard-body-padding-x: var(--kr-region-pad-x);
+  --ut-wizard-body-padding-y: var(--kr-space-6);
+  --ut-wizard-title-font-size: var(--kr-fs-xl);
+  --ut-wizard-title-line-height: var(--kr-lh-xl);
+  --ut-wizard-title-padding-y: var(--kr-space-5);
+  border-radius: var(--kr-r-lg);
+}
+.t-Wizard-header {
+  border-block-end: var(--kr-hairline) solid var(--kr-line);
+}
+.t-Wizard-title {
+  font-family: var(--kr-font-slab);
+  font-weight: var(--kr-fw-slab);
+  letter-spacing: var(--kr-tracking-heading);
+  color: var(--kr-heading);
+}
+
+/* Wizard-Fortschritt (t-WizardSteps) gestaltet content.css – hier nur der Container. */
+
+
+/* 9. Content Block: Abschnitte in Bitter 32 · 22 · 18 ---------------------------
+   Die Titel stehen offen auf dem Grund; Shadow und Light Background werden Karten wie
+   eine Region (UT: grauer bzw. weißer Kasten mit Schatten). */
+
+.t-ContentBlock--h1 {
+  --ut-content-block-header-font-size: var(--kr-fs-2xl);
+  --ut-content-block-header-line-height: var(--kr-lh-2xl);
+  --ut-content-block-header-margin: var(--kr-space-3);
+}
+.t-ContentBlock--h2 {
+  --ut-content-block-header-font-size: var(--kr-fs-xl);
+  --ut-content-block-header-line-height: var(--kr-lh-xl);
+  --ut-content-block-header-margin: var(--kr-space-3);
+}
+.t-ContentBlock--h3 {
+  --ut-content-block-header-font-size: var(--kr-fs-lg);
+  --ut-content-block-header-line-height: var(--kr-lh-lg);
+  --ut-content-block-header-margin: var(--kr-space-2);
+}
+@media (max-width: 639px) {
+  .t-ContentBlock--h1,
+  .t-ContentBlock--h2 {
+    --ut-content-block-header-margin: var(--kr-space-2);
+  }
+  .t-ContentBlock--h3 {
+    --ut-content-block-header-margin: var(--kr-space-1);
+  }
+}
+.t-ContentBlock-title {
+  font-weight: var(--kr-fw-slab);
+  letter-spacing: var(--kr-tracking-heading);
+  color: var(--kr-heading);
+}
+.t-ContentBlock--h1 .t-ContentBlock-title {
+  font-weight: var(--kr-fw-slab-heavy);
+  letter-spacing: var(--kr-tracking-title);
+}
+.t-ContentBlock-headerIcon {
+  color: var(--kr-brand-ink);
+}
+/* Shadow Background / Light Background: Karte wie eine Region */
+.t-ContentBlock--shadowBG,
+.t-ContentBlock--lightBG {
+  --ut-content-block-shadow-background-color: var(--kr-surface);
+  --ut-content-block-light-background-color: var(--kr-surface);
+  --ut-content-block-border-width: var(--kr-hairline);
+  --ut-content-block-border-color: var(--kr-line);
+  --ut-content-block-box-shadow: var(--kr-card-shadow);
+  --ut-content-block-border-radius: var(--kr-r-lg);
+  --ut-content-block-padding-y: var(--kr-space-4);
+  --ut-content-block-padding-x: var(--kr-region-pad-x);
+}
+
+
+/* 10. Image Region, Title-Bar-Region im Inhalt ---------------------------------- */
+
+.t-ImageRegion {
+  --ut-image-region-border-radius: var(--kr-r-lg);
+}
+/* Eine Title-Bar-Region im Inhalt (statt in der Title Bar) steht bündig auf dem Rand. */
+.t-Body-content .t-BreadcrumbRegion {
+  --ut-breadcrumb-padding-x: 0rem;
+}

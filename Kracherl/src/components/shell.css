@@ -1,0 +1,1080 @@
+/* ==========================================================================
+   Kracherl – Shell
+   Das sonnengelbe Band (Kopf) mit Sprudelblasen und EINER einfarbigen Wellenkante,
+   Navigation mit Etikett (Tree Nav, Menüleiste, Tabs-Navigation, Mega Menu),
+   Seitengrund, Title Bar, Breadcrumb, Region Display Selector/Tabs, Spalten, Footer,
+   mobile Schublade.
+   Regeln: nur Tokens (--kr-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Lokale Tokens (--kr-c-*):
+     --kr-c-nav-row-pad-y/-sub-pad-y  Zeilenpolster der Tree Nav (aus der Dichte)
+     --kr-c-tab-pad-x/-y, --kr-c-tab-h  Tabs/RDS-Pillen
+     --kr-c-bar-gap                   Luft der Menüleisten-Etiketten zur Bandkante
+     --kr-c-bubbles, --kr-c-bubbles-w  Blasentraube des Bands und ihre Kachelbreite (Farben: --kr-bubble, --kr-bubble-ring)
+     --kr-c-drawer-top                Oberkante der mobilen Schubladen (Bandkante ohne Wellenstreifen)
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Das Band: Kopf + Menüleiste als EINE gelbe Fläche
+   theme42.js misst #t_Header (outerHeight) → --js-sticky-top. Die Welle hängt deshalb als
+   absolut positioniertes ::after UNTER dem Kopf: sie zählt nicht zur Höhe, liegt aber über
+   Navigation und Title Bar (Kopf z-index 800). Ausnahme Phone (< 640 px): dort zählt ein
+   Wellenstreifen zur Kopfhöhe (s. u.). Nie display:none / position:fixed (Regel 11).
+   ========================================================================== */
+.t-Header {
+  /* Sprudelblasen: gefüllte Perlen und Ringe als EINE Traube (Kachel 344 × 60 px). Weiß auf Gelb
+     hebt den Kontrast der Schrift nur – trotzdem liegt nie eine Blase hinter Text (s. u.). */
+  --kr-c-bubbles:
+    radial-gradient(circle at 10px 36px, transparent 4px, var(--kr-bubble-ring) 4.5px, var(--kr-bubble-ring) 5.75px, transparent 6.25px),
+    radial-gradient(circle at 67px 4px, var(--kr-bubble) 9px, transparent 9.5px),
+    radial-gradient(circle at 103px 46px, var(--kr-bubble) 2.5px, transparent 3px),
+    radial-gradient(circle at 154px 17px, transparent 11.5px, var(--kr-bubble-ring) 12px, var(--kr-bubble-ring) 13.5px, transparent 14px),
+    radial-gradient(circle at 204px 44px, var(--kr-bubble) 5px, transparent 5.5px),
+    radial-gradient(circle at 255px 12px, transparent 5px, var(--kr-bubble-ring) 5.5px, var(--kr-bubble-ring) 6.75px, transparent 7.25px),
+    radial-gradient(circle at 291px 40px, transparent 3px, var(--kr-bubble-ring) 3.5px, var(--kr-bubble-ring) 4.75px, transparent 5.25px),
+    radial-gradient(circle at 334px 25px, var(--kr-bubble) 2px, transparent 2.5px);
+  --kr-c-bubbles-w: 344px;
+  background-color: var(--kr-band);
+  color: var(--kr-band-ink);
+}
+/* Die Blasen liegen auf einer eigenen Ebene hinter Logo und Navigation: z-index -1 im
+   Stapelkontext des Kopfs (UT: sticky, z-index 800) = über seiner Fläche, unter seinem Inhalt.
+   Ab 640 px stehen sie nur in der FREIEN Mitte des Bands: .t-Header-navBar--start ist die leere
+   Zelle zwischen Logo und Navigation Bar (UT-Raster „1fr auto auto“) – ihre Breite ist genau der
+   Platz, auf dem kein Text steht, bei jedem App-Namen und jeder Zahl von Navigation-Bar-Einträgen.
+   Die Zelle ist ein Container: breit (≥ 400 px) die ganze Traube, mittel (≥ 200 px) eine kleine,
+   schmal (≥ 120 px, z. B. 800 px Fensterbreite mit beschrifteter Navigation Bar) drei Perlen,
+   noch schmaler keine. Liegt dort Inhalt (Position „Before Navigation Bar“, z. B. ein Suchfeld),
+   gibt es keine Blasen (:empty).
+   So steht die Schrift im Band immer auf der einfarbigen Bandfläche – auch für Kontrastprüfungen,
+   die Text über Verläufen nicht bewerten können (audit.mjs). Die Ebene reicht über die volle
+   Bandhöhe (die Zelle selbst ist 0 px hoch und senkrecht mittig). */
+@media (min-width: 640px) {
+  .t-Header-navBar--start:empty {
+    position: relative;
+    container-type: inline-size;
+  }
+  .t-Header-navBar--start:empty::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block: calc(var(--kr-header-h) / -2);
+    z-index: -1;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: var(--kr-c-bubbles-w) var(--kr-header-h);
+    pointer-events: none;
+  }
+  @container (min-width: 120px) {
+    .t-Header-navBar--start:empty::before {
+      --kr-c-bubbles-w: 76px;
+      background-image:
+        radial-gradient(circle at 14px 24px, transparent 8px, var(--kr-bubble-ring) 8.5px, var(--kr-bubble-ring) 10px, transparent 10.5px),
+        radial-gradient(circle at 42px 45px, var(--kr-bubble) 4px, transparent 4.5px),
+        radial-gradient(circle at 60px 11px, var(--kr-bubble) 6px, transparent 6.5px),
+        radial-gradient(circle at 70px 33px, var(--kr-bubble) 2px, transparent 2.5px);
+    }
+  }
+  @container (min-width: 200px) {
+    .t-Header-navBar--start:empty::before {
+      --kr-c-bubbles-w: 150px;
+      background-image:
+        radial-gradient(circle at 18px 20px, transparent 11.5px, var(--kr-bubble-ring) 12px, var(--kr-bubble-ring) 13.5px, transparent 14px),
+        radial-gradient(circle at 56px 44px, var(--kr-bubble) 5px, transparent 5.5px),
+        radial-gradient(circle at 86px 8px, var(--kr-bubble) 7px, transparent 7.5px),
+        radial-gradient(circle at 104px 46px, var(--kr-bubble) 2.5px, transparent 3px),
+        radial-gradient(circle at 136px 30px, transparent 4px, var(--kr-bubble-ring) 4.5px, var(--kr-bubble-ring) 5.75px, transparent 6.25px);
+    }
+  }
+  @container (min-width: 400px) {
+    .t-Header-navBar--start:empty::before {
+      --kr-c-bubbles-w: 344px;
+      background-image: var(--kr-c-bubbles);
+    }
+  }
+}
+/* Telefon (< 640 px): Logo und Navigation Bar füllen das Band – nur ein paar Perlen steigen am
+   oberen Rand auf, über der Schriftzeile (Text und Icons stehen 16–44 px, die Perlen bis 15 px). */
+@media (max-width: 639px) {
+  .t-Header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      radial-gradient(circle at 58% 3px, var(--kr-bubble) 6px, transparent 6.5px),
+      radial-gradient(circle at 64% 10px, transparent 3px, var(--kr-bubble-ring) 3.5px, var(--kr-bubble-ring) 4.75px, transparent 5.25px),
+      radial-gradient(circle at 52% 9px, var(--kr-bubble) 2px, transparent 2.5px);
+    pointer-events: none;
+  }
+}
+/* Die Signatur: eine einzelne Wellenkante in der Bandfarbe (Maske aus scale.css) */
+.t-Header::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  height: var(--kr-wave-h);
+  background-color: var(--kr-band);
+  mask-image: var(--kr-wave);
+  mask-repeat: repeat-x;
+  mask-size: var(--kr-wave-w) 100%;
+  mask-position: 0 0;
+  pointer-events: none;
+}
+/* Phone (< 640 px): Dort ist die Title Bar nicht sticky. UT scrollt die gewählte RDS-Region bzw.
+   einen Anker bündig unter den GEMESSENEN Kopf, sticky Tabellenköpfe kleben an seiner Unterkante –
+   eine überhängende Welle schnitte deren oberste Zeile an (Überschrift „Overview“ auf jeder
+   RDS-Seite). Hier zählt die Welle deshalb zur Kopfhöhe: ein Streifen unten im Kopf, in dem nur
+   die Welle gemalt wird (Fläche und Blasen bleiben im Inhaltsbereich). Die Kopfhöhe bleibt
+   statisch: --kr-header-h + --kr-wave-h. */
+@media (max-width: 639px) {
+  .t-Header {
+    padding-block-end: var(--kr-wave-h);
+    background-clip: content-box;
+  }
+  .t-Header::before {
+    inset-block-end: var(--kr-wave-h);   /* Blasen nur auf der Bandfläche, nicht im Wellenstreifen */
+  }
+  .t-Header::after {
+    top: auto;
+    bottom: 0;
+  }
+}
+.t-Header-branding {
+  column-gap: var(--kr-space-3);
+  padding-inline-start: var(--kr-space-3);
+}
+.t-Header-logo-link {
+  font-family: var(--kr-font-slab);
+  letter-spacing: var(--kr-tracking-title);
+}
+.t-Header-logo-link,
+.t-Header-logo-link:hover {
+  color: var(--kr-band-brand);
+}
+/* Telefon: Das Logo (Bitter 800) läuft in 22 px zu breit – schon „Universal Theme“ (15 Zeichen) würde
+   gekürzt. Unter 640 px 18 px mit engerer Laufweite (-0.02em). Unter 480 px zeigt die Navigation Bar
+   nur Icons (UT); ihr Polster und die Abstände im Band schrumpfen dort auf 8 px (Trefferfläche bleibt
+   ≥ 32 × 32 px, Touch 40 px hoch). So passen 15 Zeichen ab 360 px Breite ungekürzt.
+   Zwischen 480 und 767 px beschriftet UT die Navigation Bar, und das Logo bekommt nur den Rest:
+   Dort rücken die Knöpfe enger (Polster 8 px), unter 640 px zusätzlich mit 12,5-px-Beschriftung und
+   8 px Abstand im Band – sonst verschwände das Logo bei 480 px ganz und würde bei 640 px gekürzt.
+   Ab 560 px passen so 15 Zeichen (wie in Vita); darunter kürzt UT das Logo mit „…“. */
+@media (max-width: 639px) {
+  .t-Header {
+    --ut-logo-font-size: var(--kr-fs-lg);
+  }
+  .t-Header-logo-link {
+    letter-spacing: -.02em;
+  }
+  .t-Header-branding {
+    column-gap: var(--kr-space-2);
+    padding-inline-start: var(--kr-space-2);
+  }
+}
+
+/* Header-Buttons: transparent auf dem Band, Tinte des Bands, Pillen-Hover */
+.t-Button--header {
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--kr-band-ink);
+  --a-button-border-color: transparent;
+  --a-button-shadow: none;
+  --a-button-hover-background-color: var(--kr-band-hover);
+  --a-button-hover-text-color: var(--kr-band-ink);
+  --a-button-hover-border-color: transparent;
+  --a-button-active-background-color: var(--kr-band-press);
+  --a-button-active-border-color: transparent;
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--kr-band-hover);
+  --a-button-font-size: var(--kr-fs-md);
+  --a-button-font-weight: var(--kr-fw-semibold);
+  --a-button-border-radius: var(--kr-r-pill);
+  --a-button-padding-x: var(--kr-space-3);
+}
+.t-Button--header.is-active {
+  --a-button-background-color: var(--kr-band-press);
+}
+/* Schmale Fenster: schmaleres Polster, Platz für das Logo (s. o.) – unter 480 px nur Icons (UT),
+   480–639 px beschriftet in 12,5 px (Vita: 12 px), 640–767 px in 15 px */
+@media (max-width: 767px) {
+  .t-Button--navBar {
+    --a-button-padding-x: var(--kr-space-2);
+  }
+}
+@media (min-width: 480px) and (max-width: 639px) {
+  .t-Button--navBar {
+    --a-button-font-size: var(--kr-fs-xs);
+  }
+}
+.t-Button--headerUser,
+.t-NavigationBar-item.has-username .t-Button-label {
+  text-transform: none;
+}
+.t-NavigationBar .t-Button-badge {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Navigations-Schalter: drei gleich lange, runde Striche in der Tinte des Bands – ruhig,
+   ohne Aufklapp- und X-Animation (Core morpht je Zustand: dieselben Selektoren, ein Bild). */
+.t-Button--headerTree {
+  --a-button-border-width: 0px;
+  --a-button-padding-y: var(--kr-space-2);
+  --a-button-padding-x: var(--kr-space-2);
+  --a-button-icon-size: 1.125rem;
+}
+.t-Button--headerTree.is-active {
+  --a-button-background-color: transparent;
+}
+.t-Button--headerTree.is-active:hover {
+  --a-button-background-color: var(--kr-band-hover);
+}
+.t-Header-controlsIcon,
+.t-Button--headerTree:hover .t-Header-controlsIcon,
+.t-Button--headerTree.is-active:hover .t-Header-controlsIcon,
+.t-Button--headerTree.is-active:focus .t-Header-controlsIcon {
+  top: 50%;
+  inset-inline-start: 50%;
+  width: 1.125rem;
+  height: .125rem;
+  margin-block: -.0625rem 0;
+  margin-inline: -.5625rem 0;
+  border-radius: var(--kr-r-pill);
+  background-color: currentColor;
+  transform: none;
+  transition: none;
+}
+.t-Header-controlsIcon::before,
+.t-Header-controlsIcon::after,
+.t-Button--headerTree:hover .t-Header-controlsIcon::before,
+.t-Button--headerTree:hover .t-Header-controlsIcon::after,
+.t-Button--headerTree.is-active:hover .t-Header-controlsIcon::before,
+.t-Button--headerTree.is-active:hover .t-Header-controlsIcon::after,
+.t-Button--headerTree.is-active:focus .t-Header-controlsIcon::before,
+.t-Button--headerTree.is-active:focus .t-Header-controlsIcon::after {
+  inset-inline-start: 0;
+  width: 100%;
+  height: .125rem;
+  border-radius: var(--kr-r-pill);
+  background-color: currentColor;
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+.t-Header-controlsIcon::before,
+.t-Button--headerTree:hover .t-Header-controlsIcon::before,
+.t-Button--headerTree.is-active:hover .t-Header-controlsIcon::before,
+.t-Button--headerTree.is-active:focus .t-Header-controlsIcon::before {
+  top: -.3125rem;
+  bottom: auto;
+}
+.t-Header-controlsIcon::after,
+.t-Button--headerTree:hover .t-Header-controlsIcon::after,
+.t-Button--headerTree.is-active:hover .t-Header-controlsIcon::after,
+.t-Button--headerTree.is-active:focus .t-Header-controlsIcon::after {
+  top: auto;
+  bottom: -.3125rem;
+}
+@media (max-width: 479px) {
+  .t-Button--headerTree.is-active .t-Header-controlsIcon {
+    transform: none;
+  }
+  .t-Button--headerTree.is-active .t-Header-controlsIcon::before {
+    top: -.3125rem;
+    opacity: 1;
+  }
+  .t-Button--headerTree.is-active .t-Header-controlsIcon::after {
+    bottom: -.3125rem;
+    width: 100%;
+    transform: none;
+  }
+}
+
+/* Mega-Menu-Schalter (trägt auch t-Button--headerTree): öffnet eine Tafel unter dem Band –
+   offen zeigt er ein X (mittlerer Strich aus, äußere gekreuzt). */
+.t-Button--megaMenuToggle.is-active {
+  --a-button-background-color: var(--kr-band-press);
+}
+.t-Button--megaMenuToggle.is-active .t-Header-controlsIcon,
+.t-Button--megaMenuToggle.is-active:hover .t-Header-controlsIcon,
+.t-Button--megaMenuToggle.is-active:focus .t-Header-controlsIcon {
+  background-color: transparent;
+}
+.t-Button--megaMenuToggle.is-active .t-Header-controlsIcon::before,
+.t-Button--megaMenuToggle.is-active:hover .t-Header-controlsIcon::before,
+.t-Button--megaMenuToggle.is-active:focus .t-Header-controlsIcon::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+.t-Button--megaMenuToggle.is-active .t-Header-controlsIcon::after,
+.t-Button--megaMenuToggle.is-active:hover .t-Header-controlsIcon::after,
+.t-Button--megaMenuToggle.is-active:focus .t-Header-controlsIcon::after {
+  bottom: 0;
+  transform: rotate(-45deg);
+}
+
+/* ==========================================================================
+   2. Navigation (Tree Nav) auf dem Seitengrund – der aktuelle Eintrag ist ein Etikett:
+      sonnengelbe Pille, violette fette Schrift. Hover: ein Hauch Violett.
+   ========================================================================== */
+.t-TreeNav {
+  /* Zeilenhöhe aus der Dichte: 36 px (Touch 44 px), Unterebenen 32 px (Touch 40 px) */
+  --kr-c-nav-row-pad-y: calc((var(--kr-control-h) + var(--kr-space-1) - var(--kr-lh-md)) / 2);
+  --kr-c-nav-sub-pad-y: calc((var(--kr-control-h) - var(--kr-lh-sm)) / 2);
+  --a-treeview-node-padding-y: var(--kr-c-nav-row-pad-y);
+  --a-treeview-node-padding-x: var(--kr-space-3);
+  --a-treeview-node-font-size: var(--kr-fs-md);
+  --a-treeview-node-line-height: var(--kr-lh-md);
+  --a-treeview-node-font-weight: var(--kr-fw-regular);
+  --a-treeview-node-text-color: var(--kr-ink-2);
+  --ut-treeview-toplevel-node-font-size: var(--kr-fs-md);
+  --ut-treeview-icon-size: 1rem;
+  --ut-treeview-toplevel-icon-container-width: 1.5rem;
+  --ut-treeview-toplevel-icon-container-height: 1.25rem;
+  /* Einzug im 24-px-Raster: Icon jeder Unterebene unter dem Text der Elternzeile */
+  --ut-treeview-node-indent: 1.5rem;
+  --ut-treeview-node-icon-container-width: 1.5rem;
+  --ut-treeview-leaf-node-indent: 1.5rem;
+  --ut-treeview-toplevel-leaf-padding-y: .125rem;
+  /* Fokus: nur die Zeile zeigt den Ring (Label/Icon würden in der Icon-Leiste versetzt umrandet) */
+  --ut-focus-outline: none;
+  --a-treeview-node-focused-shadow: var(--kr-focus-shadow-inset);
+}
+/* … und nur bei Tastatur-Fokus – Maus-Klicks lassen die Zeile ruhig (ohne :has() bleibt der Ring immer) */
+@supports selector(:has(*)) {
+  .t-TreeNav {
+    --a-treeview-node-focused-shadow: none;
+  }
+  .t-TreeNav:has(:focus-visible) {
+    --a-treeview-node-focused-shadow: var(--kr-focus-shadow-inset);
+  }
+}
+/* Vita-Stilvarianten (Template-Option Style A/B) setzen eigene Dichte/Icon-Maße: auf dieselben Werte ziehen */
+.t-TreeNav--styleA,
+.t-TreeNav--styleB {
+  --ut-treeview-icon-size: 1rem;
+  --ut-treeview-toplevel-icon-container-width: 1.5rem;
+  --ut-treeview-node-icon-size: 1rem;
+  --ut-treeview-node-icon-container-width: 1.5rem;
+  --ut-treeview-node-indent: 1.5rem;
+  --ut-treeview-leaf-node-indent: 1.5rem;
+  --ut-treeview-toplevel-leaf-padding-y: .125rem;
+  --ut-treeview-badge-border-radius: var(--kr-r-pill);
+  --a-treeview-node-padding-y: var(--kr-c-nav-row-pad-y);
+}
+.t-TreeNav .a-TreeView-node--topLevel ul,
+.t-TreeNav--styleA .a-TreeView-node--topLevel ul,
+.t-TreeNav--styleB .a-TreeView-node--topLevel ul {
+  --a-treeview-node-padding-y: var(--kr-c-nav-sub-pad-y);
+}
+.js-navCollapsed .t-TreeNav--styleB {
+  --a-treeview-node-padding-y: var(--kr-c-nav-row-pad-y);
+}
+.t-TreeNav--styleB > ul,
+.js-navCollapsed .t-TreeNav--styleB > ul {
+  margin: 0;
+}
+.t-TreeNav--styleB .a-TreeView-node {
+  margin-block: 0;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel {
+  margin-inline: 0;
+}
+.t-TreeNav > ul {
+  padding-block: 0 var(--kr-space-4);   /* oben: Luft für die Welle steht an .t-Body-nav (s. u.) */
+}
+.t-TreeNav .a-TreeView-node .a-TreeView-row {
+  width: auto;                      /* app_ui: width:100% – sonst schieben die Ränder die Zeile über die Nav-Kante */
+  margin-inline: var(--kr-nav-inset);
+  border-radius: var(--kr-r-pill);
+}
+.t-TreeNav .a-TreeView-node .a-TreeView-content {
+  padding-inline-start: calc(var(--a-treeview-node-indent) + var(--a-treeview-node-padding-x) + var(--kr-nav-inset));
+  padding-inline-end: calc(var(--a-treeview-node-padding-x) + var(--kr-nav-inset));
+}
+.t-TreeNav .a-TreeView-node .a-TreeView-toggle {
+  margin-inline-end: var(--kr-nav-inset);
+  color: var(--kr-muted);
+}
+.t-TreeNav .a-TreeView-content .fa {
+  color: var(--kr-brand-ink);
+}
+.t-TreeNav .a-TreeView-node--topLevel > ul .a-TreeView-content {
+  --a-treeview-node-font-size: var(--kr-fs-sm);
+  --a-treeview-node-line-height: var(--kr-lh-sm);
+  color: var(--kr-muted);
+}
+/* Unterebenen in der aufgeklappten Liste: lange Labels brechen um statt gekürzt zu werden */
+.js-navExpanded .t-TreeNav .a-TreeView-node--topLevel > ul .a-TreeView-label {
+  white-space: normal;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+}
+.t-TreeNav .a-TreeView-label.is-current {
+  color: var(--kr-ink);
+}
+.t-TreeNav .a-TreeView-row.is-focused {
+  box-shadow: var(--a-treeview-node-focused-shadow);
+}
+/* Zähler: violette Pille ohne Vita-Kante */
+.t-TreeNav .a-TreeView-badge {
+  --ut-treeview-badge-border-width: 0px;
+  --ut-treeview-badge-border-radius: var(--kr-r-pill);
+  --ut-treeview-badge-font-weight: var(--kr-fw-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Vita-Hardcodes neutralisieren (gleiche Spezifität, Hover braucht !important – Vita.css:3026) */
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-selected,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected {
+  background-color: transparent;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current--top, .t-TreeNav .a-TreeView-node--topLevel.is-collapsible > .a-TreeView-row,
+.t-TreeNav .a-TreeView-node--topLevel ul {
+  background-color: transparent;
+  color: inherit;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover {
+  background-color: var(--kr-page-hover) !important;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-toggle, .t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-content, .t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-toggle + .a-TreeView-content {
+  color: var(--kr-ink);
+}
+/* Style-Varianten aus Vita (Template-Optionen) auf dieselbe ruhige Optik ziehen */
+.t-TreeNav--styleA .a-TreeView-node--topLevel {
+  border-bottom: 0;
+}
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top ~ ul .a-TreeView-row {
+  box-shadow: none;
+}
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-focused,
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top ~ ul .a-TreeView-row.is-focused {
+  box-shadow: var(--a-treeview-node-focused-shadow);
+}
+.u-RTL .t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.u-RTL .t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top ~ ul .a-TreeView-row {
+  box-shadow: none;
+}
+.u-RTL .t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-focused,
+.u-RTL .t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top ~ ul .a-TreeView-row.is-focused {
+  box-shadow: var(--a-treeview-node-focused-shadow);
+}
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top .a-TreeView-row.is-selected,
+.t-TreeNav--styleA .a-TreeView-node--topLevel ul .a-TreeView-row.is-selected {
+  background-color: transparent;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected {
+  background-color: transparent;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected + .a-TreeView-toggle,
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-content.is-current--top {
+  color: var(--kr-ink);
+}
+/* Vita.css:3123/3126: weiße Schrift / Oracle-Blau mit !important beim Überfahren */
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-content.is-current--top.is-hover {
+  color: var(--kr-ink) !important;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-hover {
+  background-color: var(--kr-page-hover) !important;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row {
+  border-radius: var(--kr-r-pill);
+}
+
+/* --------------------------------------------------------------------------
+   DAS ETIKETT: der aktuelle Eintrag als sonnengelbe Pille.
+   Aktiv = tiefster SICHTBARER Knoten auf dem aktuellen Pfad:
+     markiert  = Inhalt .is-current / .is-current--top oder Label .is-current
+                 (.is-selected nicht: die TreeView-Auswahl wandert mit dem Tastatur-Fokus)
+     sichtbar  = zugeklappt/Blatt, oder aufgeklappt ohne markiertes Kind
+   Eingeklappte Icon-Leiste: immer der Top-Level-Knoten. Die Farbe braucht !important, weil
+   die Vita-Hover-Regel (!important, s. o.) das Etikett sonst beim Überfahren violett deckt.
+   -------------------------------------------------------------------------- */
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top {
+  background-color: var(--kr-sun) !important;
+}
+.js-navExpanded .t-TreeNav .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current) > .a-TreeView-row,
+.js-navExpanded .t-TreeNav .a-TreeView-node.is-collapsible:has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current):not(:has(> ul > li > .a-TreeView-content:is(.is-current, .is-current--top), > ul > li > .a-TreeView-content .a-TreeView-label.is-current)) > .a-TreeView-row {
+  background-color: var(--kr-sun) !important;
+}
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top ~ .a-TreeView-content,
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top ~ .a-TreeView-toggle {
+  --a-treeview-node-font-weight: var(--kr-fw-semibold);
+  color: var(--kr-sun-ink) !important;
+}
+.js-navExpanded .t-TreeNav .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current) > :is(.a-TreeView-content, .a-TreeView-toggle),
+.js-navExpanded .t-TreeNav .a-TreeView-node.is-collapsible:has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current):not(:has(> ul > li > .a-TreeView-content:is(.is-current, .is-current--top), > ul > li > .a-TreeView-content .a-TreeView-label.is-current)) > :is(.a-TreeView-content, .a-TreeView-toggle) {
+  --a-treeview-node-font-weight: var(--kr-fw-semibold);
+  color: var(--kr-sun-ink) !important;
+}
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top ~ .a-TreeView-content :is(.fa, .a-TreeView-label) {
+  color: var(--kr-sun-ink);
+}
+.js-navExpanded .t-TreeNav .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current) > .a-TreeView-content :is(.fa, .a-TreeView-label),
+.js-navExpanded .t-TreeNav .a-TreeView-node.is-collapsible:has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current):not(:has(> ul > li > .a-TreeView-content:is(.is-current, .is-current--top), > ul > li > .a-TreeView-content .a-TreeView-label.is-current)) > .a-TreeView-content :is(.fa, .a-TreeView-label) {
+  color: var(--kr-sun-ink);
+}
+/* Elternknoten auf dem Pfad (aufgeklappt, Kind ist aktuell): violette Schrift, kein Etikett */
+.js-navExpanded .t-TreeNav .a-TreeView-content.is-current--top {
+  color: var(--kr-brand-ink);
+}
+/* Rückfall ohne :has(): wenigstens der Top-Level-Knoten des aktuellen Asts als Etikett */
+@supports not selector(:has(*)) {
+  .js-navExpanded .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top {
+    background-color: var(--kr-sun) !important;
+  }
+}
+/* Eingeklappte Icon-Leiste: Icon mittig, fluchtet mit dem Navigations-Schalter im Band */
+.apex-side-nav.js-navCollapsed .t-TreeNav .a-TreeView-node .a-TreeView-content {
+  padding-inline: calc(var(--kr-nav-inset) + var(--kr-space-3));
+}
+/* Oben Luft für die Welle, die über den Navigationsanfang hängt – als Innenabstand der Scroll-Fläche,
+   nicht der Liste: Der TreeView scrollt den aktuellen Eintrag beim Laden per scrollTop = Abstand zum
+   Baum-Anfang an die Oberkante der Scroll-Fläche. Mit dem Abstand VOR dem Baum landet das Etikett
+   unter der Welle statt halb verdeckt in ihr (1601, 4000 bei aufgeklappter Navigation). */
+.t-Body-nav {
+  padding-block-start: calc(var(--kr-wave-h) + var(--kr-space-4));
+  scrollbar-width: none;            /* die Scrollleiste stünde neben den Etiketten; Rad/Touch/Pfeiltasten scrollen */
+}
+
+/* ==========================================================================
+   3. Top-Navigation im Band – Menüleiste (1102/1120) und Tabs-Navigation (1115/1121):
+      Einträge in der Tinte des Bands, der aktuelle als umgedrehtes Etikett (Violett, Gelb).
+   ========================================================================== */
+.t-Header-nav {
+  --a-menubar-item-padding-y: var(--kr-space-1);
+  --a-menubar-item-padding-x: var(--kr-space-3);
+  --a-menubar-item-font-weight: var(--kr-fw-semibold);
+  --ut-header-menubar-item-border-width: 0px;
+  --ut-header-menubar-item-hover-background-color: var(--kr-band-hover);
+  --ut-header-menubar-item-hover-text-color: var(--kr-band-ink);
+  --kr-c-bar-gap: .375rem;
+}
+.t-Header-nav .a-MenuBar {
+  box-shadow: none;
+}
+.t-Header-nav .a-MenuBar > ul {
+  padding-inline: var(--kr-space-3);
+  gap: var(--kr-space-1);
+}
+/* Das li bleibt ohne position: Es enthält das Dropdown (.a-Menu--top), die Leiste schneidet ab. */
+.t-Header-nav .a-MenuBar-item {
+  margin-block: var(--kr-c-bar-gap);
+  border-radius: var(--kr-r-pill);
+}
+/* Vita zeichnet den Ring per :focus-within auch bei Maus-Fokus: nur bei Tastatur, nach innen */
+@supports selector(:has(*)) {
+  .t-Header-nav .a-MenuBar-item {
+    --ut-focus-outline: none;
+  }
+  .t-Header-nav .a-MenuBar-item:has(:focus-visible) {
+    --ut-focus-outline: var(--kr-focus-outline);
+  }
+}
+.t-Header-nav .a-MenuBar-item:focus-within {
+  outline-offset: calc(-1 * var(--kr-focus-ring-width));
+}
+.t-Header-nav .a-MenuBar-item.a-Menu--current {
+  --ut-header-menubar-item-hover-background-color: var(--ut-header-menubar-item-current-background-color);
+  --ut-header-menubar-item-hover-text-color: var(--ut-header-menubar-item-current-text-color);
+}
+.t-Header-nav .a-MenuBar-item.a-Menu--current .a-Menu-subMenuCol {
+  color: inherit;
+}
+
+/* Tabs-Navigation (t-NavTabs): ab 768 px Pillen im Band, darunter die feste Leiste unten */
+.t-NavTabs {
+  --ut-navtabs-item-hover-background-color: var(--kr-band-hover);
+  --ut-navtabs-item-hover-text-color: var(--kr-band-ink);
+  --ut-navtabs-item-font-weight: var(--kr-fw-semibold);
+  --ut-navtabs-item-active-font-weight: var(--kr-fw-semibold);
+  --ut-navtabs-item-border-width: 0px;
+  --ut-navtabs-badge-background-color: var(--kr-band-ink);
+  --ut-navtabs-badge-text-color: var(--kr-band);
+  --ut-focus-outline-offset: calc(-1 * var(--kr-focus-ring-width));
+}
+.t-NavTabs-item .t-Icon {
+  color: inherit;
+}
+/* Core-Hervorhebungsbalken (::before) entfällt – das Etikett zeigt den Zustand */
+.t-NavTabs-link::before {
+  display: none;
+}
+@media (min-width: 768px) {
+  .t-NavTabs {
+    padding-inline: var(--kr-space-3);
+    gap: var(--kr-space-1);
+  }
+  .t-NavTabs-item {
+    flex: 0 0 auto;
+    min-width: 0;
+    margin-block: .375rem;
+    border-radius: var(--kr-r-pill);
+  }
+  .t-NavTabs-link {
+    --ut-navtabs-item-padding-y: var(--kr-space-1);
+    --ut-navtabs-item-padding-x: var(--kr-space-4);
+    border-radius: inherit;
+  }
+  .t-NavTabs-label {
+    line-height: var(--kr-lh-md);
+  }
+}
+@media (max-width: 767px) {
+  /* feste Leiste unten: ein Stück Band, aktiver Eintrag als violettes Etikett */
+  .t-NavTabs {
+    background-color: var(--kr-band);
+    gap: var(--kr-space-1);
+    padding: var(--kr-space-1) var(--kr-space-2);
+    padding-block-end: calc(var(--kr-space-1) + env(safe-area-inset-bottom, 0px));   /* UT: Home-Indikator (iOS) freihalten */
+  }
+  .t-NavTabs-link {
+    border-radius: var(--kr-r-lg);
+  }
+}
+
+/* Mega Menu (1122/1124): schwebende Tafel unter dem Band, aktueller Eintrag mit Orange-Punkt */
+.t-MegaMenu {
+  --a-menu-focused-background-color: var(--kr-raised-hover);
+  --a-menu-focused-text-color: var(--kr-ink);
+  --ut-megamenu-item-top-padding-y: var(--kr-space-3);
+  --ut-megamenu-item-top-padding-x: var(--kr-space-3);
+  --ut-megamenu-item-padding-y: .3125rem;
+  --ut-megamenu-item-padding-x: var(--kr-space-3);
+  --ut-megamenu-label-font-size: var(--kr-fs-md);
+  --ut-megamenu-label-line-height: var(--kr-lh-md);
+  --ut-megamenu-desc-text-color: var(--kr-muted);
+  --ut-megamenu-desc-opacity: 1;
+  --ut-megamenu-icon-opacity: 1;
+  --ut-megamenu-badge-background-color: var(--kr-brand-ink);
+  --ut-megamenu-badge-text-color: var(--kr-surface-raised);
+  --ut-megamenu-badge-border-radius: var(--kr-r-pill);
+}
+@media (max-width: 639px) {
+  .t-MegaMenu.has-callout {
+    margin: 0;
+  }
+  .t-MegaMenu.has-callout > .u-callout {
+    display: none;
+  }
+}
+.t-MegaMenu .a-Menu-content {
+  padding: var(--kr-space-2);
+}
+.t-MegaMenu-itemBody {
+  position: relative;
+  border-radius: var(--kr-r-md);
+}
+.t-MegaMenu-itemBody.is-focused, .t-MegaMenu-itemBody:hover {
+  background-color: var(--kr-raised-hover);
+}
+.t-MegaMenu-itemBody.is-focused .t-MegaMenu-label,
+.t-MegaMenu-itemBody:hover .t-MegaMenu-label {
+  color: var(--kr-ink);
+  text-decoration: none;
+}
+.t-MegaMenu-item--top > .t-MegaMenu-itemBody .t-MegaMenu-label {
+  --ut-megamenu-label-font-weight: var(--kr-fw-slab);
+  font-family: var(--kr-font-slab);
+  color: var(--kr-heading);
+}
+.t-MegaMenu-list--sub {
+  --ut-megamenu-label-font-size: var(--kr-fs-sm);
+  --ut-megamenu-label-line-height: var(--kr-lh-sm);
+}
+.t-MegaMenu-list--sub .t-MegaMenu-label {
+  color: var(--kr-ink-2);
+}
+.t-MegaMenu-list--sub .t-MegaMenu-item.is-active > .t-MegaMenu-itemBody .t-MegaMenu-label {
+  --ut-megamenu-label-font-weight: var(--kr-fw-semibold);
+  color: var(--kr-ink);
+}
+.t-MegaMenu-labelWrap {
+  position: relative;
+}
+/* aktuelle Seite: ein oranger Punkt vor dem Label („hier bin ich“) */
+.t-MegaMenu-list--sub .t-MegaMenu-item.is-active > .t-MegaMenu-itemBody > .t-MegaMenu-labelWrap::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(-1 * var(--kr-space-3) + 1px);
+  top: 50%;
+  width: .375rem;
+  height: .375rem;
+  margin-top: -.1875rem;
+  border-radius: var(--kr-r-pill);
+  background-color: var(--kr-mark);
+}
+/* Tastatur: Ring nach innen (die Tafel schneidet ab) */
+.t-MegaMenu:has(:focus-visible) .t-MegaMenu-itemBody.is-focused {
+  box-shadow: var(--kr-focus-shadow-inset);
+}
+
+/* ==========================================================================
+   4. Seitengrund und Inhalt
+   Eine Ebene für alles außer den Karten: Navigation, Title Bar und Inhalt liegen auf
+   demselben Lavendel-Grund; Regionen sind weiße Karten (regions.css).
+   ========================================================================== */
+.t-Body-main {
+  background-color: transparent;
+}
+
+/* Mobil (< 640 px): Navigation als Schublade ÜBER dem Inhalt (kein Quetschen).
+   APEX schließt sie per Klick auf .t-Body-main – die Abdunklung ist ein Pseudo-Element
+   von .t-Body-main, Tippen darauf schließt also die Schublade.
+   Schublade und Abdunklung beginnen an der Bandkante (Kopfhöhe ohne Wellenstreifen, §1) und
+   liegen UNTER dem Kopf (z-index 800): Die Welle bleibt klar gelb und hängt über die Schublade
+   wie am Desktop über die Navigation – statt abgedunkelt als trüber Streifen neben ihr.
+   640–991 px: die Navigation schiebt wie am Desktop. */
+@media (max-width: 639px) {
+  .t-Body {
+    --kr-c-drawer-top: max(0px, calc(var(--js-sticky-top, 0px) - var(--kr-wave-h)));
+  }
+  .apex-side-nav.js-navExpanded {
+    --ut-nav-collapsed-width: var(--ut-nav-collapsed-icon-width, 0px);
+  }
+  .apex-side-nav.js-navExpanded.js-navCollapsed--hidden {
+    --ut-nav-collapsed-width: 0px;
+  }
+  .apex-side-nav.js-navExpanded .t-Body-nav {
+    position: fixed;
+    inset-block: var(--kr-c-drawer-top) 0;
+    inset-inline-start: 0;
+    height: auto;
+    max-width: calc(100vw - var(--kr-space-12));
+    z-index: 799;
+    background-color: var(--kr-surface-raised);
+    border-start-end-radius: var(--kr-r-xl);
+    border-end-end-radius: var(--kr-r-xl);
+    box-shadow: var(--kr-float-shadow);
+  }
+  .apex-side-nav.js-navExpanded .t-Body-main::after {
+    content: "";
+    position: fixed;
+    inset: var(--kr-c-drawer-top) 0 0;
+    z-index: 798;
+    background: var(--kr-scrim);
+    cursor: pointer;
+  }
+  /* rechte Spalte: ebenfalls als Tafel über dem Inhalt statt ihn auf 150 px zu quetschen */
+  .js-rightExpanded .t-Body-actions {
+    position: fixed;
+    inset-block: var(--kr-c-drawer-top) 0;
+    inset-inline-end: 0;
+    height: auto;
+    max-width: calc(100vw - var(--kr-space-12));
+    z-index: 799;
+    border-start-start-radius: var(--kr-r-xl);
+    border-end-start-radius: var(--kr-r-xl);
+    box-shadow: var(--kr-float-shadow);
+  }
+  .js-rightExpanded .t-Body-actionsContent {
+    padding-inline: var(--kr-space-4);
+  }
+}
+
+/* ==========================================================================
+   5. Spalten: linke Spalte, rechte Actions-Spalte (beide auf dem Seitengrund)
+   ========================================================================== */
+.t-Body-side {
+  --ut-body-sidebar-border-width: 0px;
+  padding-block: var(--kr-title-pad-top) var(--kr-content-pad-y);
+  padding-inline: var(--kr-content-pad-x);
+}
+@media (min-width: 640px) {
+  .t-Body-side {
+    --ut-body-sidebar-width: 17rem;   /* t-PageBody--hideLeft blendet die Spalte per display:none aus */
+    padding-inline-end: 0;
+  }
+}
+.t-Body-actions {
+  --ut-body-actions-toggle-offset: calc(var(--kr-wave-h) + var(--kr-space-4));
+  --ut-body-actionstoggle-padding-x: var(--kr-space-2);
+  --ut-body-actionstoggle-padding-y: var(--kr-space-2);
+}
+.t-Body-actionsContent {
+  padding-block: calc(var(--kr-wave-h) + var(--kr-space-4)) var(--kr-content-pad-y);
+  padding-inline: var(--kr-space-2) var(--kr-content-pad-x);
+}
+/* Actions-Schalter: eine weiße Etiketten-Pille, an die Spaltenkante geheftet */
+.t-Body-actionsToggle,
+.t-Body-actionsToggle.is-active, .t-Body-actionsToggle:hover, .t-Body-actionsToggle:focus {
+  --ut-body-actionstoggle-padding-x: var(--kr-space-2);
+}
+.t-Body-actionsToggle {
+  border: var(--kr-hairline) solid var(--kr-line);
+  border-inline-end-width: 0;
+  border-start-start-radius: var(--kr-r-pill);
+  border-end-start-radius: var(--kr-r-pill);
+  color: var(--ut-body-actionstoggle-text-color);
+  transition: background-color var(--kr-duration) var(--kr-ease);
+}
+.t-Body-actionsToggle:hover {
+  --ut-body-actionstoggle-background-color: var(--ut-body-actionstoggle-hover-background-color);
+}
+.t-Body-actionsToggle:focus-visible {
+  outline-offset: calc(-1 * var(--kr-focus-ring-width));
+}
+.u-RTL .t-Body-actionsToggle {
+  border-inline-end-width: 0;
+  border-start-start-radius: var(--kr-r-pill);
+  border-end-start-radius: var(--kr-r-pill);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+/* Footer: leise auf dem Seitengrund */
+.t-Footer {
+  --ut-footer-padding-x: var(--kr-content-pad-x);
+  color: var(--kr-muted);
+  font-size: var(--kr-fs-sm);
+}
+.t-Footer-topButton {
+  --ut-footer-top-background-color: var(--kr-surface);
+  --ut-footer-top-text-color: var(--kr-brand-ink);
+  opacity: 1;
+  box-shadow: 0 0 0 var(--kr-hairline) var(--kr-line);
+}
+.t-Footer-topButton:hover {
+  --ut-footer-top-background-color: var(--kr-soft);
+}
+
+/* ==========================================================================
+   6. Title Bar & Breadcrumb: Seitentitel in Bitter 800, Etikett-Violett
+   Die Title Bar klebt; ab dem ersten Pixel Scroll trennt sie eine Haarlinie im Innenabstand
+   vom durchlaufenden Inhalt (Scroll-State-Query; ohne Unterstützung steht sie immer).
+   ========================================================================== */
+.t-Body-title .t-BreadcrumbRegion {
+  padding-block-start: var(--kr-title-pad-top);
+}
+.t-Body-title::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--kr-content-pad-x);
+  bottom: 0;
+  height: var(--kr-hairline);
+  background-color: var(--kr-line);
+  pointer-events: none;
+}
+@supports (container-type: scroll-state) {
+  .t-Body-title {
+    container-type: scroll-state;
+  }
+  .t-Body-title::after {
+    visibility: hidden;
+  }
+  @container scroll-state(stuck: top) {
+    .t-Body-title::after {
+      visibility: visible;
+    }
+  }
+}
+.t-Breadcrumb-item::after {
+  content: "";
+  width: .375rem;
+  height: .375rem;
+  border-inline-end: 2px solid currentColor;
+  border-block-start: 2px solid currentColor;
+  border-start-end-radius: 1px;
+  transform: rotate(45deg);
+  opacity: .55;
+  margin-inline-start: var(--kr-space-2);
+  margin-inline-end: var(--kr-space-3);
+}
+.t-Breadcrumb-item:dir(rtl)::after {
+  content: "";
+  transform: rotate(-45deg);
+}
+.t-Breadcrumb-item a {
+  color: inherit;
+  text-decoration: none;
+}
+.t-Breadcrumb-item a:hover {
+  color: var(--kr-link-text);
+  text-decoration: underline;
+  text-decoration-color: var(--kr-link-underline-hover);
+  text-decoration-thickness: var(--kr-link-underline-width-hover);
+  text-underline-offset: var(--kr-link-underline-offset);
+}
+.t-BreadcrumbRegion-titleText,
+.t-BreadcrumbRegion--useBreadcrumbTitle .t-Breadcrumb-item:last-child {
+  letter-spacing: var(--kr-tracking-title);
+  color: var(--kr-heading);
+}
+@media (min-width: 640px) {
+  .t-Body-title:not(.t-Body-title-shrink) .t-BreadcrumbRegion--useBreadcrumbTitle:not(.t-BreadcrumbRegion--compactTitle) .t-Breadcrumb-item:last-child,
+  .t-BreadcrumbRegion-titleText {
+    margin-block-start: var(--kr-space-1);
+  }
+}
+/* geschrumpfte Title Bar (ab ~400 px Scroll): unter der Welle bleibt Luft */
+.t-Body-title-shrink .t-BreadcrumbRegion {
+  padding-block-start: calc(var(--kr-wave-h) + var(--kr-space-1));
+}
+
+/* ==========================================================================
+   7. Region Display Selector und Tabs: Pillen; aktiv = violette fette Schrift +
+      Brause-Orange-Strich unter dem Text („hier bin ich“, >= 3:1, WCAG 1.4.11).
+      Fokusring nach innen – die Leisten scrollen waagerecht und schneiden sonst ab.
+   ========================================================================== */
+.apex-rds-container,
+.t-Tabs {
+  --kr-c-tab-pad-x: .875rem;
+  --kr-c-tab-pad-y: .3125rem;
+  --kr-c-tab-h: calc(2 * var(--kr-c-tab-pad-y) + var(--kr-lh-md));   /* 32 px */
+}
+.t-Body-title .apex-rds-container {
+  margin-inline: calc(var(--kr-content-pad-x) - var(--kr-c-tab-pad-x));
+  padding-block-end: var(--kr-space-3);
+}
+.t-BreadcrumbRegion + div > .apex-rds-container {
+  margin-block-start: calc(-1 * var(--kr-space-2));
+}
+/* Überlauf-Pfeile der RDS-Leiste: transparente Icon-Schaltfläche in Tab-Höhe, davor ein Verlauf
+   in der Farbe des Grundes (die Tabs laufen darunter aus). */
+.apex-rds-container > .apex-rds-slider {
+  top: auto;
+  height: var(--kr-c-tab-h);
+}
+.t-Body-title .apex-rds-container > .apex-rds-slider {
+  bottom: var(--kr-space-3);
+}
+.apex-rds-container .apex-rds-hover a {
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-text-color: var(--kr-brand-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--kr-c-tab-h);
+  block-size: var(--kr-c-tab-h);
+  padding: 0;
+  border-width: 0;
+  border-radius: var(--kr-r-pill);
+}
+.apex-rds-container .apex-rds-hover a:hover {
+  --a-button-background-color: var(--kr-page-hover);
+}
+/* der Schieber ist immer links → rechts gesetzt (UT: direction: ltr) – physische Seiten sind hier logisch */
+.apex-rds-container .apex-rds-hover.left {
+  padding-right: var(--kr-space-6);
+  background-image: linear-gradient(to left, transparent, var(--kr-page) var(--kr-space-6));
+}
+.apex-rds-container .apex-rds-hover.right {
+  padding-left: var(--kr-space-6);
+  background-image: linear-gradient(to right, transparent, var(--kr-page) var(--kr-space-6));
+}
+.t-Region .apex-rds-container .apex-rds-hover.left {
+  background-image: linear-gradient(to left, transparent, var(--kr-surface) var(--kr-space-6));
+}
+.t-Region .apex-rds-container .apex-rds-hover.right {
+  background-image: linear-gradient(to right, transparent, var(--kr-surface) var(--kr-space-6));
+}
+.apex-rds {
+  --ut-tabs-item-padding-y: var(--kr-c-tab-pad-y);
+  --ut-tabs-item-padding-x: var(--kr-c-tab-pad-x);
+  --ut-focus-outline-offset: calc(-1 * var(--kr-focus-ring-width));
+  gap: var(--kr-space-1);
+}
+.a-RDS-link {
+  position: relative;
+  border-radius: var(--kr-r-pill);
+  color: var(--ut-tabs-item-text-color);
+  font-weight: var(--kr-fw-regular);
+}
+.a-RDS-link:hover {
+  background-color: var(--kr-page-hover);
+  color: var(--kr-brand-ink);
+}
+.apex-rds-selected .a-RDS-link {
+  background-color: transparent;
+  color: var(--kr-brand-ink);
+  font-weight: var(--kr-fw-semibold);
+}
+/* Vitas Balken aus, stattdessen der orange Strich unter dem Text */
+.a-RDS-link::before,
+.t-Tabs-link::before {
+  display: none;
+}
+.apex-rds-selected .a-RDS-link::after,
+.t-Tabs-item.is-active .t-Tabs-link::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--kr-c-tab-pad-x);
+  bottom: .125rem;
+  height: var(--kr-mark-w);
+  border-radius: var(--kr-r-pill);
+  background-color: var(--kr-mark);
+  pointer-events: none;
+}
+/* senkrechte RDS (linke Spalte, .vertical-rds): die Marke steht vor dem Text */
+.vertical-rds .apex-rds-selected .a-RDS-link::after,
+.t-Body-side .apex-rds-selected .a-RDS-link::after {
+  inset-inline: .375rem auto;
+  inset-block: 50% auto;
+  width: var(--kr-mark-w);
+  height: 1rem;
+  margin-block-start: -.5rem;
+}
+/* Marquee: der Info-Bereich hat in UT keinen eigenen Innenabstand */
+.t-Body-info {
+  padding-inline: var(--kr-content-pad-x);
+}
+
+/* Tabs (Tabs-Liste, Tabs Container) */
+.t-Tabs {
+  --ut-tabs-item-padding-y: var(--kr-c-tab-pad-y);
+  --ut-tabs-item-padding-x: var(--kr-c-tab-pad-x);
+  --ut-focus-outline-offset: calc(-1 * var(--kr-focus-ring-width));
+  --ut-tabs-item-outline-offset: calc(-1 * var(--kr-focus-ring-width));
+  gap: var(--kr-space-1);
+}
+.t-Tabs-link {
+  position: relative;
+  border-radius: var(--kr-r-pill);
+}
+.t-Tabs-link:hover {
+  background-color: var(--kr-page-hover);
+  color: var(--kr-brand-ink);
+}
+.t-Tabs-item.is-active .t-Tabs-link {
+  background-color: transparent;
+  color: var(--kr-brand-ink);
+}
+/* Pill-Variante: Segment-Leiste in Lavendel, aktives Segment als weiße Pille */
+.t-Tabs--pill {
+  --ut-tabs-border-width: 0px;
+  --ut-tabs-border-radius: var(--kr-r-pill);
+  --ut-tabs-box-shadow: none;
+  --ut-tabs-background-color: var(--kr-soft);
+  padding: .1875rem;
+  gap: .125rem;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+.t-Tabs--pill .t-Tabs-item {
+  border-inline-end-width: 0;
+}
+.t-Tabs--pill.t-Tabs--fillLabels,
+.t-Tabs--pill.t-Tabs--fitLabels {
+  inline-size: auto;
+}
+.t-Tabs--pill .t-Tabs-item.is-active .t-Tabs-link {
+  background-color: var(--kr-surface);
+  box-shadow: 0 1px 2px var(--kr-page-press);
+}
+.t-Tabs--pill .t-Tabs-item.is-active .t-Tabs-link::after {
+  display: none;
+}
+
+/* ==========================================================================
+   8. Druck: keine Welle, keine Schublade
+   ========================================================================== */
+@media print {
+  .t-Header::after,
+  .t-Body-title::after,
+  .t-Body-actionsToggle {
+    display: none;
+  }
+}

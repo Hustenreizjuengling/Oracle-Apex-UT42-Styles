@@ -1,0 +1,158 @@
+/* ==========================================================================
+   Frequenz – Grundlagen (modusneutral, nur Tokens, kein @layer)
+   Schrift und Größen-Skala, Links, Textauswahl, EIN Fokus-System, Scrollbars,
+   Tabellenziffern, Druck. Spezifität bewusst niedrig (:where), damit Komponenten-
+   Dateien alles mit einfachen Klassen-Selektoren übersteuern können. Ausnahmen:
+   Überschriften h1–h6 (0,0,1 – müssen die Element-Regeln aus UT Core schlagen) und
+   der Tastatur-Fokusring (0,2,0, siehe 5).
+   ========================================================================== */
+
+/* 1. Schrift ------------------------------------------------------------- */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-synthesis-weight: none;           /* nie künstlich fetten: die Achse reicht 100–900 */
+  font-optical-sizing: auto;
+}
+:where(button, input, select, textarea, optgroup) {
+  font-family: inherit;
+}
+/* Rohe Überschriften (Static Content, Rich Text, Hilfetexte) auf der Skala und in der
+   Frequenz-Handschrift: kräftig (800), eng gesetzt. UT Core setzt h1–h6 auf
+   32/24/20/16/14/12 px mit line-height 1.5 – ein h1 im Inhalt darf nicht mit dem Seitentitel
+   (36/44) konkurrieren. Gleiche Spezifität wie Core, später geladen. Komponenten-Titel
+   (.t-*-title, .a-*-title, .is-markdownified h*) setzen ihre Größe über Klassen bzw. Tokens. */
+h1 {
+  font-size: var(--fq-fs-2xl);
+  line-height: var(--fq-lh-2xl);
+  font-weight: var(--fq-fw-heavy);
+  letter-spacing: var(--fq-tracking-heading);
+}
+h2 {
+  font-size: var(--fq-fs-xl);
+  line-height: var(--fq-lh-xl);
+  font-weight: var(--fq-fw-heavy);
+  letter-spacing: var(--fq-tracking-heading);
+}
+h3 {
+  font-size: var(--fq-fs-lg);
+  line-height: var(--fq-lh-lg);
+  font-weight: var(--fq-fw-heavy);
+}
+h4 {
+  font-size: var(--fq-fs-md);
+  line-height: var(--fq-lh-md);
+  font-weight: var(--fq-fw-bold);
+}
+h5 {
+  font-size: var(--fq-fs-sm);
+  line-height: var(--fq-lh-sm);
+  font-weight: var(--fq-fw-bold);
+}
+h6 {
+  font-size: var(--fq-fs-xs);
+  line-height: var(--fq-lh-xs);
+  font-weight: var(--fq-fw-bold);
+}
+:where(b, strong) {
+  font-weight: var(--fq-fw-bold);
+}
+:where(code, kbd, samp, pre) {
+  font-family: var(--fq-font-mono);
+}
+/* Code-Blöcke scrollen in ihrem Kasten (UT Core: pre { white-space: pre } ohne overflow). */
+:where(pre) {
+  overflow-x: auto;
+}
+/* Header-Branding: feste Zeilenhöhe, damit der Font-Swap (font-display: swap) die von
+   theme42.js gemessene Kopfhöhe nicht verschiebt. */
+.t-Header-logo,
+.t-Header-logo-link,
+.t-Header-logo .apex-logo-text {
+  line-height: var(--fq-lh-brand);
+}
+
+/* Größen-Skala als Hilfsklassen (12 · 13 · 14 · 16 · 20 · 24 · 36) */
+.fq-text-xs  { font-size: var(--fq-fs-xs);  line-height: var(--fq-lh-xs); }
+.fq-text-sm  { font-size: var(--fq-fs-sm);  line-height: var(--fq-lh-sm); }
+.fq-text-md  { font-size: var(--fq-fs-md);  line-height: var(--fq-lh-md); }
+.fq-text-lg  { font-size: var(--fq-fs-lg);  line-height: var(--fq-lh-lg); font-weight: var(--fq-fw-heavy); }
+.fq-text-xl  { font-size: var(--fq-fs-xl);  line-height: var(--fq-lh-xl); font-weight: var(--fq-fw-heavy); letter-spacing: var(--fq-tracking-heading); }
+.fq-text-2xl { font-size: var(--fq-fs-2xl); line-height: var(--fq-lh-2xl); font-weight: var(--fq-fw-heavy); letter-spacing: var(--fq-tracking-heading); }
+.fq-text-3xl { font-size: var(--fq-fs-3xl); line-height: var(--fq-lh-3xl); font-weight: var(--fq-fw-heavy); letter-spacing: var(--fq-tracking-title); }
+
+/* 2. Tabellenziffern überall, wo Zahlen in Spalten stehen ---------------- */
+:where(table, input, output, time, .apex-item-number, .a-GV, .a-IRR, .t-Report, .a-DatePicker,
+       .t-BadgeList, .t-Badge, .t-MetricCard, .a-CardView-badge, .t-Button-badge, .a-Button-badge,
+       [class*="pagination"], [class*="Pagination"], .u-tabular-nums) {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 3. Links im Fließtext: Petrol mit Unterstrich (Farbe allein reicht nicht: Petrol gegen
+      Anthrazit-Text < 3:1). Nur Links ohne Klasse – Komponenten-Links bleiben unberührt. */
+a:not([class]) {
+  color: var(--fq-link-text);
+  text-decoration-line: underline;
+  text-decoration-color: var(--fq-link-underline);
+  text-decoration-thickness: var(--fq-link-underline-width);
+  text-underline-offset: var(--fq-link-underline-offset);
+}
+a:not([class]):hover {
+  color: var(--fq-link-text);
+  text-decoration-color: var(--fq-link-underline-hover);
+  text-decoration-thickness: var(--fq-link-underline-width-hover);
+}
+
+/* 4. Textauswahl --------------------------------------------------------- */
+::selection {
+  background-color: var(--fq-selection);
+  color: var(--fq-selection-text);
+}
+
+/* 5. Fokus: EIN System (Tokens --fq-focus-*), nur bei Tastatur sichtbar.
+      UT Core zeichnet *:focus mit den Hooks --ut-focus-outline / --ut-focus-outline-offset
+      (auf :root = --fq-focus-outline / --fq-focus-ring-offset, siehe bridge.css). Komponenten
+      passen den Ring lokal über genau diese zwei Hooks an – nie über eigene outline-Regeln.
+      Hier: Maus-Fokus ohne Ring; Tastatur-Fokus überall mit Ring (wie UT: tabindex=-1 ausgenommen).
+      Spezifität 0,2,0: schlägt auch Oracle-Regeln, die den Umriss unterdrücken (a.t-ContentRow-wrap,
+      .a-CardView-titleLink:focus haben sonst GAR keinen Fokus-Hinweis). Wo Oracle den Fokus anders
+      zeigt (.a-TreeView-label → Zeilen-Schatten, .a-FS .apex-item-option → Kästchen, .a-IRR-dialogList a),
+      entsteht dadurch ein Doppelring – den nimmt die Komponente lokal über --ut-focus-outline: none. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+:focus-visible:not([tabindex="-1"]) {
+  outline: var(--ut-focus-outline, var(--fq-focus-outline));
+  outline-offset: var(--ut-focus-outline-offset, var(--fq-focus-ring-offset));
+}
+/* Visuell versteckte FORMULAR-Eingaben (Star Rating: input.u-vh.is-focusable 0×0, Datei-Input 1×1):
+   kein Streu-Ring am unsichtbaren Kästchen – ihren Fokus zeigt immer der sichtbare Stellvertreter. */
+:is(input, select, textarea):is(.u-vh, .u-VisuallyHidden, .visuallyhidden, .visuallyHidden):focus-visible {
+  outline: none;
+}
+
+/* 6. Scrollbars: dezent, Farbe folgt dem Modus (scrollbar-color vererbt sich) */
+:root {
+  scrollbar-color: var(--fq-scrollbar-thumb) var(--fq-scrollbar-track);
+}
+:where(body *) {
+  scrollbar-width: thin;
+}
+
+/* 7. Bewegung reduzieren ------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --fq-duration: 0s;
+  }
+}
+
+/* 8. Druck: weiße Seite, keine Schatten (Farb-Tokens: tokens/print.css) */
+@media print {
+  body {
+    background-color: var(--fq-surface);
+  }
+  .t-Body-title {
+    position: static;
+  }
+}

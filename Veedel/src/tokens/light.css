@@ -1,0 +1,161 @@
+/* ==========================================================================
+   Veedel – Farb-Tokens HELL (Basis Vita)
+   Nur :root-Deklarationen eigener Tokens (--ve-*) + --ut-color-scheme.
+   dark.css definiert exakt dieselben Namen. Kontrastwerte (WCAG 2.x) in Klammern:
+   gegen Fläche = --ve-surface (Weiß), Seite = --ve-page. Geprüft mit Veedel/tools/check-tokens.mjs.
+   Idee: Stadtwerke-Anmutung – Markenband in tiefem Blau, helles Azur als Leuchtfarbe,
+   Signalrot nur für die Hauptaktion, weiße eckige Flächen auf kühlem Hellgrau.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: light;
+
+  /* Flächen -------------------------------------------------------------- */
+  --ve-page: #F4F6F7;              /* Seitengrund unter Regionen und Karten */
+  --ve-surface: #FFFFFF;           /* Regionen, Karten, Navigation, Tab-Leiste */
+  --ve-surface-sunken: #F4F6F7;    /* abgesenkt in weißen Flächen: Toolbars, Code, Hinweisblöcke */
+  --ve-surface-raised: #FFFFFF;    /* schwebend: Menüs, Dialoge, Popups */
+  --ve-raised-hover: #E6EEF5;      /* Hover/Fokus auf schwebender Fläche (Menüeintrag, Tag im Popup) */
+  --ve-ground: var(--ve-surface);  /* aktuelle Grundfläche; in schwebenden Ebenen = --ve-surface-raised (bridge §18) */
+  --ve-hover: #EFF4F9;             /* Zeilen-/Listen-Hover auf Weiß */
+  --ve-press: #E2EAF2;             /* gedrückt auf Weiß */
+  --ve-soft: #EBEFF3;              /* neutrale Fläche: Chips, Zähler-Grund, aktive Pagination */
+  --ve-soft-hover: #DFE5EB;
+  --ve-soft-press: #D3DBE3;
+  --ve-field: #FFFFFF;             /* Eingabefelder */
+  --ve-field-readonly: #F4F6F7;    /* schreibgeschützte Felder */
+  --ve-scrim: rgb(8 30 53 / .5);   /* Abdunklung hinter Dialogen/Schublade (Nachtblau) */
+  --ve-tint-hover: rgb(8 30 53 / .06);   /* durchscheinender Hover auf beliebigem Grund */
+  --ve-tint-press: rgb(8 30 53 / .11);   /* durchscheinend gedrückt */
+
+  /* Markenband: Kopf ------------------------------------------------------- */
+  --ve-header: #004B8D;            /* Kopfband, tiefstes Markenblau – eine Stufe unter dem Band (Weiß 8.8) */
+  --ve-header-text: #FFFFFF;       /* Schrift und Icons im Kopf */
+  --ve-header-hover: rgb(255 255 255 / .14);
+  --ve-header-press: rgb(255 255 255 / .24);
+  --ve-header-focus: #FFFFFF;      /* Fokusring auf dem Band (Weiß 6.5) */
+
+  /* Signatur: Verlaufsband (Title Bar, Hero, Login) ------------------------ */
+  --ve-band-from: #005FAF;         /* links: tief (kleine Schrift steht hier, Weiß 6.5) */
+  --ve-band-mid: #006AC0;          /* Mitte (Weiß 5.5) */
+  --ve-band-to: #0091FA;           /* rechts: Leuchtazur (nur große Schrift, Weiß 3.3) */
+  --ve-band-text: #FFFFFF;
+  --ve-band-muted: rgb(255 255 255 / .9);   /* Breadcrumb auf dem Band */
+
+  /* Text ------------------------------------------------------------------ */
+  --ve-ink: #081E35;               /* Nachtblau: Text, Labels der Navigation (16.8 Fläche, 15.5 Seite) */
+  --ve-ink-2: #2B3F56;             /* zweite Stufe: Unterebenen der Navigation, Icons */
+  --ve-muted: #56657A;             /* Sekundärtext, Feld-Labels, Breadcrumb (5.9 Fläche, 5.5 Seite) */
+  --ve-placeholder: #63707F;       /* Platzhalter (5.1 im Feld) */
+  --ve-disabled: #8A95A1;          /* deaktivierte Beschriftung (bewusst < 4.5, WCAG-Ausnahme) */
+  --ve-on-dark: #FFFFFF;           /* Text auf dunklen/gesättigten Flächen (in beiden Modi gleich) */
+  --ve-on-light: #081E35;          /* Text auf hellen Flächen (in beiden Modi gleich) */
+  --ve-heading: #0086EA;           /* Überschriften ab 19 px/800 (großer Text: 3.8 Fläche, 3.5 Seite) */
+
+  /* Linien ---------------------------------------------------------------- */
+  --ve-line-subtle: #E8ECEF;       /* sehr zart: innere Trenner in Karten/Listen */
+  --ve-line: #DCE1E6;              /* Haarlinie: Tabellenzeilen, Trenner */
+  --ve-line-strong: #C3CBD3;       /* kräftig: Rahmen von Containern, Karten */
+  --ve-edge: #7E8A97;              /* Feldkante (3.5 Fläche, 3.3 Seite) – WCAG 1.4.11 */
+  --ve-edge-hover: #56657A;        /* Feldkante Hover */
+  --ve-head-rule: #081E35;         /* Grundlinie unter Tabellenköpfen (Nachtblau) */
+
+  /* Akzent Blau: Auswahl, Aktiv, Checked, Links, Marken ------------------ */
+  --ve-accent: #005FAF;            /* Fläche mit Schrift: aktiver Nav-Eintrag, gewählter Tag (Weiß 6.5) */
+  --ve-accent-hover: #004E91;
+  --ve-accent-press: #003F77;
+  --ve-accent-on: #FFFFFF;
+  --ve-accent-text: #005FAF;       /* als Text/Icon/Marke (6.5 Fläche, 6.0 Seite) */
+  --ve-accent-bright: #0091FA;     /* Leuchtazur: nur Deko und große Flächen ohne kleine Schrift */
+  --ve-accent-tint: #E6F2FC;       /* Auswahl-Fläche (Zeile, Menüeintrag) */
+  --ve-accent-tint-2: #CFE5F8;     /* kräftigere Auswahl, ::selection */
+  --ve-accent-ring: rgb(0 145 250 / .25);  /* weicher Halo – nur Zusatz, nie einziger Fokus-Hinweis */
+
+  /* Aktion Rot: exklusiv für die Hauptaktion (Hot/Primary) ----------------- */
+  --ve-action: #E3250C;            /* Signalrot (Weiß darauf 4.6) */
+  --ve-action-hover: #CD2319;      /* (5.5) */
+  --ve-action-press: #B01C12;      /* (7.0) */
+  --ve-action-on: #FFFFFF;
+  --ve-action-text: #C8200E;       /* Rot als Schrift (einfache Hot-Buttons): 5.7 Fläche */
+  --ve-action-tint: #FDECE9;       /* Hover einfacher Hot-Buttons */
+
+  /* Fokus (ein System, überall >= 3:1) ------------------------------------ */
+  --ve-focus-ring-color: #0078CD;  /* Ring (4.6 Fläche, 4.2 Seite) */
+  --ve-focus-gap: var(--ve-ground); /* Innenring/Lücke des Doppelrings = aktuelle Grundfläche */
+
+  /* Links: Markenblau mit Unterstrich ------------------------------------- */
+  --ve-link-text: #005FAF;
+  --ve-link-underline: #005FAF;
+  --ve-link-underline-hover: #0086EA;
+
+  /* Textauswahl ----------------------------------------------------------- */
+  --ve-selection: #CFE5F8;
+  --ve-selection-text: #081E35;
+
+  /* Pflichtfeld-Markierung ------------------------------------------------ */
+  --ve-required-color: #9E1030;    /* = Danger-Text (8.2 Fläche) */
+
+  /* Status: Fläche · Hover · on (Text auf Fläche) · Text · Tönung (Alert-Grund) --- */
+  --ve-success: #13803B;           /* Weiß darauf 5.0 */
+  --ve-success-hover: #0F6B31;
+  --ve-success-on: #FFFFFF;
+  --ve-success-text: #106E33;      /* 6.4 Fläche */
+  --ve-success-tint: #E7F4EC;
+
+  --ve-warning: #F5A800;           /* Nachtblau darauf 8.4 */
+  --ve-warning-hover: #FFB930;
+  --ve-warning-on: #081E35;
+  --ve-warning-text: #8A5700;      /* 6.1 Fläche */
+  --ve-warning-tint: #FFF4D9;
+
+  --ve-danger: #9E1030;            /* Karminrot – tiefer als das Signalrot (ΔE00 20, Helligkeit 1.8:1) */
+  --ve-danger-hover: #850B27;
+  --ve-danger-on: #FFFFFF;
+  --ve-danger-text: #9E1030;       /* 8.2 Fläche */
+  --ve-danger-tint: #FBEBEE;
+
+  --ve-info: #005FAF;              /* Information = Markenblau */
+  --ve-info-hover: #004E91;
+  --ve-info-on: #FFFFFF;
+  --ve-info-text: #005FAF;
+  --ve-info-tint: #E6F2FC;
+
+  /* Code: Syntax-Hervorhebung (Prism – Code-Blöcke, Markdown-Editor) ------ */
+  --ve-code-keyword: #005FAF;      /* Schlüsselwörter, Selektoren, Klassen: Markenblau */
+  --ve-code-string: #106E33;       /* Zeichenketten: Grün */
+  --ve-code-number: #8A5700;       /* Zahlen, Wahrheitswerte, Konstanten: Ocker */
+
+  /* Tiefe ----------------------------------------------------------------- */
+  --ve-card-shadow: none;          /* Flächen liegen flach auf dem Seitengrund */
+  --ve-lift-shadow: 0 10px 24px -12px rgb(8 30 53 / .35);  /* Karten-Hover: leichtes Anheben */
+  --ve-float-shadow: 0 16px 36px -10px rgb(8 30 53 / .28), 0 0 0 1px rgb(8 30 53 / .08);
+  --ve-tooltip-bg: #081E35;
+  --ve-tooltip-text: #FFFFFF;
+
+  /* Scrollbars ------------------------------------------------------------ */
+  --ve-scrollbar-thumb: rgb(8 30 53 / .28);
+  --ve-scrollbar-thumb-hover: rgb(8 30 53 / .45);
+  --ve-scrollbar-track: transparent;
+
+  /* Icons ----------------------------------------------------------------- */
+  --ve-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M11.5 5.5l4.5 4.5 4.5-4.5' fill='none' stroke='%2356657A' stroke-width='1.75' stroke-linecap='square'/%3E%3C/svg%3E");
+
+  /* Kategorie-/Diagrammpalette (--u-color-1…15). Chart-Reihenfolge des UT:
+     1,4,7,9,12,3,8,10,2,5,11,6. Serie 1 ist das Leuchtazur der Marke, Serie 2 Nachtblau –
+     danach gut unterscheidbare Töne (CVD-geprüft); keine Kategorie liest sich als Signalrot
+     (ΔE00 >= 20 zu --ve-action). Alle >= 3:1 gegen Weiß (WCAG 1.4.11). -on = Text darauf. */
+  --ve-cat-1: #0091FA;  --ve-cat-1-on: #081E35;   /* Serie 1  Leuchtazur (Marke) */
+  --ve-cat-2: #647386;  --ve-cat-2-on: #FFFFFF;   /* Serie 9  Schiefer */
+  --ve-cat-3: #624D29;  --ve-cat-3-on: #FFFFFF;   /* Serie 6  Sandstein (hell als Umbra: dunkel, 8.0) */
+  --ve-cat-4: #0B2F5B;  --ve-cat-4-on: #FFFFFF;   /* Serie 2  Nachtblau */
+  --ve-cat-5: #49A19C;  --ve-cat-5-on: #081E35;   /* Serie 10 Rheinwasser */
+  --ve-cat-6: #2D6E3E;  --ve-cat-6-on: #FFFFFF;   /* Serie 12 Stadtwald */
+  --ve-cat-7: #D08200;  --ve-cat-7-on: #081E35;   /* Serie 3  Bernstein */
+  --ve-cat-8: #8259CC;  --ve-cat-8-on: #FFFFFF;   /* Serie 7  Flieder */
+  --ve-cat-9: #1B9A6C;  --ve-cat-9-on: #081E35;   /* Serie 4  Grün */
+  --ve-cat-10: #6E6A2C; --ve-cat-10-on: #FFFFFF;  /* Serie 8  Moos */
+  --ve-cat-11: #C87D9D; --ve-cat-11-on: #081E35;  /* Serie 11 Rosé */
+  --ve-cat-12: #B6287A; --ve-cat-12-on: #FFFFFF;  /* Serie 5  Beere */
+  --ve-cat-13: #0E6068; --ve-cat-13-on: #FFFFFF;  /* Tiefseegrün */
+  --ve-cat-14: #8995A1; --ve-cat-14-on: #081E35;  /* Nebel */
+  --ve-cat-15: #3E4B5A; --ve-cat-15-on: #FFFFFF;  /* Basalt */
+}

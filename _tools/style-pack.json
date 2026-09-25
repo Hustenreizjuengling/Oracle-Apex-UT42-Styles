@@ -1,0 +1,18 @@
+{
+  "_hinweis": "Texte für style-pack/README.md, erzeugt von: node _tools/build.mjs --pack. Schlüssel unter 'anmutung': <präfix>-<style> wie im zweiten Parameter des Packs. Auto-Styles ohne Eintrag bekommen den Standardtext 'auto'. Fehlt ein Eintrag für Light/Dark, meldet der Build eine Warnung und nimmt den ersten Satz der Beschreibung aus theme.json.",
+  "anmutung": {
+    "auto": "folgt der Hell/Dunkel-Einstellung des Betriebssystems – pixelgleich zu Light bzw. Dark",
+    "passepartout-light": "ruhiger hellgrauer Rahmen aus Kopf und Navigation, darin eine weiße, gerundete Leinwand; einziger Akzent Kartenmagenta; Instrument Sans",
+    "passepartout-dark": "fast schwarzer Rahmen, graphitgraue Leinwand, Magenta als heller Rosé-Ton",
+    "veedel-light": "Kopfband in tiefem Markenblau, Seitentitel groß und weiß auf einem Blauverlauf, weiße eckige Flächen, Signalrot nur für die Hauptaktion; Figtree",
+    "veedel-dark": "Nachtblau statt Schwarz, gedämpfter Blauverlauf, Überschriften in Himmelblau",
+    "frequenz-light": "weiße Seite, hellgraue Tafeln mit großen Radien, Magenta-Block mit dem App-Namen oben links, Kontur-Buttons; Onest",
+    "frequenz-dark": "schwarze Seite mit dunkelgrauen Tafeln, Magenta bleibt Akzent, Links in hellem Petrol",
+    "kracherl-light": "sonnengelbes Kopfband mit Wellenkante und Sprudelblasen, weiße Etiketten-Karten auf Lavendel, Überschriften in Violett; Bitter und PT Sans",
+    "kracherl-dark": "„Biergarten bei Nacht“: Violett-Schwarz mit Laternengelb",
+    "passer-light": "„Tagdruck“: Teal und Fluoreszenz-Pink mit Passerversatz auf kühlem Papier mit Korn, Text in Indigo-Tusche, Gelb als Marker; Bricolage Grotesque",
+    "passer-dark": "„Nachtdruck“: Neonfarben auf indigo gefärbtem Papier, Teal hell leuchtend"
+  },
+  "hinweise": {},
+  "laufzeit": "Im Test (APEX 26.1, Datenbank im lokalen Netz, SQLcl) dauerte die Installation aller Styles 12 bis 16 Sekunden, die Deinstallation rund 7 Sekunden. Über langsame Verbindungen bestimmt vor allem die Größe der Skripte die Dauer."
+}

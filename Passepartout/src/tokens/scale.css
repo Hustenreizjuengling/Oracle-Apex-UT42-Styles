@@ -1,0 +1,120 @@
+/* ==========================================================================
+   Passepartout – Tokens MODUSNEUTRAL (Maße, Schrift, Dichte, Fokus-Geometrie)
+   Gilt für hell, dunkel und auto gleichermaßen; wird von index.css als Erstes geladen.
+   Nur :root-Deklarationen eigener Tokens (--pp-*). Farben stehen in light.css/dark.css.
+   Abgeleitete Tokens (calc/var) werden auf :root aufgelöst: Wer einen Basis-Token lokal
+   ändert, muss die daraus abgeleiteten Hebel dort mitsetzen (siehe docs/ARCHITECTURE.md).
+   ========================================================================== */
+:root {
+  /* Schrift ---------------------------------------------------------------- */
+  --pp-font: "Passepartout Sans", "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --pp-font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --pp-fw-regular: 400;
+  --pp-fw-medium: 500;             /* Labels, Buttons, Navigation */
+  --pp-fw-semibold: 600;           /* Titel, aktive Einträge, Tabellenköpfe */
+  --pp-fw-bold: 650;               /* „fett“ im Fließtext (<b>, <strong>) – variable Achse */
+  --pp-stretch-normal: 100%;       /* wdth-Achse 100 */
+  --pp-stretch-narrow: 87.5%;      /* schmal geschnitten: Tabellenköpfe, dichte Spaltenlabels */
+  --pp-stretch-condensed: 75%;     /* Minimum der Achse – nur für Notfälle (sehr enge Spalten) */
+
+  /* Größen-Skala 12 · 13 · 14 · 16 · 20 · 28 (+ 12,5 für Tabellenköpfe) --- */
+  --pp-fs-xs: .75rem;              /* 12  Klein: Hilfe, Badges, Zähler */
+  --pp-fs-head: .78125rem;         /* 12,5 Tabellenköpfe */
+  --pp-fs-sm: .8125rem;            /* 13  Tabellenzellen, Labels, Breadcrumb, Menüs klein */
+  --pp-fs-md: .875rem;             /* 14  UI, Fließtext, Felder, Buttons */
+  --pp-fs-lg: 1rem;                /* 16  Region-Titel */
+  --pp-fs-xl: 1.25rem;             /* 20  Abschnitt (Content Block h2) */
+  --pp-fs-2xl: 1.75rem;            /* 28  Seitentitel */
+  --pp-lh-xs: 1rem;                /* zu 12 / 12,5 */
+  --pp-lh-sm: 1.25rem;             /* zu 13 (Tabellenzellen 13/20) */
+  --pp-lh-md: 1.25rem;             /* zu 14 */
+  --pp-lh-body: 1.375rem;          /* zu 14 im Fließtext (Regionen, Content Blocks) */
+  --pp-lh-lg: 1.5rem;              /* zu 16 */
+  --pp-lh-xl: 1.75rem;             /* zu 20 */
+  --pp-lh-2xl: 2.125rem;           /* zu 28 */
+  --pp-tracking-title: -.02em;     /* Seitentitel, Login-Titel */
+  --pp-tracking-heading: -.01em;   /* Region-/Abschnittstitel, h1–h4 */
+  --pp-tracking-ui: -.003em;       /* Buttons */
+
+  /* Geometrie: Rahmen und Leinwand ---------------------------------------- */
+  --pp-gutter: .75rem;             /* Rahmenbreite um die Leinwand (rechts/unten, ohne Nav auch links) */
+  --pp-canvas-pad-x: 2rem;         /* Innenabstand der Leinwand, waagerecht */
+  --pp-canvas-pad-y: 1.25rem;      /* Innenabstand der Leinwand, senkrecht */
+  --pp-r-canvas: 1.125rem;         /* 18 Radius der Leinwand */
+  --pp-r-lg: .75rem;               /* 12 Container: Tabellen, Karten, Menüs, Dialog-Inhalte, Alerts */
+  --pp-r-md: .5rem;                /* 8  Controls: Buttons, Felder, Nav-Einträge, Tabs */
+  --pp-r-sm: .3125rem;             /* 5  Checkbox, Badges, Chips */
+  --pp-r-dialog: 1rem;             /* 16 Dialoge/Drawer (schwebende Leinwand) */
+  --pp-r-pill: 62rem;              /* Pillen (Zähler, Avatare rund) */
+  --pp-header-h: 3.5rem;           /* Kopfzeile (statisch – nie per JS/Font verändern) */
+  --pp-brand-lh: 1.5rem;           /* feste Zeilenhöhe Logo/Branding: Font-Swap verschiebt nichts */
+  --pp-nav-w: 15.5rem;             /* aufgeklappte Side-Navigation */
+  --pp-nav-rail-w: 4rem;           /* eingeklappte Icon-Leiste */
+
+  /* Abstände (4er-Raster) -------------------------------------------------- */
+  --pp-space-1: .25rem;            /* 4 */
+  --pp-space-2: .5rem;             /* 8 */
+  --pp-space-3: .75rem;            /* 12 */
+  --pp-space-4: 1rem;              /* 16 */
+  --pp-space-5: 1.25rem;           /* 20 */
+  --pp-space-6: 1.5rem;            /* 24 */
+  --pp-space-8: 2rem;              /* 32 */
+  --pp-space-12: 3rem;             /* 48 */
+  --pp-region-gap: 2rem;           /* Abstand zwischen Regionen */
+
+  /* Dichte (Desktop 32 px; unter pointer: coarse 40 px – siehe bridge.css) --- */
+  --pp-control-h: 2rem;            /* Höhe Buttons, Felder, Selects, Pillen (inkl. Rand) */
+  --pp-control-h-sm: 1.5rem;       /* kleine Buttons (t-Button--small), Toolbar-Icons */
+  --pp-control-h-lg: 2.5rem;       /* große Buttons (t-Button--large), Login */
+  --pp-control-lh: 1.25rem;        /* Zeilenhöhe im Control */
+  --pp-control-pad-x: .75rem;      /* Innenabstand waagerecht (Felder); Buttons +2 px */
+  --pp-control-pad-y: calc((var(--pp-control-h) - var(--pp-control-lh)) / 2);  /* inkl. 1 px Rand (app_ui-Konvention) */
+  --pp-row-h: 2.125rem;            /* Tabellenzeile 34 px inkl. Haarlinie */
+  --pp-row-lh: 1.25rem;            /* Zeilenhöhe in Zellen (13/20) */
+  --pp-row-pad-x: .75rem;          /* Zellen-Innenabstand waagerecht */
+  --pp-row-pad-y: calc((var(--pp-row-h) - var(--pp-row-lh) - 1px) / 2);        /* = 6,5 px */
+  --pp-head-h: 2.25rem;            /* Tabellenkopf 36 px */
+  --pp-hit-min: 1.5rem;            /* Mindest-Trefferfläche (WCAG 2.5.8); coarse: 2.5rem */
+  --pp-checkbox-size: 1.125rem;    /* Checkbox/Radio */
+
+  /* Linien-Geometrie ------------------------------------------------------ */
+  --pp-hairline: 1px;              /* Haarlinie: Zeilen, Trenner, Region-Titel */
+  --pp-head-rule-width: 1px;       /* Grundlinie unter Tabellenköpfen (Tusche); 2px = --pp-rule-strong */
+  --pp-rule-strong: 2px;           /* kräftige Tusche-Linie (Summenzeile, betonte Köpfe) */
+
+  /* Fokus-Geometrie (Farben: --pp-focus-ring-color / --pp-focus-gap) ------ */
+  --pp-focus-ring-width: 2px;
+  --pp-focus-ring-offset: 2px;
+  --pp-focus-outline: var(--pp-focus-ring-width) solid var(--pp-focus-ring-color);
+  /* Doppelring als Schatten (wo outline abgeschnitten würde): innen Grundfläche (--pp-focus-gap),
+     außen Magenta. Beide Schatten stehen für schwebende Ebenen noch einmal in bridge.css §18. */
+  --pp-focus-shadow: 0 0 0 var(--pp-focus-ring-offset) var(--pp-focus-gap), 0 0 0 calc(var(--pp-focus-ring-offset) + var(--pp-focus-ring-width)) var(--pp-focus-ring-color);
+  /* nach innen (Zeilen, Zellen, Nav-Einträge in overflow-Containern) */
+  --pp-focus-shadow-inset: inset 0 0 0 var(--pp-focus-ring-width) var(--pp-focus-ring-color), inset 0 0 0 calc(var(--pp-focus-ring-width) + 1px) var(--pp-focus-gap);
+  /* Felder: Randfarbe = Ringfarbe + 1 px Schatten = 2 px Ring ohne Layoutsprung */
+  --pp-focus-field-shadow: 0 0 0 1px var(--pp-focus-ring-color);
+
+  /* Links (Farben in light/dark) ----------------------------------------- */
+  --pp-link-underline-width: 1px;
+  --pp-link-underline-width-hover: 2px;
+  --pp-link-underline-offset: .2em;
+
+  /* Pflichtfeld ----------------------------------------------------------- */
+  --pp-required-mark: "*";         /* in Textschrift, nicht als Icon */
+  --pp-required-gap: .25rem;       /* Abstand Label-Text → Markierung */
+
+  /* Bewegung -------------------------------------------------------------- */
+  --pp-duration: .12s;
+  --pp-ease: cubic-bezier(.2, 0, 0, 1);
+}
+
+/* Mobil (< 640 px): schmaler Rahmen, kleinerer Leinwand-Innenabstand ------- */
+@media (max-width: 639px) {
+  :root {
+    --pp-gutter: .25rem;           /* 4 px: der Rahmen bleibt als Kante sichtbar */
+    --pp-canvas-pad-x: .5rem;      /* 8 px – Inhaltsbreite bei 390 px: 366 px (Vita 374) */
+    --pp-canvas-pad-y: .75rem;     /* 12 px */
+    --pp-r-canvas: .75rem;         /* 12 px: passt zum schmalen Rahmen */
+    --pp-region-gap: 1.5rem;       /* 24 px zwischen Regionen */
+  }
+}

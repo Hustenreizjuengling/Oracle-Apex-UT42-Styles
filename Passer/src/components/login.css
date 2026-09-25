@@ -1,0 +1,236 @@
+/* ==========================================================================
+   Passer – Login: das Plakat
+   Die Anmeldung ist ein Bogen auf dem Papier, dahinter ein Zweifarbendruck: eine Teal-
+   Scheibe im Vollton und eine Pink-Scheibe im Halbton-Raster (Rasterwinkel 15°), die sich
+   im Überdruck mischen. Großer Titel mit Passerversatz.
+   Einziger orchestrierter Moment des Themes: Beim Laden rasten die Platten in Passung ein –
+   Titel-Schatten, Pink-Scheibe und Bogen-Platte folgen EINER Zahl (--pa-c-shift, registriert
+   in base.css). prefers-reduced-motion: kein Einrasten, gleich das fertige Bild.
+   Regeln: nur Tokens (--pa-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Lokale Tokens: --pa-c-shift (Fehlpassung 0…1), --pa-c-disc (Scheibendurchmesser),
+   --pa-c-sheet-plate (Versatz der Platte unter dem Bogen).
+   ========================================================================== */
+
+.t-PageBody--login {
+  --ut-login-page-background-color: var(--pa-surface);
+  --ut-login-region-background-color: var(--pa-sheet);
+  --ut-login-region-filter: none;
+  --ut-login-region-border-width: 1px;
+  --ut-login-region-border-color: var(--pa-ink);
+  --ut-login-region-border-radius: var(--pa-r-lg);
+  --ut-login-region-box-shadow: none;
+  --ut-login-region-padding: var(--pa-space-8) var(--pa-space-8) var(--pa-space-6);
+  --ut-login-region-max-width: 27rem;
+  --ut-login-logo-border-radius: var(--pa-r-md);
+  --ut-login-logo-size: 3rem;
+  --ut-login-logo-font-size: 1.5rem;
+  --ut-login-container-item-spacing: var(--pa-space-4);
+  --ut-app-icon-background-color: var(--pa-accent);
+  --ut-app-icon-color: var(--pa-accent-on);
+  --pa-c-shift: 0;
+  --pa-c-disc: min(78vmin, 46rem);
+  --pa-c-sheet-plate: .5rem;
+}
+@media (max-width: 639px) {
+  .t-PageBody--login {
+    --ut-login-region-padding: var(--pa-space-6) var(--pa-space-5) var(--pa-space-5);
+    --pa-c-disc: 70vmax;
+    --pa-c-sheet-plate: .375rem;
+  }
+  .t-PageBody--login .t-Login-container {
+    padding-inline: var(--pa-space-3);
+  }
+}
+/* Einrasten der Passung: 1 → 0 mit kurzem Überschwinger */
+@keyframes ri-register {
+  from { --pa-c-shift: 1; }
+  to { --pa-c-shift: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .t-PageBody--login {
+    animation: ri-register .9s var(--pa-ease-snap) .12s both;
+  }
+}
+
+/* Hintergrund-Varianten (bg1–bg3): statt Bild das Plakat */
+.t-LoginPage--bg1,
+.t-LoginPage--bg2,
+.t-LoginPage--bg3 {
+  --ut-body-background-color: var(--pa-surface);
+}
+.t-LoginPage--bg1 .t-Login-bgImg,
+.t-LoginPage--bg2 .t-Login-bgImg,
+.t-LoginPage--bg3 .t-Login-bgImg,
+.t-LoginPage--bg1:before,
+.t-LoginPage--bg2:before,
+.t-LoginPage--bg3:before {
+  background-image: none;
+}
+
+/* Das Plakat: zwei Scheiben im Überdruck, Korn darüber ------------------------ */
+.t-Login-bg {
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--pa-surface);
+  background-image: var(--pa-grain);
+  background-size: var(--pa-grain-size) var(--pa-grain-size);
+}
+.t-Login-bg::before,
+.t-Login-bg::after {
+  content: "";
+  grid-area: bg;
+  align-self: end;
+  justify-self: end;
+  inline-size: var(--pa-c-disc);
+  block-size: var(--pa-c-disc);
+  border-radius: 50%;
+  mix-blend-mode: var(--pa-overprint);
+}
+/* Teal im Vollton, harte Kante wie gedruckt */
+.t-Login-bg::before {
+  margin: 0 -8vmin -14vmin 0;
+  background-color: var(--pa-accent);
+}
+/* Pink im Halbton-Raster (15° gedreht wie ein echter Rasterwinkel), leicht verrutscht */
+.t-Login-bg::after {
+  margin: 0 18vmin 4vmin 0;
+  background-image: radial-gradient(circle, var(--pa-plate) 42%, transparent 46%);
+  background-size: 9px 9px;
+  mask-image: radial-gradient(closest-side, var(--pa-ink) 55%, color-mix(in srgb, var(--pa-ink) 55%, transparent) 80%, transparent 100%);
+  rotate: 15deg;
+  translate: calc(var(--pa-c-shift) * 3rem) calc(var(--pa-c-shift) * -2rem);
+}
+/* Passerkreuz oben am Plakatrand: Kreis und Fadenkreuz in Tusche – die Marke, an der der Drucker
+   die Farbauszüge ausrichtet. Hintergrund des (sonst leeren) UT-Bildcontainers. */
+.t-Login-bg .t-Login-bgImg {
+  --pa-c-reg: 1.75rem;             /* Kantenlänge der Marke */
+  --pa-c-reg-at: 2.5rem;           /* Abstand zum Plakatrand */
+  --pa-c-l: linear-gradient(var(--pa-ink), var(--pa-ink));
+  background:
+    radial-gradient(circle, transparent calc(var(--pa-c-reg) * .3), var(--pa-ink) calc(var(--pa-c-reg) * .3 + .5px) calc(var(--pa-c-reg) * .3 + 1.5px), transparent calc(var(--pa-c-reg) * .3 + 2px)) right var(--pa-c-reg-at) top var(--pa-c-reg-at) / var(--pa-c-reg) var(--pa-c-reg) no-repeat,
+    var(--pa-c-l) right var(--pa-c-reg-at) top calc(var(--pa-c-reg-at) + var(--pa-c-reg) / 2 - .5px) / var(--pa-c-reg) 1px no-repeat,
+    var(--pa-c-l) right calc(var(--pa-c-reg-at) + var(--pa-c-reg) / 2 - .5px) top var(--pa-c-reg-at) / 1px var(--pa-c-reg) no-repeat;
+  filter: none;
+}
+.t-Login-bg .t-Login-bgImg:dir(rtl) {
+  background-position: left var(--pa-c-reg-at) top var(--pa-c-reg-at), left var(--pa-c-reg-at) top calc(var(--pa-c-reg-at) + var(--pa-c-reg) / 2 - .5px), left calc(var(--pa-c-reg-at) + var(--pa-c-reg) / 2 - .5px) top var(--pa-c-reg-at);
+}
+.t-Login-bg:dir(rtl)::before,
+.t-Login-bg:dir(rtl)::after {
+  justify-self: start;
+}
+.t-Login-bg:dir(rtl)::before {
+  margin: 0 0 -14vmin -8vmin;
+}
+.t-Login-bg:dir(rtl)::after {
+  margin: 0 0 4vmin 18vmin;
+}
+
+/* Der Bogen: Tusche-Kontur, Pink-Platte darunter versetzt ---------------------- */
+.t-Login-region {
+  box-shadow: calc(var(--pa-c-sheet-plate) * (1 + var(--pa-c-shift) * 2)) calc(var(--pa-c-sheet-plate) * (1 + var(--pa-c-shift) * 2)) 0 var(--pa-plate);
+}
+@media screen and (prefers-reduced-motion: no-preference) {
+  .t-Login-region {
+    animation: none;               /* UT: loginFade (Skalieren) – das Einrasten ersetzt es */
+  }
+}
+/* Schnittmarken an den vier Ecken: der Bogen ist ein gedruckter Bogen, beschnitten auf Format.
+   Acht Haarlinien in Tusche als Hintergrund EINES Pseudo-Elements außerhalb der Kante; die
+   Lücke zur Kante (--pa-c-crop-gap) lässt die Pink-Platte unten rechts frei. */
+.t-Login-region {
+  --pa-c-crop: 1.25rem;            /* Abstand des Markenfelds zur Kante */
+  --pa-c-crop-len: .625rem;        /* Länge einer Marke */
+  position: relative;
+}
+.t-Login-region::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--pa-c-crop));
+  pointer-events: none;
+  --pa-c-l: linear-gradient(var(--pa-muted), var(--pa-muted));
+  background:
+    var(--pa-c-l) left 0 top var(--pa-c-crop) / var(--pa-c-crop-len) 1px no-repeat,
+    var(--pa-c-l) left var(--pa-c-crop) top 0 / 1px var(--pa-c-crop-len) no-repeat,
+    var(--pa-c-l) right 0 top var(--pa-c-crop) / var(--pa-c-crop-len) 1px no-repeat,
+    var(--pa-c-l) right var(--pa-c-crop) top 0 / 1px var(--pa-c-crop-len) no-repeat,
+    var(--pa-c-l) left 0 bottom var(--pa-c-crop) / var(--pa-c-crop-len) 1px no-repeat,
+    var(--pa-c-l) left var(--pa-c-crop) bottom 0 / 1px var(--pa-c-crop-len) no-repeat,
+    var(--pa-c-l) right 0 bottom var(--pa-c-crop) / var(--pa-c-crop-len) 1px no-repeat,
+    var(--pa-c-l) right var(--pa-c-crop) bottom 0 / 1px var(--pa-c-crop-len) no-repeat;
+}
+.t-LoginPage--split .t-Login-region::before {
+  content: none;                   /* in der Bogenbahn am Rand gibt es kein Format zu beschneiden */
+}
+/* Telefon: Der Bogen steht nur --pa-space-3 (12 px) vom Bildschirmrand – die Marken rücken so weit
+   heran, dass sie in diesem Rand bleiben (sonst schnitt der Rand sie ab). Lücke zur Kante = Versatz
+   der Platte (.375rem), die Platte unten rechts bleibt frei. */
+@media (max-width: 639px) {
+  .t-Login-region {
+    --pa-c-crop: var(--pa-space-3);
+    --pa-c-crop-len: .375rem;
+  }
+}
+
+/* Kopf: Logo als Druckmarke, Titel als Plakatzeile ------------------------------ */
+.t-Login-header {
+  padding-block: 0 var(--pa-space-5);
+  text-align: start;
+}
+.t-Login-logo {
+  margin: 0 0 var(--pa-space-5);
+  box-shadow: var(--pa-passer) var(--pa-passer) 0 var(--pa-plate);
+}
+.t-Login-title {
+  margin: 0;
+  font-size: var(--pa-fs-display);
+  line-height: var(--pa-lh-display);
+  font-weight: 800;
+  font-stretch: 86%;
+  letter-spacing: -.035em;
+  text-align: start;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  color: var(--pa-ink);
+  text-shadow: calc(var(--pa-passer-text) + var(--pa-c-shift) * .35em) calc(var(--pa-passer-text) + var(--pa-c-shift) * .2em) 0 var(--pa-plate);
+}
+
+/* Anmelde-Button: große Control-Höhe (40 px, Touch 48 px) aus den Dichte-Tokens */
+.t-Login-buttons {
+  --a-button-padding-y: calc((var(--pa-control-h-lg) - var(--pa-control-lh)) / 2);
+  --a-button-font-size: var(--pa-fs-md);
+  --a-button-line-height: var(--pa-control-lh);
+  --a-button-font-weight: var(--pa-fw-semibold);
+  margin-block-start: var(--pa-space-2);
+}
+
+/* Fehlerseite (Error Page Template, gleiches Login-Gerüst): die Meldung ist ebenfalls ein Bogen */
+.t-Login-containerBody > .t-Alert--wizard {
+  --ut-alert-background-color: var(--pa-sheet);
+  --ut-alert-wizard-border-radius: var(--pa-r-lg);
+  --ut-alert-box-shadow: var(--pa-passer) var(--pa-passer) 0 var(--pa-plate);
+  border: 1px solid var(--pa-ink);
+}
+.t-LoginPage--split .t-Login-containerBody > .t-Alert--wizard {
+  --ut-alert-box-shadow: none;
+  border-width: 0;
+}
+
+/* Geteilte Ansicht: die Anmeldung ist eine Bogenbahn am Rand, das Plakat daneben */
+.t-LoginPage--split .t-Login-container {
+  --ut-login-region-max-width: 30rem;
+  background-color: var(--pa-sheet);
+  box-shadow: 1px 0 0 var(--pa-ink), calc(var(--pa-c-sheet-plate) * (1 + var(--pa-c-shift) * 2)) 0 0 var(--pa-plate);
+}
+.t-LoginPage--split .t-Login-container:dir(rtl) {
+  box-shadow: -1px 0 0 var(--pa-ink), calc(var(--pa-c-sheet-plate) * (-1 - var(--pa-c-shift) * 2)) 0 0 var(--pa-plate);
+}
+.t-LoginPage--split .t-Login-region {
+  box-shadow: none;
+}
+@media (max-width: 639px) {
+  .t-LoginPage--split .t-Login-container {
+    max-width: none;
+    padding-inline: 0;
+  }
+}

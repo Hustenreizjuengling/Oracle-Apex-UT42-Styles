@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Passepartout – Tokens DUNKEL
+   Eigenständig gestaltet: Die Leinwand liegt HELLER als der Rahmen (Erhebung = Licht),
+   Magenta als Fläche satter, als Text heller.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: dark;
+
+  /* Flächen -------------------------------------------------------------- */
+  --canvas-frame: #0E1013;
+  --canvas-frame-hover: rgb(237 239 242 / .07);
+  --canvas-frame-press: rgb(237 239 242 / .11);
+  --canvas-surface: #181B1F;
+  --canvas-surface-sunken: #1E2126;
+  --canvas-surface-raised: #20242A;
+  --canvas-field: #111317;
+  --canvas-field-readonly: #1B1E23;
+  --canvas-soft: #262A30;
+  --canvas-soft-hover: #2F343B;
+  --canvas-soft-press: #373D45;
+  --canvas-hover: #1F2328;
+  --canvas-scrim: rgb(0 0 0 / .6);
+
+  /* Text ------------------------------------------------------------------ */
+  --canvas-ink: #EDEFF2;               /* 15.0:1 */
+  --canvas-ink-2: #D4D8DE;
+  --canvas-muted: #A0A8B2;             /* 7.2:1 */
+  --canvas-placeholder: #8C949E;       /* 5.6:1 */
+  --canvas-on-dark: #FFFFFF;
+
+  /* Linien ---------------------------------------------------------------- */
+  --canvas-line: #272B31;
+  --canvas-line-2: #333941;
+  --canvas-edge: #666E79;              /* 3.35:1 */
+  --canvas-edge-hover: #858D98;
+
+  /* Akzent: Kartenmagenta ------------------------------------------------- */
+  --canvas-accent: #C72A80;            /* Weiß darauf 5.2:1 */
+  --canvas-accent-hover: #B52274;
+  --canvas-accent-press: #A01C66;
+  --canvas-accent-on: #FFFFFF;
+  --canvas-accent-text: #F07AB8;       /* 6.7:1 auf Leinwand */
+  --canvas-accent-tint: #3A1830;
+  --canvas-accent-tint-2: #4C1D3E;
+  --canvas-accent-ring: rgb(240 122 184 / .32);
+
+  /* Status ---------------------------------------------------------------- */
+  --canvas-success: #1F7A4D;  --canvas-success-hover: #1A6A43; --canvas-success-on: #FFFFFF;
+  --canvas-success-text: #56C993; --canvas-success-tint: #13291E;
+  --canvas-warning: #E9A21B;  --canvas-warning-hover: #F0B23F; --canvas-warning-on: #15181C;
+  --canvas-warning-text: #F2B33D; --canvas-warning-tint: #2E2410;
+  --canvas-danger: #C4331C;   --canvas-danger-hover: #AD2C18; --canvas-danger-on: #FFFFFF;
+  --canvas-danger-text: #FF8A73; --canvas-danger-tint: #33170F;
+  --canvas-info: #3C6690;     --canvas-info-hover: #335879;   --canvas-info-on: #FFFFFF;
+  --canvas-info-text: #86AEDB; --canvas-info-tint: #15222F;
+
+  /* Tiefe ----------------------------------------------------------------- */
+  --canvas-canvas-shadow: 0 0 0 1px rgb(255 255 255 / .045);
+  --canvas-float-shadow: 0 18px 44px -12px rgb(0 0 0 / .7), 0 0 0 1px rgb(255 255 255 / .07);
+  --canvas-tooltip-bg: #EDEFF2;
+  --canvas-tooltip-text: #15181C;
+
+  --canvas-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M12 6l4 4 4-4' fill='none' stroke='%23A0A8B2' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}

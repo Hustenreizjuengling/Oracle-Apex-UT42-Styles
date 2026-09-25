@@ -1,0 +1,10 @@
+{
+  "name": "Passepartout",
+  "prefix": "canvas",
+  "version": "0.1.0",
+  "description": "Rahmen und Leinwand: Kopf und Navigation als ein ruhiges, kuehlgraues Passepartout, der Inhalt auf einer eingesetzten, gerundeten Arbeitsflaeche. Ein Akzent: Kartenmagenta. Schrift: Instrument Sans.",
+  "styles": [
+    { "id": "light", "name": "Passepartout Light", "base": "Vita", "entry": "src/light.css" },
+    { "id": "dark", "name": "Passepartout Dark", "base": "Vita-Dark", "entry": "src/dark.css" }
+  ]
+}

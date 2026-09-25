@@ -1,0 +1,138 @@
+/* ==========================================================================
+   Passepartout – Farb-Tokens HELL (Basis Vita)
+   Nur :root-Deklarationen eigener Tokens (--pp-*) + --ut-color-scheme.
+   dark.css definiert exakt dieselben Namen. Kontrastwerte (WCAG 2.x) in Klammern:
+   gegen Leinwand = --pp-surface, Rahmen = --pp-frame. Geprüft mit Passepartout/tools/check-tokens.mjs.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: light;
+
+  /* Flächen -------------------------------------------------------------- */
+  --pp-frame: #E8EBEF;             /* Passepartout: Seitengrund, Kopf, Navigation */
+  --pp-frame-hover: rgb(21 24 28 / .06);   /* Hover auf dem Rahmen (Header-Buttons, Nav) */
+  --pp-frame-press: rgb(21 24 28 / .10);   /* gedrückt/aktiv auf dem Rahmen */
+  --pp-surface: #FFFFFF;           /* Leinwand; auch aktiver Nav-Eintrag (Lasche) */
+  --pp-surface-sunken: #F5F6F8;    /* abgesenkt: Hinweisblöcke, Toolbars, Readonly */
+  --pp-surface-raised: #FFFFFF;    /* schwebend: Menüs, Dialoge, Popups */
+  --pp-raised-hover: #E8EBEF;      /* Hover/Fokus auf schwebender Fläche: Menüeintrag, Tag im Popup (1.2 schwebend) */
+  --pp-ground: var(--pp-surface);  /* aktuelle Grundfläche: Leinwand; in schwebenden Ebenen = --pp-surface-raised (bridge §18) */
+  --pp-hover: #F3F4F6;             /* Zeilen-/Listen-Hover auf der Leinwand */
+  --pp-press: #EAECEF;             /* gedrückt auf der Leinwand */
+  --pp-soft: #E8EBEF;              /* Sekundär-Button, aktiver Tab = Stück Rahmen */
+  --pp-soft-hover: #DDE1E6;
+  --pp-soft-press: #D2D7DD;
+  --pp-field: #FFFFFF;             /* Eingabefelder */
+  --pp-field-readonly: #F5F6F8;    /* schreibgeschützte Felder */
+  --pp-scrim: rgb(14 16 19 / .38); /* Abdunklung hinter Dialogen/Schublade */
+
+  /* Text ------------------------------------------------------------------ */
+  --pp-ink: #15181C;               /* Tusche: Text, Titel, Icons (17.8 Leinwand, 14.9 Rahmen) */
+  --pp-ink-2: #2F353C;             /* Labels, Nav-Text (12.4 Leinwand, 10.4 Rahmen) */
+  --pp-muted: #59616B;             /* Graphit: Sekundärtext, Breadcrumb (6.3 Leinwand, 5.3 Rahmen) */
+  --pp-placeholder: #677080;       /* Platzhalter (5.0 im Feld) */
+  --pp-disabled: #8A929C;          /* deaktivierte Beschriftung (bewusst < 4.5, WCAG-Ausnahme) */
+  --pp-on-dark: #FFFFFF;           /* Text auf dunklen/gesättigten Flächen (in beiden Modi gleich) */
+  --pp-on-light: #15181C;          /* Text auf hellen Flächen (in beiden Modi gleich) */
+
+  /* Linien ---------------------------------------------------------------- */
+  --pp-line-subtle: #E3E6EA;       /* sehr zart: innere Trenner in Karten/Listen */
+  --pp-line: #D3D8DE;              /* Haarlinie: Tabellenzeilen, Trenner, Region-Titel (1.4 Leinwand) */
+  --pp-line-strong: #BCC3CB;       /* kräftig: Rahmen von Simple-Buttons, Containern (1.8) */
+  --pp-edge: #848C97;              /* Feldkante (3.4 Leinwand, 3.1 abgesenkt) – WCAG 1.4.11 */
+  --pp-edge-hover: #636B77;        /* Feldkante Hover */
+  --pp-head-rule: #2F353C;         /* Grundlinie unter Tabellenköpfen (Tusche) */
+
+  /* Akzent: Kartenmagenta (nur Primäraktion, Auswahl, Fokus, Lasche) ------ */
+  --pp-accent: #B0106E;            /* Fläche (Weiß darauf 6.7) */
+  --pp-accent-hover: #960C5D;
+  --pp-accent-press: #7E0A4E;
+  --pp-accent-on: #FFFFFF;
+  --pp-accent-text: #B0106E;       /* als Text (6.7 Leinwand, 5.6 Rahmen) */
+  --pp-accent-tint: #FAEBF3;       /* Auswahl-Fläche (Zeile, Menüeintrag) */
+  --pp-accent-tint-2: #F3D6E6;     /* kräftigere Auswahl, ::selection */
+  --pp-accent-ring: rgb(176 16 110 / .20);  /* weicher Halo – nur Zusatz, nie einziger Fokus-Hinweis */
+
+  /* Fokus (ein System, überall >= 3:1) ------------------------------------ */
+  --pp-focus-ring-color: #B0106E;  /* Ring (6.7 Leinwand, 5.6 Rahmen, 5.6 Sekundär-Button) */
+  --pp-focus-gap: var(--pp-ground); /* Innenring/Lücke des Doppelrings = aktuelle Grundfläche */
+
+  /* Links: Tusche mit Unterstrich, Hover-Unterstrich im Akzent ------------- */
+  --pp-link-text: #15181C;
+  --pp-link-underline: #848C97;    /* = Feldkante: 3.4 Leinwand, 3.1 abgesenkt (Hinweisblöcke) */
+  --pp-link-underline-hover: #B0106E;
+
+  /* Textauswahl ----------------------------------------------------------- */
+  --pp-selection: #F3D6E6;
+  --pp-selection-text: #15181C;
+
+  /* Pflichtfeld-Markierung ------------------------------------------------ */
+  --pp-required-color: #AE300C;    /* = Danger-Text (6.5 Leinwand) */
+
+  /* Status: Fläche · Hover · on (Text auf Fläche) · Text · Tönung (Alert-Grund) --- */
+  --pp-success: #1E7F4F;           /* Weiß darauf 5.0 */
+  --pp-success-hover: #196B42;
+  --pp-success-on: #FFFFFF;
+  --pp-success-text: #176A42;      /* 6.6 Leinwand, 5.8 Tönung */
+  --pp-success-tint: #E9F3EE;
+
+  --pp-warning: #E9A21B;           /* Tusche darauf 8.2 */
+  --pp-warning-hover: #F2B544;
+  --pp-warning-on: #15181C;
+  --pp-warning-text: #874D00;      /* 6.8 Leinwand, 6.1 Tönung */
+  --pp-warning-tint: #FCF2DE;
+
+  --pp-danger: #D2410F;            /* Weiß darauf 4.7 – orange-rot, heller als Magenta (L .175 vs .107) */
+  --pp-danger-hover: #B6380C;
+  --pp-danger-on: #FFFFFF;
+  --pp-danger-text: #AE300C;       /* 6.5 Leinwand, 5.7 Tönung */
+  --pp-danger-tint: #FBEDE8;
+
+  --pp-info: #1A6574;              /* Petrol statt APEX-Blau (Weiß darauf 6.7) */
+  --pp-info-hover: #14525F;
+  --pp-info-on: #FFFFFF;
+  --pp-info-text: #1A6574;         /* 6.7 Leinwand, 5.8 Tönung */
+  --pp-info-tint: #E7F1F2;
+
+  /* Code: Syntax-Hervorhebung (Prism – Code-Blöcke, Markdown-Editor) ------ */
+  /* Drei ruhige kartografische Töne statt der VS-Code-Paletten von app_ui/Vita-Dark; Kommentare
+     = --pp-muted, Namen/Eigenschaften = --pp-ink/--pp-ink-2 (Zuordnung: bridge.css §17).
+     Kein Magenta, kein Blau; ≥ 4.5 auf Leinwand, abgesenkt, Feld und schwebend. */
+  --pp-code-keyword: #1A6574;      /* Schlüsselwörter, Selektoren, Klassen: Petrol (6.7 Leinwand, 6.2 abgesenkt) */
+  --pp-code-string: #176A42;       /* Zeichenketten: Tannengrün (6.6 Leinwand, 6.1 abgesenkt) */
+  --pp-code-number: #874D00;       /* Zahlen, Wahrheitswerte, Konstanten: Ocker (6.8 Leinwand, 6.3 abgesenkt) */
+
+  /* Tiefe ----------------------------------------------------------------- */
+  --pp-canvas-shadow: 0 0 0 1px rgb(21 24 28 / .035);   /* Leinwand: nur Kante, kein Schlagschatten */
+  --pp-float-shadow: 0 16px 40px -12px rgb(16 20 26 / .22), 0 2px 6px rgb(16 20 26 / .06), 0 0 0 1px rgb(16 20 26 / .06);
+  --pp-tooltip-bg: #15181C;
+  --pp-tooltip-text: #FFFFFF;
+
+  /* Scrollbars ------------------------------------------------------------ */
+  --pp-scrollbar-thumb: rgb(21 24 28 / .28);
+  --pp-scrollbar-thumb-hover: rgb(21 24 28 / .45);
+  --pp-scrollbar-track: transparent;
+
+  /* Icons ----------------------------------------------------------------- */
+  --pp-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M12 6l4 4 4-4' fill='none' stroke='%2359616B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Kategorie-/Diagrammpalette (--u-color-1…15), kartografisch, CVD-geprüft.
+     Chart-Reihenfolge des UT: 1,4,7,9,12,3,8,10,2,5,11,6 – die ersten 8 Serien sind
+     auch bei Protan-/Deuteranopie unterscheidbar (min. ΔE00 ≥ 9.6). -on = Text darauf.
+     Jede Kategorie liegt ≥ 20 ΔE00 von --pp-accent/--pp-accent-text (keine Farbe liest sich
+     als Magenta-Marke) und hat hell und dunkel denselben Farbton (check-tokens.mjs). */
+  --pp-cat-1: #1F6B85;  --pp-cat-1-on: #FFFFFF;   /* Serie 1  Petrol (Wasser) */
+  --pp-cat-2: #7A6A55;  --pp-cat-2-on: #FFFFFF;   /* Serie 9  Erde */
+  --pp-cat-3: #4A998D;  --pp-cat-3-on: #15181C;   /* Serie 6  Lagune (≥ 3:1 auf Weiß, ΔE00 > 20 zu APEX-Chartblau) */
+  --pp-cat-4: #C98300;  --pp-cat-4-on: #15181C;   /* Serie 2  Ocker (Straße) */
+  --pp-cat-5: #9082CE;  --pp-cat-5-on: #15181C;   /* Serie 10 Lavendel */
+  --pp-cat-6: #3D6B2A;  --pp-cat-6-on: #FFFFFF;   /* Serie 12 Tanne */
+  --pp-cat-7: #14866A;  --pp-cat-7-on: #FFFFFF;   /* Serie 3  Blaugrün (Wald) */
+  --pp-cat-8: #8B8F54;  --pp-cat-8-on: #15181C;   /* Serie 7  Salbei */
+  --pp-cat-9: #6E40C4;  --pp-cat-9-on: #FFFFFF;   /* Serie 4  Violett (Grenze) */
+  --pp-cat-10: #6C4643; --pp-cat-10-on: #FFFFFF;  /* Serie 8  Rosenholz (Siedlung) */
+  --pp-cat-11: #C8755E; --pp-cat-11-on: #15181C;  /* Serie 11 Koralle */
+  --pp-cat-12: #B23D22; --pp-cat-12-on: #FFFFFF;  /* Serie 5  Ziegel (Höhe) */
+  --pp-cat-13: #284F57; --pp-cat-13-on: #FFFFFF;  /* Tiefsee */
+  --pp-cat-14: #838C96; --pp-cat-14-on: #15181C;  /* Nebel */
+  --pp-cat-15: #5E6873; --pp-cat-15-on: #FFFFFF;  /* Schiefer */
+}

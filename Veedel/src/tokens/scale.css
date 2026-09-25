@@ -1,0 +1,130 @@
+/* ==========================================================================
+   Veedel – Tokens MODUSNEUTRAL (Maße, Schrift, Dichte, Fokus-Geometrie)
+   Gilt für hell, dunkel und auto gleichermaßen; wird von index.css als Erstes geladen.
+   Nur :root-Deklarationen eigener Tokens (--ve-*). Farben stehen in light.css/dark.css.
+   Abgeleitete Tokens (calc/var) werden auf :root aufgelöst: Wer einen Basis-Token lokal
+   ändert, muss die daraus abgeleiteten Hebel dort mitsetzen (siehe docs/ARCHITECTURE.md).
+   ========================================================================== */
+:root {
+  /* Schrift ---------------------------------------------------------------- */
+  --ve-font: "Veedel Sans", "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ve-font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --ve-fw-regular: 400;            /* Fließtext, Zellen, Felder */
+  --ve-fw-medium: 500;             /* Labels, Breadcrumb, Unterebenen der Navigation */
+  --ve-fw-semibold: 600;           /* Tabellenköpfe klein, Menüs */
+  --ve-fw-bold: 700;               /* Buttons, Navigation, „fett“ im Fließtext */
+  --ve-fw-heavy: 800;              /* Region- und Abschnittstitel */
+  --ve-fw-black: 900;              /* Seitentitel im Band, Marke, Login */
+
+  /* Größen-Skala 12 · 13 · 14 · 16 · 19 · 26 · 32 · 40 (+ 12,5 für Tabellenköpfe) */
+  --ve-fs-xs: .75rem;              /* 12  Klein: Hilfe, Badges, Zähler */
+  --ve-fs-head: .78125rem;         /* 12,5 Tabellenköpfe */
+  --ve-fs-sm: .8125rem;            /* 13  Tabellenzellen, Labels, Breadcrumb */
+  --ve-fs-md: .875rem;             /* 14  UI, Fließtext, Felder, Buttons */
+  --ve-fs-lg: 1rem;                /* 16  Karten-Titel, Dialog-Titel, Unterüberschriften */
+  --ve-fs-xl: 1.1875rem;           /* 19  Region-Titel (800: WCAG „großer Text“) */
+  --ve-fs-2xl: 1.625rem;           /* 26  Abschnitt (Content Block), Seitentitel eingeklappt/mobil */
+  --ve-fs-3xl: 2rem;               /* 32  Content Block h1 */
+  --ve-fs-display: 2.5rem;         /* 40  Seitentitel im Verlaufsband */
+  --ve-lh-xs: 1rem;                /* zu 12 / 12,5 */
+  --ve-lh-sm: 1.25rem;             /* zu 13 */
+  --ve-lh-md: 1.25rem;             /* zu 14 (Controls) */
+  --ve-lh-body: 1.375rem;          /* zu 14 im Fließtext */
+  --ve-lh-lg: 1.5rem;              /* zu 16 */
+  --ve-lh-xl: 1.5rem;              /* zu 19 */
+  --ve-lh-2xl: 2rem;               /* zu 26 */
+  --ve-lh-3xl: 2.375rem;           /* zu 32 */
+  --ve-lh-display: 2.75rem;        /* zu 40 */
+  --ve-tracking-title: -.025em;    /* Seitentitel im Band, Login */
+  --ve-tracking-heading: -.012em;  /* Region-/Abschnittstitel */
+  --ve-tracking-ui: 0em;           /* Buttons */
+
+  /* Geometrie: Seite, Band, Navigation ----------------------------------- */
+  --ve-page-pad-x: 2rem;           /* Innenabstand des Inhalts, waagerecht */
+  --ve-page-pad-y: 1.5rem;         /* Innenabstand des Inhalts, senkrecht */
+  --ve-band-pad-y: 1.75rem;        /* Verlaufsband: oben/unten */
+  --ve-band-angle: 100deg;         /* Richtung des Verlaufs (tief links → Leuchtazur rechts) */
+  --ve-r-lg: 0rem;                 /* Container: Regionen, Karten, Tabellen, Alerts – eckig */
+  --ve-r-md: .25rem;               /* 4  Buttons, Tabs, Chips */
+  --ve-r-sm: .125rem;              /* 2  Checkbox, kleine Marken */
+  --ve-r-field: 0rem;              /* Eingabefelder – eckig */
+  --ve-r-float: .25rem;            /* 4  schwebend: Menüs, Dialoge, Popups */
+  --ve-r-pill: 62rem;              /* Pillen (runde Avatare, Schalter) */
+  --ve-header-h: 3.5rem;           /* Kopfband (statisch – nie per JS/Font verändern) */
+  --ve-brand-lh: 1.5rem;           /* feste Zeilenhöhe Logo/Branding: Font-Swap verschiebt nichts */
+  --ve-nav-w: 16rem;               /* aufgeklappte Side-Navigation */
+  --ve-nav-rail-w: 3.75rem;        /* eingeklappte Icon-Leiste */
+  --ve-mark-w: .25rem;             /* Balken-Marke (aktiver Tab, Menüleiste, Alert-Kante) */
+
+  /* Abstände (4er-Raster) -------------------------------------------------- */
+  --ve-space-1: .25rem;            /* 4 */
+  --ve-space-2: .5rem;             /* 8 */
+  --ve-space-3: .75rem;            /* 12 */
+  --ve-space-4: 1rem;              /* 16 */
+  --ve-space-5: 1.25rem;           /* 20 */
+  --ve-space-6: 1.5rem;            /* 24 */
+  --ve-space-8: 2rem;              /* 32 */
+  --ve-space-12: 3rem;             /* 48 */
+  --ve-region-gap: 1.5rem;         /* Abstand zwischen Regionen */
+  --ve-region-pad-x: 1.5rem;       /* Innenabstand weißer Regionen */
+  --ve-region-pad-y: 1.25rem;
+
+  /* Dichte (Desktop 36 px; unter pointer: coarse 44 px – siehe bridge.css) --- */
+  --ve-control-h: 2.25rem;         /* Höhe Buttons, Felder, Selects (inkl. Rand) */
+  --ve-control-h-sm: 1.75rem;      /* kleine Buttons (t-Button--small), Toolbar-Icons */
+  --ve-control-h-lg: 2.75rem;      /* große Buttons (t-Button--large), Login */
+  --ve-control-lh: 1.25rem;        /* Zeilenhöhe im Control */
+  --ve-control-pad-x: .875rem;     /* Innenabstand waagerecht (Felder); Buttons +2 px */
+  --ve-control-pad-y: calc((var(--ve-control-h) - var(--ve-control-lh)) / 2);  /* inkl. 1 px Rand (app_ui-Konvention) */
+  --ve-row-h: 2.25rem;             /* Tabellenzeile 36 px inkl. Haarlinie */
+  --ve-row-lh: 1.25rem;            /* Zeilenhöhe in Zellen (13/20) */
+  --ve-row-pad-x: .75rem;          /* Zellen-Innenabstand waagerecht */
+  --ve-row-pad-y: calc((var(--ve-row-h) - var(--ve-row-lh) - 1px) / 2);        /* = 7,5 px */
+  --ve-head-h: 2.5rem;             /* Tabellenkopf 40 px */
+  --ve-hit-min: 1.5rem;            /* Mindest-Trefferfläche (WCAG 2.5.8); coarse: 2.75rem */
+  --ve-checkbox-size: 1.125rem;    /* Checkbox/Radio */
+
+  /* Linien-Geometrie ------------------------------------------------------ */
+  --ve-hairline: 1px;              /* Haarlinie: Zeilen, Trenner */
+  --ve-head-rule-width: 2px;       /* Grundlinie unter Tabellenköpfen (Nachtblau) */
+  --ve-rule-strong: 2px;           /* kräftige Linie (Summenzeile, betonte Köpfe) */
+
+  /* Fokus-Geometrie (Farben: --ve-focus-ring-color / --ve-focus-gap) ------ */
+  --ve-focus-ring-width: 2px;
+  --ve-focus-ring-offset: 2px;
+  --ve-focus-outline: var(--ve-focus-ring-width) solid var(--ve-focus-ring-color);
+  /* Doppelring als Schatten (wo outline abgeschnitten würde): innen Grundfläche (--ve-focus-gap),
+     außen Ringfarbe. Beide Schatten stehen für schwebende Ebenen noch einmal in bridge.css §18. */
+  --ve-focus-shadow: 0 0 0 var(--ve-focus-ring-offset) var(--ve-focus-gap), 0 0 0 calc(var(--ve-focus-ring-offset) + var(--ve-focus-ring-width)) var(--ve-focus-ring-color);
+  /* nach innen (Zeilen, Zellen, Nav-Einträge in overflow-Containern) */
+  --ve-focus-shadow-inset: inset 0 0 0 var(--ve-focus-ring-width) var(--ve-focus-ring-color), inset 0 0 0 calc(var(--ve-focus-ring-width) + 1px) var(--ve-focus-gap);
+  /* Felder: Randfarbe = Ringfarbe + 1 px Schatten = 2 px Ring ohne Layoutsprung */
+  --ve-focus-field-shadow: 0 0 0 1px var(--ve-focus-ring-color);
+
+  /* Links (Farben in light/dark) ----------------------------------------- */
+  --ve-link-underline-width: 1px;
+  --ve-link-underline-width-hover: 2px;
+  --ve-link-underline-offset: .2em;
+
+  /* Pflichtfeld ----------------------------------------------------------- */
+  --ve-required-mark: "*";         /* in Textschrift, nicht als Icon */
+  --ve-required-gap: .25rem;       /* Abstand Label-Text → Markierung */
+
+  /* Bewegung -------------------------------------------------------------- */
+  --ve-duration: .12s;
+  --ve-ease: cubic-bezier(.2, 0, 0, 1);
+}
+
+/* Mobil (< 640 px): schmalerer Innenabstand, kleinerer Seitentitel ---------- */
+@media (max-width: 639px) {
+  :root {
+    --ve-page-pad-x: 1rem;         /* 16 px – Inhaltsbreite bei 390 px: 358 px */
+    --ve-page-pad-y: 1rem;
+    --ve-band-pad-y: 1.25rem;
+    --ve-fs-display: 1.75rem;      /* 28 px Seitentitel im Band */
+    --ve-lh-display: 2.125rem;
+    --ve-region-gap: 1rem;
+    --ve-region-pad-x: 1rem;
+    --ve-region-pad-y: 1rem;
+  }
+}

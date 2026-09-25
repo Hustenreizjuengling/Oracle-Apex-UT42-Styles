@@ -1,0 +1,927 @@
+/* ==========================================================================
+   Nonius · Komponentenregeln (modusneutral – liest nur Tokens)
+   Reihenfolge: Basis · Signatur · Shell · Regionen · Buttons · Formulare ·
+                Menüs/Dialoge · Reports · Cards · Login · Responsive
+   Kein @layer (würde gegen ungelayertes Oracle-CSS verlieren).
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   0 · Basis & Typografie
+   --------------------------------------------------------------------------- */
+body {
+  font-family: var(--precision-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Tabellenziffern überall dort, wo Zahlen verglichen werden */
+.t-Report-report,
+.a-IRR-table,
+.a-GV-table,
+.t-Report-pagination,
+.a-IRR-pagination,
+.a-GV-footer,
+.a-CardView-badge,
+.t-Badge,
+.t-BadgeList,
+.apex-item-number,
+.a-DatePicker-calendar,
+.u-tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Links im Fließtext: Tusche + Unterstreichung (kein Blau) */
+.t-Body-content a:not([class]),
+.t-Dialog-body a:not([class]),
+.t-Footer a:not([class]) {
+  text-decoration: underline;
+  text-decoration-color: var(--precision-line-control);
+  text-decoration-thickness: 1px;
+  text-underline-offset: .2em;
+}
+.t-Body-content a:not([class]):hover,
+.t-Dialog-body a:not([class]):hover,
+.t-Footer a:not([class]):hover {
+  text-decoration-color: var(--precision-signal);
+  text-decoration-thickness: 2px;
+}
+
+/* Tastatur-Fokus: Maus-Klicks auf Tasten zeigen keinen Ring */
+.t-Button:focus:not(:focus-visible),
+.a-Button:focus:not(:focus-visible) {
+  outline: none;
+  --a-button-focus-shadow: none;
+}
+
+/* ---------------------------------------------------------------------------
+   1 · SIGNATUR – die Nonius-Skala mit gelber Nullmarke
+   Teilstriche alle 8 px, Hauptstriche alle 80 px, Nullmarke unter dem Titelanfang.
+   --------------------------------------------------------------------------- */
+.t-Body-title {
+  --precision-scale-origin: var(--ut-breadcrumb-padding-x, 1rem);
+  padding-block-end: 1.25rem;
+}
+.t-Body-title::after,
+.t-Login-region::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 14px;
+  box-sizing: border-box;
+  padding-inline-start: var(--precision-scale-origin);
+  pointer-events: none;
+  /* Nullmarke · Hauptstrich (80 px) · Mittelstrich (40 px) · Teilstrich (8 px) · Grundlinie */
+  background-image:
+    linear-gradient(var(--precision-signal), var(--precision-signal)),
+    linear-gradient(to right, var(--precision-tick-major) 1px, transparent 1px),
+    linear-gradient(to right, var(--precision-tick-major) 1px, transparent 1px),
+    linear-gradient(to right, var(--precision-tick) 1px, transparent 1px),
+    linear-gradient(var(--precision-line), var(--precision-line));
+  background-size: 3px 14px, 80px 9px, 40px 6px, 8px 4px, 100% 1px;
+  background-position:
+    calc(var(--precision-scale-origin) - 1px) 100%,
+    var(--precision-scale-origin) 100%,
+    calc(var(--precision-scale-origin) + 40px) 100%,
+    var(--precision-scale-origin) 100%,
+    0 100%;
+  background-repeat: no-repeat, repeat-x, repeat-x, repeat-x, no-repeat;
+  /* Teilstriche beginnen an der Nullmarke, die Grundlinie läuft durch */
+  background-clip: border-box, content-box, content-box, content-box, border-box;
+}
+.u-RTL .t-Body-title::after {
+  transform: scaleX(-1);
+}
+:root {
+  --ut-body-content-padding-y: 1.5rem;
+  --ut-xs-body-content-padding-x: 1rem;   /* mobil: Inhalt fluchtet mit der Nullmarke */
+}
+
+/* ---------------------------------------------------------------------------
+   2 · Header (Gehäuse)
+   --------------------------------------------------------------------------- */
+:root {
+  --ut-header-controls-icon-top-width: 1rem;
+  --ut-header-controls-icon-middle-width: 1rem;
+  --ut-header-controls-icon-bottom-width: 1rem;
+  --ut-header-controls-icon-height: 1.5px;
+}
+.t-Header-branding {
+  line-height: 1.25rem; /* feste Zeilenhöhe: Font-Swap ändert die gemessene Header-Höhe nicht */
+}
+.t-Header-logo-link {
+  color: var(--precision-ink);
+  letter-spacing: -.01em;
+}
+.t-Button--header {
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--precision-ink-2);
+  --a-button-border-color: transparent;
+  --a-button-shadow: none;
+  --a-button-hover-background-color: var(--precision-housing-2);
+  --a-button-hover-text-color: var(--precision-ink);
+  --a-button-hover-border-color: transparent;
+  --a-button-active-background-color: var(--precision-housing-3);
+  --a-button-active-border-color: transparent;
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--precision-housing-2);
+  --a-button-focus-border-color: transparent;
+  --a-button-font-size: .8125rem;
+  --a-button-font-weight: 500;
+}
+.t-Button--header.is-active {
+  --a-button-background-color: var(--precision-housing-2);
+}
+.t-Button--headerUser,
+.t-NavigationBar-item.has-username .t-Button-label {
+  text-transform: none;
+}
+.t-Button--navBar .t-Button-badge {
+  background-color: var(--ut-navbar-button-badge-background-color);
+  color: var(--precision-display);
+}
+/* Hamburger: drei gleiche Striche, kein APEX-X-Morphing */
+.t-Header-controlsIcon,
+.t-Header-controlsIcon:before,
+.t-Header-controlsIcon:after {
+  background-color: currentColor;
+}
+.t-Button--headerTree.is-active:hover .t-Header-controlsIcon,
+.t-Button--headerTree.is-active:focus .t-Header-controlsIcon {
+  transform: none;
+}
+.t-Button--headerTree.is-active:hover .t-Header-controlsIcon:before,
+.t-Button--headerTree.is-active:focus .t-Header-controlsIcon:before {
+  top: -0.3125rem;
+  opacity: 1;
+}
+.t-Button--headerTree.is-active:hover .t-Header-controlsIcon:after,
+.t-Button--headerTree.is-active:focus .t-Header-controlsIcon:after {
+  bottom: -0.3125rem;
+  transform: none;
+}
+@media (max-width: 479px) {
+  .t-Button--headerTree.is-active .t-Header-controlsIcon { transform: none; }
+  .t-Button--headerTree.is-active .t-Header-controlsIcon:before { top: -0.3125rem; opacity: 1; }
+  .t-Button--headerTree.is-active .t-Header-controlsIcon:after { bottom: -0.3125rem; transform: none; }
+}
+
+/* Menüleiste (Top-Nav) im Header */
+.t-Header-nav .a-MenuBar {
+  box-shadow: inset 0 -1px 0 var(--precision-line);
+}
+.t-Header-nav .a-Menu--current {
+  --a-menubar-item-font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--precision-ink);
+}
+
+/* ---------------------------------------------------------------------------
+   3 · Side-Navigation (Tree Nav) – Gehäuse, gelbe Marke am aktuellen Eintrag
+   --------------------------------------------------------------------------- */
+.t-TreeNav {
+  --a-treeview-node-font-size: .875rem;
+  --a-treeview-node-line-height: 1.25rem;
+  --a-treeview-node-padding-y: .5rem;
+  --ut-treeview-toplevel-node-font-size: .875rem;
+  --ut-treeview-icon-opacity: 1;
+}
+.t-TreeNav .a-TreeView-row {
+  inset-inline-start: .375rem;
+  width: calc(100% - .75rem);
+  border-radius: var(--precision-radius-sm);
+}
+.t-TreeNav .a-TreeView-content .fa {
+  color: var(--precision-muted);
+}
+.t-TreeNav .a-TreeView-content.is-selected .fa,
+.t-TreeNav .a-TreeView-content.is-current--top .fa,
+.t-TreeNav .a-TreeView-row.is-hover + .a-TreeView-content .fa,
+.t-TreeNav .a-TreeView-row.is-hover + .a-TreeView-toggle + .a-TreeView-content .fa {
+  color: var(--precision-ink);
+}
+.t-TreeNav .a-TreeView-label.is-current,
+.t-TreeNav .a-TreeView-content.is-current--top .a-TreeView-label {
+  font-weight: 600;
+  color: var(--precision-ink);
+}
+/* Icon-Leiste: Labels bleiben unsichtbar (Core: color transparent) */
+.js-navCollapsed .t-TreeNav .a-TreeView-label,
+.js-navCollapsed .t-TreeNav .a-TreeView-label.is-current,
+.js-navCollapsed .t-TreeNav .a-TreeView-content.is-current--top .a-TreeView-label {
+  color: transparent;
+}
+/* Vita-Hardcodes (Vita.css Z. 3015–3033), gleiche Spezifität */
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-selected,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected {
+  background-color: var(--precision-display);
+  box-shadow: inset 3px 0 0 var(--precision-signal), 0 0 0 1px var(--precision-line);
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav .a-TreeView-node--topLevel.is-collapsible > .a-TreeView-row,
+.t-TreeNav .a-TreeView-node--topLevel ul {
+  background-color: transparent;
+  color: inherit;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover {
+  background-color: var(--precision-housing-2) !important;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-toggle,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-content,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-toggle + .a-TreeView-content {
+  color: var(--precision-ink);
+}
+.u-RTL .t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-selected {
+  box-shadow: inset -3px 0 0 var(--precision-signal), 0 0 0 1px var(--precision-line);
+}
+/* Style A / B (Template-Optionen) auf dieselbe Sprache bringen */
+.t-TreeNav--styleA .a-TreeView-node--topLevel {
+  border-bottom-color: var(--precision-line);
+}
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav--styleA .a-TreeView-node--topLevel ul {
+  background-color: transparent;
+  color: inherit;
+}
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top ~ ul .a-TreeView-row {
+  box-shadow: none;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected {
+  background-color: var(--precision-display);
+  box-shadow: inset 3px 0 0 var(--precision-signal), 0 0 0 1px var(--precision-line);
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected + .a-TreeView-toggle,
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-content.is-current--top {
+  color: var(--precision-ink);
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-content.is-current--top.is-hover {
+  color: var(--precision-ink) !important;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-hover {
+  background-color: var(--precision-housing-2) !important;
+}
+/* Tree im Inhalt (nicht Navigation): Hover sichtbar in beiden Modi */
+.a-TreeView:not(.t-TreeNav) {
+  --a-treeview-node-selected-background-color: var(--precision-signal-tint);
+  --a-treeview-node-selected-text-color: var(--precision-ink);
+  --a-treeview-node-selected-icon-color: var(--precision-ink);
+}
+
+/* ---------------------------------------------------------------------------
+   4 · Title Bar & Breadcrumb
+   --------------------------------------------------------------------------- */
+.t-Breadcrumb-item:after,
+.u-RTL .t-Breadcrumb-item:after {
+  content: "/";
+  color: var(--precision-tick-major);
+}
+.t-Breadcrumb-item a {
+  text-decoration: none;
+}
+.t-Breadcrumb-item a:hover {
+  color: var(--precision-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--precision-signal);
+  text-decoration-thickness: 2px;
+  text-underline-offset: .2em;
+}
+.t-BreadcrumbRegion--useBreadcrumbTitle .t-Breadcrumb-item:last-child,
+.t-BreadcrumbRegion-titleText {
+  letter-spacing: -.02em;
+}
+
+/* ---------------------------------------------------------------------------
+   5 · Regionen: Einschübe (Gehäuse) ohne Kopfstreifen
+   --------------------------------------------------------------------------- */
+.t-Region-title {
+  letter-spacing: -.005em;
+}
+.t-Region-header ~ .t-Region-bodyWrap > .t-Region-body {
+  padding-block-start: .25rem;
+}
+.t-Region--hideHeader > .t-Region-bodyWrap > .t-Region-body,
+.t-Region--removeHeader > .t-Region-bodyWrap > .t-Region-body,
+.t-Region--noUI > .t-Region-bodyWrap > .t-Region-body {
+  padding-block-start: var(--ut-region-body-padding-y);
+}
+.t-Region--noPadding > .t-Region-bodyWrap > .t-Region-body {
+  padding-block-start: 0;
+}
+.t-Region-headerIcon .t-Icon {
+  color: var(--precision-muted);
+}
+.t-Wizard {
+  border-radius: var(--precision-radius);
+  overflow: clip;
+}
+
+/* Content Blocks: kompakte, kräftige Überschriften */
+.t-ContentBlock--h1 { --ut-content-block-header-font-size: 1.625rem; }
+.t-ContentBlock--h2 { --ut-content-block-header-font-size: 1.25rem; }
+.t-ContentBlock--h3 { --ut-content-block-header-font-size: 1rem; }
+.t-ContentBlock-title {
+  letter-spacing: -.015em;
+}
+/* RDS-Sprungnavigation scrollt Panels bündig unter die Titelleiste → Luft unter der Skala */
+.t-ContentBlock.a-Tabs-panel {
+  padding-block-start: .75rem;
+}
+
+/* Seitenmeldungen: Anzeige statt gelber Fläche, Fehler rot markiert */
+.t-Alert--page {
+  --ut-alert-type-border-radius: var(--precision-radius);
+}
+.t-Alert--page.t-Alert--colorBG {
+  --ut-alert-type-background-color: var(--precision-display);
+  --ut-alert-type-text-color: var(--precision-ink);
+  --ut-alert-type-border-color: var(--precision-line);
+}
+.t-Alert--page.t-Alert--success { box-shadow: inset 3px 0 0 var(--precision-success-fill), var(--precision-shadow-float); }
+.t-Alert--page.t-Alert--warning { box-shadow: inset 3px 0 0 var(--precision-danger-fill), var(--precision-shadow-float); }
+.t-Alert--page .t-Button.t-Button--closeAlert {
+  background-color: var(--precision-ink);
+  color: var(--precision-display);
+  border-color: transparent;
+}
+
+/* ---------------------------------------------------------------------------
+   6 · Tabs, RDS (Tusche-Unterstrich, kein Blau)
+   --------------------------------------------------------------------------- */
+.a-RDS-link,
+.t-Tabs-link {
+  color: var(--precision-muted);
+}
+.apex-rds-selected .a-RDS-link,
+.t-Tabs-item.is-active .t-Tabs-link {
+  color: var(--precision-ink);
+}
+
+/* ---------------------------------------------------------------------------
+   7 · Buttons – Tasten. Genau eine gelbe: die Hauptaktion.
+   --------------------------------------------------------------------------- */
+/* Hot (Vita.css Z. 2091 ff.: vollständige Selektorliste) */
+.t-Button--hot,
+.a-Button--hot,
+.ui-button--hot,
+.a-CardView-button--hot,
+.apex-button-group input:checked + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label {
+  --a-button-background-color: var(--precision-signal);
+  --a-button-text-color: var(--precision-on-signal);
+  --a-button-border-color: var(--precision-signal-edge);
+  --a-button-hover-background-color: var(--precision-signal-hover);
+  --a-button-hover-text-color: var(--precision-on-signal);
+  --a-button-hover-border-color: var(--precision-signal-edge);
+  --a-button-active-background-color: var(--precision-signal-active);
+  --a-button-active-text-color: var(--precision-on-signal);
+  --a-button-active-border-color: var(--precision-signal-edge);
+  --a-button-focus-background-color: var(--precision-signal-hover);
+  --a-button-focus-text-color: var(--precision-on-signal);
+  --a-button-focus-border-color: var(--precision-signal-edge);
+  --a-button-font-weight: 600;
+}
+.t-Button--hot.t-Button--simple,
+.a-Button--hot.t-Button--simple,
+.ui-button--hot.t-Button--simple,
+.a-CardView-button--hot.t-Button--simple,
+.apex-button-group input:checked + label.t-Button--simple,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--simple {
+  --a-button-border-color: var(--precision-line-button);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--precision-ink);
+  --a-button-type-shadow: inset 0 -3px 0 var(--precision-signal);
+  --a-button-hover-text-color: var(--precision-on-signal);
+  --a-button-hover-background-color: var(--precision-signal);
+  --a-button-hover-border-color: var(--precision-signal-edge);
+}
+.t-Button--hot.t-Button--link,
+.a-Button--hot.t-Button--link,
+.ui-button--hot.t-Button--link,
+.a-CardView-button--hot.t-Button--link,
+.apex-button-group input:checked + label.t-Button--link,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--precision-signal-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--precision-signal);
+  text-decoration-thickness: 2px;
+  text-underline-offset: .25em;
+}
+.t-Button--hot.t-Button--noUI, .t-Button--hot.a-Button--noUI,
+.a-Button--hot.t-Button--noUI,
+.a-Button--hot.a-Button--noUI,
+.ui-button--hot.t-Button--noUI,
+.ui-button--hot.a-Button--noUI,
+.a-CardView-button--hot.t-Button--noUI,
+.a-CardView-button--hot.a-Button--noUI,
+.apex-button-group input:checked + label.t-Button--noUI,
+.apex-button-group input:checked + label.a-Button--noUI,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--noUI,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.a-Button--noUI {
+  --a-button-text-color: var(--precision-signal-ink);
+  color: var(--precision-signal-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--precision-signal);
+  text-decoration-thickness: 2px;
+  text-underline-offset: .25em;
+}
+
+/* Primary („Alt“) = Tusche-Taste */
+.t-Button--primary {
+  --a-button-background-color: var(--precision-ink);
+  --a-button-text-color: var(--precision-display);
+  --a-button-border-color: var(--precision-ink);
+  --a-button-hover-background-color: color-mix(in srgb, var(--precision-ink) 86%, var(--precision-display));
+  --a-button-hover-text-color: var(--precision-display);
+  --a-button-hover-border-color: var(--a-button-hover-background-color);
+  --a-button-active-background-color: color-mix(in srgb, var(--precision-ink) 76%, var(--precision-display));
+  --a-button-active-text-color: var(--precision-display);
+  --a-button-focus-background-color: var(--a-button-hover-background-color);
+  --a-button-focus-text-color: var(--precision-display);
+}
+.t-Button--primary.t-Button--simple {
+  --a-button-border-color: var(--precision-ink);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--precision-ink);
+  --a-button-hover-text-color: var(--precision-display);
+}
+.t-Button--primary.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--precision-ink);
+}
+.t-Button--primary.t-Button--noUI, .t-Button--primary.a-Button--noUI {
+  --a-button-text-color: var(--precision-ink);
+  color: var(--precision-ink);
+}
+
+/* Status: Warnung (Orange), Erfolg, Gefahr – gefüllt mit weißer Schrift */
+.t-Button--warning {
+  --a-button-background-color: var(--precision-warning-fill);
+  --a-button-text-color: var(--precision-on-status);
+  --a-button-border-color: transparent;
+  --a-button-hover-background-color: color-mix(in srgb, var(--precision-warning-fill) 88%, #000);
+  --a-button-hover-text-color: var(--precision-on-status);
+  --a-button-hover-border-color: transparent;
+  --a-button-active-background-color: color-mix(in srgb, var(--precision-warning-fill) 78%, #000);
+  --a-button-active-text-color: var(--precision-on-status);
+  --a-button-focus-background-color: var(--a-button-hover-background-color);
+  --a-button-focus-text-color: var(--precision-on-status);
+}
+.t-Button--warning.t-Button--simple {
+  --a-button-border-color: var(--precision-warning-fill);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--precision-warning);
+  --a-button-hover-text-color: var(--precision-on-status);
+  --a-button-hover-background-color: var(--precision-warning-fill);
+}
+.t-Button--warning.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--precision-warning);
+}
+.t-Button--warning.t-Button--noUI, .t-Button--warning.a-Button--noUI {
+  --a-button-text-color: var(--precision-warning);
+  color: var(--precision-warning);
+}
+.t-Button--success {
+  --a-button-background-color: var(--precision-success-fill);
+  --a-button-text-color: var(--precision-on-status);
+  --a-button-border-color: transparent;
+  --a-button-hover-background-color: color-mix(in srgb, var(--precision-success-fill) 88%, #000);
+  --a-button-hover-text-color: var(--precision-on-status);
+  --a-button-hover-border-color: transparent;
+  --a-button-active-background-color: color-mix(in srgb, var(--precision-success-fill) 78%, #000);
+  --a-button-active-text-color: var(--precision-on-status);
+  --a-button-focus-background-color: var(--a-button-hover-background-color);
+  --a-button-focus-text-color: var(--precision-on-status);
+}
+.t-Button--success.t-Button--simple {
+  --a-button-border-color: var(--precision-success-fill);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--precision-success);
+  --a-button-hover-text-color: var(--precision-on-status);
+  --a-button-hover-background-color: var(--precision-success-fill);
+}
+.t-Button--success.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--precision-success);
+}
+.t-Button--success.t-Button--noUI, .t-Button--success.a-Button--noUI {
+  --a-button-text-color: var(--precision-success);
+  color: var(--precision-success);
+}
+.ui-button--danger,
+.t-Button--danger {
+  --a-button-background-color: var(--precision-danger-fill);
+  --a-button-text-color: var(--precision-on-status);
+  --a-button-border-color: transparent;
+  --a-button-hover-background-color: color-mix(in srgb, var(--precision-danger-fill) 88%, #000);
+  --a-button-hover-text-color: var(--precision-on-status);
+  --a-button-hover-border-color: transparent;
+  --a-button-active-background-color: color-mix(in srgb, var(--precision-danger-fill) 78%, #000);
+  --a-button-active-text-color: var(--precision-on-status);
+  --a-button-focus-background-color: var(--a-button-hover-background-color);
+  --a-button-focus-text-color: var(--precision-on-status);
+}
+.ui-button--danger.t-Button--simple,
+.t-Button--danger.t-Button--simple {
+  --a-button-border-color: var(--precision-danger-fill);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--precision-danger);
+  --a-button-hover-text-color: var(--precision-on-status);
+  --a-button-hover-background-color: var(--precision-danger-fill);
+}
+.ui-button--danger.t-Button--link,
+.t-Button--danger.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--precision-danger);
+}
+.ui-button--danger.t-Button--noUI, .ui-button--danger.a-Button--noUI,
+.t-Button--danger.t-Button--noUI,
+.t-Button--danger.a-Button--noUI {
+  --a-button-text-color: var(--precision-danger);
+  color: var(--precision-danger);
+}
+
+/* Font-APEX-Modifier-Overlays (Vita.css Z. 2281 ff.) */
+.t-Button.t-Button--noUI .fa:after,
+.t-Button.t-Button--link .fa:after,
+.t-Button.t-Button--simple .fa:after,
+.a-Button.a-Button--noUI .fa:after,
+.fa[class*=fam-]:after {
+  background-color: var(--precision-display);
+}
+.t-Button--danger .fa:after,
+.t-Button--simple.t-Button--danger:hover .fa:after { background-color: var(--precision-danger-fill); }
+.t-Button--success .fa:after,
+.t-Button--simple.t-Button--success:hover .fa:after { background-color: var(--precision-success-fill); }
+.t-Button--warning .fa:after,
+.t-Button--simple.t-Button--warning:hover .fa:after { background-color: var(--precision-warning-fill); }
+.t-Button--primary .fa:after,
+.t-Button--simple.t-Button--primary:hover .fa:after { background-color: var(--precision-ink); }
+.t-Button--hot .fa:after,
+.t-Button--simple.t-Button--hot:hover .fa:after { background-color: var(--precision-signal); }
+
+/* Pill-Gruppen (Radio als Tasten) */
+:root {
+  --ut-pillbutton-font-size: .8125rem;
+  --ut-pillbutton-padding-y: .375rem;
+  --ut-pillbutton-padding-x: .75rem;
+}
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input + label,
+.apex-button-group label {
+  --a-button-font-weight: 500;
+}
+.apex-button-group input:focus-visible + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:focus-visible + label {
+  outline: var(--ut-focus-outline);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   8 · Formulare
+   --------------------------------------------------------------------------- */
+/* Labels linksbündig (APEX: rechtsbündig) */
+.t-Form-labelContainer {
+  text-align: start;
+}
+/* Pflicht: Zeichen hinter dem Label statt davor; kein rotes Dreieck bei Floating Labels */
+.t-Form-fieldContainer.is-required .t-Form-label:before {
+  display: none;
+}
+.t-Form-fieldContainer.is-required .t-Form-label:after,
+.t-Form-fieldContainer--floatingLabel.is-required .t-Form-label:after {
+  display: inline;
+  margin-inline-start: .25rem;
+  font-size: .625rem;
+  vertical-align: top;
+}
+.t-Form-fieldContainer--floatingLabel.is-required .t-Form-itemRequired-marker:before {
+  display: none;
+}
+
+/* Feldfokus: 2-px-Rahmen in Fokusfarbe + gelbe Unterkante (hell) */
+.apex-item-text,
+.apex-item-textarea,
+.apex-item-select,
+.apex-item-multi,
+.apex-item-comboselect,
+.apex-item-combobox,
+.a-IRR-search-field,
+.a-Toolbar-inputText {
+  --ut-focus-outline-offset: -1px;
+}
+.apex-item-text:focus,
+.apex-item-textarea:focus,
+.apex-item-select:focus,
+.apex-item-multi:focus,
+.apex-item-combobox:focus {
+  --a-field-input-state-shadow: inset 0 -3px 0 var(--precision-focus-halo);
+}
+
+/* Floating Labels: Feld = Anzeige, Label klein in Skala-Grau (12 px statt 11 px) */
+.t-Form-fieldContainer--floatingLabel {
+  --a-field-input-padding-x: .625rem;
+  --ut-field-fl-label-font-size: .75rem;
+}
+.t-Form-fieldContainer--floatingLabel .t-Form-label {
+  color: var(--precision-muted);
+  font-weight: 500;
+}
+.t-Form-fieldContainer--floatingLabel.is-active .t-Form-label,
+.t-Form-fieldContainer--floatingLabel:focus-within .t-Form-label {
+  color: var(--precision-ink);
+}
+
+/* Checkbox/Radio: gelbe Füllung, Tusche-Haken, Kante bleibt sichtbar */
+.u-checkbox:before,
+.u-radio:before {
+  transition: background-color .1s ease;
+}
+input:checked + .u-checkbox:before,
+input:checked + .u-radio:before {
+  border-color: var(--precision-signal-edge);
+}
+.u-checkbox,
+.u-radio {
+  font-size: .875rem;
+}
+
+/* Switch: Knopf mit feiner Kante */
+.a-Switch .a-Switch-toggle:before {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .12);
+}
+
+/* Date Picker: eckige Tage, Kopf im Gehäuse, Monat/Jahr kräftig */
+.a-DatePicker-header {
+  border-block-end: 1px solid var(--precision-line);
+}
+.a-DatePicker-calendar th {
+  font-weight: 500;
+  color: var(--precision-muted);
+}
+
+/* ---------------------------------------------------------------------------
+   9 · Menüs, Dialoge
+   --------------------------------------------------------------------------- */
+.a-Menu .a-Menu-item.is-focused > .a-Menu-inner,
+.a-Menu .a-Menu-item.is-expanded > .a-Menu-inner {
+  box-shadow: inset 2px 0 0 var(--precision-ink);
+}
+.ui-dialog .ui-dialog-title {
+  font-weight: 650;
+  letter-spacing: -.01em;
+}
+
+/* ---------------------------------------------------------------------------
+   10 · Reports: Messprotokoll-Tabellen
+   Kopf im Schmalschnitt (Breite 85 %), Tusche-Kopflinie, Tabellenziffern.
+   --------------------------------------------------------------------------- */
+/* Classic Report */
+.t-Report-tableWrap {
+  background-color: var(--precision-display);
+}
+.t-Report-colHead {
+  font-stretch: 85%;
+  color: var(--precision-ink);
+  box-shadow: inset 0 -1px 0 var(--precision-ink);
+}
+.t-Report-colHead a,
+.t-Report-colHead .a-Report-SortHeading-Anchor--event {
+  color: inherit;
+}
+
+/* Interactive Report */
+.a-IRR {
+  --a-gv-border-radius: var(--precision-radius);
+  --a-gv-header-cell-padding-x: var(--a-gv-cell-padding-x);
+  overflow: clip;
+}
+.a-IRR-toolbar {
+  background-color: var(--precision-housing);
+  border-block-end: 1px solid var(--precision-line);
+}
+/* Vita.css Z. 3210 ff. – hart codierte Kopffarben */
+.a-IRR-header {
+  background-color: var(--a-gv-header-background-color);
+  box-shadow: inset 0 -1px 0 var(--precision-ink);
+}
+.a-IRR-header:hover {
+  background-color: var(--precision-raise);
+}
+.a-IRR-header--group {
+  background-color: var(--precision-housing);
+}
+.a-IRR-header.is-active,
+.a-GV-header.is-active {
+  background-color: var(--precision-housing-2);
+  color: var(--precision-ink);
+}
+.a-IRR-headerLink,
+.a-IRR-headerLabel,
+.a-GV-headerLabel {
+  font-stretch: 85%;
+  font-weight: 600;
+  font-size: .8125rem;
+  color: var(--precision-ink);
+}
+.a-IRR-headerLink {
+  text-decoration: none;
+}
+.a-IRR-table td {
+  font-size: .8125rem;
+}
+.a-IG-button.a-IG-button--controls,
+.a-IRR-button.a-IRR-button--controls {
+  --a-button-background-color: var(--precision-display);
+}
+.a-IRR-button.a-IRR-button--pagination {
+  --a-button-border-radius: var(--precision-radius-sm);
+}
+.a-IRR-button.a-IRR-button--pagination:hover {
+  background-color: var(--precision-housing-2);
+  color: var(--precision-ink);
+}
+.a-IRR-button--remove:hover {
+  --a-button-text-color: var(--precision-danger);
+}
+.a-IRR-sortWidget-help {
+  background-color: var(--precision-housing);
+  color: var(--precision-ink);
+}
+/* Filterleiste: alle Kontrolltypen neutral (Vita: bunte Kacheln) */
+.a-IG-reportSummary-item--savedReport, .a-IG-controls-item--savedReport, .a-IRR-reportSummary-item--savedReport, .a-IRR-controls-item--savedReport,
+.a-IG-reportSummary-item--search, .a-IG-controls-item--search, .a-IRR-reportSummary-item--search, .a-IRR-controls-item--search,
+.a-IG-reportSummary-item--filter, .a-IG-controls-item--filter, .a-IRR-reportSummary-item--filter, .a-IRR-controls-item--filter,
+.a-IG-reportSummary-item--controlBreak, .a-IG-controls-item--controlBreak, .a-IRR-reportSummary-item--controlBreak, .a-IRR-controls-item--controlBreak,
+.a-IG-reportSummary-item--groupBy, .a-IG-controls-item--groupBy, .a-IRR-reportSummary-item--groupBy, .a-IRR-controls-item--groupBy,
+.a-IG-reportSummary-item--aggregate, .a-IG-controls-item--aggregate, .a-IRR-reportSummary-item--aggregate, .a-IRR-controls-item--aggregate,
+.a-IG-reportSummary-item--highlight, .a-IG-controls-item--highlight, .a-IRR-reportSummary-item--highlight, .a-IRR-controls-item--highlight,
+.a-IG-reportSummary-item--flashback, .a-IG-controls-item--flashback, .a-IRR-reportSummary-item--flashback, .a-IRR-controls-item--flashback,
+.a-IG-reportSummary-item--chart, .a-IG-controls-item--chart, .a-IRR-reportSummary-item--chart, .a-IRR-controls-item--chart,
+.a-IG-reportSummary-item--pivot, .a-IG-controls-item--pivot, .a-IRR-reportSummary-item--pivot, .a-IRR-controls-item--pivot,
+.a-IG-reportSummary-item--invalidSettings, .a-IG-controls-item--invalidSettings, .a-IRR-reportSummary-item--invalidSettings, .a-IRR-controls-item--invalidSettings,
+.a-IG-reportSummary-item--inactiveSettings, .a-IG-controls-item--inactiveSettings, .a-IRR-reportSummary-item--inactiveSettings, .a-IRR-controls-item--inactiveSettings {
+  --a-report-controls-cell-label-icon-background-color: var(--precision-ink-2);
+  --a-report-controls-cell-label-hover-background-color: var(--precision-housing);
+}
+
+/* Interactive Grid */
+.a-GV-header {
+  box-shadow: inset 0 -1px 0 var(--precision-ink);
+}
+.a-GV-table th.a-GV-controlBreakHeader {
+  background-color: var(--precision-housing);
+  border-color: var(--precision-line);
+  color: var(--precision-muted);
+}
+.a-GV-table .a-GV-cell.is-active {
+  background-color: var(--precision-housing-2);
+}
+.a-GV--editMode .a-GV-row.is-readonly .a-GV-cell,
+.a-GV--editMode .a-GV-cell.is-readonly {
+  background-color: var(--precision-housing);
+  color: var(--precision-muted);
+}
+.a-GV-cell .a-GV-columnItem input:not([type=radio]):not([type=checkbox]):focus,
+.a-GV-cell .a-GV-columnItem select[size="1"]:focus {
+  background-color: var(--precision-display);
+}
+.a-GV-status,
+.a-GV-rownum,
+.is-aggregate .a-GV-rowHeader {
+  color: var(--precision-muted);
+}
+.a-GV-columnControls .a-Button {
+  background-color: var(--precision-housing);
+  color: var(--precision-ink-2);
+}
+.a-GV-pageSelector-item.is-selected .a-GV-pageButton {
+  background-color: var(--a-gv-pagination-button-selected-background-color);
+  color: var(--a-gv-pagination-button-selected-text-color);
+}
+
+/* ---------------------------------------------------------------------------
+   11 · Cards (Card Regions) – Anzeigen mit 1-px-Kontur, ohne Schatten
+   --------------------------------------------------------------------------- */
+.t-CardsRegion--styleA,
+.t-CardsRegion--styleB,
+.t-CardsRegion--styleC {
+  --a-cv-media-background-color: var(--precision-housing);
+  --a-cv-badge-border-radius: var(--precision-radius-sm);
+  --a-cv-icon-border-radius: var(--precision-radius);
+  --a-cv-initials-border-radius: var(--precision-radius);
+}
+.a-CardView-title {
+  letter-spacing: -.01em;
+}
+.a-CardView-badge {
+  font-weight: 600;
+}
+.a-CardView:hover {
+  border-color: var(--precision-line-control);
+}
+
+/* ---------------------------------------------------------------------------
+   12 · Login – Gehäusegrund, Anzeige-Karte mit Skala an der Oberkante
+   --------------------------------------------------------------------------- */
+.t-LoginPage--bg1,
+.t-LoginPage--bg2,
+.t-LoginPage--bg3 {
+  --ut-body-background-color: var(--precision-housing);
+}
+.t-LoginPage--bg1:before, .t-LoginPage--bg1 .t-Login-bgImg,
+.t-LoginPage--bg2:before, .t-LoginPage--bg2 .t-Login-bgImg,
+.t-LoginPage--bg3:before, .t-LoginPage--bg3 .t-Login-bgImg {
+  background-image: none;
+}
+.t-PageBody--login {
+  background-color: var(--precision-housing);
+}
+.t-Login-region {
+  --precision-scale-origin: var(--ut-login-region-padding, 2rem);
+  position: relative;
+  overflow: clip;
+  padding-block-start: 2.75rem;
+}
+.t-Login-region::before {
+  inset-block-start: 0;
+  inset-block-end: auto;
+  transform: scaleY(-1);
+}
+.t-Login-header {
+  padding-block: .5rem 1rem;
+  text-align: start;
+}
+.t-Login-logo {
+  margin-inline: 0;
+  margin-block-end: 1.25rem;
+}
+.t-Login-title {
+  font-size: 1.375rem;
+  line-height: 1.75rem;
+  font-weight: 650;
+  letter-spacing: -.015em;
+  text-align: start;
+  margin: 0;
+}
+.t-Login-buttons {
+  --a-button-padding-y: .75rem;
+  --a-button-font-size: .9375rem;
+  --a-button-line-height: 1.25rem;
+}
+
+/* ---------------------------------------------------------------------------
+   13 · Footer
+   --------------------------------------------------------------------------- */
+.t-Footer {
+  font-size: .75rem;
+  color: var(--precision-muted);
+}
+.t-Footer-topButton {
+  --ut-footer-top-background-color: var(--precision-housing);
+}
+
+/* ---------------------------------------------------------------------------
+   14 · Responsive & Touch
+   --------------------------------------------------------------------------- */
+/* Navigation unter 992 px als Overlay statt Push (Rezept ut-shell.md §5.7) */
+@media (max-width: 991px) {
+  .apex-side-nav.js-navExpanded {
+    --ut-nav-collapsed-width: 0px;
+  }
+  .apex-side-nav.js-navExpanded .t-Body-nav {
+    position: fixed;
+    inset-block: var(--js-sticky-top, 0px) 0;
+    inset-inline-start: 0;
+    height: auto;
+    z-index: 900;
+    box-shadow: var(--precision-shadow-float);
+  }
+}
+@media (max-width: 639px) {
+  .t-ContentBlock--h1 { --ut-content-block-header-font-size: 1.375rem; }
+  .t-ContentBlock--h2 { --ut-content-block-header-font-size: 1.125rem; }
+  :root {
+    --ut-breadcrumb-title-font-size: 1.375rem;
+    --ut-breadcrumb-title-line-height: 1.75rem;
+  }
+}
+/* Grober Zeiger (Tablet, Handschuh): 40-px-Bedienelemente */
+@media (pointer: coarse) {
+  :root {
+    --a-button-padding-y: .75rem;
+    --a-field-input-padding-y: .625rem;
+    --a-checkbox-size: 1.25rem;
+  }
+  .t-TreeNav {
+    --a-treeview-node-padding-y: .625rem;
+  }
+}

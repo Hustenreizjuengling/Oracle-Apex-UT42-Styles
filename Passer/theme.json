@@ -1,0 +1,38 @@
+{
+  "name": "Passer",
+  "prefix": "passer",
+  "tokenPrefix": "pa",
+  "version": "1.0.0",
+  "description": "Zweifarbendruck auf kühlem Papier: Teal als Arbeitsfarbe, Fluoreszenz-Pink als zweiter, leicht verrutschter Farbauszug (Passerversatz an Seitentitel, Logo, Hot-Buttons, Volltonbadges, aktiver Navigation und aktivem Reiter – nie auf Fließtext, Feldern oder Tabellen), Text in Indigo-Tusche, Gelb als Marker. Papierkorn, Halbton-Raster, Login als Plakat mit Überdruck-Scheiben. Nachts Neon auf indigo gefärbtem Papier. Schrift: Bricolage Grotesque (variabel, opsz 12–96, Gewicht 200–800, Breite 75–100 %). Vertrag für Komponenten: docs/ARCHITECTURE.md.",
+  "license": "Theme: MIT. Schrift Bricolage Grotesque: SIL Open Font License 1.1.",
+  "styles": [
+    {
+      "id": "light",
+      "name": "Passer Light",
+      "staticId": "passer-light",
+      "base": "Vita",
+      "entry": "src/passer-light.css"
+    },
+    {
+      "id": "dark",
+      "name": "Passer Dark",
+      "staticId": "passer-dark",
+      "base": "Vita-Dark",
+      "entry": "src/passer-dark.css"
+    },
+    {
+      "id": "auto",
+      "name": "Passer Auto",
+      "staticId": "passer-auto",
+      "base": "Vita",
+      "entry": "src/passer-auto.css"
+    }
+  ],
+  "themeVariant": {
+    "number": 146,
+    "name": "Passer",
+    "internalName": "PASSER",
+    "staticId": "passer",
+    "defaultStyle": "light"
+  }
+}

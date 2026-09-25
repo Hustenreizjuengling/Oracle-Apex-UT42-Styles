@@ -1,0 +1,136 @@
+/* ==========================================================================
+   Frequenz – Tokens MODUSNEUTRAL (Maße, Schrift, Dichte, Fokus-Geometrie)
+   Gilt für hell, dunkel und auto gleichermaßen; wird von index.css als Erstes geladen.
+   Nur :root-Deklarationen eigener Tokens (--fq-*). Farben stehen in light.css/dark.css.
+   Abgeleitete Tokens (calc/var) werden auf :root aufgelöst: Wer einen Basis-Token lokal
+   ändert, muss die daraus abgeleiteten Hebel dort mitsetzen (siehe docs/ARCHITECTURE.md).
+   ========================================================================== */
+:root {
+  /* Schrift ---------------------------------------------------------------- */
+  --fq-font: "Frequenz Sans", "Onest", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --fq-font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --fq-fw-regular: 400;
+  --fq-fw-medium: 500;             /* Unterebenen der Navigation, Menüs */
+  --fq-fw-semibold: 600;           /* Labels, Tabs, Buttons */
+  --fq-fw-bold: 700;               /* Navigation, Tabellenköpfe, <b>/<strong> */
+  --fq-fw-heavy: 800;              /* Überschriften, Seitentitel, App-Name im Block */
+
+  /* Größen-Skala 12 · 13 · 14 · 16 · 20 · 24 · 36 · 44 ------------------ */
+  --fq-fs-xs: .75rem;              /* 12  Klein: Hilfe, Badges, Zähler */
+  --fq-fs-head: .8125rem;          /* 13  Tabellenköpfe */
+  --fq-fs-sm: .8125rem;            /* 13  Tabellenzellen, Labels, Breadcrumb */
+  --fq-fs-md: .875rem;             /* 14  UI, Fließtext, Felder, Buttons */
+  --fq-fs-lg: 1rem;                /* 16  Kartentitel, Unterüberschriften */
+  --fq-fs-xl: 1.25rem;             /* 20  Region-Titel */
+  --fq-fs-2xl: 1.5rem;             /* 24  Abschnitt (Content Block h2), Dialogtitel groß */
+  --fq-fs-3xl: 2.25rem;            /* 36  Seitentitel (mobil 28) */
+  --fq-fs-hero: 2.75rem;           /* 44  Hero-Titel (mobil 32) */
+  --fq-fs-brand: 1.125rem;         /* 18  App-Name im Markenblock */
+  --fq-lh-xs: 1rem;
+  --fq-lh-sm: 1.25rem;
+  --fq-lh-md: 1.25rem;
+  --fq-lh-body: 1.375rem;          /* 14 im Fließtext */
+  --fq-lh-lg: 1.5rem;
+  --fq-lh-xl: 1.75rem;
+  --fq-lh-2xl: 2rem;
+  --fq-lh-3xl: 2.75rem;
+  --fq-lh-hero: 3.25rem;
+  --fq-lh-brand: 1.5rem;           /* feste Zeilenhöhe im Block: Font-Swap verschiebt nichts */
+  --fq-tracking-title: -.02em;     /* Seiten- und Hero-Titel */
+  --fq-tracking-heading: -.01em;   /* Region-/Abschnittstitel, h1–h4, App-Name */
+  --fq-tracking-ui: 0em;
+
+  /* Radien: Hierarchie statt eines Radius für alles ------------------------ */
+  --fq-r-control: .25rem;          /*  4 Buttons, Felder, Checkbox */
+  --fq-r-item: .375rem;            /*  6 Menüeinträge, kleine Flächen in Listen */
+  --fq-r-box: .625rem;             /* 10 Tabellen-Container, Menüs, Popups, Code, Meldungen */
+  --fq-r-card: 1rem;               /* 16 Karten, Dialoge, verschachtelte Tafeln */
+  --fq-r-panel: 1.5rem;            /* 24 Tafeln: Regionen, Hinweisblöcke */
+  --fq-r-hero: 2.5rem;             /* 40 Hero, Login-Tafel */
+  --fq-r-pill: 62rem;              /* Pillen: Chips, Badges, Tab-Pillen, runde Icon-Buttons */
+
+  /* Geometrie: Kopf, Navigation, Seite ------------------------------------ */
+  --fq-header-h: 4rem;             /* Kopfzeile 64 px (statisch – nie per JS/Font verändern) */
+  --fq-nav-w: 16rem;               /* aufgeklappte Navigation */
+  --fq-nav-rail-w: 4rem;           /* Icon-Leiste = Kopfhöhe: Block und Leiste bilden eine Spalte */
+  --fq-nav-mark-w: .25rem;         /* Akzentkante des aktiven Navigationspunkts */
+  --fq-tab-mark-h: .1875rem;       /* Akzent-Unterstrich aktiver Tabs/Menüpunkte */
+  --fq-page-pad-x: 2rem;           /* Seiten-Innenabstand waagerecht */
+  --fq-page-pad-y: 1.5rem;
+  --fq-panel-pad: 1.5rem;          /* Innenabstand der Tafeln */
+  --fq-float-inset: 0px;           /* Abstand schwebender Schubladen zum Fensterrand */
+
+  /* Abstände (4er-Raster) -------------------------------------------------- */
+  --fq-space-1: .25rem;            /* 4 */
+  --fq-space-2: .5rem;             /* 8 */
+  --fq-space-3: .75rem;            /* 12 */
+  --fq-space-4: 1rem;              /* 16 */
+  --fq-space-5: 1.25rem;           /* 20 */
+  --fq-space-6: 1.5rem;            /* 24 */
+  --fq-space-8: 2rem;              /* 32 */
+  --fq-space-12: 3rem;             /* 48 */
+  --fq-region-gap: 1.5rem;         /* Abstand zwischen Tafeln */
+
+  /* Dichte (Desktop 36 px; unter pointer: coarse 44 px – siehe bridge.css) --- */
+  --fq-control-h: 2.25rem;         /* Höhe Buttons, Felder, Selects (inkl. Rand) */
+  --fq-control-h-sm: 1.75rem;      /* kleine Buttons, Toolbar-Icons */
+  --fq-control-h-lg: 2.75rem;      /* große Buttons, Login */
+  --fq-control-lh: 1.25rem;        /* Zeilenhöhe im Control */
+  --fq-control-pad-x: .75rem;      /* Innenabstand Felder; Buttons: --fq-button-pad-x */
+  --fq-button-pad-x: 1rem;
+  --fq-control-pad-y: calc((var(--fq-control-h) - var(--fq-control-lh)) / 2);  /* inkl. 1 px Rand (app_ui-Konvention) */
+  --fq-row-h: 2.25rem;             /* Tabellenzeile 36 px inkl. Haarlinie */
+  --fq-row-lh: 1.25rem;
+  --fq-row-pad-x: .75rem;
+  --fq-row-pad-y: calc((var(--fq-row-h) - var(--fq-row-lh) - 1px) / 2);        /* = 7,5 px */
+  --fq-head-h: 2.5rem;             /* Tabellenkopf 40 px */
+  --fq-hit-min: 1.5rem;            /* Mindest-Trefferfläche (WCAG 2.5.8); coarse: 2.75rem */
+  --fq-checkbox-size: 1.125rem;
+
+  /* Linien-Geometrie ------------------------------------------------------ */
+  --fq-hairline: 1px;
+  --fq-head-rule-width: 1px;
+  --fq-rule-strong: 2px;
+
+  /* Fokus-Geometrie (Farben: --fq-focus-ring-color / --fq-focus-gap) ------ */
+  --fq-focus-ring-width: 2px;
+  --fq-focus-ring-offset: 2px;
+  --fq-focus-outline: var(--fq-focus-ring-width) solid var(--fq-focus-ring-color);
+  /* Doppelring als Schatten (wo outline abgeschnitten würde): innen Grundfläche (--fq-focus-gap),
+     außen Ring. Beide Schatten stehen für schwebende Ebenen noch einmal in bridge.css §18. */
+  --fq-focus-shadow: 0 0 0 var(--fq-focus-ring-offset) var(--fq-focus-gap), 0 0 0 calc(var(--fq-focus-ring-offset) + var(--fq-focus-ring-width)) var(--fq-focus-ring-color);
+  /* nach innen (Zeilen, Zellen, Nav-Einträge in overflow-Containern) */
+  --fq-focus-shadow-inset: inset 0 0 0 var(--fq-focus-ring-width) var(--fq-focus-ring-color), inset 0 0 0 calc(var(--fq-focus-ring-width) + 1px) var(--fq-focus-gap);
+  /* Felder: Randfarbe = Ringfarbe + 1 px Schatten = 2 px Rand ohne Layoutsprung */
+  --fq-focus-field-shadow: 0 0 0 1px var(--fq-focus-ring-color);
+
+  /* Links (Farben in light/dark) ----------------------------------------- */
+  --fq-link-underline-width: 1px;
+  --fq-link-underline-width-hover: 2px;
+  --fq-link-underline-offset: .2em;
+
+  /* Pflichtfeld ----------------------------------------------------------- */
+  --fq-required-mark: "*";
+  --fq-required-gap: .25rem;
+
+  /* Bewegung -------------------------------------------------------------- */
+  --fq-duration: .14s;
+  --fq-ease: cubic-bezier(.2, 0, 0, 1);
+}
+
+/* Mobil (< 640 px): flacherer Kopf, schmalere Ränder, kleinere Titel ------- */
+@media (max-width: 639px) {
+  :root {
+    --fq-header-h: 3.5rem;         /* 56 px */
+    --fq-page-pad-x: 1rem;
+    --fq-page-pad-y: 1rem;
+    --fq-panel-pad: 1rem;
+    --fq-region-gap: 1rem;
+    --fq-r-panel: 1.25rem;
+    --fq-r-hero: 1.75rem;
+    --fq-fs-3xl: 1.75rem;          /* 28 */
+    --fq-lh-3xl: 2.25rem;
+    --fq-fs-hero: 2rem;            /* 32 */
+    --fq-lh-hero: 2.5rem;
+  }
+}

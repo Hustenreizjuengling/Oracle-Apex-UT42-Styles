@@ -1,0 +1,38 @@
+{
+  "name": "Passepartout",
+  "prefix": "passepartout",
+  "tokenPrefix": "pp",
+  "version": "1.0.0",
+  "description": "Rahmen und Leinwand: Kopf und Navigation als ein ruhiges Passepartout, der Inhalt auf einer eingesetzten Arbeitsfläche. Ein Akzent: Kartenmagenta. Schrift: Instrument Sans (variabel, Gewicht 400–700 und Breite 75–100 %). Vertrag für Komponenten: docs/ARCHITECTURE.md.",
+  "license": "Theme: MIT. Schrift Instrument Sans: SIL Open Font License 1.1.",
+  "styles": [
+    {
+      "id": "light",
+      "name": "Passepartout Light",
+      "staticId": "passepartout-light",
+      "base": "Vita",
+      "entry": "src/passepartout-light.css"
+    },
+    {
+      "id": "dark",
+      "name": "Passepartout Dark",
+      "staticId": "passepartout-dark",
+      "base": "Vita-Dark",
+      "entry": "src/passepartout-dark.css"
+    },
+    {
+      "id": "auto",
+      "name": "Passepartout Auto",
+      "staticId": "passepartout-auto",
+      "base": "Vita",
+      "entry": "src/passepartout-auto.css"
+    }
+  ],
+  "themeVariant": {
+    "number": 142,
+    "name": "Passepartout",
+    "internalName": "PASSEPARTOUT",
+    "staticId": "passepartout",
+    "defaultStyle": "light"
+  }
+}

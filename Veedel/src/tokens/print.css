@@ -1,0 +1,25 @@
+/* ==========================================================================
+   Veedel – Tokens DRUCK (wird von index.css mit Media „print“ geladen)
+   Der Druck ist immer hell: veedel-dark.css lädt zusätzlich tokens/light.css unter
+   „print“ (Light braucht es nicht, Auto bleibt über „screen and (…dark)“ im Druck hell);
+   diese Datei nimmt danach Seitengrund, Bänder und Schatten weg: Papier ist weiß, Kopf- und
+   Verlaufsband drucken weiß mit nachtblauer Schrift – eine 2-px-Linie in Markenblau trennt
+   sie vom Inhalt (shell.css §8). Browser drucken Hintergründe standardmäßig nicht; weiße
+   Schrift auf einem nicht gedruckten Band wäre sonst unsichtbar. Nur :root, nur Werte.
+   ========================================================================== */
+:root {
+  --ve-page: #FFFFFF;              /* Seitengrund = Papier */
+  --ve-header: #FFFFFF;
+  --ve-header-text: #081E35;
+  --ve-band-from: #FFFFFF;
+  --ve-band-mid: #FFFFFF;
+  --ve-band-to: #FFFFFF;
+  --ve-band-text: #081E35;
+  --ve-band-muted: #56657A;
+  --ve-page-pad-x: 0px;
+  --ve-region-pad-x: 0px;
+  --ve-card-shadow: none;
+  --ve-lift-shadow: none;
+  --ve-float-shadow: none;
+  --ve-scrim: transparent;
+}

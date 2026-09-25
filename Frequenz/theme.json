@@ -1,0 +1,38 @@
+{
+  "name": "Frequenz",
+  "prefix": "frequenz",
+  "tokenPrefix": "fq",
+  "version": "1.0.0",
+  "description": "Weiße Seite, hellgraue Tafeln mit großen Radien und ein Farbblock in der Akzentfarbe oben links, der den App-Namen trägt. Kräftige Überschriften in Onest (800), Kontur-Buttons mit 4 px Radius, runde Icon-Buttons und Pillen, eine 4-px-Kante in der Akzentfarbe am aktiven Navigationspunkt, Links in Petrol. Dunkel: schwarze Seite mit dunkelgrauen Tafeln. Für interne Apps.",
+  "license": "Theme: MIT. Schrift Onest: SIL Open Font License 1.1. Drittanbieter-Hinweise und Lizenztexte: THIRD-PARTY-NOTICES.txt.",
+  "styles": [
+    {
+      "id": "light",
+      "name": "Frequenz Light",
+      "staticId": "frequenz-light",
+      "base": "Vita",
+      "entry": "src/frequenz-light.css"
+    },
+    {
+      "id": "dark",
+      "name": "Frequenz Dark",
+      "staticId": "frequenz-dark",
+      "base": "Vita-Dark",
+      "entry": "src/frequenz-dark.css"
+    },
+    {
+      "id": "auto",
+      "name": "Frequenz Auto",
+      "staticId": "frequenz-auto",
+      "base": "Vita",
+      "entry": "src/frequenz-auto.css"
+    }
+  ],
+  "themeVariant": {
+    "number": 144,
+    "name": "Frequenz",
+    "internalName": "FREQUENZ",
+    "staticId": "frequenz",
+    "defaultStyle": "light"
+  }
+}

@@ -1,0 +1,21 @@
+/* ==========================================================================
+   Passer – Tokens DRUCK (wird von index.css mit Media „print“ geladen)
+   Der Druck ist immer hell und schlicht: passer-dark.css lädt zusätzlich tokens/light.css
+   unter „print“ (Light braucht es nicht, Auto bleibt über „screen and (…dark)“ im Druck
+   hell). Diese Datei nimmt danach Korn, Raster, Neon und Passer weg: weißes Papier, Tusche,
+   ein Kopf ohne Vollton. Nur :root, nur Werte.
+   ========================================================================== */
+:root {
+  --pa-surface: #FFFFFF;           /* weißes Papier statt getöntem */
+  --pa-sheet: #FFFFFF;
+  --pa-field: #FFFFFF;
+  --pa-header-bg: #FFFFFF;         /* kein Teal-Vollton über der Seite */
+  --pa-header-text: #1E2049;
+  --pa-header-plate: transparent;
+  --pa-plate: transparent;         /* kein Passerversatz, kein Neon */
+  --pa-header-dots: transparent;
+  --pa-halftone-ink: transparent;
+  --pa-grain: none;                /* kein Papierkorn */
+  --pa-float-shadow: none;
+  --pa-scrim: transparent;
+}

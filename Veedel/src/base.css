@@ -1,0 +1,161 @@
+/* ==========================================================================
+   Veedel – Grundlagen (modusneutral, nur Tokens, kein @layer)
+   Schrift und Größen-Skala, Links, Textauswahl, EIN Fokus-System, Scrollbars,
+   Tabellenziffern, Druck. Spezifität bewusst niedrig (:where), damit Komponenten-
+   Dateien alles mit einfachen Klassen-Selektoren übersteuern können. Ausnahmen:
+   Überschriften h1–h6 (0,0,1 – müssen die Element-Regeln aus UT Core schlagen) und
+   der Tastatur-Fokusring (0,2,0, siehe 5).
+   ========================================================================== */
+
+/* 1. Schrift ------------------------------------------------------------- */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-synthesis-weight: none;           /* nie künstlich fetten: die Achse reicht 300–900 */
+  font-optical-sizing: auto;
+}
+:where(button, input, select, textarea, optgroup) {
+  font-family: inherit;
+}
+:where(h1, h2, h3, h4) {
+  letter-spacing: var(--ve-tracking-heading);
+  font-weight: var(--ve-fw-heavy);
+}
+:where(h5, h6) {
+  font-weight: var(--ve-fw-bold);
+}
+/* Rohe Überschriften (Static Content, Rich Text, Hilfetexte) auf der Skala: UT Core setzt
+   h1–h6 auf 32/24/20/16/14/12 px mit line-height 1.5 – ein h3 wäre größer als der
+   Region-Titel (19/24), ein h1 käme dem Seitentitel im Band nahe.
+   Gleiche Spezifität wie Core, später geladen. Komponenten-Titel (.t-*-title, .a-*-title,
+   .is-markdownified h*) setzen ihre Größe über Klassen bzw. UT-/APEX-Tokens und bleiben unberührt. */
+h1 {
+  font-size: var(--ve-fs-2xl);
+  line-height: var(--ve-lh-2xl);
+  letter-spacing: var(--ve-tracking-title);
+}
+h2 {
+  font-size: var(--ve-fs-xl);
+  line-height: var(--ve-lh-xl);
+}
+h3 {
+  font-size: var(--ve-fs-lg);
+  line-height: var(--ve-lh-lg);
+}
+h4 {
+  font-size: var(--ve-fs-md);
+  line-height: var(--ve-lh-md);
+}
+h5 {
+  font-size: var(--ve-fs-sm);
+  line-height: var(--ve-lh-sm);
+}
+h6 {
+  font-size: var(--ve-fs-xs);
+  line-height: var(--ve-lh-xs);
+}
+:where(b, strong) {
+  font-weight: var(--ve-fw-bold);
+}
+:where(code, kbd, samp, pre) {
+  font-family: var(--ve-font-mono);
+}
+/* Code-Blöcke scrollen in ihrem Kasten, statt über die Regionskante zu laufen
+   (UT Core: pre { white-space: pre } ohne overflow; mobil 3004/3005 „Sample SQL Query“). */
+:where(pre) {
+  overflow-x: auto;
+}
+/* Header-Branding: feste Zeilenhöhe, damit der Font-Swap (font-display: swap) die von
+   theme42.js gemessene Kopfhöhe nicht verschiebt. */
+.t-Header-logo,
+.t-Header-logo-link,
+.t-Header-logo .apex-logo-text {
+  line-height: var(--ve-brand-lh);
+}
+
+/* Größen-Skala als Hilfsklassen (12 · 13 · 14 · 16 · 19 · 26 · 40) */
+.ve-text-xs  { font-size: var(--ve-fs-xs);  line-height: var(--ve-lh-xs); }
+.ve-text-sm  { font-size: var(--ve-fs-sm);  line-height: var(--ve-lh-sm); }
+.ve-text-md  { font-size: var(--ve-fs-md);  line-height: var(--ve-lh-md); }
+.ve-text-lg  { font-size: var(--ve-fs-lg);  line-height: var(--ve-lh-lg); font-weight: var(--ve-fw-bold); }
+.ve-text-xl  { font-size: var(--ve-fs-xl);  line-height: var(--ve-lh-xl); font-weight: var(--ve-fw-heavy); letter-spacing: var(--ve-tracking-heading); }
+.ve-text-2xl { font-size: var(--ve-fs-2xl); line-height: var(--ve-lh-2xl); font-weight: var(--ve-fw-heavy); letter-spacing: var(--ve-tracking-heading); }
+.ve-text-display { font-size: var(--ve-fs-display); line-height: var(--ve-lh-display); font-weight: var(--ve-fw-black); letter-spacing: var(--ve-tracking-title); }
+
+/* 2. Tabellenziffern überall, wo Zahlen in Spalten stehen ---------------- */
+:where(table, input, output, time, .apex-item-number, .a-GV, .a-IRR, .t-Report, .a-DatePicker,
+       .t-BadgeList, .t-Badge, .t-MetricCard, .a-CardView-badge, .t-Button-badge, .a-Button-badge,
+       [class*="pagination"], [class*="Pagination"], .u-tabular-nums) {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 3. Links im Fließtext: Markenblau mit Unterstrich, Hover-Unterstrich doppelt so stark.
+      Nur Links ohne Klasse – Komponenten-Links (Buttons, Nav, Karten …) bleiben unberührt. */
+a:not([class]) {
+  color: var(--ve-link-text);
+  text-decoration-line: underline;
+  text-decoration-color: var(--ve-link-underline);
+  text-decoration-thickness: var(--ve-link-underline-width);
+  text-underline-offset: var(--ve-link-underline-offset);
+}
+a:not([class]):hover {
+  color: var(--ve-link-text);
+  text-decoration-color: var(--ve-link-underline-hover);
+  text-decoration-thickness: var(--ve-link-underline-width-hover);
+}
+
+/* 4. Textauswahl --------------------------------------------------------- */
+::selection {
+  background-color: var(--ve-selection);
+  color: var(--ve-selection-text);
+}
+
+/* 5. Fokus: EIN System (Tokens --ve-focus-*), nur bei Tastatur sichtbar.
+      UT Core zeichnet *:focus mit den Hooks --ut-focus-outline / --ut-focus-outline-offset
+      (auf :root = --ve-focus-outline / --ve-focus-ring-offset, siehe bridge.css). Komponenten
+      passen den Ring lokal über genau diese zwei Hooks an – nie über eigene outline-Regeln.
+      Hier: Maus-Fokus ohne Ring; Tastatur-Fokus überall mit Ring (wie UT: tabindex=-1 ausgenommen).
+      Spezifität 0,2,0: schlägt auch Oracle-Regeln, die den Umriss unterdrücken (a.t-ContentRow-wrap,
+      .a-CardView-titleLink:focus haben sonst GAR keinen Fokus-Hinweis). Wo Oracle den Fokus anders
+      zeigt (.a-TreeView-label → Zeilen-Schatten, .a-FS .apex-item-option → Kästchen, .a-IRR-dialogList a),
+      entsteht dadurch ein Doppelring – den nimmt die Komponente lokal über --ut-focus-outline: none. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+:focus-visible:not([tabindex="-1"]) {
+  outline: var(--ut-focus-outline, var(--ve-focus-outline));
+  outline-offset: var(--ut-focus-outline-offset, var(--ve-focus-ring-offset));
+}
+/* Visuell versteckte FORMULAR-Eingaben (Star Rating: input.u-vh.is-focusable 0×0, Datei-Input 1×1):
+   kein Streu-Ring am unsichtbaren Kästchen – ihren Fokus zeigt immer der sichtbare Stellvertreter
+   (Ring um .a-StarRating, FileDrop, Checkbox-Kästchen). Versteckte Links/Buttons (Sprunglinks, die
+   beim Fokus sichtbar werden) behalten den Ring. 0,2,1 schlägt den Ring oben. */
+:is(input, select, textarea):is(.u-vh, .u-VisuallyHidden, .visuallyhidden, .visuallyHidden):focus-visible {
+  outline: none;
+}
+
+/* 6. Scrollbars: dezent, Farbe folgt dem Modus (scrollbar-color vererbt sich) */
+:root {
+  scrollbar-color: var(--ve-scrollbar-thumb) var(--ve-scrollbar-track);
+}
+:where(body *) {
+  scrollbar-width: thin;
+}
+
+/* 7. Bewegung reduzieren ------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ve-duration: 0s;
+  }
+}
+
+/* 8. Druck: weißes Papier, keine Schatten (Farb-Tokens: tokens/print.css; Band: shell.css §8) */
+@media print {
+  body {
+    background-color: var(--ve-surface);
+  }
+  .t-Body-title {
+    position: static;
+  }
+}

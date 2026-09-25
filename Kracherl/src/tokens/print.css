@@ -1,0 +1,16 @@
+/* ==========================================================================
+   Kracherl – Tokens DRUCK (wird von index.css mit Media „print“ geladen)
+   Der Druck ist immer hell: kracherl-dark.css lädt zusätzlich tokens/light.css unter
+   „print“ (Light braucht es nicht, Auto bleibt über „screen and (…dark)“ im Druck hell);
+   diese Datei nimmt danach Band, Blasen, Seitengrund und Schatten weg. Nur :root, nur Werte.
+   ========================================================================== */
+:root {
+  --kr-page: #FFFFFF;              /* Seitengrund = Papier */
+  --kr-band: #FFFFFF;              /* kein gelbes Band auf Papier (spart Toner) */
+  --kr-bubble: transparent;
+  --kr-bubble-ring: transparent;
+  --kr-content-pad-x: 0px;
+  --kr-card-shadow: 0 0 0 transparent;
+  --kr-float-shadow: none;
+  --kr-scrim: transparent;
+}

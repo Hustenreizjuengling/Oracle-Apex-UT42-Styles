@@ -1,0 +1,38 @@
+{
+  "name": "Veedel",
+  "prefix": "veedel",
+  "tokenPrefix": "ve",
+  "version": "1.0.0",
+  "description": "Veedel – Theme Styles für das Universal Theme 42: Kopfband in tiefem Markenblau, weiße Navigation mit blauem Aktiv-Block, Seitentitel als Verlaufsband (Tiefblau → Leuchtazur) mit großer weißer Headline, weiße eckige Flächen ohne Schatten auf hellgrauem Grund, Signalrot nur für die Hauptaktion, Gefahr als Karmin-Kontur. Dark in Nachtblau, Auto folgt dem Betriebssystem. Schrift: Figtree (OFL).",
+  "license": "Theme: MIT. Schrift Figtree: SIL Open Font License 1.1 (assets/fonts/LICENSE-Figtree-OFL.txt).",
+  "styles": [
+    {
+      "id": "light",
+      "name": "Veedel Light",
+      "staticId": "veedel-light",
+      "base": "Vita",
+      "entry": "src/veedel-light.css"
+    },
+    {
+      "id": "dark",
+      "name": "Veedel Dark",
+      "staticId": "veedel-dark",
+      "base": "Vita-Dark",
+      "entry": "src/veedel-dark.css"
+    },
+    {
+      "id": "auto",
+      "name": "Veedel Auto",
+      "staticId": "veedel-auto",
+      "base": "Vita",
+      "entry": "src/veedel-auto.css"
+    }
+  ],
+  "themeVariant": {
+    "number": 143,
+    "name": "Veedel",
+    "internalName": "VEEDEL",
+    "staticId": "veedel",
+    "defaultStyle": "light"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "oracle-apex-custom-themes",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Eigene Theme Styles für das Oracle APEX Universal Theme – Build, Test-Harness und Installer",
+  "type": "module",
+  "scripts": {
+    "fetch-reference": "node _tools/fetch-reference.mjs",
+    "build": "node _tools/build.mjs",
+    "shoot": "node _tools/shoot.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "browserslist": "^4.29.0",
+    "lightningcss": "^1.33.0",
+    "pixelmatch": "^7.2.0",
+    "pngjs": "^7.0.0",
+    "puppeteer-core": "^25.11.0"
+  }
+}

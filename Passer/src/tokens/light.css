@@ -1,0 +1,159 @@
+/* ==========================================================================
+   Passer – Farb-Tokens HELL „Tagdruck“ (Basis Vita)
+   Zwei Druckfarben auf kühlem Papier: Teal (Arbeitsfarbe) und Fluoreszenz-Pink
+   (Passer-Platte), dazu Gelb als Marker. Text in der Überdruck-Tusche: dort, wo Teal und
+   Pink übereinander drucken, entsteht ein tiefes Indigo – das ist die Schriftfarbe.
+   Nur :root-Deklarationen eigener Tokens (--pa-*) + --ut-color-scheme.
+   dark.css definiert exakt dieselben Namen. Kontrastwerte (WCAG 2.x) in Klammern:
+   gegen Papier = --pa-surface. Geprüft mit Passer/tools/check-tokens.mjs.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: light;
+
+  /* Papier und Bögen ------------------------------------------------------ */
+  --pa-surface: #ECEEF3;           /* Papier: Seitengrund, Navigation, Title Bar, Regionen */
+  --pa-sheet: #FAFAFD;             /* Bogen: Tabellen, Karten, Felder – ein hellerer Zettel auf dem Papier */
+  --pa-sheet-stripe: #F1F2F7;      /* Zebra-Zeile auf dem Bogen (Classic Report „Alternating Rows“) */
+  --pa-surface-sunken: #DFE2EB;    /* Rastertönung: Hinweisblöcke, Code, Readonly, Segment-Spur */
+  --pa-surface-raised: #FAFAFD;    /* schwebend: Menüs, Dialoge, Popups (Bogen) */
+  --pa-raised-hover: #E6E8F0;      /* Hover/Fokus auf schwebender Fläche: Menüeintrag, Tag im Popup */
+  --pa-ground: var(--pa-surface);  /* aktuelle Grundfläche: Papier; in schwebenden Ebenen = --pa-surface-raised (bridge §18) */
+  --pa-hover: #E3E6EE;             /* Zeilen-/Listen-Hover auf dem Papier */
+  --pa-press: #D9DDE7;             /* gedrückt auf dem Papier */
+  --pa-soft: #E0E3EC;              /* Sekundär-Fläche (Rastertönung der Tusche): Tabs, Chips, Zähler-Spur */
+  --pa-soft-hover: #D5D9E4;
+  --pa-soft-press: #C9CEDB;
+  --pa-tint-hover: rgb(30 32 73 / .07);    /* transparente Tusche-Tönung: Hover auf jeder Fläche */
+  --pa-tint-press: rgb(30 32 73 / .12);    /* dito gedrückt */
+  --pa-field: #FAFAFD;             /* Eingabefelder (Bogen) */
+  --pa-field-readonly: #E3E6EE;    /* schreibgeschützte Felder: Rastertönung */
+  --pa-scrim: rgb(23 23 46 / .42); /* Abdunklung hinter Dialogen/Schublade (Tusche) */
+
+  /* Kopf: Vollton Teal ----------------------------------------------------- */
+  --pa-header-bg: #00767C;         /* Teal-Vollton (Papier darauf 4.7, Weiß 5.4) */
+  --pa-header-text: #FAFAFD;       /* Schrift auf dem Kopf (5.2) */
+  --pa-header-hover: rgb(15 16 40 / .18);  /* Hover auf dem Kopf: Tusche über Teal */
+  --pa-header-press: rgb(15 16 40 / .30);
+  --pa-header-plate: #FF48B0;      /* Passer-Platte im Kopf (Logo, Raster) */
+  --pa-header-dots: #FF48B0;         /* Halbton-Punkte im Kopf (im Überdruck mit dem Teal) */
+
+  /* Text ------------------------------------------------------------------ */
+  --pa-ink: #1E2049;               /* Überdruck-Tusche: Text, Titel, Icons (13.3 Papier, 14.8 Bogen) */
+  --pa-ink-2: #33365E;             /* Labels, Nav-Text (9.9 Papier) */
+  --pa-muted: #585B7C;             /* Sekundärtext, Breadcrumb (5.7 Papier, 5.3 Raster) */
+  --pa-placeholder: #5E6182;       /* Platzhalter (5.8 im Feld) */
+  --pa-disabled: #8B8DA6;          /* deaktivierte Beschriftung (bewusst < 4.5, WCAG-Ausnahme) */
+  --pa-on-dark: #FFFFFF;           /* Text auf dunklen/gesättigten Flächen (in beiden Modi gleich) */
+  --pa-on-light: #1E2049;          /* Text auf hellen Flächen (in beiden Modi gleich) */
+
+  /* Linien ---------------------------------------------------------------- */
+  --pa-line-subtle: #DEE1EA;       /* sehr zart: innere Trenner in Karten/Listen */
+  --pa-line: #CDD1DD;              /* Haarlinie: Tabellenzeilen, Trenner, Region-Titel */
+  --pa-line-strong: #A9AEC2;       /* kräftig: Kontur der Sekundär-Buttons, Container */
+  --pa-edge: #767993;              /* Feldkante (3.7 Papier, 4.1 Bogen) – WCAG 1.4.11 */
+  --pa-edge-hover: #4A4D70;        /* Feldkante Hover */
+  --pa-head-rule: #1E2049;         /* Grundlinie unter Tabellenköpfen (Tusche) */
+
+  /* Arbeitsfarbe Teal (Primäraktion, Auswahl, Fokus, aktive Navigation) ---- */
+  --pa-accent: #00767C;            /* Vollton (Bogen-Weiß darauf 5.2) */
+  --pa-accent-hover: #00686E;
+  --pa-accent-press: #005A5F;
+  --pa-accent-on: #FAFAFD;
+  --pa-accent-text: #00696F;       /* als Text/Marke (5.6 Papier, 5.3 Tönung) */
+  --pa-accent-tint: #D3EBEA;       /* Auswahl-Fläche (Zeile, Menüeintrag) */
+  --pa-accent-tint-2: #BCE1DF;     /* kräftigere Auswahl */
+  --pa-accent-ring: rgb(0 118 124 / .22);  /* weicher Halo – nur Zusatz, nie einziger Fokus-Hinweis */
+
+  /* Passer-Platte: Fluoreszenz-Pink (nur Versatz, Raster, Druck – nie Text) -- */
+  --pa-plate: #FF48B0;             /* Fluoreszenz-Pink: zweiter Farbauszug */
+  --pa-overprint: multiply;        /* Druckfarben mischen sich: hell multipliziert, nachts addiert */
+
+  /* Marker: Gelb (Textauswahl, Treffer, heute) ------------------------------ */
+  --pa-marker: #FFE800;            /* Druckgelb als Fläche (Tusche darauf 12.4) */
+  --pa-marker-soft: #FFF3A6;       /* Marker hell: Such-Treffer, Hervorhebung in Reports (Tusche darauf) */
+  --pa-marker-text: #1E2049;       /* Schrift auf dem Marker-Gelb (in beiden Modi dunkel) */
+
+  /* Fokus (ein System, überall >= 3:1) ------------------------------------ */
+  --pa-focus-ring-color: #00696F;  /* Ring (5.6 Papier, 6.2 Bogen) */
+  --pa-focus-gap: var(--pa-ground); /* Innenring/Lücke des Doppelrings = aktuelle Grundfläche */
+
+  /* Links: Tusche mit Unterstrich, Hover-Unterstrich in Teal --------------- */
+  --pa-link-text: #1E2049;
+  --pa-link-underline: #767993;    /* = Feldkante: 3.7 Papier, 3.4 Raster */
+  --pa-link-underline-hover: #00696F;
+
+  /* Textauswahl: gelber Marker -------------------------------------------- */
+  --pa-selection: #FFEB3B;
+  --pa-selection-text: #1E2049;
+
+  /* Pflichtfeld-Markierung ------------------------------------------------ */
+  --pa-required-color: #B3263A;    /* = Danger-Text (5.6 Papier) */
+
+  /* Status: Fläche · Hover · on (Text auf Fläche) · Text · Tönung (Alert-Grund) --- */
+  --pa-success: #0E7446;           /* Druckgrün, verdichtet (Weiß 5.8) */
+  --pa-success-hover: #0B6139;
+  --pa-success-on: #FFFFFF;
+  --pa-success-text: #0E6B40;      /* 5.5 Papier */
+  --pa-success-tint: #D8EDE2;
+
+  --pa-warning: #FFC21A;           /* Sonnenblumengelb (Tusche darauf 9.6) */
+  --pa-warning-hover: #FFD04F;
+  --pa-warning-on: #1E2049;
+  --pa-warning-text: #8A5200;      /* 5.5 Papier */
+  --pa-warning-tint: #F8ECCB;
+
+  --pa-danger: #A91F33;            /* Druckrot, verdichtet (Weiß 7.2) – rot, nicht pink; dunkler als Teal */
+  --pa-danger-hover: #8E1A2B;
+  --pa-danger-on: #FFFFFF;
+  --pa-danger-text: #B3263A;       /* 5.6 Papier */
+  --pa-danger-tint: #F6DDE0;
+
+  --pa-info: #6A4BAA;              /* Druckviolett statt APEX-Blau (Weiß 6.6) */
+  --pa-info-on: #FFFFFF;
+  --pa-info-text: #5B3F99;         /* 6.9 Papier */
+  --pa-info-tint: #E5DFF3;
+
+  /* Code: Syntax-Hervorhebung (Prism – Code-Blöcke, Markdown-Editor) ------ */
+  /* Drei Druckfarben-Töne statt der VS-Code-Paletten; Kommentare = --pa-muted,
+     Namen/Eigenschaften = --pa-ink/--pa-ink-2 (Zuordnung: bridge.css §17). */
+  --pa-code-keyword: #00696F;      /* Schlüsselwörter, Selektoren, Klassen: Teal */
+  --pa-code-string: #0E6B40;       /* Zeichenketten: Grün */
+  --pa-code-number: #8A5200;       /* Zahlen, Wahrheitswerte, Konstanten: Ocker */
+
+  /* Tiefe: gestapelte Bögen statt weicher Schatten ------------------------ */
+  --pa-float-shadow: 0 0 0 1px rgb(30 32 73 / .14), .25rem .25rem 0 rgb(30 32 73 / .10), 0 12px 32px -12px rgb(30 32 73 / .28);
+  --pa-tooltip-bg: #1E2049;
+  --pa-tooltip-text: #FAFAFD;
+
+  /* Scrollbars ------------------------------------------------------------ */
+  --pa-scrollbar-thumb: rgb(30 32 73 / .28);
+  --pa-scrollbar-track: transparent;
+
+  /* Druckbild: Papierkorn und Halbton-Raster (Data-URI, einmal gerastert) --- */
+  /* Korn: feTurbulence (Kacheln nahtlos), Tusche mit 5 % Deckung – kein CSS-Filter auf Flächen */
+  --pa-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .118 0 0 0 0 .125 0 0 0 0 .286 .24 0 0 0 -.085'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+  --pa-halftone-ink: #FF48B0;      /* Punktfarbe der Raster auf Papier */
+
+  /* Icons ----------------------------------------------------------------- */
+  --pa-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M12 6l4 4 4-4' fill='none' stroke='%23585B7C' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Kategorie-/Diagrammpalette (--u-color-1…15): Druckfarben und ihre Überdrucke.
+     Chart-Reihenfolge des UT: 1,4,7,9,12,3,8,10,2,5,11,6. -on = Text darauf.
+     Geprüft (check-tokens.mjs): Kontrast zum Papier, CVD-Unterscheidbarkeit der ersten
+     Serien, gleicher Farbton hell/dunkel, Abstand zu Oracle-Blau. */
+  --pa-cat-1: #00767C;  --pa-cat-1-on: #FFFFFF;   /* Serie 1  Teal */
+  --pa-cat-2: #1B8049;  --pa-cat-2-on: #FFFFFF;   /* Serie 9  Druckgrün */
+  --pa-cat-3: #8C6D3F;  --pa-cat-3-on: #FFFFFF;   /* Serie 6  Mattgold */
+  --pa-cat-4: #EC4FA4;  --pa-cat-4-on: #1E2049;   /* Serie 2  Fluoreszenz-Pink */
+  --pa-cat-5: #EE6A36;  --pa-cat-5-on: #1E2049;   /* Serie 10 Orange */
+  --pa-cat-6: #4F6B3A;  --pa-cat-6-on: #FFFFFF;   /* Serie 12 Moos */
+  --pa-cat-7: #363C80;  --pa-cat-7-on: #FFFFFF;   /* Serie 3  Überdruck-Indigo (Teal × Pink) */
+  --pa-cat-8: #8E3B5E;  --pa-cat-8-on: #FFFFFF;   /* Serie 7  Burgund */
+  --pa-cat-9: #C68C00;  --pa-cat-9-on: #1E2049;   /* Serie 4  Sonnengelb */
+  --pa-cat-10: #D9677A; --pa-cat-10-on: #1E2049;  /* Serie 8  Koralle */
+  --pa-cat-11: #4B5A6B; --pa-cat-11-on: #FFFFFF;  /* Serie 11 Schiefer */
+  --pa-cat-12: #9B86D6; --pa-cat-12-on: #1E2049;  /* Serie 5  Violett */
+  --pa-cat-13: #1F5C5F; --pa-cat-13-on: #FFFFFF;  /* Tiefes Teal */
+  --pa-cat-14: #8B8DA6; --pa-cat-14-on: #1E2049;  /* Tusche 40 % */
+  --pa-cat-15: #585B7C; --pa-cat-15-on: #FFFFFF;  /* Tusche 70 % */
+}

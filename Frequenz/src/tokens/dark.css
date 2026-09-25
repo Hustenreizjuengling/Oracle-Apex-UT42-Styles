@@ -1,0 +1,154 @@
+/* ==========================================================================
+   Frequenz – Farb-Tokens DUNKEL (Basis Vita-Dark; im Auto-Style unter prefers-color-scheme: dark)
+   Schwarz wie eine App im Dunkelmodus: die Seite ist Schwarz, Tafeln und schwebende Ebenen
+   heben sich in dunklen Grautönen ab (Erhebung = Licht). Innere Flächen in Tafeln (Felder,
+   Tabellen, Karten) nehmen wieder die Seitenfarbe – dasselbe Prinzip wie hell, nur umgekehrt.
+   Der Markenblock bleibt #E20074 mit weißer Schrift; Akzent als Text wird aufgehellt
+   (#E20074 auf Schwarz läge bei 4.5 knapp darunter).
+   Exakt dieselben Namen wie light.css; nur :root, nur Werte.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: dark;
+
+  /* Marke ----------------------------------------------------------------- */
+  --fq-brand: #E20074;             /* Weiß darauf 4.7; gegen Schwarz 4.5 */
+  --fq-brand-hover: #C9006A;
+  --fq-brand-on: #FFFFFF;
+  --fq-brand-area: #660034;        /* große Markenfläche (geteilte Anmeldung): tiefes Magenta – volles #E20074
+                                      auf zwei Dritteln des Schirms blendete im Dunkeln (1.6 gegen Schwarz statt 4.5) */
+
+  /* Flächen -------------------------------------------------------------- */
+  --fq-surface: #000000;           /* Seite, Kopf, Navigation; innere Flächen in Tafeln */
+  --fq-panel: #1B1B1B;             /* Tafel (1.2 gegen Schwarz) */
+  --fq-surface-sunken: #1B1B1B;
+  --fq-surface-raised: #262626;    /* Menüs, Dialoge, Popups */
+  --fq-raised-hover: #383838;      /* Hover auf schwebender Fläche (1.3) */
+  --fq-ground: var(--fq-surface);
+  --fq-hover: #1B1B1B;             /* Zeilen-Hover auf Schwarz */
+  --fq-press: #262626;
+  --fq-soft: #2E2E2E;
+  --fq-soft-hover: #3A3A3A;
+  --fq-soft-press: #454545;
+  --fq-wash-hover: rgb(255 255 255 / .08);
+  --fq-wash-press: rgb(255 255 255 / .13);
+  --fq-button-fill: #1B1B1B;        /* Standard-Button: Tafelgrau – in der Tafel wie ohne Fläche; auf fest
+                                      weißen Flächen aus App-CSS bleibt die Schrift lesbar (15.8) */
+  --fq-button-fill-hover: #2E2E2E;  /* deckend – ein Schleier bliebe auf Weiß hell auf hell (12.5) */
+  --fq-button-fill-press: #3A3A3A;  /* (10.4) */
+  --fq-field: #000000;             /* Felder liegen als Vertiefung in der Tafel */
+  --fq-field-readonly: #141414;
+  --fq-scrim: rgb(0 0 0 / .7);
+
+  /* Text ------------------------------------------------------------------ */
+  --fq-ink: #F5F5F5;               /* 19.3 Seite, 15.9 Tafel */
+  --fq-ink-2: #D9D9D9;
+  --fq-muted: #A6A6A6;             /* 8.6 Seite, 7.1 Tafel, 5.9 schwebend */
+  --fq-placeholder: #8F8F8F;       /* 6.5 im Feld */
+  --fq-disabled: #666666;
+  --fq-on-dark: #FFFFFF;
+  --fq-on-light: #262626;
+
+  --fq-strong: #F5F5F5;            /* invertiert: helle Fläche, schwarze Schrift */
+  --fq-strong-hover: #FFFFFF;
+  --fq-strong-on: #000000;
+
+  /* Linien ---------------------------------------------------------------- */
+  --fq-line-subtle: #262626;
+  --fq-line: #3D3D3D;              /* Haarlinie (1.9 Seite) */
+  --fq-line-strong: #5C5C5C;
+  --fq-edge: #8A8A8A;              /* Feldkante (6.1 Seite, 5.0 Tafel, 4.3 schwebend) */
+  --fq-edge-hover: #C2C2C2;
+  --fq-button-edge: #A6A6A6;
+  --fq-head-rule: #5C5C5C;
+
+  /* Akzent ---------------------------------------------------------------- */
+  --fq-accent: #E20074;            /* Weiß darauf 4.7; als Marke gegen Schwarz 4.5, Tafel 3.7 */
+  --fq-accent-hover: #C9006A;
+  --fq-accent-press: #B00060;
+  --fq-accent-on: #FFFFFF;
+  --fq-accent-text: #FF6EB8;       /* 8.2 Seite, 6.7 Tafel, 5.9 schwebend, 4.6 Menü-Hover */
+  --fq-accent-tint: #3D0F26;
+  --fq-accent-tint-2: #5A1439;
+  --fq-accent-ring: rgb(255 110 184 / .3);
+
+  /* Fokus ----------------------------------------------------------------- */
+  --fq-focus-ring-color: #F5F5F5;  /* 19.3 Seite, 15.9 Tafel */
+  --fq-focus-gap: var(--fq-ground);
+
+  /* Links ----------------------------------------------------------------- */
+  --fq-link-text: #4FB8C8;         /* Petrol hell: 9.0 Seite, 7.5 Tafel */
+  --fq-link-underline: #4FB8C8;
+  --fq-link-underline-hover: #F5F5F5;
+
+  /* Textauswahl ----------------------------------------------------------- */
+  --fq-selection: #5A1439;
+  --fq-selection-text: #FFFFFF;
+
+  /* Pflichtfeld ----------------------------------------------------------- */
+  --fq-required-color: #FF9A70;
+
+  /* Status (helle Flächen, dunkle Schrift) -------------------------------- */
+  --fq-success: #3FB56F;
+  --fq-success-hover: #57C283;
+  --fq-success-on: #000000;
+  --fq-success-text: #5CCB8A;
+  --fq-success-tint: #0F2A1B;
+
+  --fq-warning: #F2B01E;
+  --fq-warning-hover: #F5C04A;
+  --fq-warning-on: #000000;
+  --fq-warning-text: #F7C548;
+  --fq-warning-tint: #2E2410;
+
+  --fq-danger: #FF7A45;            /* Schwarz darauf 8.1 – Orangerot, heller als der Akzent */
+  --fq-danger-hover: #FF8F66;
+  --fq-danger-on: #000000;
+  --fq-danger-text: #FF9A70;
+  --fq-danger-tint: #3A1210;
+
+  --fq-info: #4FB8C8;
+  --fq-info-hover: #6CC5D2;
+  --fq-info-on: #000000;
+  --fq-info-text: #6CC7D4;
+  --fq-info-tint: #0B2A30;
+
+  /* Code ------------------------------------------------------------------ */
+  --fq-code-keyword: #6CC7D4;
+  --fq-code-string: #5CCB8A;
+  --fq-code-number: #F7C548;
+
+  /* Tiefe ----------------------------------------------------------------- */
+  --fq-header-shadow: 0 1px 0 #262626;
+  --fq-card-shadow: 0 0 0 1px #5C5C5C;
+  --fq-float-shadow: 0 18px 44px -12px rgb(0 0 0 / .8), 0 0 0 1px rgb(255 255 255 / .1);
+  --fq-tooltip-bg: #F5F5F5;
+  --fq-tooltip-text: #000000;
+
+  /* Scrollbars ------------------------------------------------------------ */
+  --fq-scrollbar-thumb: rgb(255 255 255 / .28);
+  --fq-scrollbar-thumb-hover: rgb(255 255 255 / .45);
+  --fq-scrollbar-track: transparent;
+
+  /* Icons ----------------------------------------------------------------- */
+  /* Pfeil der Select-Listen: dünn und in --fq-muted wie die Symbole der übrigen Auswahlfelder
+     (Select One, Combobox, Popup-LOV, Date Picker – Font-APEX-Glyphen in Grau) */
+  --fq-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M11 6l5 5 5-5' fill='none' stroke='%23A6A6A6' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Kategorie-/Diagrammpalette dunkel: gleiche Farbtöne, aufgehellt (alle ≥ 5 : 1 gegen Schwarz),
+     jede ≥ 20 ΔE00 vom Akzent. */
+  --fq-cat-1: #29A6B1;  --fq-cat-1-on: #000000;
+  --fq-cat-2: #B89468;  --fq-cat-2-on: #000000;
+  --fq-cat-3: #5FCFBF;  --fq-cat-3-on: #000000;
+  --fq-cat-4: #F2B82E;  --fq-cat-4-on: #000000;
+  --fq-cat-5: #B8A6F0;  --fq-cat-5-on: #000000;
+  --fq-cat-6: #6FA35A;  --fq-cat-6-on: #000000;
+  --fq-cat-7: #7E868F;  --fq-cat-7-on: #000000;
+  --fq-cat-8: #8F9C2C;  --fq-cat-8-on: #000000;
+  --fq-cat-9: #A683F2;  --fq-cat-9-on: #000000;
+  --fq-cat-10: #B07366; --fq-cat-10-on: #000000;
+  --fq-cat-11: #F59A74; --fq-cat-11-on: #000000;
+  --fq-cat-12: #3DBA80; --fq-cat-12-on: #000000;
+  --fq-cat-13: #6E9E9C; --fq-cat-13-on: #000000;
+  --fq-cat-14: #BFC6CC; --fq-cat-14-on: #000000;
+  --fq-cat-15: #8D98A4; --fq-cat-15-on: #000000;
+}

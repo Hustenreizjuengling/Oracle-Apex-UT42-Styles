@@ -1,0 +1,15 @@
+/* ==========================================================================
+   Passepartout – Tokens DRUCK (wird von index.css mit Media „print“ geladen)
+   Der Druck ist immer hell: passepartout-dark.css lädt zusätzlich tokens/light.css unter
+   „print“ (Light braucht es nicht, Auto bleibt über „screen and (…dark)“ im Druck hell);
+   diese Datei nimmt danach Rahmen, Radien und Schatten weg. Nur :root, nur Werte.
+   ========================================================================== */
+:root {
+  --pp-frame: #FFFFFF;             /* Rahmen weg: Seitengrund = Papier */
+  --pp-gutter: 0px;
+  --pp-r-canvas: 0px;
+  --pp-canvas-pad-x: 0px;
+  --pp-canvas-shadow: none;
+  --pp-float-shadow: none;
+  --pp-scrim: transparent;
+}

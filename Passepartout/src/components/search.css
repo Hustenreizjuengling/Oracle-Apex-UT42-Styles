@@ -1,0 +1,382 @@
+/* ==========================================================================
+   Passepartout – Suche & Filter
+   Faceted Search, Smart Filters, Search Region, Chips.
+   Regeln: nur Tokens (--pp-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Leitlinie: Filter sind eine ruhige Liste auf der Leinwand – Überschrift, Optionen,
+   Haarlinie. Zähler stehen rechtsbündig als Tabellenziffern ohne Klammern. Chips sind
+   „Stücke Rahmen“ (--pp-soft), Aktionen wie „Clear“/„Show All“ sind Tusche-Links.
+   Magenta nur für Checked, Fokus und den aktiven Chip in der Suchleiste.
+   Grundwerte der Chips (Radius, Schrift, Flächen) setzt bridge.css §10.
+   ========================================================================== */
+
+/* 1. Chips (Smart Filters, Select/Combobox Many) --------------------------
+      Beschriftung in Graphit statt 70 % Deckkraft, Wert in Tusche, Zähler als
+      Tabellenziffer ohne Klammern, Entfernen-Kreuz in Graphit (Hover Tusche). */
+.a-Chip {
+  --a-chip-label-opacity: 1;
+  --a-chip-label-text-color: var(--pp-muted);
+  --a-chip-value-font-weight: var(--pp-fw-medium);
+  --a-chip-count-font-weight: var(--pp-fw-regular);
+  --a-chip-count-text-color: var(--pp-muted);
+  --a-chip-remove-border-radius: var(--pp-r-sm);
+  --a-chip-remove-text-color: var(--pp-muted);
+  --a-chip-remove-hover-text-color: var(--pp-ink);
+  --a-chip-remove-active-text-color: var(--pp-ink);
+  --a-chip-applied-border-color: transparent;
+  --a-chip-applied-hover-border-color: transparent;
+}
+/* Hover-Fläche (--pp-soft-hover) ist dunkel heller: Beschriftung dort in --pp-ink-2 (≥ 4,5 : 1) */
+.a-Chip:hover {
+  --a-chip-label-text-color: var(--pp-ink-2);
+  --a-chip-count-text-color: var(--pp-ink-2);
+}
+/* aktiver (per Tastatur gewählter) Chip in der Suchleiste = Auswahl: Magenta-Fläche,
+   Beschriftung und Zähler in der Schriftfarbe der Fläche */
+.a-Chip--applied.is-active {
+  --a-chip-label-text-color: currentColor;
+  --a-chip-count-text-color: currentColor;
+}
+.a-Chip-count {
+  font-variant-numeric: tabular-nums;
+}
+.a-Chip-count:before,
+.a-Chip-count:after {
+  content: none;
+}
+/* Chips im Smart Filter: 28 px hoch (Touch: Trefferfläche 40 px) */
+.a-FS-smartFilter .a-Chip {
+  --a-chip-padding-y: var(--pp-hairline);
+  --a-chip-padding-x: var(--pp-space-1);
+  min-block-size: max(1.75rem, var(--pp-hit-min));
+}
+.a-FS-smartFilter .a-Chip--input {
+  min-block-size: 0;
+}
+/* Platzhalter im Chip-Eingabefeld (Smart-Filter-Suche, Select/Combobox Many): app_ui nimmt die
+   Feldschrift (color: inherit) und dämpft nur über --a-field-placeholder-opacity – die Brücke setzt
+   die Deckkraft auf 1. Also dieselbe Farbe wie in jedem anderen Feld (gleiche Selektorliste, später). */
+.a-Chip--input input::placeholder,
+.a-Chip--input input.apex-item-text::placeholder {
+  color: var(--a-field-placeholder-text-color);
+}
+
+/* Vorschlags-Chips unter der Suchleiste: Stück Rahmen ohne Kante */
+.a-FS-suggestionChips {
+  --a-chip-background-color: var(--pp-soft);
+  --a-chip-border-color: transparent;
+  --a-chip-hover-background-color: var(--pp-soft-hover);
+  --a-chip-hover-border-color: transparent;
+  --a-chip-active-background-color: var(--pp-soft-press);
+  --a-chip-focus-background-color: var(--pp-soft);
+  --a-chip-label-spacing: var(--pp-space-1);
+}
+.a-FS-suggestionChips .a-Chips {
+  gap: var(--pp-space-1) 0;
+}
+/* Fokus: Beschriftung (öffnet das Facetten-Popup) und Wert (wendet den Filter an) sind je ein
+   Tab-Stopp – der Ring liegt innen um den fokussierten Teil, nicht um den ganzen Chip. app_ui
+   schiebt den Wert um --a-chip-label-spacing unter die Beschriftung; die Beschriftung gibt den
+   Platz als Rand zurück, sonst läge jeder Ring auf den Glyphen des anderen Teils. */
+.a-FS-suggestionChips .a-Chip-label,
+.a-FS-suggestionChips .a-Chip-text {
+  --ut-focus-outline-offset: calc(-1 * var(--pp-focus-ring-width));
+  border-radius: inherit;
+}
+.a-FS-suggestionChips .a-Chip-label {
+  margin-inline-end: var(--a-chip-label-spacing);
+}
+
+/* 2. Smart Filters: EIN Suchfeld (Feldkante, Fokus aus forms.css) --------- */
+.a-FS--smart {
+  --a-chip-input-font-size: var(--a-field-input-font-size);
+  --a-chip-input-line-height: var(--a-field-input-line-height);
+}
+@media (max-width: 479px) {
+  .a-FS--smart {
+    --a-chip-input-font-size: var(--ut-xs-field-input-font-size);
+    --a-chip-input-line-height: var(--ut-xs-field-input-line-height);
+  }
+}
+.a-FS-smartFilter .a-FS-searchBar {
+  min-block-size: var(--pp-control-h-lg);
+  align-items: center;
+  padding-inline-start: var(--pp-space-3);
+}
+.a-FS-searchBar > .a-Icon {
+  color: var(--pp-muted);
+  flex-shrink: 0;
+}
+.a-FS-suggestionChips {
+  margin-block-start: var(--pp-space-2);
+}
+
+/* 3. Faceted Search ------------------------------------------------------- */
+.a-FS,
+.a-FS-currentList,
+.a-FS-facetPopup {
+  --a-fs-control-seperator-border-color: var(--pp-line);
+  --a-fs-filter-group-border-color: var(--pp-line);
+  --a-fs-filter-group-label-text-color: var(--pp-muted);
+  --a-fs-search-container-border-color: var(--pp-line);
+  --a-fs-control-header-font-size: var(--pp-fs-md);
+  --a-fs-control-header-font-weight: var(--pp-fw-semibold);
+  --a-fs-control-header-line-height: var(--pp-lh-md);
+  --a-fs-control-header-padding-y: var(--pp-space-3);
+  --a-fs-control-body-padding-y: var(--pp-space-4);
+  --a-fs-control-item-badge-opacity: 1;
+  --a-fs-item-highlight-text-color: var(--pp-ink);
+  --a-fs-item-highlight-font-weight: var(--pp-fw-semibold);
+}
+
+/* Überschrift der Facette: Tusche 14/600, dicht über ihrer Liste */
+.a-FS--facets .a-FS-header {
+  letter-spacing: var(--pp-tracking-heading);
+  padding-block-start: var(--pp-space-4);
+  padding-block-end: var(--pp-space-2);
+}
+/* Facetten-Menü (⋮): Graphit, bei Hover Tusche (noUI-Button erbt sonst die Titelfarbe) */
+.a-FS-moreOptions {
+  color: var(--pp-muted);
+}
+
+/* Optionen: ganze Zeilenbreite, Zähler rechtsbündig in Graphit (Tabellenziffern) */
+.a-FS--facets .a-FS-body .apex-item-group--rc {
+  align-items: stretch;
+}
+.a-FS--facets .a-FS-body .apex-item-option {
+  display: flex;
+  align-items: center;
+  margin-block: 0;
+  min-block-size: max(1.625rem, var(--pp-hit-min));
+}
+.a-FS .apex-item-option input + label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--pp-space-2);
+  flex: 1 1 auto;
+  padding-inline-end: 0;
+}
+.a-FS .apex-item-option .label {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.a-FS .apex-item-option-badge,
+.a-FS-facetPopup .apex-item-option-badge {
+  margin-inline-start: auto;
+  font-size: var(--pp-fs-xs);
+  font-weight: var(--pp-fw-regular);
+  color: var(--pp-muted);
+  font-variant-numeric: tabular-nums;
+}
+.a-FS .apex-item-option-badge:before,
+.a-FS .apex-item-option-badge:after,
+.a-FS-facetPopup .apex-item-option-badge:before,
+.a-FS-facetPopup .apex-item-option-badge:after {
+  content: none;
+}
+/* Fokus einer Option: EIN Ring am Kästchen. UT Core zeichnet ihn bei :focus über den Hook an
+   label::before (bzw. bei a-FS--hideRadio/is-excluded an .label); base.css würde zusätzlich die
+   Zeile umranden – aber nur die Option mit tabindex="0", nicht die per Pfeiltaste erreichten (-1).
+   Darum Hook an der Option aus, am Label wieder an. Maus-Fokus: kein Ring. */
+.a-FS .apex-item-option {
+  --ut-focus-outline: none;
+}
+.a-FS .apex-item-option label {
+  --ut-focus-outline: var(--pp-focus-outline);
+}
+.a-FS .apex-item-option:focus:not(:focus-visible) input + label:before,
+.a-FS-facetPopupContent .apex-item-option:focus:not(:focus-visible) input + label:before {
+  outline: none;
+}
+/* Gruppen-Überschrift innerhalb einer Facette (Unterlisten) */
+.a-FS .apex-group-label {
+  font-size: var(--pp-fs-xs);
+  line-height: var(--pp-lh-xs);
+  font-weight: var(--pp-fw-medium);
+  color: var(--pp-muted);
+}
+
+/* „Clear“, „Clear All“, „Show All“: Tusche-Links (Vita: Primärblau als Textfarbe) */
+.a-FS-clearAll,
+.a-FS-clearButton,
+.a-FS-toggleOverflow {
+  --a-button-font-size: var(--pp-fs-sm);
+  --a-button-line-height: var(--pp-lh-sm);
+  --a-button-font-weight: var(--pp-fw-medium);
+  --a-button-text-color: var(--pp-link-text);
+  --a-button-hover-text-color: var(--pp-link-text);
+  --a-button-active-text-color: var(--pp-link-text);
+  --a-button-focus-text-color: var(--pp-link-text);
+  text-decoration-line: underline;
+  text-decoration-color: var(--pp-link-underline);
+  text-decoration-thickness: var(--pp-link-underline-width);
+  text-underline-offset: var(--pp-link-underline-offset);
+}
+.a-FS-clearAll:hover,
+.a-FS-clearButton:hover,
+.a-FS-toggleOverflow:hover {
+  text-decoration-color: var(--pp-link-underline-hover);
+  text-decoration-thickness: var(--pp-link-underline-width-hover);
+}
+.a-FS-clearButton {
+  --a-button-font-size: var(--pp-fs-xs);
+  --a-button-font-weight: var(--pp-fw-regular);
+}
+
+/* Suchfeld über den Facetten: bündig mit den Überschriften, Haarlinie darunter */
+.a-FS-search {
+  --a-fs-search-container-padding-y: var(--pp-space-3);
+}
+
+/* Aktuelle Filter: Gesamtzahl als ruhige Zeile, Filter als Chips (Stück Rahmen) */
+.a-FS-currentList {
+  --ut-fs-total-font-size: var(--pp-fs-lg);
+  --ut-fs-total-font-weight: var(--pp-fw-semibold);
+}
+.a-FS-totalArea {
+  line-height: var(--pp-lh-lg);
+  letter-spacing: var(--pp-tracking-heading);
+}
+.a-FS-totalLabel {
+  color: var(--pp-muted);
+  font-weight: var(--pp-fw-medium);
+  margin-inline-end: var(--pp-space-1);
+}
+.a-FS-totalCount {
+  font-variant-numeric: tabular-nums;
+}
+.a-FS-currentLabel {
+  font-size: var(--pp-fs-xs);
+  font-weight: var(--pp-fw-medium);
+}
+.a-FS-clear {
+  --a-button-padding-y: var(--pp-space-1);
+  --a-button-padding-x: var(--pp-space-2);
+  --a-button-font-size: var(--pp-fs-sm);
+  --a-button-line-height: var(--pp-lh-sm);
+  --a-button-font-weight: var(--pp-fw-medium);
+  --a-button-border-radius: var(--pp-r-sm);
+  --a-button-text-color: var(--pp-ink);
+  --a-button-background-color: var(--pp-soft);
+  --a-button-hover-background-color: var(--pp-soft-hover);
+  --a-button-active-background-color: var(--pp-soft-press);
+  --a-button-focus-background-color: var(--pp-soft);
+}
+.a-FS-clear .a-Icon.icon-multi-remove {
+  color: var(--pp-muted);
+}
+.a-FS-clear:hover .a-Icon.icon-multi-remove {
+  color: var(--pp-ink);
+}
+.a-FS-currentList--includeName .a-FS-currentItem {
+  border-radius: var(--pp-r-md);
+}
+
+/* Facetten-Diagramme: im Dashboard als ruhige Fläche mit Haarlinie (im Popup ohne) */
+.a-FS-facetsDashboard {
+  --a-fs-chart-border-color: var(--pp-line);
+  --a-fs-chart-border-radius: var(--pp-r-lg);
+  --a-fs-chart-background-color: var(--pp-surface);
+  --a-fs-chart-shadow: none;
+}
+.a-FS-facetChart-title {
+  letter-spacing: var(--pp-tracking-heading);
+}
+
+/* Facetten-Popup (Smart Filters): Optionen als Menüliste – Hover wie Menüeinträge,
+   Fokus = Ring nach innen um die Zeile (app_ui); der zweite Ring am Kästchen (UT Core) entfällt */
+.a-FS-facetPopup .apex-item-option:focus input + label:before {
+  outline: none;
+}
+/* Per Pfeiltaste erreichte Optionen tragen tabindex="-1": base.css lässt sie aus, app_ui setzt
+   outline: none – ohne diese Regel hätten sie gar keinen Fokus-Hinweis (Versatz nach innen: app_ui) */
+.a-FS-facetPopup .apex-item-option:focus-visible,
+.a-FS-overflowFacetsContent .apex-item-option:focus-visible {
+  outline: var(--ut-focus-outline);
+}
+.a-FS-facetPopup .apex-item-checkbox .apex-item-option:not(.is-disabled):hover,
+.a-FS-facetPopup .apex-item-radio .apex-item-option:not(.is-disabled):hover {
+  background-color: var(--a-menu-focused-background-color);
+}
+
+/* 4. Search Region (Suchergebnisse) --------------------------------------- */
+.t-ResultsRegion {
+  --a-searchresults-gap: var(--pp-space-2);
+  --a-resultsitem-item-gap: var(--pp-space-3);
+  --a-resultsitem-padding-x: var(--pp-space-4);
+  --a-resultsitem-padding-y: var(--pp-space-3);
+  --a-resultsitem-border-color: var(--pp-line);
+  --a-resultsitem-border-radius: var(--pp-r-lg);
+  --a-resultsitem-text-color: var(--pp-ink);
+  --a-resultsitem-font-size: var(--pp-fs-sm);
+  --a-resultsitem-line-height: var(--pp-lh-sm);
+  --a-resultsitem-content-gap: var(--pp-space-1);
+  --a-resultsitem-title-font-size: var(--pp-fs-md);
+  --a-resultsitem-title-line-height: var(--pp-lh-md);
+  --a-resultsitem-title-font-weight: var(--pp-fw-semibold);
+  --a-resultsitem-subtitle-font-size: var(--pp-fs-sm);
+  --a-resultsitem-subtitle-line-height: var(--pp-lh-sm);
+  --a-resultsitem-subtitle-font-weight: var(--pp-fw-medium);
+  --a-resultsitem-subtitle-text-color: var(--pp-ink-2);
+  --a-resultsitem-description-font-size: var(--pp-fs-sm);
+  --a-resultsitem-description-line-height: var(--pp-lh-sm);
+  --a-resultsitem-description-text-color: var(--pp-ink-2);
+  --a-resultsitem-attributes-font-size: var(--pp-fs-xs);
+  --a-resultsitem-attributes-line-height: var(--pp-lh-xs);
+  --a-resultsitem-attributes-text-color: var(--pp-muted);
+  --a-resultsitem-misc-font-size: var(--pp-fs-xs);
+  --a-resultsitem-misc-line-height: var(--pp-lh-xs);
+  --a-resultsitem-initials-font-size: var(--pp-fs-xs);
+  --a-resultsitem-initials-font-weight: var(--pp-fw-semibold);
+  --a-resultsitem-badge-font-size: var(--pp-fs-xs);
+  --a-resultsitem-badge-font-weight: var(--pp-fw-semibold);
+  --a-resultsitem-badge-border-radius: var(--pp-r-sm);
+  --a-resultsitem-badge-padding: .1875rem var(--pp-space-2);
+  --a-resultsitem-badge-text-color: var(--pp-ink);
+  --a-searchresults-pagination-color: var(--pp-muted);
+  --a-searchresults-highlight-font-weight: var(--pp-fw-bold);
+  --ut-resultsregion-border-radius: var(--pp-r-lg);
+  --ut-resultsregion-search-padding-y: var(--pp-space-3);
+  --ut-resultsregion-search-padding-x: var(--pp-space-4);
+}
+.a-ResultsItem-title {
+  letter-spacing: var(--pp-tracking-heading);
+}
+.a-ResultsItem-badge,
+.a-SearchResults-pageRange {
+  font-variant-numeric: tabular-nums;
+}
+.t-ResultsRegion--iconMd {
+  --a-resultsitem-initials-font-size: var(--pp-fs-md);
+}
+.t-ResultsRegion--iconLg {
+  --a-resultsitem-initials-font-size: var(--pp-fs-xl);
+}
+/* Titelzeile mittig zum Icon/Initialen-Kreis (32 px) – bei mittleren/großen Icons oben */
+.a-ResultsItem-icon + .a-ResultsItem-content,
+.a-ResultsItem-initials + .a-ResultsItem-content,
+.a-ResultsItem-image + .a-ResultsItem-content {
+  padding-block-start: calc((2rem - var(--a-resultsitem-title-line-height)) / 2);
+}
+.t-ResultsRegion--iconMd .a-ResultsItem-content,
+.t-ResultsRegion--iconLg .a-ResultsItem-content {
+  padding-block-start: 0;
+}
+/* Varianten: UT setzt ihre Werte auf demselben Element wie die Grundwerte oben – daher
+   hier (später geladen) erneut. Boxed = EIN Blatt mit Haarlinie, abgesenkte Suchzeile;
+   Flat = nur Haarlinien, bündig mit dem Suchfeld. */
+.t-ResultsRegion--boxed {
+  --a-searchresults-gap: 0px;
+  --ut-resultsregion-border-color: var(--pp-line);
+}
+.t-ResultsRegion--boxed .t-ResultsRegion-search {
+  border-start-start-radius: calc(var(--pp-r-lg) - var(--pp-hairline));
+  border-start-end-radius: calc(var(--pp-r-lg) - var(--pp-hairline));
+}
+.t-ResultsRegion--flat {
+  --a-searchresults-gap: var(--pp-space-3);
+  --a-resultsitem-padding-x: 0px;
+  --a-resultsitem-padding-y: 0px;
+  --a-resultsitem-border-radius: 0px;
+}

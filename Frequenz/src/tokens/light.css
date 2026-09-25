@@ -1,0 +1,158 @@
+/* ==========================================================================
+   Frequenz – Farb-Tokens HELL (Basis Vita)
+   Nur :root-Deklarationen eigener Tokens (--fq-*) + --ut-color-scheme.
+   dark.css definiert exakt dieselben Namen. Kontrastwerte (WCAG 2.x) in Klammern:
+   gegen Seite = --fq-surface (Weiß), Tafel = --fq-panel (Hellgrau). Geprüft mit
+   Frequenz/tools/check-tokens.mjs.
+   Bild: weiße Seite, hellgraue Tafeln mit großem Radius, darin wieder Weißes (Felder,
+   Tabellen, Karten). Die Akzentfarbe ist die Marke oben links und die Primäraktion.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: light;
+
+  /* Marke: der Markenblock oben links (Kopf, Login) --------------------- */
+  --fq-brand: #E20074;             /* Blockfläche (Weiß darauf 4.7) */
+  --fq-brand-hover: #C9006A;       /* Block als Link überfahren (Weiß 5.7) */
+  --fq-brand-on: #FFFFFF;          /* Logo/Schrift im Block */
+  --fq-brand-area: var(--fq-brand); /* große Markenfläche: geteilte Anmeldung (hell = Block-Magenta) */
+
+  /* Flächen -------------------------------------------------------------- */
+  --fq-surface: #FFFFFF;           /* Seite: Kopf, Navigation, Inhalt; innere Flächen in Tafeln */
+  --fq-panel: #F4F4F6;             /* Tafel: Regionen, Hero, Hinweisblöcke (1.1 gegen Weiß) */
+  --fq-surface-sunken: #F4F4F6;    /* abgesenkt: Toolbars, Readonly, Code, Tabellenkopf-Band */
+  --fq-surface-raised: #FFFFFF;    /* schwebend: Menüs, Dialoge, Popups (mit Schatten) */
+  --fq-raised-hover: #EDEDED;      /* Hover/Fokus auf schwebender Fläche (1.2) */
+  --fq-ground: var(--fq-surface);  /* aktuelle Grundfläche; in schwebenden Ebenen = --fq-surface-raised (bridge §18) */
+  --fq-hover: #F4F4F6;             /* Zeilen-/Listen-Hover auf Weiß */
+  --fq-press: #EDEDED;             /* gedrückt auf Weiß */
+  --fq-soft: #EDEDED;              /* weiche Füllung: Chips, Badges, Zähler-Grund, Icon-Kacheln */
+  --fq-soft-hover: #E3E3E3;
+  --fq-soft-press: #D9D9D9;
+  --fq-wash-hover: rgb(0 0 0 / .05);   /* Hover auf beliebigem Grund (transparente Buttons, Kopf) */
+  --fq-wash-press: rgb(0 0 0 / .09);
+  --fq-button-fill: transparent;    /* Standard-Button: Kontur ohne Fläche (Schrift 15.1 Seite, 13.8 Tafel) */
+  --fq-button-fill-hover: var(--fq-wash-hover);   /* Schleier: passt auf Seite und Tafel */
+  --fq-button-fill-press: var(--fq-wash-press);
+  --fq-field: #FFFFFF;             /* Eingabefelder */
+  --fq-field-readonly: #F4F4F6;
+  --fq-scrim: rgb(0 0 0 / .45);    /* Abdunklung hinter Dialogen/Schublade */
+
+  /* Text ------------------------------------------------------------------ */
+  --fq-ink: #262626;               /* Anthrazit: Überschriften, Text, Icons (15.1 Seite, 13.8 Tafel) */
+  --fq-ink-2: #383838;             /* Fließtext zweiter Ordnung, Labels (11.7 Seite, 10.7 Tafel) */
+  --fq-muted: #6B6B6B;             /* Sekundärtext, Breadcrumb (5.3 Seite, 4.9 Tafel) */
+  --fq-placeholder: #737373;       /* Platzhalter (4.7 im Feld) */
+  --fq-disabled: #A3A3A3;          /* deaktivierte Beschriftung (bewusst < 4.5, WCAG-Ausnahme) */
+  --fq-on-dark: #FFFFFF;           /* Text auf dunklen/gesättigten Flächen (in beiden Modi gleich) */
+  --fq-on-light: #262626;          /* Text auf hellen Flächen (in beiden Modi gleich) */
+
+  /* Kräftige Neutralfläche: aktive Pille, aktive Seite der Pagination, Tooltip */
+  --fq-strong: #262626;            /* Weiß darauf 15.1 */
+  --fq-strong-hover: #000000;
+  --fq-strong-on: #FFFFFF;
+
+  /* Linien ---------------------------------------------------------------- */
+  --fq-line-subtle: #EDEDED;       /* zart: Zeilentrenner, Kartenkante auf der Tafel */
+  --fq-line: #D0D0D0;              /* Haarlinie: Trenner, Kartenkante auf Weiß (1.6) */
+  --fq-line-strong: #B2B2B2;       /* kräftig: Rand von Simple-Buttons, Tabellenkopf-Linie (2.2) */
+  --fq-edge: #7C7C7C;              /* Feld-/Checkbox-Kante (4.2 Seite, 3.8 Tafel) – WCAG 1.4.11 */
+  --fq-edge-hover: #383838;        /* Feldkante Hover */
+  --fq-button-edge: #6B6B6B;       /* Rand der Standard-Buttons (5.3 Seite, 4.9 Tafel) */
+  --fq-head-rule: #B2B2B2;         /* Linie unter Tabellenköpfen */
+
+  /* Akzent (Primäraktion, Auswahl, aktive Navigation) ------------ */
+  --fq-accent: #E20074;            /* Fläche mit Schrift (Weiß 4.7), Checkbox-/Schalter-Marke (4.7 Seite) */
+  --fq-accent-hover: #C9006A;      /* Weiß 5.7 */
+  --fq-accent-press: #B00060;      /* Weiß 7.0 */
+  --fq-accent-on: #FFFFFF;
+  --fq-accent-text: #D0006F;       /* Akzent als Text: aktive Navigation (5.4 Seite, 4.9 Tafel) */
+  --fq-accent-tint: #FDEAF4;       /* Auswahl-Fläche (Zeile, Menüeintrag) */
+  --fq-accent-tint-2: #F9CFE5;     /* kräftigere Auswahl */
+  --fq-accent-ring: rgb(226 0 116 / .22);  /* weicher Halo – nur Zusatz, nie einziger Fokus-Hinweis */
+
+  /* Fokus: Anthrazit-Ring mit weißer Lücke (überall >= 3:1, unabhängig vom Akzent) */
+  --fq-focus-ring-color: #262626;  /* 15.1 Seite, 13.8 Tafel */
+  --fq-focus-gap: var(--fq-ground); /* Lücke des Doppelrings = aktuelle Grundfläche */
+
+  /* Links: Petrol mit Unterstrich ---------------------------------------- */
+  --fq-link-text: #00748F;         /* 5.4 Seite, 4.9 Tafel; ΔE00 15 zu Oracle-Blau (#00739F läge bei 9) */
+  --fq-link-underline: #00748F;
+  --fq-link-underline-hover: #262626;
+
+  /* Textauswahl ----------------------------------------------------------- */
+  --fq-selection: #F9CFE5;
+  --fq-selection-text: #262626;
+
+  /* Pflichtfeld-Markierung ------------------------------------------------ */
+  --fq-required-color: #A02A08;    /* = Danger-Text (7.4 Seite) */
+
+  /* Status: Fläche · Hover · on (Text auf Fläche) · Text · Tönung (Alert-Grund) --- */
+  --fq-success: #0B7A3E;           /* Weiß darauf 5.4 */
+  --fq-success-hover: #096433;
+  --fq-success-on: #FFFFFF;
+  --fq-success-text: #0B7A3E;      /* 5.4 Seite, 4.8 Tönung */
+  --fq-success-tint: #E6F4EC;
+
+  --fq-warning: #F2A400;           /* Anthrazit darauf 7.3 */
+  --fq-warning-hover: #F5B42E;
+  --fq-warning-on: #262626;
+  --fq-warning-text: #8A5A00;      /* 5.9 Seite, 5.4 Tönung */
+  --fq-warning-tint: #FDF3DC;
+
+  --fq-danger: #A02A08;            /* Weiß darauf 7.4 – Ziegelrot, deutlich dunkler als der Akzent (L .08 vs .17) */
+  --fq-danger-hover: #86230A;
+  --fq-danger-on: #FFFFFF;
+  --fq-danger-text: #A02A08;       /* 7.4 Seite, 6.4 Tönung */
+  --fq-danger-tint: #FBE9E7;
+
+  --fq-info: #00748F;              /* Petrol statt APEX-Blau (Weiß darauf 5.4) */
+  --fq-info-hover: #005F75;
+  --fq-info-on: #FFFFFF;
+  --fq-info-text: #00748F;         /* 5.4 Seite, 4.7 Tönung */
+  --fq-info-tint: #E3F2F5;
+
+  /* Code: Syntax-Hervorhebung (Prism – Code-Blöcke, Markdown-Editor) ------ */
+  /* Kommentare = --fq-muted, Namen/Eigenschaften = --fq-ink/--fq-ink-2 (bridge.css §17).
+     Kein Akzent, kein Blau; ≥ 4.5 auf Seite, Tafel, Feld und schwebend. */
+  --fq-code-keyword: #00748F;      /* Petrol */
+  --fq-code-string: #0B7A3E;       /* Grün */
+  --fq-code-number: #8A5A00;       /* Ocker */
+
+  /* Tiefe ----------------------------------------------------------------- */
+  --fq-header-shadow: 0 1px 0 rgb(0 0 0 / .06), 0 4px 16px -6px rgb(0 0 0 / .12);  /* weicher Schatten unter dem Kopf */
+  --fq-card-shadow: 0 6px 24px -10px rgb(0 0 0 / .18);     /* Karten-Hover */
+  --fq-float-shadow: 0 16px 40px -12px rgb(0 0 0 / .24), 0 2px 8px rgb(0 0 0 / .06), 0 0 0 1px rgb(0 0 0 / .05);
+  --fq-tooltip-bg: #262626;
+  --fq-tooltip-text: #FFFFFF;
+
+  /* Scrollbars ------------------------------------------------------------ */
+  --fq-scrollbar-thumb: rgb(0 0 0 / .26);
+  --fq-scrollbar-thumb-hover: rgb(0 0 0 / .42);
+  --fq-scrollbar-track: transparent;
+
+  /* Icons ----------------------------------------------------------------- */
+  /* Pfeil der Select-Listen: dünn und in --fq-muted wie die Symbole der übrigen Auswahlfelder
+     (Select One, Combobox, Popup-LOV, Date Picker – Font-APEX-Glyphen in Grau) */
+  --fq-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M11 6l5 5 5-5' fill='none' stroke='%236B6B6B' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Kategorie-/Diagrammpalette (--u-color-1…15), CVD-geprüft.
+     Chart-Reihenfolge des UT: 1,4,7,9,12,3,8,10,2,5,11,6 – Petrol, Sonnengelb, Graphit, Violett,
+     Grün, Türkis … Die ersten 8 Serien sind auch bei Protan-/Deuteranopie unterscheidbar.
+     Jede Kategorie liegt ≥ 20 ΔE00 vom Akzent (keine Datenfarbe liest sich als Auswahl)
+     und hat hell und dunkel denselben Farbton (check-tokens.mjs). -on = Text darauf. */
+  --fq-cat-1: #00748F;  --fq-cat-1-on: #FFFFFF;   /* Serie 1  Petrol */
+  --fq-cat-2: #8C6A3F;  --fq-cat-2-on: #FFFFFF;   /* Serie 9  Kaffee */
+  --fq-cat-3: #3BA89A;  --fq-cat-3-on: #262626;   /* Serie 6  Türkis */
+  --fq-cat-4: #D99A00;  --fq-cat-4-on: #262626;   /* Serie 2  Sonnengelb */
+  --fq-cat-5: #9A86D6;  --fq-cat-5-on: #262626;   /* Serie 10 Lavendel */
+  --fq-cat-6: #3E6B2F;  --fq-cat-6-on: #FFFFFF;   /* Serie 12 Tanne */
+  --fq-cat-7: #525A63;  --fq-cat-7-on: #FFFFFF;   /* Serie 3  Graphit */
+  --fq-cat-8: #6B7A1F;  --fq-cat-8-on: #FFFFFF;   /* Serie 7  Oliv */
+  --fq-cat-9: #7446C4;  --fq-cat-9-on: #FFFFFF;   /* Serie 4  Violett */
+  --fq-cat-10: #8A4B3D; --fq-cat-10-on: #FFFFFF;  /* Serie 8  Rotbraun */
+  --fq-cat-11: #E07B53; --fq-cat-11-on: #262626;  /* Serie 11 Koralle */
+  --fq-cat-12: #187A50; --fq-cat-12-on: #FFFFFF;  /* Serie 5  Grün */
+  --fq-cat-13: #2E5A5E; --fq-cat-13-on: #FFFFFF;  /* Tiefsee */
+  --fq-cat-14: #8E969E; --fq-cat-14-on: #262626;  /* Nebel */
+  --fq-cat-15: #5E6873; --fq-cat-15-on: #FFFFFF;  /* Schiefer */
+}

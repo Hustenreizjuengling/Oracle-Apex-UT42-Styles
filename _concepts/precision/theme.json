@@ -1,0 +1,10 @@
+{
+  "name": "Nonius",
+  "prefix": "precision",
+  "version": "0.1.0",
+  "description": "Nonius – präzise wie ein Messgerät: Graphit-Gehäuse, weiße Anzeigen, Tusche auf 1-px-Linien, genau eine gelbe Taste. Signatur: die Nonius-Skala mit gelber Nullmarke unter dem Seitentitel. Hell (Tag) und Dunkel (Nachtmodus mit Signalamber).",
+  "styles": [
+    { "id": "light", "name": "Nonius Light", "base": "Vita", "entry": "src/light.css" },
+    { "id": "dark", "name": "Nonius Dark", "base": "Vita-Dark", "entry": "src/dark.css" }
+  ]
+}

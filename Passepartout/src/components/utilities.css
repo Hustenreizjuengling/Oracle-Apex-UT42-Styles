@@ -1,0 +1,133 @@
+/* ==========================================================================
+   Passepartout – Hilfsklassen
+   u-color-*, Status-Modifier (u-hot/-success/-warning/-danger/-info/-normal).
+   Regeln: nur Tokens (--pp-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Die Palette selbst (--u-color-1…45, auch der Zyklus .u-colors) setzt bridge.css §15;
+   hier nur, was UT daraus als Text/Fläche macht – so, dass es in hell UND dunkel lesbar ist.
+   ========================================================================== */
+
+/* 1. Status-Modifier ----------------------------------------------------------
+   UT färbt *-text mit der FLÄCHEN-Farbe (--ut-palette-*): Warnung auf Weiß 2,1:1, Danger
+   4,2:1, Hot (Magenta-Fläche) im Dunkeln 2,7:1. Text nimmt daher die Text-Tokens. Flächen
+   (*-bg) bekommen die passende Schrift dazu, damit Text darauf nie zufällig erbt. */
+.u-hot-text     { color: var(--pp-accent-text); }
+.u-success-text { color: var(--pp-success-text); }
+.u-warning-text { color: var(--pp-warning-text); }
+.u-danger-text  { color: var(--pp-danger-text); }
+.u-info-text    { color: var(--pp-info-text); }
+.u-hot-bg       { color: var(--pp-accent-on); }
+.u-success-bg   { color: var(--pp-success-on); }
+.u-warning-bg   { color: var(--pp-warning-on); }
+.u-danger-bg    { color: var(--pp-danger-on); }
+.u-info-bg      { color: var(--pp-info-on); }
+/* „normal“ = Stück Rahmen (wie Sekundär-Button), nicht der fast schwarze Seitengrund im Dunkeln */
+.u-normal {
+  background-color: var(--pp-soft);
+  color: var(--pp-ink);
+}
+.u-normal-bg {
+  color: var(--pp-surface);                    /* Fläche = Tusche (UT), Schrift = Leinwand */
+}
+
+/* 2. Palette als Text: .u-color-N-text/-txt ---------------------------------------
+   Die Kategorie-Farben sind für Flächen und Diagramme abgestimmt; als Schrift erreichen
+   viele < 4,5:1 (Lagune/Nebel hell 2,5:1, die dunklen Stufen 31–45 im Dunkeln bis 1,5:1).
+   Mischung mit Tusche: im Hellen dunkler, im Dunkeln heller – der Farbton bleibt, jede
+   Stufe ≥ 4,5:1 auf der Leinwand. Anteil je Stufe = kleinster Tusche-Anteil, der in hell UND
+   dunkel 4,5:1 auf --pp-surface erreicht, + 6 % Reserve, in 5er-Schritten (gerechnet aus
+   tokens/light.css + dark.css, Stand 2026-09-23; bei Palettenänderung neu rechnen). Stufen
+   ohne Eintrag erreichen 4,5:1 schon unverändert. */
+.u-color-1-txt, .u-color-1-text   { color: color-mix(in srgb, var(--u-color-1), var(--pp-ink) 25%); }
+.u-color-3-txt, .u-color-3-text   { color: color-mix(in srgb, var(--u-color-3), var(--pp-ink) 45%); }
+.u-color-4-txt, .u-color-4-text   { color: color-mix(in srgb, var(--u-color-4), var(--pp-ink) 30%); }
+.u-color-5-txt, .u-color-5-text   { color: color-mix(in srgb, var(--u-color-5), var(--pp-ink) 35%); }
+.u-color-6-txt, .u-color-6-text   { color: color-mix(in srgb, var(--u-color-6), var(--pp-ink) 10%); }
+.u-color-7-txt, .u-color-7-text   { color: color-mix(in srgb, var(--u-color-7), var(--pp-ink) 5%); }   /* 4,52:1 unverändert – knapp */
+.u-color-8-txt, .u-color-8-text   { color: color-mix(in srgb, var(--u-color-8), var(--pp-ink) 40%); }
+.u-color-9-txt, .u-color-9-text   { color: color-mix(in srgb, var(--u-color-9), var(--pp-ink) 20%); }
+.u-color-10-txt, .u-color-10-text { color: color-mix(in srgb, var(--u-color-10), var(--pp-ink) 20%); }
+.u-color-11-txt, .u-color-11-text { color: color-mix(in srgb, var(--u-color-11), var(--pp-ink) 40%); }
+.u-color-12-txt, .u-color-12-text { color: color-mix(in srgb, var(--u-color-12), var(--pp-ink) 5%); }  /* 4,67:1 unverändert – knapp */
+.u-color-13-txt, .u-color-13-text { color: color-mix(in srgb, var(--u-color-13), var(--pp-ink) 25%); }
+.u-color-14-txt, .u-color-14-text { color: color-mix(in srgb, var(--u-color-14), var(--pp-ink) 40%); }
+.u-color-16-txt, .u-color-16-text { color: color-mix(in srgb, var(--u-color-16), var(--pp-ink) 40%); }
+.u-color-17-txt, .u-color-17-text { color: color-mix(in srgb, var(--u-color-17), var(--pp-ink) 45%); }
+.u-color-18-txt, .u-color-18-text { color: color-mix(in srgb, var(--u-color-18), var(--pp-ink) 55%); }
+.u-color-19-txt, .u-color-19-text { color: color-mix(in srgb, var(--u-color-19), var(--pp-ink) 50%); }
+.u-color-20-txt, .u-color-20-text { color: color-mix(in srgb, var(--u-color-20), var(--pp-ink) 55%); }
+.u-color-21-txt, .u-color-21-text { color: color-mix(in srgb, var(--u-color-21), var(--pp-ink) 40%); }
+.u-color-22-txt, .u-color-22-text { color: color-mix(in srgb, var(--u-color-22), var(--pp-ink) 45%); }
+.u-color-23-txt, .u-color-23-text { color: color-mix(in srgb, var(--u-color-23), var(--pp-ink) 55%); }
+.u-color-24-txt, .u-color-24-text { color: color-mix(in srgb, var(--u-color-24), var(--pp-ink) 50%); }
+.u-color-25-txt, .u-color-25-text { color: color-mix(in srgb, var(--u-color-25), var(--pp-ink) 35%); }
+.u-color-26-txt, .u-color-26-text { color: color-mix(in srgb, var(--u-color-26), var(--pp-ink) 55%); }
+.u-color-27-txt, .u-color-27-text { color: color-mix(in srgb, var(--u-color-27), var(--pp-ink) 40%); }
+.u-color-28-txt, .u-color-28-text { color: color-mix(in srgb, var(--u-color-28), var(--pp-ink) 30%); }
+.u-color-29-txt, .u-color-29-text { color: color-mix(in srgb, var(--u-color-29), var(--pp-ink) 55%); }
+.u-color-30-txt, .u-color-30-text { color: color-mix(in srgb, var(--u-color-30), var(--pp-ink) 40%); }
+.u-color-31-txt, .u-color-31-text { color: color-mix(in srgb, var(--u-color-31), var(--pp-ink) 55%); }
+.u-color-32-txt, .u-color-32-text { color: color-mix(in srgb, var(--u-color-32), var(--pp-ink) 50%); }
+.u-color-33-txt, .u-color-33-text { color: color-mix(in srgb, var(--u-color-33), var(--pp-ink) 35%); }
+.u-color-34-txt, .u-color-34-text { color: color-mix(in srgb, var(--u-color-34), var(--pp-ink) 45%); }
+.u-color-35-txt, .u-color-35-text { color: color-mix(in srgb, var(--u-color-35), var(--pp-ink) 40%); }
+.u-color-36-txt, .u-color-36-text { color: color-mix(in srgb, var(--u-color-36), var(--pp-ink) 50%); }
+.u-color-37-txt, .u-color-37-text { color: color-mix(in srgb, var(--u-color-37), var(--pp-ink) 50%); }
+.u-color-38-txt, .u-color-38-text { color: color-mix(in srgb, var(--u-color-38), var(--pp-ink) 40%); }
+.u-color-39-txt, .u-color-39-text { color: color-mix(in srgb, var(--u-color-39), var(--pp-ink) 45%); }
+.u-color-40-txt, .u-color-40-text { color: color-mix(in srgb, var(--u-color-40), var(--pp-ink) 55%); }
+.u-color-41-txt, .u-color-41-text { color: color-mix(in srgb, var(--u-color-41), var(--pp-ink) 40%); }
+.u-color-42-txt, .u-color-42-text { color: color-mix(in srgb, var(--u-color-42), var(--pp-ink) 50%); }
+.u-color-43-txt, .u-color-43-text { color: color-mix(in srgb, var(--u-color-43), var(--pp-ink) 55%); }
+.u-color-44-txt, .u-color-44-text { color: color-mix(in srgb, var(--u-color-44), var(--pp-ink) 40%); }
+.u-color-45-txt, .u-color-45-text { color: color-mix(in srgb, var(--u-color-45), var(--pp-ink) 50%); }
+
+/* 3. Palette als Fläche: .u-color-N-bg/-background -----------------------------------
+   UT setzt nur den Hintergrund – Text darauf erbt die Tusche (auf Petrol hell 3:1, auf den
+   hellen Stufen im Dunkeln 1,4:1). Wie .u-color-N die passende Kontrastschrift dazu. */
+.u-color-1-bg, .u-color-1-background          { color: var(--u-color-1-contrast); }
+.u-color-2-bg, .u-color-2-background          { color: var(--u-color-2-contrast); }
+.u-color-3-bg, .u-color-3-background          { color: var(--u-color-3-contrast); }
+.u-color-4-bg, .u-color-4-background          { color: var(--u-color-4-contrast); }
+.u-color-5-bg, .u-color-5-background          { color: var(--u-color-5-contrast); }
+.u-color-6-bg, .u-color-6-background          { color: var(--u-color-6-contrast); }
+.u-color-7-bg, .u-color-7-background          { color: var(--u-color-7-contrast); }
+.u-color-8-bg, .u-color-8-background          { color: var(--u-color-8-contrast); }
+.u-color-9-bg, .u-color-9-background          { color: var(--u-color-9-contrast); }
+.u-color-10-bg, .u-color-10-background        { color: var(--u-color-10-contrast); }
+.u-color-11-bg, .u-color-11-background        { color: var(--u-color-11-contrast); }
+.u-color-12-bg, .u-color-12-background        { color: var(--u-color-12-contrast); }
+.u-color-13-bg, .u-color-13-background        { color: var(--u-color-13-contrast); }
+.u-color-14-bg, .u-color-14-background        { color: var(--u-color-14-contrast); }
+.u-color-15-bg, .u-color-15-background        { color: var(--u-color-15-contrast); }
+.u-color-16-bg, .u-color-16-background        { color: var(--u-color-16-contrast); }
+.u-color-17-bg, .u-color-17-background        { color: var(--u-color-17-contrast); }
+.u-color-18-bg, .u-color-18-background        { color: var(--u-color-18-contrast); }
+.u-color-19-bg, .u-color-19-background        { color: var(--u-color-19-contrast); }
+.u-color-20-bg, .u-color-20-background        { color: var(--u-color-20-contrast); }
+.u-color-21-bg, .u-color-21-background        { color: var(--u-color-21-contrast); }
+.u-color-22-bg, .u-color-22-background        { color: var(--u-color-22-contrast); }
+.u-color-23-bg, .u-color-23-background        { color: var(--u-color-23-contrast); }
+.u-color-24-bg, .u-color-24-background        { color: var(--u-color-24-contrast); }
+.u-color-25-bg, .u-color-25-background        { color: var(--u-color-25-contrast); }
+.u-color-26-bg, .u-color-26-background        { color: var(--u-color-26-contrast); }
+.u-color-27-bg, .u-color-27-background        { color: var(--u-color-27-contrast); }
+.u-color-28-bg, .u-color-28-background        { color: var(--u-color-28-contrast); }
+.u-color-29-bg, .u-color-29-background        { color: var(--u-color-29-contrast); }
+.u-color-30-bg, .u-color-30-background        { color: var(--u-color-30-contrast); }
+.u-color-31-bg, .u-color-31-background        { color: var(--u-color-31-contrast); }
+.u-color-32-bg, .u-color-32-background        { color: var(--u-color-32-contrast); }
+.u-color-33-bg, .u-color-33-background        { color: var(--u-color-33-contrast); }
+.u-color-34-bg, .u-color-34-background        { color: var(--u-color-34-contrast); }
+.u-color-35-bg, .u-color-35-background        { color: var(--u-color-35-contrast); }
+.u-color-36-bg, .u-color-36-background        { color: var(--u-color-36-contrast); }
+.u-color-37-bg, .u-color-37-background        { color: var(--u-color-37-contrast); }
+.u-color-38-bg, .u-color-38-background        { color: var(--u-color-38-contrast); }
+.u-color-39-bg, .u-color-39-background        { color: var(--u-color-39-contrast); }
+.u-color-40-bg, .u-color-40-background        { color: var(--u-color-40-contrast); }
+.u-color-41-bg, .u-color-41-background        { color: var(--u-color-41-contrast); }
+.u-color-42-bg, .u-color-42-background        { color: var(--u-color-42-contrast); }
+.u-color-43-bg, .u-color-43-background        { color: var(--u-color-43-contrast); }
+.u-color-44-bg, .u-color-44-background        { color: var(--u-color-44-contrast); }
+.u-color-45-bg, .u-color-45-background        { color: var(--u-color-45-contrast); }
+
+/* u-Report (Report-Hilfsklasse, Doku-Tabellen) gestaltet components/reports.css (Tabellen-DNA). */

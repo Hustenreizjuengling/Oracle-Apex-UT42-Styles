@@ -1,0 +1,8 @@
+/* Kracherl Auto – Basis: Vita. Folgt der Hell/Dunkel-Einstellung des Betriebssystems.
+   Im dunklen Modus macht das generierte UT-Delta (Vita -> Vita-Dark) aus der Vita-Basis ein
+   vollständiges Vita-Dark; danach greifen die dunklen Kracherl-Tokens. „screen and“ hält
+   den Druck hell (Anatomie §3.5). Alle Regeln sind modusneutral – nur Token-Werte wechseln. */
+@import "./tokens/light.css";
+@import "../../_shared/ut-dark-delta.css" screen and (prefers-color-scheme: dark);
+@import "./tokens/dark.css" screen and (prefers-color-scheme: dark);
+@import "./index.css";

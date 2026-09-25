@@ -1,0 +1,1272 @@
+/* ==========================================================================
+   Passepartout – Komponenten
+   Modusneutral: verwendet ausschließlich Tokens (--canvas-* bzw. gemappte --ut-/--a-*).
+   Vita-Selektoren werden mit gleicher Spezifität neu deklariert (Bundle lädt nach Vita).
+   Kein @layer (verliert gegen ungelayertes Oracle-CSS).
+   ========================================================================== */
+@import "./map.css";
+
+/* ==========================================================================
+   0. Grundlagen
+   ========================================================================== */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+h1, h2, h3, h4 {
+  letter-spacing: -.01em;
+}
+::selection {
+  background-color: var(--canvas-accent-tint-2);
+  color: var(--canvas-ink);
+}
+
+/* ==========================================================================
+   1. Rahmen (Passepartout): Kopf + Navigation als EINE Fläche
+   ========================================================================== */
+.t-Header-branding {
+  column-gap: .75rem;
+}
+.t-Header-logo-link {
+  letter-spacing: -.01em;
+}
+
+/* Header-Buttons: transparent auf dem Rahmen, ruhige Hover-Pille */
+.t-Button--header {
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--canvas-ink);
+  --a-button-border-color: transparent;
+  --a-button-shadow: none;
+  --a-button-hover-background-color: var(--canvas-frame-hover);
+  --a-button-hover-text-color: var(--canvas-ink);
+  --a-button-hover-border-color: transparent;
+  --a-button-active-background-color: var(--canvas-frame-press);
+  --a-button-active-border-color: transparent;
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--canvas-frame-hover);
+  --a-button-font-size: .8125rem;
+  --a-button-font-weight: 500;
+  --a-button-border-radius: var(--canvas-r-md);
+}
+.t-Button--header.is-active {
+  --a-button-background-color: var(--canvas-frame-press);
+}
+.t-Button--headerUser,
+.t-NavigationBar-item.has-username .t-Button-label {
+  text-transform: none;
+}
+
+/* Navigations-Schalter: statt APEX-Hamburger ein Seitenleisten-Symbol (Rahmen + Leinwand) */
+.t-Button--headerTree {
+  --a-button-border-width: 0px;
+  --a-button-padding-y: .5rem;
+  --a-button-padding-x: .5rem;
+  --a-button-icon-size: 1.25rem;
+}
+.t-Button--headerTree.is-active {
+  --a-button-background-color: transparent;
+}
+.t-Button--header:focus:not(:focus-visible) {
+  --a-button-focus-background-color: transparent;
+}
+.t-Button--headerTree:is(.t-Button, .is-active:hover, .is-active:focus) .t-Header-controlsIcon {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 50%;
+  width: 1.125rem;
+  height: .9375rem;
+  margin: -.46875rem 0 0 -.5625rem;
+  border: 1.5px solid currentColor;
+  border-radius: .3125rem;
+  background-color: transparent;
+  transform: none;
+  transition: none;
+}
+.t-Button--headerTree:is(.t-Button, .is-active:hover, .is-active:focus) .t-Header-controlsIcon::before {
+  top: 1.5px;
+  bottom: 1.5px;
+  inset-inline-start: 1.5px;
+  width: 4px;
+  height: auto;
+  border-radius: 1.5px;
+  background-color: currentColor;
+  opacity: .35;
+  transform: none;
+  transition: none;
+}
+.t-Button--headerTree:is(.t-Button, .is-active:hover, .is-active:focus) .t-Header-controlsIcon::after {
+  top: 0;
+  bottom: 0;
+  inset-inline-start: 6.5px;
+  width: 1.5px;
+  height: auto;
+  border-radius: 0;
+  background-color: currentColor;
+  transform: none;
+  transition: none;
+}
+.t-Button--headerTree.is-active .t-Header-controlsIcon::before {
+  opacity: 1;
+}
+@media (max-width: 479px) {
+  .t-Button--headerTree:is(.t-Button, .is-active, .is-active) .t-Header-controlsIcon {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   2. Navigation (Tree Nav) – ruhige Textliste auf dem Rahmen
+   ========================================================================== */
+.t-TreeNav {
+  --a-treeview-node-padding-y: .5rem;
+  --a-treeview-node-padding-x: .75rem;
+  --a-treeview-node-font-size: .875rem;
+  --a-treeview-node-line-height: 1.25rem;
+  --a-treeview-node-text-color: var(--canvas-ink-2);
+  --ut-treeview-toplevel-node-font-size: .875rem;
+  --ut-treeview-icon-size: 1rem;
+  --ut-treeview-toplevel-icon-container-width: 1.5rem;
+  --ut-treeview-toplevel-icon-container-height: 1.25rem;
+  --ut-treeview-node-indent: 2.25rem;
+  --ut-treeview-toplevel-leaf-padding-y: .125rem;
+  --canvas-nav-inset: .5rem;
+  --canvas-tab-r: .625rem;
+}
+.t-TreeNav > ul {
+  /* Abstand oben >= Leinwand-Radius + Lasche, damit die konkave Ecke nie in die Leinwand-Ecke fällt */
+  padding-block: 1.75rem 1rem;
+}
+.t-TreeNav .a-TreeView-node .a-TreeView-row {
+  width: auto;                      /* app_ui: width:100% – sonst schieben die Ränder die Zeile über die Nav-Kante */
+  margin-inline: var(--canvas-nav-inset);
+  border-radius: var(--canvas-r-md);
+}
+.t-TreeNav .a-TreeView-node .a-TreeView-content {
+  padding-inline-start: calc(var(--a-treeview-node-indent) + var(--a-treeview-node-padding-x) + var(--canvas-nav-inset));
+  padding-inline-end: calc(var(--a-treeview-node-padding-x) + var(--canvas-nav-inset));
+}
+.t-TreeNav .a-TreeView-node .a-TreeView-toggle {
+  margin-inline-end: var(--canvas-nav-inset);
+  color: var(--canvas-muted);
+}
+.t-TreeNav .a-TreeView-content .fa {
+  color: var(--canvas-ink-2);
+}
+.t-TreeNav .a-TreeView-node--topLevel > ul .a-TreeView-content {
+  --a-treeview-node-font-size: .8125rem;
+  color: var(--canvas-muted);
+}
+.t-TreeNav .is-current,
+.t-TreeNav .is-current--top {
+  --a-treeview-node-font-weight: 600;
+}
+.t-TreeNav .a-TreeView-label.is-current {
+  color: var(--canvas-ink);
+}
+
+/* Vita-Hardcodes neutralisieren (gleiche Spezifität, Hover braucht !important) */
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-selected,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected {
+  background-color: transparent;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current--top, .t-TreeNav .a-TreeView-node--topLevel.is-collapsible > .a-TreeView-row,
+.t-TreeNav .a-TreeView-node--topLevel ul {
+  background-color: transparent;
+  color: inherit;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover {
+  background-color: var(--canvas-frame-hover) !important;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-toggle, .t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-content, .t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-toggle + .a-TreeView-content {
+  color: var(--canvas-ink);
+}
+.t-TreeNav .a-TreeView-row.is-focused {
+  box-shadow: inset 0 0 0 2px var(--canvas-accent);
+}
+/* Style-Varianten aus Vita (Template-Optionen) auf dieselbe ruhige Optik ziehen */
+.t-TreeNav--styleA .a-TreeView-node--topLevel {
+  border-bottom: 0;
+}
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top ~ ul .a-TreeView-row {
+  box-shadow: none;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected {
+  background-color: transparent;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected + .a-TreeView-toggle,
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-content.is-current--top {
+  color: var(--canvas-ink);
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-content.is-current--top.is-hover {
+  color: var(--canvas-ink) !important;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-hover {
+  background-color: var(--canvas-frame-hover) !important;
+}
+
+/* --------------------------------------------------------------------------
+   DAS MARKANTE ELEMENT: „Die Lasche“
+   Der aktive Eintrag ist ein Stück Leinwand: gleiche Farbe, rechts nahtlos an
+   die Arbeitsfläche angesetzt, oben/unten konkave Ecken, Magenta-Marke.
+   Aktiv = tiefster sichtbarer aktueller Knoten:
+   – eingeklappte Nav oder zugeklappter Ast: der Top-Level-Knoten
+   – aufgeklappter Ast: das aktuelle Blatt
+   -------------------------------------------------------------------------- */
+.t-TreeNav .a-TreeView-node--topLevel:not(.is-collapsible) > .a-TreeView-row.is-current--top,
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top,
+.js-navExpanded .t-TreeNav .a-TreeView-node--topLevel ul .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content .is-current) > .a-TreeView-row {
+  background-color: var(--canvas-surface) !important;
+  margin-inline-end: 0;
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  border-start-start-radius: var(--canvas-r-lg);
+  border-end-start-radius: var(--canvas-r-lg);
+}
+.t-TreeNav .a-TreeView-node--topLevel:not(.is-collapsible) > .a-TreeView-row.is-current--top::before,
+.t-TreeNav .a-TreeView-node--topLevel:not(.is-collapsible) > .a-TreeView-row.is-current--top::after,
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top::before,
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top::after,
+.js-navExpanded .t-TreeNav .a-TreeView-node--topLevel ul .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content .is-current) > .a-TreeView-row::before,
+.js-navExpanded .t-TreeNav .a-TreeView-node--topLevel ul .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content .is-current) > .a-TreeView-row::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: 0;
+  width: var(--canvas-tab-r);
+  height: var(--canvas-tab-r);
+  pointer-events: none;
+}
+.t-TreeNav .a-TreeView-node--topLevel:not(.is-collapsible) > .a-TreeView-row.is-current--top::before,
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top::before,
+.js-navExpanded .t-TreeNav .a-TreeView-node--topLevel ul .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content .is-current) > .a-TreeView-row::before {
+  bottom: 100%;
+  background: radial-gradient(circle at 0 0, transparent calc(var(--canvas-tab-r) - .5px), var(--canvas-surface) var(--canvas-tab-r));
+}
+.t-TreeNav .a-TreeView-node--topLevel:not(.is-collapsible) > .a-TreeView-row.is-current--top::after,
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top::after,
+.js-navExpanded .t-TreeNav .a-TreeView-node--topLevel ul .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content .is-current) > .a-TreeView-row::after {
+  top: 100%;
+  background: radial-gradient(circle at 0 100%, transparent calc(var(--canvas-tab-r) - .5px), var(--canvas-surface) var(--canvas-tab-r));
+}
+/* Magenta-Marke + Beschriftung der Lasche */
+.t-TreeNav .a-TreeView-node--topLevel:not(.is-collapsible) > .a-TreeView-row.is-current--top ~ .a-TreeView-content::before,
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top ~ .a-TreeView-content::before,
+.js-navExpanded .t-TreeNav .a-TreeView-node--topLevel ul .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content .is-current) > .a-TreeView-content::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(var(--canvas-nav-inset) + .3125rem);
+  top: 50%;
+  width: .1875rem;
+  height: 1rem;
+  margin-top: -.5rem;
+  border-radius: .125rem;
+  background-color: var(--canvas-accent);
+}
+.t-TreeNav .a-TreeView-node--topLevel:not(.is-collapsible) > .a-TreeView-row.is-current--top ~ .a-TreeView-content,
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top ~ .a-TreeView-content,
+.js-navExpanded .t-TreeNav .a-TreeView-node--topLevel ul .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content .is-current) > .a-TreeView-content {
+  color: var(--canvas-ink) !important;
+}
+.t-TreeNav .a-TreeView-node--topLevel:not(.is-collapsible) > .a-TreeView-row.is-current--top ~ .a-TreeView-content .fa,
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top ~ .a-TreeView-content .fa {
+  color: var(--canvas-ink);
+}
+
+/* Eingeklappte Icon-Leiste */
+.apex-side-nav.js-navCollapsed .t-TreeNav .a-TreeView-node .a-TreeView-content {
+  padding-inline-start: calc(var(--canvas-nav-inset) + .5rem);
+  padding-inline-end: .5rem;
+}
+
+/* Top-Navigation (Menüleiste): dieselbe Lasche, horizontal – der aktuelle Eintrag
+   ist ein Stück Leinwand, das von unten in den Rahmen greift */
+.t-Header-nav {
+  --a-menubar-item-padding-y: .5rem;
+  --a-menubar-item-padding-x: .75rem;
+  --ut-header-menubar-item-border-width: 0px;
+  --ut-header-menubar-item-hover-background-color: var(--canvas-frame-hover);
+  --ut-header-menubar-item-hover-text-color: var(--canvas-ink);
+  --canvas-tab-r: .625rem;
+}
+.t-Header-nav .a-MenuBar {
+  box-shadow: none;
+}
+.t-Header-nav .a-MenuBar > ul {
+  /* erster Eintrag beginnt erst hinter der oberen Leinwand-Ecke */
+  padding-inline: calc(var(--canvas-gutter) + var(--canvas-r-canvas) + var(--canvas-tab-r)) var(--canvas-gutter);
+  gap: .125rem;
+}
+.apex-top-nav .t-Header-branding {
+  padding-inline-start: calc(var(--canvas-gutter) + var(--canvas-r-canvas) + .625rem);
+}
+.t-Header-nav .a-MenuBar-item {
+  position: relative;
+  margin-block: .375rem;
+  border-radius: var(--canvas-r-md);
+}
+.t-Header-nav .a-MenuBar-item.a-Menu--current {
+  margin-block-end: 0;
+  padding-block-end: .375rem;
+  border-radius: var(--canvas-r-lg) var(--canvas-r-lg) 0 0;
+  --a-menubar-item-font-weight: 600;
+}
+.t-Header-nav .a-MenuBar-item.a-Menu--current::before,
+.t-Header-nav .a-MenuBar-item.a-Menu--current::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: var(--canvas-tab-r);
+  height: var(--canvas-tab-r);
+  pointer-events: none;
+}
+.t-Header-nav .a-MenuBar-item.a-Menu--current::before {
+  inset-inline-end: 100%;
+  background: radial-gradient(circle at 0 0, transparent calc(var(--canvas-tab-r) - .5px), var(--canvas-surface) var(--canvas-tab-r));
+}
+.t-Header-nav .a-MenuBar-item.a-Menu--current::after {
+  inset-inline-start: 100%;
+  background: radial-gradient(circle at 100% 0, transparent calc(var(--canvas-tab-r) - .5px), var(--canvas-surface) var(--canvas-tab-r));
+}
+.t-Header-nav .a-MenuBar-item.a-Menu--current > .a-MenuBar-label::before {
+  content: "";
+  flex: none;
+  align-self: center;
+  width: .1875rem;
+  height: .875rem;
+  margin-inline-end: .5rem;
+  border-radius: .125rem;
+  background-color: var(--canvas-accent);
+}
+
+/* ==========================================================================
+   3. Die Leinwand
+   ========================================================================== */
+.t-Body-main {
+  border-radius: var(--canvas-r-canvas);
+  margin-inline-end: var(--canvas-gutter);
+  margin-block-end: var(--canvas-gutter);
+  box-shadow: var(--canvas-canvas-shadow);
+}
+/* ohne sichtbare Side-Nav: Rahmen auch links */
+.apex-side-nav.js-navCollapsed.js-navCollapsed--hidden .t-Body-main,
+.apex-top-nav .t-Body-main,
+.t-PageBody--noNav .t-Body-main {
+  margin-inline-start: var(--canvas-gutter);
+}
+/* obere Leinwand-Ecken: von der (sticky) Title Bar gehalten */
+.t-Body-title::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: var(--canvas-r-canvas);
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 100% 100%, transparent calc(var(--canvas-r-canvas) - .5px), var(--canvas-frame) var(--canvas-r-canvas)) left top / var(--canvas-r-canvas) var(--canvas-r-canvas) no-repeat,
+    radial-gradient(circle at 0 100%, transparent calc(var(--canvas-r-canvas) - .5px), var(--canvas-frame) var(--canvas-r-canvas)) right top / var(--canvas-r-canvas) var(--canvas-r-canvas) no-repeat;
+}
+.t-Body-title.t-Body-title-shrink,
+.t-Body-title.is-stuck {
+  --ut-body-title-border-width: 1px;
+}
+/* untere Leinwand-Kante: bleibt beim Scrollen am unteren Fensterrand stehen */
+.t-Body-main::after {
+  content: "";
+  grid-column: 1 / -1;
+  grid-row: 9;
+  position: sticky;
+  bottom: 0;
+  z-index: 480;
+  height: calc(var(--canvas-r-canvas) + var(--canvas-gutter));
+  margin-block: calc(-1 * var(--canvas-r-canvas)) calc(-1 * var(--canvas-gutter));
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 100% 0, transparent calc(var(--canvas-r-canvas) - .5px), var(--canvas-frame) var(--canvas-r-canvas)) left top / var(--canvas-r-canvas) var(--canvas-r-canvas) no-repeat,
+    radial-gradient(circle at 0 0, transparent calc(var(--canvas-r-canvas) - .5px), var(--canvas-frame) var(--canvas-r-canvas)) right top / var(--canvas-r-canvas) var(--canvas-r-canvas) no-repeat,
+    linear-gradient(var(--canvas-frame), var(--canvas-frame)) left bottom / 100% var(--canvas-gutter) no-repeat;
+}
+
+/* obere Leinwand-Ecken auch ohne (sticky) Title Bar – z. B. mobil (u-unstick) */
+.t-Body-main::before {
+  content: "";
+  grid-column: 1 / -1;
+  grid-row: 1;
+  align-self: start;
+  position: sticky;
+  top: var(--js-sticky-top, 0px);
+  z-index: 485;
+  height: var(--canvas-r-canvas);
+  margin-block-end: calc(-1 * var(--canvas-r-canvas));
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 100% 100%, transparent calc(var(--canvas-r-canvas) - .5px), var(--canvas-frame) var(--canvas-r-canvas)) left top / var(--canvas-r-canvas) var(--canvas-r-canvas) no-repeat,
+    radial-gradient(circle at 0 100%, transparent calc(var(--canvas-r-canvas) - .5px), var(--canvas-frame) var(--canvas-r-canvas)) right top / var(--canvas-r-canvas) var(--canvas-r-canvas) no-repeat;
+}
+
+/* Mobil/Tablet: schmalerer Rahmen, Navigation als Schublade ÜBER der Leinwand (kein Quetschen) */
+@media (max-width: 639px) {
+  :root {
+    --canvas-gutter: .5rem;
+    --canvas-r-canvas: .875rem;
+    --canvas-pad-x: 1rem;
+  }
+}
+@media (max-width: 991px) {
+  .apex-side-nav.js-navExpanded {
+    --ut-nav-collapsed-width: var(--ut-nav-collapsed-icon-width, 0px);
+  }
+  .apex-side-nav.js-navExpanded.js-navCollapsed--hidden {
+    --ut-nav-collapsed-width: 0px;
+  }
+  .apex-side-nav.js-navExpanded .t-Body-nav {
+    position: fixed;
+    inset-block: var(--js-sticky-top, 0px) 0;
+    inset-inline-start: 0;
+    height: auto;
+    z-index: 900;
+    border-start-end-radius: var(--canvas-r-canvas);
+    box-shadow: 0 0 0 100vmax var(--canvas-scrim);
+    clip-path: inset(0 -100vmax -100vmax 0);   /* Abdunklung nur unterhalb des Kopfes */
+  }
+  /* in der Schublade: Lasche als geschlossene Pille (die Leinwand liegt darunter) */
+  .js-navExpanded .t-TreeNav .a-TreeView-node--topLevel:not(.is-collapsible) > .a-TreeView-row.is-current--top,
+  .js-navExpanded .t-TreeNav .a-TreeView-node--topLevel ul .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content .is-current) > .a-TreeView-row {
+    margin-inline-end: var(--canvas-nav-inset);
+    border-radius: var(--canvas-r-md);
+  }
+  .js-navExpanded .t-TreeNav .a-TreeView-node--topLevel:not(.is-collapsible) > .a-TreeView-row.is-current--top::before,
+  .js-navExpanded .t-TreeNav .a-TreeView-node--topLevel:not(.is-collapsible) > .a-TreeView-row.is-current--top::after,
+  .js-navExpanded .t-TreeNav .a-TreeView-node--topLevel ul .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content .is-current) > .a-TreeView-row::before,
+  .js-navExpanded .t-TreeNav .a-TreeView-node--topLevel ul .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content .is-current) > .a-TreeView-row::after {
+    display: none;
+  }
+}
+@media (max-width: 479px) {
+  .apex-side-nav .t-Body-main {
+    margin-inline-start: var(--canvas-gutter);
+  }
+}
+
+/* Linke Spalte (in der Leinwand) und rechte Actions-Spalte (auf dem Rahmen) */
+.t-Body-side {
+  --ut-body-sidebar-border-width: 1px;
+}
+.t-Body-actions .t-Region {
+  --ut-region-header-border-width: 0px;
+}
+
+/* Footer liegt in der Leinwand */
+.t-Footer {
+  --ut-footer-padding-x: var(--canvas-pad-x);
+  color: var(--canvas-muted);
+  font-size: .8125rem;
+  border-top: 1px solid var(--canvas-line);
+  margin-inline: var(--canvas-pad-x);
+  padding-inline: 0;
+}
+.t-Footer-topButton {
+  --ut-footer-top-background-color: var(--canvas-soft);
+  --ut-footer-top-text-color: var(--canvas-ink);
+  opacity: 1;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   4. Title Bar & Breadcrumb
+   ========================================================================== */
+.t-Breadcrumb-item::after {
+  content: "";
+  width: .375rem;
+  height: .375rem;
+  border-inline-end: 1.5px solid currentColor;
+  border-block-start: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  opacity: .6;
+  margin-inline-start: .5rem;
+  margin-inline-end: .75rem;
+}
+.u-RTL .t-Breadcrumb-item::after {
+  content: "";
+  transform: rotate(-135deg);
+}
+.t-Breadcrumb-item a {
+  color: inherit;
+  text-decoration: none;
+}
+.t-Breadcrumb-item a:hover {
+  color: var(--canvas-ink);
+  text-decoration: none;
+}
+.t-BreadcrumbRegion-titleText,
+.t-BreadcrumbRegion--useBreadcrumbTitle .t-Breadcrumb-item:last-child {
+  letter-spacing: -.02em;
+}
+@media (min-width: 640px) {
+  .t-Body-title:not(.t-Body-title-shrink) .t-BreadcrumbRegion--useBreadcrumbTitle:not(.t-BreadcrumbRegion--compactTitle) .t-Breadcrumb-item:last-child,
+  .t-BreadcrumbRegion-titleText {
+    margin-block-start: .25rem;
+  }
+}
+
+/* Region Display Selector / Tabs in der Title Bar: aktive Lasche = Rahmen-Grau */
+.t-Body-title .apex-rds-container {
+  margin-inline: calc(var(--canvas-pad-x) - .75rem);
+  padding-block-end: .75rem;
+}
+.t-BreadcrumbRegion + div > .apex-rds-container {
+  margin-block-start: -.5rem;
+}
+.apex-rds {
+  --ut-tabs-item-padding-y: .375rem;
+  --ut-tabs-item-padding-x: .75rem;
+  gap: .25rem;
+}
+.a-RDS-link {
+  border-radius: var(--canvas-r-md);
+  color: var(--ut-tabs-item-text-color);
+  font-weight: 500;
+  outline-offset: 0;
+}
+.a-RDS-link:hover {
+  background-color: var(--canvas-hover);
+  color: var(--canvas-ink);
+}
+.apex-rds-selected .a-RDS-link {
+  background-color: var(--ut-tabs-item-active-background-color);
+  color: var(--canvas-ink);
+  font-weight: 600;
+}
+.a-RDS-link::before {
+  display: none;
+}
+
+/* Tabs (Tabs Container, Tabs-Liste) */
+.t-Tabs {
+  gap: .25rem;
+}
+.t-Tabs-link {
+  border-radius: var(--canvas-r-md);
+}
+.t-Tabs-link::before {
+  display: none;
+}
+.t-Tabs-link:hover {
+  background-color: var(--canvas-hover);
+}
+.t-Tabs-item.is-active .t-Tabs-link {
+  background-color: var(--canvas-soft);
+  color: var(--canvas-ink);
+}
+
+/* ==========================================================================
+   5. Regionen: flach, Titel + Haarlinie
+   ========================================================================== */
+.t-Region-title {
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+.t-Region-headerIcon {
+  color: var(--canvas-muted);
+}
+.t-Region-header {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+/* Akzent-Regionen: kein Kopfstreifen, sondern farbige Titel-Linie */
+.t-Region[class*="t-Region--accent"] > .t-Region-header {
+  background-color: transparent;
+  color: var(--canvas-ink);
+  border-bottom: 2px solid var(--ut-region-header-background-color);
+}
+.t-Region--noUI {
+  --ut-region-header-border-width: 0px;
+}
+.t-Region--hideShow > .t-Region-header {
+  --ut-region-header-padding-y: .5rem;
+}
+/* Content Blocks (Überschriften-Abschnitte) */
+.t-ContentBlock--h1 {
+  --ut-content-block-header-font-size: 1.75rem;
+  --ut-content-block-header-margin: .75rem;
+}
+.t-ContentBlock--h2 {
+  --ut-content-block-header-font-size: 1.25rem;
+  --ut-content-block-header-margin: .625rem;
+}
+.t-ContentBlock--h3 {
+  --ut-content-block-header-font-size: 1rem;
+  --ut-content-block-header-margin: .5rem;
+}
+.t-ContentBlock {
+  --ut-content-block-header-line-height: 1.4;
+}
+.t-ContentBlock-title {
+  letter-spacing: -.015em;
+}
+.t-ContentBlock--shadowBG {
+  --ut-content-block-border-width: 0px;
+  --ut-content-block-box-shadow: none;
+  --ut-content-block-border-radius: var(--canvas-r-lg);
+  --ut-content-block-padding-y: 1rem;
+  --ut-content-block-padding-x: 1.25rem;
+}
+.t-ContentBlock--lightBG {
+  --ut-content-block-box-shadow: none;
+  --ut-content-block-border-color: var(--canvas-line);
+  --ut-content-block-border-radius: var(--canvas-r-lg);
+}
+
+/* Button Container */
+.t-ButtonRegion {
+  --ut-button-region-border-width: 1px;
+}
+
+/* Alerts & Seitenmeldungen */
+.t-Alert--horizontal,
+.t-Alert--wizard {
+  --ut-alert-border-width: 1px;
+}
+.t-Alert--page {
+  --ut-alert-type-border-radius: var(--canvas-r-lg);
+}
+.t-Alert--page.t-Alert--warning {
+  --ut-alert-type-background-color: var(--canvas-surface-raised);
+  --ut-alert-type-text-color: var(--canvas-ink);
+}
+.t-Alert--page.t-Alert--success {
+  --ut-alert-type-background-color: var(--canvas-surface-raised);
+  --ut-alert-type-text-color: var(--canvas-ink);
+}
+.t-Alert--page.t-Alert--warning .t-Alert-icon .t-Icon { color: var(--canvas-danger); }
+.t-Alert--page.t-Alert--success .t-Alert-icon .t-Icon { color: var(--canvas-success); }
+.t-Alert--page .t-Button.t-Button--closeAlert {
+  background-color: var(--canvas-soft);
+  color: var(--canvas-ink);
+  border-color: transparent;
+}
+
+/* ==========================================================================
+   6. Buttons
+   ========================================================================== */
+.t-Button,
+.a-Button,
+.ui-button {
+  letter-spacing: -.003em;
+}
+.t-Button--simple {
+  --a-button-border-color: var(--canvas-line-2);
+  --a-button-hover-background-color: var(--canvas-soft);
+}
+.t-Button--noUI,
+.t-Button--noUI:hover,
+.t-Button--noUI:active,
+.a-Button--noUI,
+.a-Button--noUI:hover,
+.a-Button--noUI:active {
+  --a-button-type-shadow: none;
+  --a-button-type-background-color: transparent;
+  --a-button-type-border-color: transparent;
+  --a-button-type-text-color: inherit;
+  color: inherit;
+  background-color: transparent;
+  text-shadow: none;
+}
+
+/* Hot = Kartenmagenta (gleiche Selektorliste wie Vita) */
+.t-Button--hot,
+.a-Button--hot,
+.ui-button--hot,
+.a-CardView-button--hot,
+.apex-button-group input:checked + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label {
+  --a-button-background-color: var(--canvas-accent);
+  --a-button-text-color: var(--canvas-accent-on);
+  --a-button-hover-background-color: var(--canvas-accent-hover);
+  --a-button-hover-text-color: var(--canvas-accent-on);
+  --a-button-active-background-color: var(--canvas-accent-press);
+  --a-button-active-text-color: var(--canvas-accent-on);
+  --a-button-focus-background-color: var(--canvas-accent-hover);
+  --a-button-focus-text-color: var(--canvas-accent-on);
+  --a-button-font-weight: 600;
+}
+.t-Button--hot.t-Button--simple,
+.a-Button--hot.t-Button--simple,
+.ui-button--hot.t-Button--simple,
+.a-CardView-button--hot.t-Button--simple,
+.apex-button-group input:checked + label.t-Button--simple,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--simple {
+  --a-button-border-color: var(--canvas-accent);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--canvas-accent-text);
+  --a-button-hover-text-color: var(--canvas-accent-on);
+}
+.t-Button--hot.t-Button--link,
+.a-Button--hot.t-Button--link,
+.ui-button--hot.t-Button--link,
+.a-CardView-button--hot.t-Button--link,
+.apex-button-group input:checked + label.t-Button--link,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-box-shadow: none;
+  --a-button-text-color: var(--canvas-accent-text);
+}
+.t-Button--hot.t-Button--noUI, .t-Button--hot.a-Button--noUI,
+.a-Button--hot.t-Button--noUI,
+.a-Button--hot.a-Button--noUI,
+.ui-button--hot.t-Button--noUI,
+.ui-button--hot.a-Button--noUI,
+.a-CardView-button--hot.t-Button--noUI,
+.a-CardView-button--hot.a-Button--noUI,
+.apex-button-group input:checked + label.t-Button--noUI,
+.apex-button-group input:checked + label.a-Button--noUI,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--noUI,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.a-Button--noUI {
+  --a-button-text-color: var(--canvas-accent-text);
+  color: var(--canvas-accent-text);
+}
+
+/* Warning */
+.t-Button--warning {
+  --a-button-background-color: var(--canvas-warning);
+  --a-button-text-color: var(--canvas-warning-on);
+  --a-button-hover-background-color: var(--canvas-warning-hover);
+  --a-button-hover-text-color: var(--canvas-warning-on);
+  --a-button-active-background-color: var(--canvas-warning);
+  --a-button-active-text-color: var(--canvas-warning-on);
+  --a-button-focus-background-color: var(--canvas-warning-hover);
+  --a-button-focus-text-color: var(--canvas-warning-on);
+}
+.t-Button--warning.t-Button--simple {
+  --a-button-border-color: var(--canvas-warning);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--canvas-warning-text);
+  --a-button-hover-text-color: var(--canvas-warning-on);
+}
+.t-Button--warning.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-box-shadow: none;
+  --a-button-text-color: var(--canvas-warning-text);
+}
+.t-Button--warning.t-Button--noUI, .t-Button--warning.a-Button--noUI {
+  --a-button-text-color: var(--canvas-warning-text);
+  color: var(--canvas-warning-text);
+}
+/* Success */
+.t-Button--success {
+  --a-button-background-color: var(--canvas-success);
+  --a-button-text-color: var(--canvas-success-on);
+  --a-button-hover-background-color: var(--canvas-success-hover);
+  --a-button-hover-text-color: var(--canvas-success-on);
+  --a-button-active-background-color: var(--canvas-success-hover);
+  --a-button-active-text-color: var(--canvas-success-on);
+  --a-button-focus-background-color: var(--canvas-success-hover);
+  --a-button-focus-text-color: var(--canvas-success-on);
+}
+.t-Button--success.t-Button--simple {
+  --a-button-border-color: var(--canvas-success);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--canvas-success-text);
+  --a-button-hover-text-color: var(--canvas-success-on);
+}
+.t-Button--success.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-box-shadow: none;
+  --a-button-text-color: var(--canvas-success-text);
+}
+.t-Button--success.t-Button--noUI, .t-Button--success.a-Button--noUI {
+  --a-button-text-color: var(--canvas-success-text);
+  color: var(--canvas-success-text);
+}
+/* Danger */
+.ui-button--danger,
+.t-Button--danger {
+  --a-button-background-color: var(--canvas-danger);
+  --a-button-text-color: var(--canvas-danger-on);
+  --a-button-hover-background-color: var(--canvas-danger-hover);
+  --a-button-hover-text-color: var(--canvas-danger-on);
+  --a-button-active-background-color: var(--canvas-danger-hover);
+  --a-button-active-text-color: var(--canvas-danger-on);
+  --a-button-focus-background-color: var(--canvas-danger-hover);
+  --a-button-focus-text-color: var(--canvas-danger-on);
+}
+.ui-button--danger.t-Button--simple,
+.t-Button--danger.t-Button--simple {
+  --a-button-border-color: var(--canvas-danger);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--canvas-danger-text);
+  --a-button-hover-text-color: var(--canvas-danger-on);
+}
+.ui-button--danger.t-Button--link,
+.t-Button--danger.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-box-shadow: none;
+  --a-button-text-color: var(--canvas-danger-text);
+}
+.ui-button--danger.t-Button--noUI, .ui-button--danger.a-Button--noUI,
+.t-Button--danger.t-Button--noUI,
+.t-Button--danger.a-Button--noUI {
+  --a-button-text-color: var(--canvas-danger-text);
+  color: var(--canvas-danger-text);
+}
+/* Primary (Alt) = Magenta-Tönung */
+.t-Button--primary {
+  --a-button-background-color: var(--canvas-accent-tint);
+  --a-button-text-color: var(--canvas-accent-text);
+  --a-button-hover-background-color: var(--canvas-accent-tint-2);
+  --a-button-hover-text-color: var(--canvas-accent-text);
+  --a-button-active-background-color: var(--canvas-accent-tint-2);
+  --a-button-active-text-color: var(--canvas-accent-text);
+  --a-button-focus-background-color: var(--canvas-accent-tint-2);
+  --a-button-focus-text-color: var(--canvas-accent-text);
+  --a-button-font-weight: 600;
+}
+.t-Button--primary.t-Button--simple {
+  --a-button-border-color: var(--canvas-accent-tint-2);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--canvas-accent-text);
+  --a-button-hover-text-color: var(--canvas-accent-text);
+}
+.t-Button--primary.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-box-shadow: none;
+  --a-button-text-color: var(--canvas-accent-text);
+}
+.t-Button--primary.t-Button--noUI, .t-Button--primary.a-Button--noUI {
+  --a-button-text-color: var(--canvas-accent-text);
+  color: var(--canvas-accent-text);
+}
+/* Font-APEX-Modifier-Overlays in Buttons */
+.t-Button.t-Button--noUI .fa:after,
+.t-Button.t-Button--link .fa:after,
+.t-Button.t-Button--simple .fa:after,
+.a-Button.a-Button--noUI .fa:after {
+  background-color: var(--canvas-surface);
+}
+.t-Button--danger .fa:after,
+.t-Button--simple.t-Button--danger:hover .fa:after { background-color: var(--canvas-danger); }
+.t-Button--success .fa:after,
+.t-Button--simple.t-Button--success:hover .fa:after { background-color: var(--canvas-success); }
+.t-Button--primary .fa:after,
+.t-Button--simple.t-Button--primary:hover .fa:after { background-color: var(--canvas-accent-tint); }
+.t-Button--warning .fa:after,
+.t-Button--simple.t-Button--warning:hover .fa:after { background-color: var(--canvas-warning); }
+.t-Button--hot .fa:after,
+.t-Button--simple.t-Button--hot:hover .fa:after { background-color: var(--canvas-accent); }
+
+/* Fokusring nur bei Tastaturfokus (Maus-Klick lässt keinen Ring stehen) */
+.t-Button:focus:not(:focus-visible),
+.a-Button:focus:not(:focus-visible),
+.ui-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Buttons IN Feldern (Popup LOV, Kalender, Farbwähler, Passwort): Teil des Feldes */
+.a-Button--popupLOV,
+.a-Button--calendar,
+.a-Button--colorPicker,
+.t-Button--passwordVisibility {
+  --a-button-background-color: var(--canvas-field);
+  --a-button-border-color: var(--a-field-input-border-color);
+  --a-button-text-color: var(--canvas-muted);
+  --a-button-hover-background-color: var(--canvas-hover);
+  --a-button-hover-border-color: var(--a-field-input-border-color);
+  --a-button-hover-text-color: var(--canvas-ink);
+  --a-button-active-background-color: var(--canvas-soft);
+  --a-button-focus-background-color: var(--canvas-hover);
+  --a-button-focus-border-color: var(--a-field-input-border-color);
+  --a-button-shadow: none;
+  --a-button-font-weight: 400;
+}
+.a-Button--comboSelect {
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-text-color: var(--canvas-muted);
+  --a-button-hover-background-color: var(--canvas-hover);
+  --a-button-shadow: none;
+}
+
+/* Hilfe-Button */
+.t-Form-helpButton {
+  --a-button-text-color: var(--canvas-muted);
+  --a-button-hover-text-color: var(--canvas-ink);
+  --a-button-hover-background-color: var(--canvas-soft);
+}
+
+/* IR/IG-Steuer-Buttons (Vita hart #f8f8f8) */
+.a-IG-button.a-IG-button--controls,
+.a-IRR-button.a-IRR-button--controls {
+  --a-button-background-color: var(--canvas-soft);
+}
+
+/* ==========================================================================
+   7. Formulare
+   ========================================================================== */
+/* Feldfokus: Magenta-Kante + weicher Halo statt doppeltem Ring */
+.t-Form-fieldContainer,
+.apex-item-wrapper,
+.a-IRR-search,
+.a-Toolbar-group--search,
+.a-PopupLOV-searchBar {
+  --ut-focus-outline: 3px solid var(--canvas-accent-ring);
+  --ut-focus-outline-offset: 0px;
+}
+.t-Form-fieldContainer .t-Button,
+.t-Form-fieldContainer .u-checkbox,
+.t-Form-fieldContainer .u-radio {
+  --ut-focus-outline: 2px solid var(--canvas-accent);
+  --ut-focus-outline-offset: 2px;
+}
+/* Labels linksbündig, auf Grundlinie des Feldtextes */
+.t-Form-labelContainer {
+  text-align: start;
+}
+.t-Form-label {
+  font-weight: 500;
+}
+.t-Form-fieldContainer:not(.t-Form-fieldContainer--floatingLabel) {
+  --ut-field-label-padding-y: .5rem;
+}
+.t-Form-fieldContainer--stacked {
+  --ut-field-label-padding-y: .25rem;
+}
+/* Pflichtfeld: kleiner Magenta-Punkt statt rotem Asterisk/Dreieck */
+.t-Form-fieldContainer.is-required .t-Form-label:before {
+  display: none;
+}
+.t-Form-fieldContainer.is-required .t-Form-label:after {
+  content: "";
+  display: inline-block;
+  width: .375rem;
+  height: .375rem;
+  margin-inline-start: .375rem;
+  vertical-align: middle;
+  border-radius: 50%;
+  background-color: var(--canvas-accent);
+  font-family: inherit !important;
+}
+.t-Form-fieldContainer--floatingLabel.is-required .t-Form-itemRequired-marker:before {
+  display: none;
+}
+.t-Form-fieldContainer--floatingLabel.is-required .t-Form-label:after {
+  display: inline-block;
+}
+/* Readonly/Display */
+.apex-item-display-only {
+  color: var(--canvas-ink);
+}
+/* Floating Labels: ruhiger, gleiche Kante */
+.t-Form-fieldContainer--floatingLabel {
+  --ut-field-fl-label-font-size: .75rem;
+  --ut-field-label-text-color: var(--canvas-muted);
+}
+
+/* Checkbox / Radio: Häkchen ohne Skalier-Animation aus Vita */
+.u-checkbox:before,
+.u-radio:before {
+  border-width: 1.5px;
+}
+
+/* Switch */
+.a-Switch .a-Switch-toggle {
+  box-shadow: none;
+}
+
+/* Radio-Gruppe als Buttons (Pill) */
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input + label,
+.apex-button-group label {
+  --a-button-background-color: var(--canvas-soft);
+  --a-button-border-color: transparent;
+}
+.apex-button-group input:focus + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:focus + label {
+  outline: 2px solid var(--canvas-accent);
+  outline-offset: 2px;
+}
+
+/* Date Picker */
+.a-DatePicker {
+  border-radius: var(--canvas-r-lg);
+}
+.a-DatePicker-calendar td > span {
+  font-variant-numeric: tabular-nums;
+}
+.a-DatePicker-nav {
+  --a-button-text-color: var(--canvas-ink);
+  --a-button-hover-background-color: var(--canvas-soft);
+}
+.a-DatePicker--today {
+  color: var(--canvas-accent-text);
+}
+
+/* ==========================================================================
+   8. Menüs, Dialoge, Tooltips
+   ========================================================================== */
+.a-Menu .a-Menu-hSeparator {
+  border-color: var(--canvas-line);
+}
+.ui-dialog .ui-dialog-titlebar {
+  border-bottom-color: var(--canvas-line);
+}
+.ui-dialog .ui-dialog-title {
+  letter-spacing: -.01em;
+}
+/* Dialog-/Drawer-Inhalt (iframe-Dokument) auf dieselbe Fläche wie der Dialog-Rahmen der Elternseite */
+.t-Dialog-page,
+.t-Drawer-page {
+  --ut-body-background-color: var(--canvas-surface-raised);
+  --ut-component-background-color: var(--canvas-surface-raised);
+}
+
+/* ==========================================================================
+   9. Reports: Classic Report, Interactive Report, Interactive Grid
+   ========================================================================== */
+.t-Report-report,
+.a-IRR-table,
+.a-GV-table {
+  font-variant-numeric: tabular-nums;
+}
+.t-Report-colHead,
+.t-Report-colHead a {
+  color: var(--canvas-muted);
+}
+.t-Report-colHead a:hover {
+  color: var(--canvas-ink);
+}
+.t-Report-cell {
+  color: var(--canvas-ink);
+}
+/* Standard: nur waagerechte Haarlinien (Option „Vertical Borders“ bleibt wirksam) */
+.t-Report:not(.t-Report--verticalBorders) .t-Report-cell,
+.t-Report:not(.t-Report--verticalBorders) .t-Report-colHead {
+  border-inline-width: 0;
+}
+.t-Report-colHead {
+  font-size: var(--ut-report-header-cell-font-size);
+}
+/* Außenrahmen als gerundeter Container (Tabelle behält border-collapse) */
+:where(.t-Report:not(.t-Report--inline, .t-Report--noBorders)) .t-Report-tableWrap {
+  border: 1px solid var(--canvas-line);
+  border-radius: var(--canvas-r-lg);
+  overflow: clip;
+}
+:where(.t-Report:not(.t-Report--inline, .t-Report--noBorders)) .t-Report-report {
+  border-style: hidden;
+}
+
+/* Interactive Report */
+.a-IRR {
+  --a-gv-border-radius: var(--canvas-r-lg);
+  --a-gv-cell-padding-y: .5rem;
+  --a-gv-cell-padding-x: .75rem;
+  --a-gv-header-cell-padding-x: .75rem;
+}
+.a-IRR-header {
+  background-color: var(--a-gv-header-background-color);
+}
+.a-IRR-header:hover {
+  background-color: var(--canvas-hover);
+}
+.a-IRR-header.is-active,
+.a-GV-header.is-active {
+  background-color: var(--canvas-soft);
+  color: var(--canvas-ink);
+}
+.a-IRR-header--group {
+  background-color: var(--canvas-surface-sunken);
+}
+.a-IRR-headerLink,
+.a-IRR-headerLabel {
+  color: var(--canvas-muted);
+  font-weight: 600;
+  font-size: .78125rem;
+}
+.a-IRR-headerLink:hover {
+  color: var(--canvas-ink);
+}
+.a-IRR-table td {
+  color: var(--canvas-ink);
+  border-inline-width: 0;
+}
+.a-IRR-table .a-IRR-header {
+  border-inline-width: 0;
+}
+.a-IRR-toolbar {
+  background-color: transparent;
+}
+/* IR-Suche als EIN Feld: Spaltenwahl | Eingabe | Go */
+.a-IRR-search {
+  flex-grow: 0;
+  border: 1px solid var(--a-field-input-border-color);
+  border-radius: var(--canvas-r-md);
+  background-color: var(--canvas-field);
+  overflow: clip;
+}
+.a-IRR-search:hover {
+  border-color: var(--canvas-edge-hover);
+}
+.a-IRR-search:focus-within {
+  border-color: var(--canvas-accent);
+  outline: 3px solid var(--canvas-accent-ring);
+  outline-offset: 0;
+}
+.a-IRR-search .a-IRR-button--colSearch,
+.a-IRR-search .a-IRR-button--search {
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-text-color: var(--canvas-muted);
+  --a-button-hover-background-color: var(--canvas-hover);
+  --a-button-hover-text-color: var(--canvas-ink);
+  --a-button-focus-background-color: var(--canvas-hover);
+  --a-button-padding-y: .4375rem;
+  --a-button-border-radius: 0;
+}
+.a-IRR-search .a-IRR-button--search {
+  --a-button-font-weight: 600;
+  --a-button-text-color: var(--canvas-ink);
+  box-shadow: inset 1px 0 0 var(--canvas-line);
+}
+.a-IRR-search .a-IRR-search-field {
+  height: auto;
+  align-self: stretch;
+  border-width: 0;
+  background-color: transparent;
+  font-size: .875rem;
+  outline: none;
+}
+.a-IRR-button.a-IRR-button--pagination {
+  --a-button-border-radius: var(--canvas-r-md);
+}
+.a-IRR-button.a-IRR-button--pagination:hover {
+  background-color: var(--canvas-soft-hover);
+  color: var(--canvas-ink);
+}
+.a-IRR-radioIconList-item input[type=radio]:checked + label {
+  box-shadow: inset var(--canvas-accent) 0 2px 0 0;
+}
+/* Filter-/Kontroll-Chips: neutral statt bunt */
+.a-IG-reportSummary-item--savedReport, .a-IG-controls-item--savedReport, .a-IRR-reportSummary-item--savedReport, .a-IRR-controls-item--savedReport,
+.a-IG-reportSummary-item--search, .a-IG-controls-item--search, .a-IRR-reportSummary-item--search, .a-IRR-controls-item--search,
+.a-IG-reportSummary-item--filter, .a-IG-controls-item--filter, .a-IRR-reportSummary-item--filter, .a-IRR-controls-item--filter,
+.a-IG-reportSummary-item--controlBreak, .a-IG-controls-item--controlBreak, .a-IRR-reportSummary-item--controlBreak, .a-IRR-controls-item--controlBreak,
+.a-IG-reportSummary-item--groupBy, .a-IG-controls-item--groupBy, .a-IRR-reportSummary-item--groupBy, .a-IRR-controls-item--groupBy,
+.a-IG-reportSummary-item--aggregate, .a-IG-controls-item--aggregate, .a-IRR-reportSummary-item--aggregate, .a-IRR-controls-item--aggregate,
+.a-IG-reportSummary-item--highlight, .a-IG-controls-item--highlight, .a-IRR-reportSummary-item--highlight, .a-IRR-controls-item--highlight,
+.a-IG-reportSummary-item--flashback, .a-IG-controls-item--flashback, .a-IRR-reportSummary-item--flashback, .a-IRR-controls-item--flashback,
+.a-IG-reportSummary-item--chart, .a-IG-controls-item--chart, .a-IRR-reportSummary-item--chart, .a-IRR-controls-item--chart,
+.a-IG-reportSummary-item--pivot, .a-IG-controls-item--pivot, .a-IRR-reportSummary-item--pivot, .a-IRR-controls-item--pivot {
+  --a-report-controls-cell-label-icon-background-color: var(--canvas-soft);
+  --a-report-controls-cell-label-icon-text-color: var(--canvas-ink);
+  --a-report-controls-cell-label-hover-background-color: var(--canvas-hover);
+}
+
+/* Interactive Grid */
+.a-GV-table th.a-GV-controlBreakHeader {
+  background-color: var(--canvas-surface-sunken);
+  border-color: var(--canvas-line);
+  color: var(--canvas-muted);
+}
+.a-GV-table .a-GV-cell.is-active {
+  background-color: var(--canvas-accent-tint);
+}
+.a-GV--editMode .a-GV-row.is-readonly .a-GV-cell,
+.a-GV--editMode .a-GV-cell.is-readonly {
+  background-color: var(--canvas-surface-sunken);
+  color: var(--canvas-muted);
+}
+.a-GV-headerLabel {
+  color: var(--canvas-muted);
+  font-weight: 600;
+}
+.a-GV-status,
+.a-GV-rownum {
+  color: var(--canvas-muted);
+}
+.a-GV-columnControls .a-Button {
+  background-color: var(--canvas-soft);
+  color: var(--canvas-ink);
+}
+
+/* ==========================================================================
+   10. Cards
+   ========================================================================== */
+.a-CardView-title {
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+.a-CardView-badge {
+  font-variant-numeric: tabular-nums;
+}
+.t-CardsRegion--styleA,
+.t-CardsRegion--styleB,
+.t-CardsRegion--styleC {
+  --a-cv-media-background-color: var(--canvas-surface-sunken);
+  --a-cv-badge-border-radius: var(--canvas-r-sm);
+}
+.t-CardsRegion--styleA {
+  --a-cv-icon-border-radius: var(--canvas-r-md);
+  --a-cv-initials-border-radius: var(--canvas-r-md);
+}
+
+/* ==========================================================================
+   11. Login: Leinwand auf dem Passepartout
+   ========================================================================== */
+.t-PageBody--login {
+  --ut-login-page-background-color: var(--canvas-frame);
+  --ut-login-region-background-color: var(--canvas-surface);
+  --ut-login-region-filter: none;
+  --ut-login-region-border-width: 0px;
+  --ut-login-region-border-radius: var(--canvas-r-canvas);
+  --ut-login-region-box-shadow: var(--canvas-canvas-shadow);
+  --ut-login-region-padding: 2.5rem;
+  --ut-login-logo-border-radius: var(--canvas-r-lg);
+}
+.t-LoginPage--bg1,
+.t-LoginPage--bg2,
+.t-LoginPage--bg3 {
+  --ut-body-background-color: var(--canvas-frame);
+}
+.t-LoginPage--bg1 .t-Login-bgImg,
+.t-LoginPage--bg2 .t-Login-bgImg,
+.t-LoginPage--bg3 .t-Login-bgImg,
+.t-LoginPage--bg1:before,
+.t-LoginPage--bg2:before,
+.t-LoginPage--bg3:before {
+  background-image: none;
+}
+.t-Login-title {
+  font-weight: 600;
+  letter-spacing: -.02em;
+}
+.t-Login-buttons {
+  --a-button-padding-y: .75rem;
+  --a-button-font-size: .9375rem;
+  --a-button-line-height: 1.25rem;
+}
+
+/* ==========================================================================
+   12. Kleinteile
+   ========================================================================== */
+.t-Badge {
+  font-variant-numeric: tabular-nums;
+}
+.t-LinksList-link {
+  border-radius: var(--canvas-r-md);
+}
+.t-Wizard {
+  border-radius: var(--canvas-r-lg);
+  overflow: clip;
+}

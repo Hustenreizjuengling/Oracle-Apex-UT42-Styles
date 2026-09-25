@@ -1,0 +1,608 @@
+/* ==========================================================================
+   Frequenz – Inhalts-Komponenten
+   Badges, Avatare, Template Components (Content Row, Comments, Timeline, Media List,
+   Metric Card), Listen (Links, Badges, Wizard Progress, Value Attribute Pairs,
+   Contextual Info) und die Icons-Seite der UT-Referenz-App.
+   Regeln: nur Tokens (--fq-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Leitidee: Weißraum, kräftige Typografie und zarte Haarlinien statt Kästen. Badges sind
+   Pillen, Avatare Kreise, Zähler und Gruppenköpfe neutral (--fq-soft, keine Kopfstreifen).
+   Akzent nur für Auswahl (Tönung + Akzentkante wie in der Navigation) und den aktuellen
+   Wizard-Schritt.
+   ========================================================================== */
+
+/* 1. Badge ------------------------------------------------------------------
+      Status-Flächen kommen über --a-palette-* aus der Brücke. Subtile Badges nehmen
+      in UT die FLÄCHEN-Farbe als Text (Warnung 2:1) – hier die Status-Textfarbe. */
+.t-Badge {
+  font-variant-numeric: tabular-nums;
+  --ut-badge-subtle-success-text-color: var(--fq-success-text);
+  --ut-badge-subtle-success-background-color: var(--fq-success-tint);
+  --ut-badge-subtle-warning-text-color: var(--fq-warning-text);
+  --ut-badge-subtle-warning-background-color: var(--fq-warning-tint);
+  --ut-badge-subtle-danger-text-color: var(--fq-danger-text);
+  --ut-badge-subtle-danger-background-color: var(--fq-danger-tint);
+  --ut-badge-subtle-info-text-color: var(--fq-info-text);
+  --ut-badge-subtle-info-background-color: var(--fq-info-tint);
+}
+.t-Badge--success { --fq-c-badge-text: var(--fq-success-text); --fq-c-badge-edge: var(--fq-success); }
+.t-Badge--warning { --fq-c-badge-text: var(--fq-warning-text); --fq-c-badge-edge: var(--fq-warning); }
+.t-Badge--danger  { --fq-c-badge-text: var(--fq-danger-text);  --fq-c-badge-edge: var(--fq-danger); }
+.t-Badge--info    { --fq-c-badge-text: var(--fq-info-text);    --fq-c-badge-edge: var(--fq-info); }
+/* Kontur: Text in Status-Textfarbe (UT: Flächenfarbe), neutrale Kontur mit kräftiger Linie
+   statt der fast unsichtbaren Sekundärfläche */
+.t-Badge--outline {
+  --ut-badge-border-color: var(--fq-c-badge-edge, var(--fq-line-strong));
+  color: var(--fq-c-badge-text, var(--fq-ink));
+}
+/* Größen setzen den Radius lokal auf .25rem – neu deklariert (Pille), danach die Formen */
+.t-Badge--sm,
+.t-Badge--md,
+.t-Badge--lg {
+  --ut-badge-border-radius: var(--fq-r-pill);
+}
+.t-Badge {
+  font-weight: var(--fq-fw-bold);
+}
+/* Klein: UT 11 px liegt unter der Skala – 12 px (--fq-fs-xs). Zeilenhöhe = Schriftgröße,
+   damit die UT-Höhe von 16 px (2 px Polster, Kontur 1 + 1 px Rand) für alle Varianten bleibt. */
+.t-Badge--sm {
+  --ut-badge-font-size: var(--fq-fs-xs);
+  --ut-badge-line-height: 1;
+}
+.t-Badge--square {
+  --ut-badge-border-radius: var(--fq-r-control);
+}
+.t-Badge--rounded {
+  --ut-badge-border-radius: var(--fq-r-item);
+}
+.t-Badge--circle {
+  --ut-badge-border-radius: var(--fq-r-pill);
+}
+
+/* 2. Avatar -----------------------------------------------------------------
+      UT fällt ohne u-color auf --a-palette-primary zurück (= Akzent). Neutral:
+      weiche Füllung mit Anthrazit, rund. u-color-N / u-colors setzen die Fläche weiter direkt. */
+.t-Avatar {
+  --ut-avatar-background-color: var(--fq-soft);
+  --ut-avatar-text-color: var(--fq-ink-2);
+}
+.t-Avatar--xxs,
+.t-Avatar--xs,
+.t-Avatar--sm,
+.t-Avatar--md,
+.t-Avatar--lg,
+.t-Avatar--xl,
+.t-Avatar--xxl {
+  --ut-avatar-border-radius: var(--fq-r-pill);
+}
+/* Formen und Sonderfälle nach den Größen (gleiche Spezifität, Reihenfolge wie UT Core) */
+.t-Avatar--square {
+  --ut-avatar-border-radius: var(--fq-r-control);
+}
+.t-Avatar--rounded {
+  --ut-avatar-border-radius: var(--fq-r-box);
+}
+.t-Avatar--circle {
+  --ut-avatar-border-radius: 50%;
+}
+.t-Avatar--noShape {
+  --ut-avatar-border-radius: unset;
+  --ut-avatar-background-color: transparent;
+  --ut-avatar-text-color: currentColor;
+}
+.t-Avatar--image {
+  --ut-avatar-text-color: transparent;
+}
+.t-Avatar--initials {
+  font-weight: var(--fq-fw-bold);
+}
+.t-Avatars {
+  --ut-avatar-group-header-background-color: transparent;
+  --ut-avatar-group-title-font-size: var(--fq-fs-lg);
+  --ut-avatar-group-title-line-height: var(--fq-lh-lg);
+  --ut-avatar-group-title-font-weight: var(--fq-fw-heavy);
+}
+
+/* 3. Auswahl in Listen-Komponenten ------------------------------------------
+      Fläche = --a-gv-selected-background-color (Brücke: --fq-accent-tint). Die Tönung
+      allein ist schwach – dazu die Akzentkante der Navigation an der Startkante. */
+.t-ContentRow-item.is-selected::before,
+.t-MediaList-item.is-selected::before,
+.t-Timeline-item.is-selected .t-Timeline-wrap::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset-inline-start: 0;
+  inset-block: 0;
+  inline-size: var(--fq-nav-mark-w);
+  background-color: var(--fq-accent);
+  pointer-events: none;
+}
+
+/* Fokus: Listenzeilen und Kacheln liegen bündig nebeneinander (teils in overflow:hidden) –
+   Ring nach innen statt über die Nachbarzeile (Vertrag §5.5). */
+.t-LinksList-link,
+.t-MediaList-itemWrap,
+a.t-ContentRow-wrap,
+.t-ContentRow-fullLink,
+a.t-Timeline-wrap,
+.t-BadgeList-wrap,
+.t-BadgeList-value a {
+  --ut-focus-outline-offset: calc(-1 * var(--fq-focus-ring-width));
+}
+
+/* 4. Content Row ------------------------------------------------------------ */
+.t-ContentRow {
+  --ut-cr-wrap-padding-x: var(--fq-row-pad-x);
+  --ut-cr-wrap-padding-y: var(--fq-space-3);
+  --ut-xs-cr-wrap-padding-x: var(--fq-row-pad-x);
+  --ut-xs-cr-wrap-padding-y: var(--fq-space-3);
+  --ut-cr-icon-spacing: var(--fq-space-3);
+  --ut-cr-overline-font-size: var(--fq-fs-xs);
+  --ut-cr-overline-line-height: var(--fq-lh-xs);
+  --ut-cr-overline-font-weight: var(--fq-fw-medium);
+  --ut-cr-title-font-size: var(--fq-fs-md);
+  --ut-cr-title-line-height: var(--fq-lh-md);
+  --ut-cr-title-font-weight: var(--fq-fw-bold);
+  --ut-cr-desc-margin-y: .125rem;
+  --ut-cr-desc-font-size: var(--fq-fs-sm);
+  --ut-cr-desc-line-height: var(--fq-lh-sm);
+  --ut-cr-misc-font-size: var(--fq-fs-xs);
+  --ut-cr-group-header-background-color: transparent;
+  --ut-cr-group-header-padding-x: var(--fq-row-pad-x);
+  --ut-cr-group-title-font-size: var(--fq-fs-lg);
+  --ut-cr-group-title-line-height: var(--fq-lh-lg);
+  --ut-cr-group-title-font-weight: var(--fq-fw-heavy);
+}
+.t-ContentRow--styleCompact {
+  --ut-cr-wrap-padding-y: var(--fq-space-2);
+  --ut-xs-cr-wrap-padding-y: var(--fq-space-2);
+  --ut-cr-selection-spacing: .625rem;
+  --ut-cr-icon-spacing: .625rem;
+  --ut-cr-img-max-width: 1.5rem;
+}
+a.t-ContentRow-wrap {
+  transition: background-color var(--fq-duration) var(--fq-ease);
+}
+a.t-ContentRow-wrap:hover {
+  background-color: var(--fq-wash-hover);   /* Schleier: sichtbar auf Seite und Tafel */
+}
+
+/* 5. Comments ---------------------------------------------------------------
+      Chat: Sprechblasen ohne Spitze, die dem Avatar zugewandte Ecke abgeflacht.
+      Eingehend = Tafelgrau, ausgehend = weiche Füllung. */
+.t-Comments {
+  --ut-comment-font-size: var(--fq-fs-md);
+  --ut-comment-line-height: var(--fq-lh-body);
+  --ut-comment-info-font-size: var(--fq-fs-xs);
+  --ut-comment-info-margin-y: .375rem;
+  --ut-comment-chat-active-background-color: var(--fq-soft-hover);
+  --ut-comment-group-header-background-color: transparent;
+  --ut-comment-group-title-font-size: var(--fq-fs-lg);
+  --ut-comment-group-title-line-height: var(--fq-lh-lg);
+  --ut-comment-group-title-font-weight: var(--fq-fw-heavy);
+}
+.t-Comments--chat {
+  --ut-comment-chat-padding-x: var(--fq-space-4);
+  --ut-comment-chat-padding-y: var(--fq-space-3);
+  --ut-comment-chat-border-radius: var(--fq-r-card);
+}
+.t-Comments--chat .t-Comments-comment:after {
+  content: none;
+}
+.t-Comments--chat .t-Comments-comment {
+  border-start-start-radius: .25rem;
+}
+.t-Comments-item--outbound,
+.t-Comments-item--Outbound {
+  --ut-comment-chat-background-color: var(--fq-soft);
+}
+.t-Comments-item--outbound .t-Comments-item .t-Comments-comment,
+.t-Comments-item--Outbound .t-Comments-item .t-Comments-comment {
+  border-start-start-radius: var(--ut-comment-chat-border-radius);
+  border-start-end-radius: .25rem;
+}
+/* UT setzt hier margin-right (physisch) – logisch nachgezogen */
+.t-Comments--chat .t-Comments-item--outbound .t-Comments-date {
+  margin-right: 0;
+  margin-inline-end: var(--ut-comment-info-margin-x, .5rem);
+}
+/* Auswahl: Blase getönt + Akzentkante (Tönung allein zu schwach) */
+.t-Comments--chat .t-Comments-item.is-selected .t-Comments-comment {
+  box-shadow: inset 0 0 0 2px var(--fq-accent);
+}
+/* Basic: Hervorhebung ragt per Schatten über den Eintrag hinaus – kein Versatz des Inhalts.
+   Seitlich --fq-space-2, oben/unten nur --fq-space-1 (zwei Schatten, je um space-1 versetzt):
+   zwei hervorgehobene Nachbarn (Abstand 1rem) behalten 8 px Luft statt zu einem Block zu
+   verschmelzen. Aktiv = Tafelgrau; ausgewählt = Tönung + Akzentkante (gewinnt bei beidem). */
+.t-Comments--basic .t-Comments-item.is-active {
+  --fq-c-cm-hl: var(--ut-comment-chat-background-color);
+  padding: 0;
+}
+.t-Comments--basic .t-Comments-item.is-selected {
+  --fq-c-cm-hl: var(--ut-comment-item-background-color);
+  position: relative;
+}
+.t-Comments--basic .t-Comments-item.is-active,
+.t-Comments--basic .t-Comments-item.is-selected {
+  border-radius: var(--fq-r-item);
+  background-color: var(--fq-c-cm-hl);
+  box-shadow:
+    calc(-1 * var(--fq-space-1)) 0 0 var(--fq-space-1) var(--fq-c-cm-hl),
+    var(--fq-space-1) 0 0 var(--fq-space-1) var(--fq-c-cm-hl);
+}
+.t-Comments--basic .t-Comments-item.is-selected::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset-inline-start: calc(-1 * var(--fq-space-2));
+  inset-block: calc(-1 * var(--fq-space-1));
+  inline-size: var(--fq-nav-mark-w);
+  background-color: var(--fq-accent);
+  pointer-events: none;
+}
+.t-Comments-userIcon {
+  font-weight: var(--fq-fw-bold);
+  /* Icon-Kachel als Paar (siehe Media List, §7) */
+  --ut-comment-icon-background-color: var(--fq-soft);
+  --ut-comment-icon-color: var(--fq-ink);
+}
+
+/* 6. Timeline ---------------------------------------------------------------
+      Neutrale Avatare, Ereignistyp als kompaktes Badge statt breitem Farbbalken. */
+.t-Timeline {
+  --ut-timeline-hover-background-color: var(--fq-wash-hover);
+  --ut-timeline-username-font-size: var(--fq-fs-sm);
+  --ut-timeline-username-line-height: var(--fq-lh-sm);
+  --ut-timeline-date-font-size: var(--fq-fs-xs);
+  --ut-timeline-date-line-height: var(--fq-lh-xs);
+  --ut-timeline-title-font-size: var(--fq-fs-md);
+  --ut-timeline-title-line-height: var(--fq-lh-md);
+  --ut-timeline-desc-font-size: var(--fq-fs-xs);
+  --ut-timeline-desc-line-height: var(--fq-lh-xs);
+  --ut-timeline-type-background-color: var(--fq-soft);
+  --ut-timeline-type-text-color: var(--fq-ink);
+  --ut-timeline-type-is-new-background-color: var(--fq-success-tint);
+  --ut-timeline-type-is-new-text-color: var(--fq-success-text);
+  --ut-timeline-type-updated-background-color: var(--fq-info-tint);
+  --ut-timeline-type-updated-text-color: var(--fq-info-text);
+  --ut-timeline-type-removed-background-color: var(--fq-danger-tint);
+  --ut-timeline-type-removed-text-color: var(--fq-danger-text);
+  --ut-timeline-group-header-background-color: transparent;
+  --ut-timeline-group-title-font-size: var(--fq-fs-lg);
+  --ut-timeline-group-title-line-height: var(--fq-lh-lg);
+  --ut-timeline-group-title-font-weight: var(--fq-fw-heavy);
+  --ut-badge-font-size: var(--fq-fs-xs);
+  --ut-badge-font-weight: var(--fq-fw-bold);
+  --ut-badge-border-radius: var(--fq-r-pill);
+}
+.t-Timeline-username {
+  font-weight: var(--fq-fw-bold);
+}
+/* Icon-Kachel als Paar (siehe Media List, §7) */
+.t-Timeline-avatar {
+  --ut-timeline-icon-background-color: var(--fq-soft);
+  --ut-timeline-icon-color: var(--fq-ink);
+}
+.t-Timeline-typeWrap {
+  --ut-timeline-typewrap-width: 10rem;
+}
+.t-Timeline-type {
+  --ut-timeline-type-padding-y: .125rem;
+  --ut-timeline-type-padding-x: .5rem;
+  --ut-timeline-type-min-height: 1.5rem;
+  --ut-timeline-type-border-radius: var(--fq-r-pill);
+  flex-grow: 0;
+}
+.t-Timeline-typename {
+  --ut-timeline-type-font-size: var(--fq-fs-xs);
+  --ut-timeline-type-line-height: var(--fq-lh-xs);
+  --ut-timeline-type-font-weight: var(--fq-fw-bold);
+}
+.t-Timeline-typeWrap .t-Badge {
+  align-self: center;
+  flex-grow: 0;
+}
+
+/* 7. Media List ------------------------------------------------------------- */
+.t-MediaList {
+  --ut-avatar-border-radius: var(--fq-r-pill);
+  --ut-medialist-title-font-weight: var(--fq-fw-bold);
+  --ut-medialist-badge-border-radius: var(--fq-r-pill);
+  --ut-medialist-item-hover-background-color: var(--fq-wash-hover);   /* Schleier: sichtbar auf Seite und Tafel */
+  --ut-media-list-group-header-background-color: transparent;
+  --ut-media-list-group-title-font-size: var(--fq-fs-lg);
+  --ut-media-list-group-title-line-height: var(--fq-lh-lg);
+  --ut-media-list-group-title-font-weight: var(--fq-fw-heavy);
+}
+/* Icon-Kacheln (Media List, Timeline, Comments) als PAAR am Element: weiche Füllung + Anthrazit.
+   Setzt eine App per :root nur die Fläche (--ut-medialist-icon-background-color o. ä.,
+   Vita-Gewohnheit mit weißem Symbol), stünde sonst Anthrazit auf der Kategoriefläche.
+   Farbige Kacheln weiter über u-color-N / u-colors
+   (setzen Fläche UND Kontrastschrift) oder app-seitig als Paar auf diesem Selektor. */
+.t-MediaList-icon {
+  --ut-medialist-icon-background-color: var(--fq-soft);
+  --ut-medialist-icon-color: var(--fq-ink);
+}
+.t-MediaList-itemWrap {
+  --ut-medialist-item-grid-gap: var(--fq-space-3);
+}
+.t-MediaList--large .t-MediaList-itemWrap {
+  --ut-medialist-item-grid-gap: var(--fq-space-4);
+}
+.t-MediaList-badge {
+  font-weight: var(--fq-fw-bold);
+  font-variant-numeric: tabular-nums;
+}
+/* Horizontal: UT trennt physisch rechts (RTL-Selektor dort wirkungslos) */
+@media (min-width: 480px) {
+  .u-RTL .t-MediaList--horizontal .t-MediaList-item {
+    border-right-width: 0;
+    border-left-width: var(--ut-medialist-item-border-width, var(--ut-component-inner-border-width));
+    border-left-color: var(--ut-medialist-item-border-color, var(--ut-component-inner-border-color));
+    border-left-style: solid;
+  }
+}
+
+/* 8. Metric Card (nur UT 26.1) ---------------------------------------------- */
+.t-MetricCards {
+  --ut-metric-card-border-radius: var(--fq-r-card);
+  --ut-metric-card-title-text-color: var(--fq-muted);
+  --ut-metric-card-title-font-size: var(--fq-fs-sm);
+  --ut-metric-card-title-line-height: var(--fq-lh-sm);
+  --ut-metric-card-metric-text-color: var(--fq-ink);
+  --ut-metric-card-metric-line-height: var(--fq-lh-xl);
+  --ut-metric-card-metric-font-weight: var(--fq-fw-heavy);
+  --ut-metric-card-meta-text-color: var(--fq-muted);
+  --ut-metric-card-group-header-background-color: transparent;
+  --ut-metric-card-group-title-font-size: var(--fq-fs-lg);
+  --ut-metric-card-group-title-line-height: var(--fq-lh-lg);
+  --ut-metric-card-group-title-font-weight: var(--fq-fw-heavy);
+}
+.t-MetricCard {
+  --ut-text-subheading-xs-font-size: var(--fq-fs-2xl);
+}
+.t-MetricCard-metric {
+  letter-spacing: var(--fq-tracking-heading);
+}
+/* UT: Primärfarbe 10 % (= Akzent) – neutral abgesenkt */
+.t-MetricCard-avatar--subtle .t-Avatar {
+  --ut-avatar-background-color: var(--fq-soft);
+  --ut-avatar-text-color: var(--fq-ink);
+}
+.t-MetricCards-item.is-selected .t-MetricCard {
+  --ut-metric-card-border-color: var(--fq-accent);
+}
+/* Schmale Karten brechen um, statt den Kennwert zu kürzen. UT hält Körper und Badge in einer
+   Zeile und schrumpft den Körper (min-inline-size 0); in Stacked/Spalten bei Tablet-Breite
+   (Karte ~200 px) blieb vom Wert nur „$…“. Zuerst rutscht der Badge unter den Körper, erst wenn
+   auch Avatar + Wert nicht nebeneinander passen, der Avatar über den Text (Inhalt mit
+   flex-basis min-content: Wert und Titel zählen, nicht die Länge des Meta-Satzes). Passt alles in
+   eine Zeile, ist das Ergebnis dasselbe wie in UT (einzige wachsende Spalte füllt den Rest). */
+.t-MetricCard {
+  flex-wrap: wrap;
+}
+.t-MetricCard-body--avatarPositionInline {
+  flex-wrap: wrap;
+}
+.t-MetricCard-body--avatarPositionInline .t-MetricCard-content {
+  flex-basis: min-content;
+}
+/* Horizontal scrollend: Karten behalten ihre Inhaltsbreite und bleiben einzeilig (UT). */
+.t-MetricCards--overflow .t-MetricCard,
+.t-MetricCards--overflow .t-MetricCard-body--avatarPositionInline {
+  flex-wrap: nowrap;
+}
+/* Stacked und Spalten füllen die Liste bzw. Spur (UT: flex-grow 1). In schmalen Spalten
+   (Stacked neben einer Seitenspalte, 480–640 px) lief die Karte mit ihrer Mindestbreite 12,5rem
+   32–59 px über den Rand – höchstens so breit wie die Liste. Gleiche Selektorliste wie UT Core. */
+.t-MetricCards--stacked .t-MetricCard,
+.t-MetricCards--cols .t-MetricCard,
+.t-MetricCards--2cols .t-MetricCard,
+.t-MetricCards--3cols .t-MetricCard,
+.t-MetricCards--4cols .t-MetricCard,
+.t-MetricCards--5cols .t-MetricCard {
+  min-inline-size: min(var(--ut-metric-card-min-width, 12.5rem), 100%);
+}
+/* Spalten-Layouts: UT teilt ab 480/640/768/992 px fest in 2/3/4/5 Spuren (repeat(N, minmax(0,1fr))),
+   die Karte behält aber ihre Mindestbreite 12,5rem – bei 3 Spalten und 768–1000 px Viewport
+   (Spur 157–190 px) überlappen die Karten und laufen aus der Region. Mindestbreite 0 hilft nicht:
+   Avatar und Badge schrumpfen nicht, der Wert verschwände ganz. Deshalb: höchstens N Spuren
+   wie UT, aber keine schmaler als die Kartenbreite – sonst eine Spur weniger (Container-Breite,
+   nicht Viewport). auto-fill wie repeat(N): wenige Karten werden nicht breiter gezogen.
+   Gleiche Selektorlisten wie UT Core (:not(:has()) ist dort Semantik, keine Spezifität). */
+.t-MetricCards--cols,
+.t-MetricCards--2cols,
+.t-MetricCards--3cols,
+.t-MetricCards--4cols,
+.t-MetricCards--5cols {
+  --fq-c-mc-cols: 2;
+}
+@media (min-width: 480px) {
+  .t-MetricCards--cols:not(:has(.t-MetricCard-groupItem)),
+  .t-MetricCards--cols .t-MetricCard-groupItems,
+  .t-MetricCards--2cols:not(:has(.t-MetricCard-groupItem)),
+  .t-MetricCards--2cols .t-MetricCard-groupItems,
+  .t-MetricCards--3cols:not(:has(.t-MetricCard-groupItem)),
+  .t-MetricCards--3cols .t-MetricCard-groupItems,
+  .t-MetricCards--4cols:not(:has(.t-MetricCard-groupItem)),
+  .t-MetricCards--4cols .t-MetricCard-groupItems,
+  .t-MetricCards--5cols:not(:has(.t-MetricCard-groupItem)),
+  .t-MetricCards--5cols .t-MetricCard-groupItems {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, max(
+      var(--ut-metric-card-min-width, 12.5rem),
+      calc((100% - (var(--fq-c-mc-cols) - 1) * var(--ut-metric-cards-gap, 1rem)) / var(--fq-c-mc-cols))
+    )), 1fr));
+  }
+}
+@media (min-width: 640px) {
+  .t-MetricCards--3cols,
+  .t-MetricCards--4cols,
+  .t-MetricCards--5cols {
+    --fq-c-mc-cols: 3;
+  }
+}
+@media (min-width: 768px) {
+  .t-MetricCards--4cols,
+  .t-MetricCards--5cols {
+    --fq-c-mc-cols: 4;
+  }
+}
+@media (min-width: 992px) {
+  .t-MetricCards--5cols {
+    --fq-c-mc-cols: 5;
+  }
+}
+
+/* 9. Links List ------------------------------------------------------------- */
+.t-LinksList {
+  --ut-linkslist-link-padding-x: var(--fq-row-pad-x);
+  --ut-linkslist-link-padding-y: calc((var(--fq-row-h) - var(--fq-lh-md) - 1px) / 2);
+  --ut-linkslist-label-line-height: var(--fq-lh-md);
+  --ut-linkslist-icon-color: var(--fq-muted);
+  --ut-linkslist-badge-border-radius: var(--fq-r-pill);
+  --ut-linkslist-text-color: var(--fq-ink);
+  --ut-linkslist-label-font-weight: var(--fq-fw-semibold);
+}
+/* Form von Hover und Fokus: Zeilen bündig zwischen Haarlinien bleiben eckig wie Media List,
+   Content Row und Tabellenzeilen (eine gerundete Fläche kerbt die Linien an den Ecken).
+   Gerundet nur frei stehend: Aktionsliste ohne Trennlinien, Badge-List-Kachel (eingerückt). */
+.t-LinksList--actions .t-LinksList-link {
+  border-radius: var(--fq-r-item);
+}
+.t-LinksList-link:hover .t-LinksList-icon {
+  color: var(--fq-ink);
+}
+.t-LinksList-badge {
+  font-weight: var(--fq-fw-bold);
+  font-variant-numeric: tabular-nums;
+}
+/* Aktueller Eintrag: wie die Navigation – Akzentschrift, Akzentkante an der Startkante */
+.t-LinksList-item.is-current > .t-LinksList-link {
+  --ut-linkslist-label-font-weight: var(--fq-fw-heavy);
+  --ut-linkslist-icon-color: var(--fq-accent-text);
+  color: var(--fq-accent-text);
+}
+.t-LinksList-item.is-current > .t-LinksList-link::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 0;
+  inline-size: var(--fq-nav-mark-w);
+  background-color: var(--fq-accent);
+}
+
+/* 10. Badge List ------------------------------------------------------------ */
+.t-BadgeList {
+  --ut-badgelist-item-border-color: var(--fq-line-subtle);
+  --ut-badgelist-label-text-color: var(--fq-ink-2);
+  --ut-badgelist-value-font-weight: var(--fq-fw-heavy);
+  --ut-badgelist-value-border-color: var(--fq-line-strong);
+  --ut-badgelist-wrap-border-radius: var(--fq-r-card);
+  --ut-badgelist-wrap-hover-background-color: var(--fq-wash-hover);
+}
+.t-BadgeList-wrap {
+  border-radius: var(--fq-r-card);
+}
+/* Wertkreis mit Kategorie-Farbe braucht keinen zusätzlichen Ring */
+.t-BadgeList.u-colors {
+  --ut-badgelist-value-border-color: transparent;
+}
+
+/* 11. Value Attribute Pairs, Contextual Info ---------------------------------
+      Attribut grau, Wert in Anthrazit; Zeilen wie Tabellenzeilen (36 px). */
+.t-AVPList {
+  --ut-avp-label-text-color: var(--fq-muted);
+  --ut-avp-value-text-color: var(--fq-ink);
+  --ut-avp-padding-x: var(--fq-row-pad-x);
+  --ut-avp-padding-y: calc((var(--fq-row-h) - var(--fq-lh-md) - 1px) / 2);
+  --ut-avp-line-height: var(--fq-lh-md);
+}
+.t-ContextualInfo {
+  --ut-contextualinfo-label-font-size: var(--fq-fs-sm);
+  --ut-contextualinfo-label-line-height: var(--fq-lh-sm);
+  --ut-contextualinfo-value-line-height: var(--fq-lh-sm);
+}
+
+/* 12. Wizard Progress ------------------------------------------------------
+      Erledigt = Anthrazit mit Haken in Grundfarbe, Fortschrittslinie in Anthrazit,
+      aktueller Schritt = Akzentring (wie ein gewähltes Radio), offen = Punkt.
+      #E20074 hält auch dunkel ≥ 3 : 1 (Seite 4,5, Dialog 3,2). */
+.t-WizardSteps {
+  --ut-wp-track-color: var(--fq-line-strong);
+  --ut-wp-marker-color: var(--fq-line-strong);
+  --ut-wp-complete-background-color: var(--fq-ink);
+  --ut-wp-checkmark-color: var(--fq-surface);
+  --ut-wp-active-background-color: var(--fq-ground);   /* Grundfläche: im Modal-Wizard die Dialogfläche */
+  --ut-wp-label-color: var(--fq-muted);
+  --ut-wp-label-font-size: var(--fq-fs-xs);
+  --ut-wp-label-line-height: var(--fq-lh-xs);
+  --ut-wp-label-active-font-weight: var(--fq-fw-heavy);
+  --fq-c-wp-done: var(--fq-ink);
+}
+.t-WizardSteps-step.is-complete .t-WizardSteps-marker {
+  transform: none;
+}
+.t-WizardSteps-step.is-active .t-WizardSteps-marker {
+  transform: none;
+  box-shadow: inset 0 0 0 .375rem var(--fq-accent);
+}
+.t-WizardSteps-step.is-active .t-WizardSteps-label {
+  color: var(--fq-ink);
+}
+/* Klickbare Schritte: UT wechselt nur die Farbe – Link-Konvention (Petrol, Unterstrich)
+   bei Hover und Tastaturfokus. Gleiche Spezifität wie UT, später geladen. */
+a.t-WizardSteps-wrap[href]:hover .t-WizardSteps-label,
+a.t-WizardSteps-wrap[href]:focus-visible .t-WizardSteps-label {
+  color: var(--fq-link-text);
+  text-decoration-line: underline;
+  text-decoration-color: var(--fq-link-underline-hover);
+  text-decoration-thickness: var(--fq-link-underline-width-hover);
+  text-underline-offset: var(--fq-link-underline-offset);
+}
+.t-WizardSteps-step.is-complete .t-WizardSteps-wrap::after {
+  background-color: var(--fq-c-wp-done);
+}
+.t-WizardSteps-step.is-active .t-WizardSteps-wrap::after {
+  background-image: linear-gradient(to right, var(--fq-c-wp-done) 50%, transparent 50%);
+}
+.u-RTL .t-WizardSteps-step.is-active .t-WizardSteps-wrap::after {
+  background-image: linear-gradient(to left, var(--fq-c-wp-done) 50%, transparent 50%);
+}
+.t-WizardSteps--vertical .t-WizardSteps-step.is-active .t-WizardSteps-wrap::after {
+  background-image: linear-gradient(to bottom, var(--fq-c-wp-done) 50%, transparent 50%);
+}
+.t-WizardSteps-step.is-active:first-child .t-WizardSteps-wrap::after {
+  background-image: none;
+}
+.t-WizardSteps-step.is-active:last-child .t-WizardSteps-wrap::after {
+  background-image: linear-gradient(var(--fq-c-wp-done), var(--fq-c-wp-done));
+}
+
+/* 13. Icons-Seite der UT-Referenz-App (dm-Search, Seite 4000) ----------------
+      Seiten-CSS färbt Kacheln #fff und nur unter .apex-theme-vita-dark dunkel –
+      für Frequenz greift das nie. Kategorien flach auf der Seite. */
+.dm-Search .dm-Search-category {
+  background-color: transparent;
+  border: 0;
+  border-block-start: var(--fq-hairline) solid var(--fq-line);
+  border-radius: 0;
+  box-shadow: none;
+  padding-inline: 0;
+}
+.dm-Search .dm-Search-result {
+  border-radius: var(--fq-r-box);
+  color: var(--fq-ink-2);
+}
+.dm-Search .dm-Search-result:hover,
+.dm-Search .dm-Search-result:focus {
+  background-color: var(--fq-hover);
+  box-shadow: none;
+  color: var(--fq-ink);
+}
+.dm-Search .dm-Search-result:focus-visible {
+  box-shadow: var(--fq-focus-shadow-inset);
+}
+.t-Body-content .dm-Search:empty::before {
+  color: var(--fq-muted);
+}

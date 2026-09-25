@@ -1,0 +1,38 @@
+{
+  "name": "Kracherl",
+  "prefix": "kracherl",
+  "tokenPrefix": "kr",
+  "version": "1.0.0",
+  "description": "Kracherl – sonniges Biergarten-Theme: sonnengelbes Kopfband mit einer einzelnen, einfarbigen Wellenkante und Sprudelblasen, Überschriften in Etikett-Violett (Bitter), Text in PT Sans, weiße Etiketten-Karten auf Lavendel-Grund, der aktuelle Eintrag als gelbe Etikett-Pille, Pillen-Buttons, Brause-Orange für Fokus und „hier bin ich“. Dunkel: „Biergarten bei Nacht“ – Violett-Schwarz mit Laternengelb.",
+  "license": "Theme: MIT. Schriften Bitter und PT Sans: SIL Open Font License 1.1.",
+  "styles": [
+    {
+      "id": "light",
+      "name": "Kracherl Light",
+      "staticId": "kracherl-light",
+      "base": "Vita",
+      "entry": "src/kracherl-light.css"
+    },
+    {
+      "id": "dark",
+      "name": "Kracherl Dark",
+      "staticId": "kracherl-dark",
+      "base": "Vita-Dark",
+      "entry": "src/kracherl-dark.css"
+    },
+    {
+      "id": "auto",
+      "name": "Kracherl Auto",
+      "staticId": "kracherl-auto",
+      "base": "Vita",
+      "entry": "src/kracherl-auto.css"
+    }
+  ],
+  "themeVariant": {
+    "number": 145,
+    "name": "Kracherl",
+    "internalName": "KRACHERL",
+    "staticId": "kracherl",
+    "defaultStyle": "light"
+  }
+}

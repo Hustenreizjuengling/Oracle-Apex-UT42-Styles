@@ -1,0 +1,178 @@
+/* ==========================================================================
+   Passer – Grundlagen (modusneutral, nur Tokens, kein @layer)
+   Schrift und Größen-Skala, Links, Textauswahl, EIN Fokus-System, Scrollbars,
+   Tabellenziffern, Druck. Spezifität bewusst niedrig (:where), damit Komponenten-
+   Dateien alles mit einfachen Klassen-Selektoren übersteuern können. Ausnahmen:
+   Überschriften h1–h6 (0,0,1 – müssen die Element-Regeln aus UT Core schlagen) und
+   der Tastatur-Fokusring (0,2,0, siehe 5).
+   ========================================================================== */
+
+/* 0. Registrierte Eigenschaften -------------------------------------------
+      Die Fehlpassung als typisierte Zahl (0 = in Passung, 1 = voll verrutscht): So lässt sie
+      sich als EINE Größe animieren (Einrasten der Passung auf der Login-Seite, login.css) und
+      treibt dabei Schrift-Schatten, Platten-Schatten und Raster zugleich – jede Ebene rechnet
+      sie in ihre eigene Länge um. inherits: true – Kinder erben den laufenden Wert. */
+@property --pa-c-shift {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/* 1. Papier und Schrift ---------------------------------------------------
+      Das Papierkorn liegt EINMAL als Kachel auf dem Seitengrund (Data-URI-SVG, einmal gerastert,
+      scrollt als normales Hintergrundbild mit – kein Filter, kein fixed, kein Neuzeichnen).
+      Flächen, die darüber kleben (Kopf, Title Bar), tragen dieselbe Kachel selbst (shell.css). */
+body {
+  background-image: var(--pa-grain);
+  background-size: var(--pa-grain-size) var(--pa-grain-size);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-synthesis-weight: none;           /* nie künstlich fetten: die Achse reicht 200–800 */
+  font-optical-sizing: auto;             /* opsz folgt der Schriftgröße: Titel eng und kräftig, Zellen offen */
+}
+:where(button, input, select, textarea, optgroup) {
+  font-family: inherit;
+}
+:where(h1, h2, h3, h4) {
+  letter-spacing: var(--pa-tracking-heading);
+}
+/* Rohe Überschriften (Static Content, Rich Text, Hilfetexte) auf der Skala: UT Core setzt
+   h1–h6 auf 32/24/20/16/14/12 px mit line-height 1.5 – ein h3 wäre so groß wie der
+   Abschnittstitel (Content Block h2, 20/28), ein h1 größer als der Seitentitel (30/36).
+   Gleiche Spezifität wie Core, später geladen. Komponenten-Titel (.t-*-title, .a-*-title,
+   .is-markdownified h*) setzen ihre Größe über Klassen bzw. UT-/APEX-Tokens und bleiben unberührt. */
+h1 {
+  font-size: var(--pa-fs-2xl);
+  line-height: var(--pa-lh-2xl);
+  letter-spacing: var(--pa-tracking-title);
+}
+h2 {
+  font-size: var(--pa-fs-xl);
+  line-height: var(--pa-lh-xl);
+}
+h3 {
+  font-size: var(--pa-fs-lg);
+  line-height: var(--pa-lh-lg);
+}
+h4 {
+  font-size: var(--pa-fs-md);
+  line-height: var(--pa-lh-md);
+}
+h5 {
+  font-size: var(--pa-fs-sm);
+  line-height: var(--pa-lh-sm);
+}
+h6 {
+  font-size: var(--pa-fs-xs);
+  line-height: var(--pa-lh-xs);
+}
+:where(b, strong) {
+  font-weight: var(--pa-fw-bold);
+}
+:where(code, kbd, samp, pre) {
+  font-family: var(--pa-font-mono);
+}
+/* Code-Blöcke scrollen in ihrem Kasten, statt über den Seitenrand zu laufen
+   (UT Core: pre { white-space: pre } ohne overflow; mobil 3004/3005 „Sample SQL Query“). */
+:where(pre) {
+  overflow-x: auto;
+}
+/* Header-Branding: feste Zeilenhöhe, damit der Font-Swap (font-display: swap) die von
+   theme42.js gemessene Kopfhöhe nicht verschiebt. */
+.t-Header-logo,
+.t-Header-logo-link,
+.t-Header-logo .apex-logo-text {
+  line-height: var(--pa-brand-lh);
+}
+
+/* Größen-Skala als Hilfsklassen (12 · 13 · 14 · 16 · 20 · 32) */
+.ri-text-xs  { font-size: var(--pa-fs-xs);  line-height: var(--pa-lh-xs); }
+.ri-text-sm  { font-size: var(--pa-fs-sm);  line-height: var(--pa-lh-sm); }
+.ri-text-md  { font-size: var(--pa-fs-md);  line-height: var(--pa-lh-md); }
+.ri-text-lg  { font-size: var(--pa-fs-lg);  line-height: var(--pa-lh-lg); font-weight: var(--pa-fw-semibold); }
+.ri-text-xl  { font-size: var(--pa-fs-xl);  line-height: var(--pa-lh-xl); font-weight: var(--pa-fw-semibold); letter-spacing: var(--pa-tracking-heading); }
+.ri-text-2xl { font-size: var(--pa-fs-2xl); line-height: var(--pa-lh-2xl); font-weight: var(--pa-fw-semibold); letter-spacing: var(--pa-tracking-title); }
+.ri-text-narrow { font-stretch: var(--pa-stretch-narrow); }
+
+/* 2. Tabellenziffern überall, wo Zahlen in Spalten stehen ---------------- */
+:where(table, input, output, time, .apex-item-number, .a-GV, .a-IRR, .t-Report, .a-DatePicker,
+       .t-BadgeList, .t-Badge, .t-MetricCard, .a-CardView-badge, .t-Button-badge, .a-Button-badge,
+       [class*="pagination"], [class*="Pagination"], .u-tabular-nums) {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 3. Links im Fließtext: Tusche mit Unterstrich, Hover-Unterstrich im Akzent.
+      Nur Links ohne Klasse – Komponenten-Links (Buttons, Nav, Karten …) bleiben unberührt. */
+a:not([class]) {
+  color: var(--pa-link-text);
+  text-decoration-line: underline;
+  text-decoration-color: var(--pa-link-underline);
+  text-decoration-thickness: var(--pa-link-underline-width);
+  text-underline-offset: var(--pa-link-underline-offset);
+}
+a:not([class]):hover {
+  color: var(--pa-link-text);
+  text-decoration-color: var(--pa-link-underline-hover);
+  text-decoration-thickness: var(--pa-link-underline-width-hover);
+}
+
+/* 4. Textauswahl und Markierung: gelber Marker (Druckgelb) ------------- */
+::selection {
+  background-color: var(--pa-selection);
+  color: var(--pa-selection-text);
+}
+:where(mark) {
+  background-color: var(--pa-marker-soft);
+  color: var(--pa-ink);
+}
+
+/* 5. Fokus: EIN System (Tokens --pa-focus-*), nur bei Tastatur sichtbar.
+      UT Core zeichnet *:focus mit den Hooks --ut-focus-outline / --ut-focus-outline-offset
+      (auf :root = --pa-focus-outline / --pa-focus-ring-offset, siehe bridge.css). Komponenten
+      passen den Ring lokal über genau diese zwei Hooks an – nie über eigene outline-Regeln.
+      Hier: Maus-Fokus ohne Ring; Tastatur-Fokus überall mit Ring (wie UT: tabindex=-1 ausgenommen).
+      Spezifität 0,2,0: schlägt auch Oracle-Regeln, die den Umriss unterdrücken (a.t-ContentRow-wrap,
+      .a-CardView-titleLink:focus haben sonst GAR keinen Fokus-Hinweis). Wo Oracle den Fokus anders
+      zeigt (.a-TreeView-label → Zeilen-Schatten, .a-FS .apex-item-option → Kästchen, .a-IRR-dialogList a),
+      entsteht dadurch ein Doppelring – den nimmt die Komponente lokal über --ut-focus-outline: none. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+:focus-visible:not([tabindex="-1"]) {
+  outline: var(--ut-focus-outline, var(--pa-focus-outline));
+  outline-offset: var(--ut-focus-outline-offset, var(--pa-focus-ring-offset));
+}
+/* Visuell versteckte FORMULAR-Eingaben (Star Rating: input.u-vh.is-focusable 0×0, Datei-Input 1×1):
+   kein Streu-Ring am unsichtbaren Kästchen – ihren Fokus zeigt immer der sichtbare Stellvertreter
+   (Ring um .a-StarRating, FileDrop, Checkbox-Kästchen). Versteckte Links/Buttons (Sprunglinks, die
+   beim Fokus sichtbar werden) behalten den Ring. 0,2,1 schlägt den Ring oben. */
+:is(input, select, textarea):is(.u-vh, .u-VisuallyHidden, .visuallyhidden, .visuallyHidden):focus-visible {
+  outline: none;
+}
+
+/* 6. Scrollbars: dezent, Farbe folgt dem Modus (scrollbar-color vererbt sich) */
+:root {
+  scrollbar-color: var(--pa-scrollbar-thumb) var(--pa-scrollbar-track);
+}
+:where(body *) {
+  scrollbar-width: thin;
+}
+
+/* 7. Bewegung reduzieren ------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --pa-duration: 0s;
+  }
+}
+
+/* 8. Druck: weißes Papier, kein Korn, kein Neon, kein Passer (Farb-Tokens: tokens/print.css) */
+@media print {
+  body {
+    background-color: var(--pa-surface);
+    background-image: none;
+  }
+  .t-Body-title {
+    position: static;
+  }
+}

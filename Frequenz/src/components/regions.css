@@ -1,0 +1,627 @@
+/* ==========================================================================
+   Frequenz – Regionen
+   Standard-Region (alle Template-Optionen), Akzente, Collapsible, Hero, Alert-Region,
+   Button Container, Carousel, Tabs Container, Wizard-Container, Content Block, Image Region.
+   Idee: Regionen sind hellgraue Tafeln mit großem Radius (24 px) auf der weißen Seite – ohne
+   Rand, ohne Schatten. Was in einer Tafel liegt (Felder, Tabellen, Karten, verschachtelte
+   Regionen), ist wieder weiß. Der Hero ist die größte Tafel (40 px). Akzent-Regionen sind
+   getönte Tafeln. Flach („Remove UI Decoration“) bleibt flach.
+   Regeln: nur Tokens (--fq-*, gemappte UT-/APEX-Tokens), modusneutral, kein @layer,
+   logische Eigenschaften; lokale Tokens: --fq-c-accent, --fq-c-region-toggle-*,
+   --fq-c-region-ring-room, --fq-c-region-title-pad.
+   ========================================================================== */
+
+
+/* 1. Standard-Region: Tafel ----------------------------------------------------
+   Fläche, Radius, Polster und Titelgröße setzt bridge.css (Abschnitt 7). Hier nur die
+   Abstände: Titel oben mit Tafel-Polster, darunter direkt der Inhalt. */
+
+.t-Region-header {
+  font-weight: var(--fq-fw-heavy);
+}
+.t-Region-title {
+  letter-spacing: var(--fq-tracking-heading);
+}
+.t-Region-headerItems--title {
+  padding-block: var(--fq-space-5) var(--fq-space-1);
+}
+.t-Region-headerItems--buttons {
+  padding-block: var(--fq-space-4) 0;
+}
+.t-Region-bodyWrap > .t-Region-body {
+  padding-block: var(--fq-space-4) var(--fq-panel-pad);
+}
+/* ohne sichtbaren Kopf: gleiches Polster oben wie unten („Remove Body Padding“ behält 0) */
+.t-Region--hideHeader:not(.t-Region--noPadding) > .t-Region-bodyWrap > .t-Region-body,
+.t-Region--removeHeader:not(.t-Region--noPadding) > .t-Region-bodyWrap > .t-Region-body {
+  padding-block-start: var(--fq-panel-pad);
+}
+.t-Region-buttons-left,
+.t-Region-buttons-right {
+  --ut-region-buttons-padding-y: var(--fq-space-3);
+}
+.t-Region-buttons + .t-Region-body,
+.t-Region-body + .t-Region-buttons {
+  --ut-region-buttons-padding-y: var(--fq-space-3);
+}
+
+/* Titel als Schalter (Collapsible): Fokusring gerundet und mit etwas Luft zur Schrift */
+.t-Region-titleButton {
+  --fq-c-region-title-pad: .25rem;
+  padding-inline: var(--fq-c-region-title-pad);
+  margin-inline: calc(-1 * var(--fq-c-region-title-pad));
+  border-radius: var(--fq-r-item);
+}
+
+/* Region-Icon: runder Grund in weicher Füllung */
+.t-Region-headerIcon {
+  --ut-region-header-icon-spacing: var(--fq-space-3);
+  --ut-region-header-icon-padding: .5rem;
+  --ut-region-header-icon-border-radius: var(--fq-r-pill);
+}
+.t-Region-headerIcon .t-Icon {
+  background-color: var(--fq-surface);
+  color: var(--fq-ink);
+}
+
+/* Button-Zeilen oben/unten: Gruppen brechen um, die rechte bleibt am Ende */
+.t-Region-buttons {
+  flex-wrap: wrap;
+  column-gap: var(--fq-space-2);
+}
+.t-Region-buttons-left,
+.t-Region-buttons-right {
+  max-inline-size: 100%;
+}
+.t-Region-buttons-right {
+  margin-inline-start: auto;
+}
+
+/* Verschachtelt: Region in Region bzw. in einer grauen Fläche wird wieder weiß (16 px) */
+.t-Region-body .t-Region,
+.t-ContentBlock--shadowBG .t-Region,
+.t-Alert .t-Region {
+  --ut-region-background-color: var(--fq-surface);
+  --ut-region-border-radius: var(--fq-r-card);
+}
+/* … und eine Region in einer weißen Region wieder grau */
+.t-Region-body .t-Region-body .t-Region {
+  --ut-region-background-color: var(--fq-panel);
+}
+
+/* Akzent 1–15: getönte Tafel statt farbigem Kopfbalken. Die Tönung kommt aus der
+   Kategoriefarbe (14 % über dem Tafelgrau); Titel und Text bleiben in Anthrazit. */
+.t-Region--accent1 { --fq-c-accent: var(--u-color-1); }
+.t-Region--accent2 { --fq-c-accent: var(--u-color-2); }
+.t-Region--accent3 { --fq-c-accent: var(--u-color-3); }
+.t-Region--accent4 { --fq-c-accent: var(--u-color-4); }
+.t-Region--accent5 { --fq-c-accent: var(--u-color-5); }
+.t-Region--accent6 { --fq-c-accent: var(--u-color-6); }
+.t-Region--accent7 { --fq-c-accent: var(--u-color-7); }
+.t-Region--accent8 { --fq-c-accent: var(--u-color-8); }
+.t-Region--accent9 { --fq-c-accent: var(--u-color-9); }
+.t-Region--accent10 { --fq-c-accent: var(--u-color-10); }
+.t-Region--accent11 { --fq-c-accent: var(--u-color-11); }
+.t-Region--accent12 { --fq-c-accent: var(--u-color-12); }
+.t-Region--accent13 { --fq-c-accent: var(--u-color-13); }
+.t-Region--accent14 { --fq-c-accent: var(--u-color-14); }
+.t-Region--accent15 { --fq-c-accent: var(--u-color-15); }
+.t-Region[class*="t-Region--accent"] {
+  --ut-region-background-color: color-mix(in srgb, var(--fq-c-accent) 14%, var(--fq-panel));
+}
+.t-Region[class*="t-Region--accent"] > .t-Region-header {
+  background-color: transparent;
+  color: var(--fq-ink);
+}
+
+/* Body Overflow „Scroll“ (UT-Standard, t-Region--scrollBody): Scroll-Container. Bei bündigem
+   Inhalt schnitte er den Fokusring seitlich ab – Ring-Raum als Polster, mit negativer Marge zurück.
+   Jeder Körper setzt den Token neu, damit verschachtelte Regionen ihn nicht erben.
+   Nur ohne Tafel (noUI): Bei „Remove Body Padding“ mit Tafel schneidet der bodyWrap am Radius ab
+   (unten) – der Ring-Raum läge außerhalb davon und nützte nichts, kostete aber am Ende einer
+   waagerecht gescrollten breiten Tabelle die letzten Pixel samt rechter Kante (1411/1412). */
+.t-Region-body {
+  --fq-c-region-ring-room: 0px;
+}
+.t-Region--noUI.t-Region--scrollBody > .t-Region-bodyWrap > .t-Region-body,
+.t-Region--noUI.t-Region--shadowScroll > .t-Region-bodyWrap > .t-Region-body {
+  --fq-c-region-ring-room: calc(var(--fq-focus-ring-offset) + var(--fq-focus-ring-width));
+  padding-inline: var(--fq-c-region-ring-room);
+  margin-inline: calc(-1 * var(--fq-c-region-ring-room));
+}
+
+/* Remove UI Decoration: flach, ohne Tafel und ohne Polster; Titel mit Abstand zum Inhalt */
+.t-Region--noUI > .t-Region-header .t-Region-headerItems--title {
+  padding-block: 0 var(--fq-space-3);
+}
+.t-Region--noUI > .t-Region-header .t-Region-headerItems--buttons {
+  padding-block: 0 var(--fq-space-3);
+}
+.t-Region--noUI > .t-Region-bodyWrap > .t-Region-body {
+  padding-block: 0;
+}
+/* Remove Borders: Tafel bleibt (sie hat ohnehin keinen Rand) */
+
+/* Remove Body Padding: Inhalt bis an die Tafelkante; der Radius schneidet ihn sauber ab */
+.t-Region--noPadding:not(.t-Region--noUI) > .t-Region-bodyWrap {
+  border-end-start-radius: var(--ut-region-border-radius);
+  border-end-end-radius: var(--ut-region-border-radius);
+  overflow: clip;
+}
+/* … ohne sichtbaren Kopf auch oben: der Inhalt beginnt an der Tafelkante, der Radius rundet ihn */
+.t-Region--noPadding:is(.t-Region--hideHeader, .t-Region--removeHeader):not(.t-Region--noUI) > .t-Region-bodyWrap {
+  border-start-start-radius: var(--ut-region-border-radius);
+  border-start-end-radius: var(--ut-region-border-radius);
+}
+
+/* Text Content: flach wie Fließtext */
+.t-Region--textContent > .t-Region-header .t-Region-headerItems--title {
+  padding-inline: 0;
+}
+
+/* Stack Region: Liste ohne Tafel, Haarlinien zwischen den Einträgen (Grundlage für Akkordeons) */
+.t-Region--stacked {
+  --ut-region-background-color: transparent;
+  --ut-region-border-width: var(--fq-hairline);
+  --ut-region-border-color: var(--fq-line);
+  --ut-region-header-padding-x: 0rem;
+  --ut-region-body-padding-x: 0rem;
+  --ut-region-hideshow-header-padding-x: 0rem;
+}
+
+/* Maximieren: die Region füllt das Fenster als weiße Fläche */
+.t-Region.is-maximized {
+  padding-block: var(--fq-page-pad-y);
+  padding-inline: var(--fq-page-pad-x);
+  background-color: var(--fq-surface);
+}
+
+
+/* 2. Collapsible: runder Schalter mit Chevron --------------------------------- */
+
+.t-Region--hideShow {
+  --fq-c-region-toggle-rot: 45deg;                 /* aufgeklappt: nach unten */
+  --fq-c-region-toggle-shift: 0 -15%;
+}
+.t-Region--hideShow.is-collapsed {
+  --fq-c-region-toggle-rot: -45deg;                /* zugeklappt: in Leserichtung */
+  --fq-c-region-toggle-shift: -15% 0;
+}
+.u-RTL .t-Region--hideShow.is-collapsed {
+  --fq-c-region-toggle-rot: 135deg;
+  --fq-c-region-toggle-shift: 15% 0;
+}
+.t-Region--controlsPosEnd.is-expanded {
+  --fq-c-region-toggle-rot: -135deg;               /* Schalter am Ende: auf = nach oben */
+  --fq-c-region-toggle-shift: 0 15%;
+}
+.t-Region--controlsPosEnd.is-collapsed,
+.u-RTL .t-Region--controlsPosEnd.is-collapsed {
+  --fq-c-region-toggle-rot: 45deg;
+  --fq-c-region-toggle-shift: 0 -15%;
+}
+/* zugeklappte Tafel: Titel oben und unten gleich eingefasst */
+.t-Region--hideShow.is-collapsed:not(.t-Region--noUI) > .t-Region-header .t-Region-headerItems--title {
+  padding-block-end: var(--fq-space-5);
+}
+.t-Region--hideShow.is-collapsed.t-Region--noUI > .t-Region-header .t-Region-headerItems--title {
+  padding-block-end: 0;
+}
+
+.t-Region-headerItems--controls {
+  padding-inline: var(--ut-region-header-padding-x) 0;
+  align-self: flex-start;
+  padding-block-start: calc(var(--fq-space-5) + (var(--fq-lh-xl) - 2rem) / 2);
+}
+.t-Region--noUI .t-Region-headerItems--controls {
+  padding-block-start: calc((var(--fq-lh-xl) - 2rem) / 2);
+}
+.t-Region--hideShow > .t-Region-header .t-Region-headerItems--title {
+  padding-inline-start: var(--fq-space-3);
+}
+.t-Region--controlsPosEnd .t-Region-headerItems--controls {
+  padding-inline: var(--fq-space-2) var(--ut-region-header-padding-x);
+}
+.t-Region--controlsPosEnd > .t-Region-header .t-Region-headerItems--title {
+  padding-inline-start: var(--ut-region-header-padding-x);
+}
+.t-Region-headerItems--controls .t-Button--hideShow {
+  --a-button-background-color: var(--fq-surface);
+  --a-button-text-color: var(--fq-ink);
+  --a-button-border-color: transparent;
+  --a-button-hover-background-color: var(--fq-soft);
+  --a-button-hover-text-color: var(--fq-ink);
+  --a-button-hover-border-color: transparent;
+  --a-button-active-background-color: var(--fq-soft-hover);
+  --a-button-active-border-color: transparent;
+  --a-button-focus-background-color: var(--fq-surface);
+  --a-button-focus-border-color: transparent;
+  --a-button-border-radius: var(--fq-r-pill);
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  min-inline-size: var(--fq-hit-min);
+  min-block-size: var(--fq-hit-min);
+  padding: 0;
+}
+.t-Region--noUI .t-Button--hideShow,
+.t-Region--stacked .t-Button--hideShow {
+  --a-button-background-color: var(--fq-panel);
+  --a-button-focus-background-color: var(--fq-panel);
+}
+.t-Button--hideShow .a-Collapsible-icon {
+  display: grid;
+  place-items: center;
+}
+/* Chevron als zwei Striche; die Glyphe (Dreieck) wird auf 0 gesetzt.
+   Physische Kanten sind hier Absicht: die Drehung bestimmt die Richtung (RTL oben). */
+.t-Button--hideShow .a-Collapsible-icon::before {
+  font-size: 0;
+  inline-size: .5rem;
+  block-size: .5rem;
+  border-style: solid;
+  border-color: currentColor;
+  border-width: 0 2px 2px 0;
+  translate: var(--fq-c-region-toggle-shift, 0 -15%);
+  rotate: var(--fq-c-region-toggle-rot, 45deg);
+  transition: rotate var(--fq-duration) var(--fq-ease), translate var(--fq-duration) var(--fq-ease);
+}
+/* Option „Plus or Minus“: Glyphen von UT behalten */
+.t-Region--hideShowIconsMath .t-Button--hideShow .a-Collapsible-icon::before {
+  font-size: inherit;
+  inline-size: auto;
+  block-size: auto;
+  border-width: 0;
+  translate: none;
+  rotate: none;
+}
+
+
+/* 3. Hero: die größte Tafel – 40 px Radius, Titel 44/800 ------------------------ */
+
+.t-HeroRegion {
+  --ut-hero-region-padding-x: var(--fq-space-12);
+  --ut-hero-region-padding-y: var(--fq-space-12);
+  --ut-xs-hero-region-padding-x: var(--fq-space-6);
+  --ut-xs-hero-region-padding-y: var(--fq-space-8);
+  --ut-hero-region-title-font-size: var(--fq-fs-hero);
+  --ut-hero-region-title-line-height: var(--fq-lh-hero);
+  --ut-xs-hero-region-title-font-size: var(--fq-fs-hero);
+  --ut-xs-hero-region-title-line-height: var(--fq-lh-hero);
+  --ut-hero-region-title-font-weight: var(--fq-fw-heavy);
+  --ut-hero-region-font-size: var(--fq-fs-lg);
+  --ut-hero-region-line-height: var(--fq-lh-lg);
+  --ut-xs-hero-region-font-size: var(--fq-fs-md);
+  --ut-xs-hero-region-line-height: var(--fq-lh-body);
+  --ut-hero-region-content-text-color: var(--fq-ink-2);
+  --ut-hero-region-icon-container-size: 5rem;
+  --ut-hero-region-icon-size: 2.25rem;
+  --ut-xs-hero-region-icon-container-size: 3.5rem;
+  --ut-xs-hero-region-icon-size: 1.5rem;
+  --ut-hero-region-icon-spacing: var(--fq-space-8);
+  --ut-xs-hero-region-icon-spacing: var(--fq-space-4);
+  --ut-hero-region-column-spacing: var(--fq-space-6);
+  margin-block-end: var(--fq-region-gap);
+  border-radius: var(--fq-r-hero);
+  background-color: var(--fq-panel);
+}
+.t-HeroRegion--noPadding {
+  --ut-hero-region-padding-y: 0rem;
+  --ut-hero-region-padding-x: 0rem;
+  background-color: transparent;
+}
+.t-HeroRegion--iconsRounded {
+  --ut-hero-region-icon-border-radius: var(--fq-r-card);
+}
+.t-HeroRegion--iconsSquare {
+  --ut-hero-region-icon-border-radius: var(--fq-r-control);
+}
+/* Icon: Fläche und Symbol immer als Paar – runder weißer Grund in der Tafel */
+.t-HeroRegion-icon {
+  --ut-hero-region-icon-background-color: var(--fq-surface);
+  --ut-hero-region-icon-text-color: var(--fq-ink);
+}
+.t-HeroRegion-title {
+  letter-spacing: var(--fq-tracking-title);
+}
+.t-HeroRegion-buttons {
+  gap: var(--fq-space-3);
+}
+/* Hero in der Title Bar: flacher, Seitentitel-Größe */
+.t-Body-title .t-HeroRegion {
+  --ut-hero-region-padding-x: var(--fq-page-pad-x);
+  --ut-hero-region-padding-y: var(--fq-space-6);
+  --ut-hero-region-title-font-size: var(--fq-fs-3xl);
+  --ut-hero-region-title-line-height: var(--fq-lh-3xl);
+  margin: var(--fq-space-4) var(--fq-page-pad-x) var(--fq-space-2);
+  border-radius: var(--fq-r-panel);
+}
+
+
+/* 4. Alert: getönte Fläche, Symbol auf rundem Grund in Statusfarbe ---------------
+   Ohne „Highlight Background“: Tafelgrau; mit (t-Alert--colorBG): Status-Tönung
+   (--ut-palette-*-shade = --fq-<status>-tint). */
+
+.t-Alert {
+  --ut-alert-background-color: var(--fq-panel);
+  --ut-alert-text-color: var(--fq-ink);
+  --ut-alert-border-width: 0px;
+  --ut-alert-box-shadow: none;
+  --ut-alert-title-font-weight: var(--fq-fw-heavy);
+  --ut-alert-horizontal-icon-size: 1.125rem;
+  --ut-alert-wizard-icon-size: 2rem;
+  --ut-alert-horizontal-border-radius: var(--fq-r-card);
+  --ut-alert-wizard-border-radius: var(--fq-r-panel);
+  --fq-c-alert-disc: var(--fq-strong);
+  --fq-c-alert-disc-on: var(--fq-strong-on);
+  display: flow-root;            /* ohne Rahmen fielen die Innenabstände des Wizard-Alerts nach außen */
+}
+.t-Alert-icon {
+  background-color: transparent;
+}
+.t-Alert-title {
+  letter-spacing: var(--fq-tracking-heading);
+}
+.t-Alert--warning,
+.t-Alert--yellow {
+  --fq-c-alert-disc: var(--fq-warning);
+  --fq-c-alert-disc-on: var(--fq-warning-on);
+}
+.t-Alert--success {
+  --fq-c-alert-disc: var(--fq-success);
+  --fq-c-alert-disc-on: var(--fq-success-on);
+}
+.t-Alert--info {
+  --fq-c-alert-disc: var(--fq-info);
+  --fq-c-alert-disc-on: var(--fq-info-on);
+}
+.t-Alert--danger,
+.t-Alert--red {
+  --fq-c-alert-disc: var(--fq-danger);
+  --fq-c-alert-disc-on: var(--fq-danger-on);
+}
+.t-Alert-icon .t-Icon {
+  display: grid;
+  place-items: center;
+  border-radius: var(--fq-r-pill);
+  background-color: var(--fq-c-alert-disc);
+  color: var(--fq-c-alert-disc-on);
+}
+
+/* Horizontal: runder Symbolgrund 36 px oben neben dem Titel */
+.t-Alert--horizontal .t-Alert-icon {
+  align-items: flex-start;
+  padding-block: var(--fq-space-5);
+  padding-inline: var(--fq-space-5) 0;
+}
+.t-Alert--horizontal .t-Alert-icon .t-Icon {
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  margin-block: 0;
+}
+.t-Alert--horizontal .t-Alert-content {
+  padding: var(--fq-space-5);
+  gap: var(--fq-space-1);
+  justify-content: center;
+}
+.t-Alert--horizontal:is(.t-Alert--accessibleHeading, .t-Alert--removeHeading) .t-Alert-content {
+  gap: 0;
+}
+.t-Alert--horizontal .t-Alert-title {
+  --ut-alert-title-font-size: var(--fq-fs-lg);
+  --ut-alert-title-line-height: var(--fq-lh-lg);
+}
+
+/* Wizard: zentrierte Meldung (Bestätigung, Zugriff verweigert …) */
+.t-Alert--wizard .t-Alert-icon .t-Icon {
+  inline-size: 4rem;
+  block-size: 4rem;
+}
+.t-Alert--wizard .t-Alert-title {
+  --ut-alert-title-font-size: var(--fq-fs-2xl);
+  --ut-alert-title-line-height: var(--fq-lh-2xl);
+}
+.t-Alert--wizard .t-Alert-body {
+  font-size: var(--fq-fs-md);
+  line-height: var(--fq-lh-body);
+  color: var(--fq-ink-2);
+}
+.t-Alert--wizard .t-Alert-inset {
+  border-radius: var(--fq-r-box);
+}
+.t-Alert .t-ButtonRegion {
+  --ut-button-region-border-width: 0px;
+  background-color: transparent;
+}
+
+/* Seitenmeldungen (t-Alert--page, apex.message) gestaltet overlays.css. */
+
+
+/* 5. Button Container: Tafel mit Buttons (Formular-Fußleiste) -------------------
+   Borderless / Remove UI Decoration / Slim / No Padding wirken weiter über UT. */
+
+:where(.t-ButtonRegion) {
+  --ut-button-region-padding: var(--fq-space-3);
+}
+.t-ButtonRegion {
+  --ut-button-region-background-color: var(--fq-panel);
+  --ut-button-region-title-font-size: var(--fq-fs-xl);
+  --ut-button-region-title-line-height: var(--fq-lh-xl);
+  --ut-button-region-title-font-weight: var(--fq-fw-heavy);
+  border-width: 0;
+}
+.t-ButtonRegion-col--left .t-ButtonRegion-buttons,
+.t-ButtonRegion-col--right .t-ButtonRegion-buttons {
+  padding-inline: var(--fq-space-3);
+  gap: var(--fq-space-2);
+}
+.t-ButtonRegion--noUI,
+.t-ButtonRegion--noBorder {
+  --ut-button-region-background-color: transparent;
+}
+.t-ButtonRegion--noUI .t-ButtonRegion-col--left .t-ButtonRegion-buttons,
+.t-ButtonRegion--noUI .t-ButtonRegion-col--right .t-ButtonRegion-buttons {
+  padding-inline: 0;
+}
+/* in Dialog-, Drawer- und Wizard-Fußzeilen und in der Title Bar: flach */
+.t-DialogRegion-buttons .t-ButtonRegion,
+.t-Wizard-footer .t-ButtonRegion,
+.t-Dialog-footer .t-ButtonRegion,
+.t-Drawer-footer .t-ButtonRegion,
+.t-Body-title .t-ButtonRegion,
+.t-ButtonRegion--dialogRegion,
+.t-ButtonRegion--wizard {
+  --ut-button-region-background-color: transparent;
+  border-radius: 0;
+}
+/* mobil am unteren Rand verankert: weiße Leiste über dem Inhalt */
+@media (max-width: 639px) {
+  .t-ButtonRegion--stickToBottom.is-anchored {
+    --ut-button-region-background-color: var(--fq-surface);
+    border-radius: 0;
+    box-shadow: 0 -1px 0 var(--fq-line-subtle);
+  }
+}
+
+
+/* 6. Carousel: Punkte (aktiv Akzent) und runde Pfeile ------------------------- */
+
+.t-Region--carousel {
+  --ut-carousel-button-icon-size: 1rem;
+  --ut-carousel-button-padding-y: calc((var(--fq-control-h-lg) - 1rem) / 2);
+  --ut-carousel-button-padding-x: calc((var(--fq-control-h-lg) - 1rem) / 2);
+  --ut-carousel-button-border-radius: var(--fq-r-pill);
+  --ut-carousel-button-background-color: var(--fq-surface);
+  --ut-carousel-button-text-color: var(--fq-ink);
+  --ut-carousel-button-opacity: 1;
+  --ut-carousel-button-offset-x: var(--fq-space-3);
+  --ut-carousel-nav-size: .625rem;
+  --ut-carousel-nav-offset-x: .25rem;
+  --ut-carousel-nav-offset-y: .5rem;
+  --ut-carousel-nav-border-width: 0px;
+  --ut-carousel-nav-background-color: var(--fq-line);
+  --ut-carousel-nav-selected-background-color: var(--fq-accent);
+}
+.t-Region--carousel > .t-Region-bodyWrap > .t-Region-body {
+  --fq-c-region-ring-room: 0px;
+  overflow: clip;
+}
+.t-Region--carousel .a-Region-carouselNav {
+  inline-size: fit-content;
+  margin-inline: auto;
+  inset-block-end: var(--fq-space-3);
+  padding-inline: var(--fq-space-2);
+  border-radius: var(--fq-r-pill);
+  background-color: var(--fq-surface);
+}
+.t-Region--carousel .a-Region-carouselLink {
+  border-radius: var(--fq-r-pill);
+}
+/* Fokus über beliebigem Motiv: Doppelring (Grund-Lücke + Ring) statt Outline */
+.a-Region-carouselControl .a-Tabs-button:focus-visible,
+.t-Region--carousel .a-Region-carouselLink:focus-visible {
+  --ut-focus-outline: none;
+  box-shadow: var(--fq-focus-shadow);
+}
+
+
+/* 7. Tabs Container (t-TabsRegion): Abstand zwischen Leiste und Panel ------------ */
+
+.t-TabsRegion-items > .t-Tabs {
+  margin-block-end: var(--fq-space-4);
+}
+
+
+/* 8. Wizard: Tafel – Schritte oben, Inhalt ------------------------------------ */
+
+.t-Wizard {
+  --ut-wizard-border-width: 0px;
+  --ut-wizard-box-shadow: none;
+  --ut-wizard-background-color: var(--fq-panel);
+  --ut-wizard-controls-padding-x: var(--fq-panel-pad);
+  --ut-wizard-controls-padding-y: var(--fq-space-4);
+  --ut-wizard-body-padding-x: var(--fq-panel-pad);
+  --ut-wizard-body-padding-y: var(--fq-space-6);
+  --ut-wizard-title-font-size: var(--fq-fs-2xl);
+  --ut-wizard-title-line-height: var(--fq-lh-2xl);
+  --ut-wizard-title-padding-y: var(--fq-space-6);
+  border-radius: var(--fq-r-panel);
+}
+.t-Wizard-title {
+  font-weight: var(--fq-fw-heavy);
+  letter-spacing: var(--fq-tracking-heading);
+}
+
+/* Wizard-Fortschritt (t-WizardSteps) gestaltet content.css – hier nur der Container. */
+
+
+/* 9. Content Block: Überschriften 36 · 24 · 20, alle 800 -------------------------- */
+
+.t-ContentBlock--h1 {
+  --ut-content-block-header-font-size: var(--fq-fs-3xl);
+  --ut-content-block-header-line-height: var(--fq-lh-3xl);
+  --ut-content-block-header-margin: var(--fq-space-4);
+}
+.t-ContentBlock--h2 {
+  --ut-content-block-header-font-size: var(--fq-fs-2xl);
+  --ut-content-block-header-line-height: var(--fq-lh-2xl);
+  --ut-content-block-header-margin: var(--fq-space-3);
+}
+.t-ContentBlock--h3 {
+  --ut-content-block-header-font-size: var(--fq-fs-xl);
+  --ut-content-block-header-line-height: var(--fq-lh-xl);
+  --ut-content-block-header-margin: var(--fq-space-3);
+}
+@media (max-width: 639px) {
+  .t-ContentBlock--h1 {
+    --ut-content-block-header-font-size: var(--fq-fs-2xl);
+    --ut-content-block-header-line-height: var(--fq-lh-2xl);
+  }
+  .t-ContentBlock--h1,
+  .t-ContentBlock--h2,
+  .t-ContentBlock--h3 {
+    --ut-content-block-header-margin: var(--fq-space-2);
+  }
+}
+.t-ContentBlock {
+  --ut-content-block-header-font-weight: var(--fq-fw-heavy);
+  --ut-content-block-margin: var(--fq-space-8);
+}
+.t-ContentBlock-title {
+  letter-spacing: var(--fq-tracking-heading);
+}
+.t-ContentBlock--h1 .t-ContentBlock-title {
+  letter-spacing: var(--fq-tracking-title);
+}
+.t-ContentBlock-headerIcon {
+  color: var(--fq-ink);
+}
+/* Shadow Background = Tafel */
+.t-ContentBlock--shadowBG {
+  --ut-content-block-border-width: 0px;
+  --ut-content-block-box-shadow: none;
+  --ut-content-block-border-radius: var(--fq-r-panel);
+  --ut-content-block-padding-y: var(--fq-panel-pad);
+  --ut-content-block-padding-x: var(--fq-panel-pad);
+}
+/* Light Background = weiße Karte mit zarter Kante */
+.t-ContentBlock--lightBG {
+  --ut-content-block-border-width: var(--fq-hairline);
+  --ut-content-block-border-color: var(--fq-line);
+  --ut-content-block-box-shadow: none;
+  --ut-content-block-border-radius: var(--fq-r-panel);
+  --ut-content-block-padding-y: var(--fq-panel-pad);
+  --ut-content-block-padding-x: var(--fq-panel-pad);
+}
+
+
+/* 10. Image Region, Title-Bar-Region im Inhalt ---------------------------------- */
+
+.t-ImageRegion {
+  --ut-image-region-border-radius: var(--fq-r-card);
+}
+/* Eine Title-Bar-Region im Inhalt steht bündig auf dem Rand – wie jeder Region-Inhalt. */
+.t-Body-content .t-BreadcrumbRegion {
+  --ut-breadcrumb-padding-x: 0rem;
+}

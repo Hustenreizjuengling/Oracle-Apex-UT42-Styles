@@ -1,0 +1,956 @@
+/* ==========================================================================
+   Frequenz – Shell
+   Kopf mit Markenblock, Navigation (Tree Nav mit Akzentkante, Menüleiste, Tabs-Navigation,
+   Mega Menu), Seite, Spalten, Footer, Title Bar, Breadcrumb, Region Display Selector/Tabs,
+   mobile Schublade.
+   Idee: weiße Seite ohne Rahmen. Oben links sitzt der Markenblock über die volle Kopfhöhe
+   (App-Name bzw. Logo in Weiß); darunter führt die Navigation den Blick mit einer Akzentkante
+   am aktiven Punkt – Block und Kante stehen in derselben Spalte am linken Rand.
+   Regeln: nur Tokens (--fq-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Lokale Tokens (--fq-c-*):
+     --fq-c-nav-row-pad-y / --fq-c-nav-sub-pad-y   Zeilenpolster der Navigation (oben / Unterebenen)
+     --fq-c-bar-h           Höhe der Menüleiste bzw. Tabs-Leiste im Kopf
+     --fq-c-burger-w / -gap Maße des Menü-Symbols
+     --fq-c-tab-pad-x/-y    Innenabstand der Tabs/RDS
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Kopf: weiß, weicher Schatten, Markenblock ganz links
+   ========================================================================== */
+.t-Header {
+  box-shadow: var(--fq-header-shadow);
+}
+.t-Header-branding {
+  grid-template-areas: "logo controls navbar";
+  padding-inline-start: 0;                 /* der Block steht bündig am Rand */
+  column-gap: var(--fq-space-3);
+}
+.t-Header-logo {
+  align-self: stretch;
+  align-items: stretch;
+}
+/* Der Markenblock: App-Name (bzw. Bild-Logo in Weiß) über die volle Kopfhöhe.
+   Mindestens so breit wie hoch – ein kurzer Name oder ein Kürzel ergibt ein Quadrat,
+   das genau über der Icon-Leiste der Navigation steht. */
+.t-Header-logo-link {
+  --ut-focus-outline: var(--fq-focus-ring-width) solid var(--fq-brand-on);   /* Ring im Block: weiß, nach innen */
+  --ut-focus-outline-offset: calc(-3 * var(--fq-focus-ring-width));
+  justify-content: center;
+  min-inline-size: var(--fq-nav-rail-w);
+  max-inline-size: min(22rem, 60vw);
+  margin-inline-end: 0;
+  padding-inline: var(--fq-space-5);
+  background-color: var(--fq-brand);
+  color: var(--fq-brand-on);
+  letter-spacing: var(--fq-tracking-heading);
+  transition: background-color var(--fq-duration) var(--fq-ease);
+}
+.t-Header-logo-link:hover {
+  background-color: var(--fq-brand-hover);
+  color: var(--fq-brand-on);
+}
+/* App-Name: reicht der Platz nicht für eine Zeile (Telefon, volle Navigationsleiste), bricht er auf
+   zwei Zeilen um; erst was auch dann nicht passt, wird gekürzt (…). Zeilenhöhe fest (kein Font-Swap-Sprung),
+   zwei Zeilen passen in den 56-px-Kopf. */
+.t-Header-logo-link .apex-logo-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  text-wrap: balance;
+  text-align: center;
+  line-height: var(--fq-lh-sm);
+}
+/* Bild-Logos erscheinen als weiße Silhouette auf der Akzentfarbe (niedrige Spezifität: App-CSS kann das
+   mit .t-Header-logo-link img { filter: none } abschalten). */
+:where(.t-Header-logo-link) img {
+  filter: brightness(0) invert(1);
+}
+/* #AFTER_LOGO# (z. B. Umgebungs-Badge) steht neben dem Block auf Weiß */
+.t-Header-logo > :not(.t-Header-logo-link) {
+  align-self: center;
+  margin-inline-start: var(--fq-space-3);
+}
+
+/* Kopf-Buttons: transparent, runde bzw. Pillen-Hover */
+.t-Button--header {
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--fq-ink);
+  --a-button-border-color: transparent;
+  --a-button-shadow: none;
+  --a-button-hover-background-color: var(--fq-hover);
+  --a-button-hover-text-color: var(--fq-ink);
+  --a-button-hover-border-color: transparent;
+  --a-button-active-background-color: var(--fq-press);
+  --a-button-active-border-color: transparent;
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--fq-hover);
+  --a-button-focus-border-color: transparent;
+  --a-button-font-size: var(--fq-fs-sm);
+  --a-button-font-weight: var(--fq-fw-semibold);
+  --a-button-border-radius: var(--fq-r-pill);
+  --a-button-padding-x: var(--fq-space-3);
+}
+.t-Button--header.is-active {
+  --a-button-background-color: var(--fq-soft);
+}
+.t-Button--navBar .t-Icon {
+  font-size: 1.125rem;
+}
+.t-Button--navBar .t-Button-label {
+  color: var(--fq-ink-2);
+}
+.t-Button--headerUser,
+.t-NavigationBar-item.has-username .t-Button-label {
+  text-transform: none;
+}
+.t-Header-navBar .t-Button-badge {
+  --ut-navbar-button-badge-border-radius: var(--fq-r-pill);
+  font-weight: var(--fq-fw-bold);
+}
+
+/* Navigations-Schalter: runder Icon-Button mit drei gleich langen Strichen (statt des gestaffelten
+   APEX-Symbols). Core animiert das Symbol je Zustand – dieselben Selektoren, ein ruhiges Bild. */
+.t-Button--headerTree {
+  --fq-c-burger-w: 1.125rem;
+  --fq-c-burger-gap: .375rem;
+  --a-button-border-width: 0px;
+  --a-button-padding-y: calc((var(--fq-control-h-lg) - 1.25rem) / 2);
+  --a-button-padding-x: calc((var(--fq-control-h-lg) - 1.25rem) / 2);
+  --a-button-icon-size: 1.25rem;
+  --a-button-border-radius: var(--fq-r-pill);
+}
+.t-Header-controlsIcon,
+.t-Button--headerTree:hover .t-Header-controlsIcon,
+.t-Button--headerTree.is-active:hover .t-Header-controlsIcon,
+.t-Button--headerTree.is-active:focus .t-Header-controlsIcon {
+  top: 50%;
+  inset-inline-start: 50%;
+  width: var(--fq-c-burger-w);
+  height: 2px;
+  margin-block: -1px 0;
+  margin-inline: calc(var(--fq-c-burger-w) / -2) 0;
+  border-radius: 1px;
+  background-color: currentColor;
+  transform: none;
+  transition: none;
+}
+.t-Header-controlsIcon::before,
+.t-Header-controlsIcon::after,
+.t-Button--headerTree:hover .t-Header-controlsIcon::before,
+.t-Button--headerTree:hover .t-Header-controlsIcon::after,
+.t-Button--headerTree.is-active:hover .t-Header-controlsIcon::before,
+.t-Button--headerTree.is-active:hover .t-Header-controlsIcon::after,
+.t-Button--headerTree.is-active:focus .t-Header-controlsIcon::before,
+.t-Button--headerTree.is-active:focus .t-Header-controlsIcon::after {
+  top: calc(-1 * var(--fq-c-burger-gap));
+  bottom: auto;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 1px;
+  background-color: currentColor;
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+.t-Header-controlsIcon::after,
+.t-Button--headerTree:hover .t-Header-controlsIcon::after,
+.t-Button--headerTree.is-active:hover .t-Header-controlsIcon::after,
+.t-Button--headerTree.is-active:focus .t-Header-controlsIcon::after {
+  top: var(--fq-c-burger-gap);
+}
+/* aufgeklappt: gedrückte Fläche; die Striche bleiben (die Navigation daneben zeigt den Zustand) */
+.t-Button--headerTree.is-active {
+  --a-button-background-color: var(--fq-soft);
+  --a-button-hover-background-color: var(--fq-soft-hover);
+}
+/* Telefon (Core: X-Symbol unter 480 px): offen = X, die Schublade liegt über dem Inhalt.
+   :is(:hover, :focus, .is-active) hebt die Spezifität auf die der Hover-/Fokus-Regeln oben – das X bleibt,
+   solange Finger oder Fokus noch auf dem Schalter liegen. */
+@media (max-width: 479px) {
+  .t-Button--headerTree.is-active:is(:hover, :focus, .is-active) .t-Header-controlsIcon {
+    background-color: transparent;
+    transform: none;
+  }
+  .t-Button--headerTree.is-active:is(:hover, :focus, .is-active) .t-Header-controlsIcon::before {
+    top: 0;
+    opacity: 1;
+    transform: rotate(45deg);
+  }
+  .t-Button--headerTree.is-active:is(:hover, :focus, .is-active) .t-Header-controlsIcon::after {
+    top: 0;
+    bottom: auto;
+    width: 100%;
+    transform: rotate(-45deg);
+  }
+}
+/* Mega-Menu-Schalter (trägt auch t-Button--headerTree): offen ein X */
+.t-Button--megaMenuToggle.is-active .t-Header-controlsIcon,
+.t-Button--megaMenuToggle.is-active:hover .t-Header-controlsIcon,
+.t-Button--megaMenuToggle.is-active:focus .t-Header-controlsIcon {
+  background-color: transparent;
+}
+.t-Button--megaMenuToggle.is-active .t-Header-controlsIcon::before,
+.t-Button--megaMenuToggle.is-active:hover .t-Header-controlsIcon::before,
+.t-Button--megaMenuToggle.is-active:focus .t-Header-controlsIcon::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+.t-Button--megaMenuToggle.is-active .t-Header-controlsIcon::after,
+.t-Button--megaMenuToggle.is-active:hover .t-Header-controlsIcon::after,
+.t-Button--megaMenuToggle.is-active:focus .t-Header-controlsIcon::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+/* Top-Navigation ohne Schalter: die leere Controls-Spalte erzeugt keinen zweiten Abstand */
+.apex-top-nav .t-Header-controls:not(:has(.t-Button--megaMenuToggle)),
+.t-PageBody--noNav .t-Header-controls {
+  display: none;
+}
+
+/* ==========================================================================
+   2. Navigation (Tree Nav): weiße Liste, fette Labels, Akzentkante am aktiven Punkt
+   ========================================================================== */
+.t-TreeNav {
+  /* Zeilen 44 px oben (Touch 52 px), Unterebenen 36 px (Touch 44 px) */
+  --fq-c-nav-row-pad-y: calc((var(--fq-control-h) + var(--fq-space-2) - var(--fq-lh-md)) / 2);
+  --fq-c-nav-sub-pad-y: calc((var(--fq-control-h) - var(--fq-lh-md)) / 2);
+  --a-treeview-node-padding-y: var(--fq-c-nav-row-pad-y);
+  --a-treeview-node-padding-x: var(--fq-space-4);
+  --a-treeview-node-font-size: var(--fq-fs-md);
+  --a-treeview-node-line-height: var(--fq-lh-md);
+  --a-treeview-node-font-weight: var(--fq-fw-bold);
+  --a-treeview-node-text-color: var(--fq-ink);
+  --ut-treeview-toplevel-node-font-size: var(--fq-fs-md);
+  --ut-treeview-icon-size: 1.125rem;
+  --ut-treeview-toplevel-icon-container-width: 2rem;
+  --ut-treeview-toplevel-icon-container-height: 1.25rem;
+  --ut-treeview-node-indent: 2rem;
+  --ut-treeview-node-icon-container-width: 2rem;
+  --ut-treeview-leaf-node-indent: 2rem;
+  --ut-treeview-toplevel-leaf-padding-y: .125rem;
+  /* Fokus: nur die Zeile zeigt den Ring (Label/Icon würden in der Icon-Leiste versetzt umrandet) */
+  --ut-focus-outline: none;
+  --a-treeview-node-focused-shadow: var(--fq-focus-shadow-inset);
+}
+/* … und nur bei Tastatur-Fokus – Maus-Klicks lassen die Zeile ruhig */
+@supports selector(:has(*)) {
+  .t-TreeNav {
+    --a-treeview-node-focused-shadow: none;
+  }
+  .t-TreeNav:has(:focus-visible) {
+    --a-treeview-node-focused-shadow: var(--fq-focus-shadow-inset);
+  }
+}
+/* Vita-Stilvarianten (Template-Option Style A/B) auf dieselben Maße ziehen */
+.t-TreeNav--styleA,
+.t-TreeNav--styleB {
+  --ut-treeview-icon-size: 1.125rem;
+  --ut-treeview-toplevel-icon-container-width: 2rem;
+  --ut-treeview-node-icon-size: 1rem;
+  --ut-treeview-node-icon-container-width: 2rem;
+  --ut-treeview-node-indent: 2rem;
+  --ut-treeview-leaf-node-indent: 2rem;
+  --ut-treeview-toplevel-leaf-padding-y: .125rem;
+  --ut-treeview-badge-border-radius: var(--fq-r-pill);
+  --a-treeview-node-padding-y: var(--fq-c-nav-row-pad-y);
+}
+.t-TreeNav .a-TreeView-node--topLevel ul,
+.t-TreeNav--styleA .a-TreeView-node--topLevel ul,
+.t-TreeNav--styleB .a-TreeView-node--topLevel ul {
+  --a-treeview-node-padding-y: var(--fq-c-nav-sub-pad-y);
+  --a-treeview-node-font-weight: var(--fq-fw-medium);
+  --a-treeview-node-text-color: var(--fq-ink-2);
+}
+.js-navCollapsed .t-TreeNav--styleB {
+  --a-treeview-node-padding-y: var(--fq-c-nav-row-pad-y);
+}
+.t-TreeNav--styleB > ul,
+.js-navCollapsed .t-TreeNav--styleB > ul {
+  margin: 0;
+}
+.t-TreeNav--styleB .a-TreeView-node {
+  margin-block: 0;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel {
+  margin-inline: 0;
+}
+.t-TreeNav > ul {
+  padding-block: var(--fq-space-3) var(--fq-space-6);
+}
+/* Zeilen über die volle Breite, eckig – flache Liste statt eingerückter Pillen */
+.t-TreeNav .a-TreeView-node .a-TreeView-row {
+  border-radius: 0;
+}
+.t-TreeNav .a-TreeView-node .a-TreeView-toggle {
+  color: var(--fq-muted);
+}
+.t-TreeNav .a-TreeView-content .fa {
+  color: var(--fq-ink);
+}
+.t-TreeNav .a-TreeView-node--topLevel > ul .a-TreeView-content {
+  color: var(--fq-ink-2);
+}
+/* Unterebenen in der aufgeklappten Liste: lange Labels brechen um statt gekürzt zu werden */
+.js-navExpanded .t-TreeNav .a-TreeView-node--topLevel > ul .a-TreeView-label {
+  white-space: normal;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+}
+.t-TreeNav .is-current,
+.t-TreeNav .is-current--top {
+  --a-treeview-node-font-weight: var(--fq-fw-bold);
+}
+.t-TreeNav .a-TreeView-label.is-current {
+  color: var(--fq-ink);
+}
+.t-TreeNav .a-TreeView-row.is-focused {
+  box-shadow: var(--a-treeview-node-focused-shadow);
+}
+.t-TreeNav .a-TreeView-badge {
+  --ut-treeview-badge-border-width: 0px;
+  --ut-treeview-badge-border-radius: var(--fq-r-pill);
+  --ut-treeview-badge-font-weight: var(--fq-fw-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Vita-Hardcodes neutralisieren (gleiche Spezifität, Hover braucht !important) */
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-selected,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected {
+  background-color: transparent;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current--top, .t-TreeNav .a-TreeView-node--topLevel.is-collapsible > .a-TreeView-row,
+.t-TreeNav .a-TreeView-node--topLevel ul {
+  background-color: transparent;
+  color: inherit;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover {
+  background-color: var(--fq-hover) !important;      /* gegen Vita-!important (#25292d) */
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-toggle, .t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-content, .t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-toggle + .a-TreeView-content {
+  color: var(--fq-ink);
+}
+.t-TreeNav--styleA .a-TreeView-node--topLevel {
+  border-bottom: 0;
+}
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top ~ ul .a-TreeView-row {
+  box-shadow: none;
+}
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-focused,
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top ~ ul .a-TreeView-row.is-focused {
+  box-shadow: var(--a-treeview-node-focused-shadow);
+}
+.u-RTL .t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.u-RTL .t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top ~ ul .a-TreeView-row {
+  box-shadow: none;
+}
+.u-RTL .t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-focused,
+.u-RTL .t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top ~ ul .a-TreeView-row.is-focused {
+  box-shadow: var(--a-treeview-node-focused-shadow);
+}
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top .a-TreeView-row.is-selected,
+.t-TreeNav--styleA .a-TreeView-node--topLevel ul .a-TreeView-row.is-selected {
+  background-color: transparent;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected {
+  background-color: transparent;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected + .a-TreeView-toggle,
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-content.is-current--top {
+  color: var(--fq-ink);
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-content.is-current--top.is-hover {
+  color: var(--fq-ink) !important;                    /* gegen Vita-!important (white) */
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-hover {
+  background-color: var(--fq-hover) !important;      /* gegen Vita-!important (#056dcd) */
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row {
+  border-radius: 0;
+}
+
+/* --------------------------------------------------------------------------
+   DAS MARKANTE ELEMENT der Navigation: die Akzentkante
+   Der aktive Punkt steht in Akzentschrift; an seinem Zeilenanfang läuft eine 4-px-Kante
+   in der Akzentfarbe über die volle Zeilenhöhe – bündig am Fensterrand, in der Spalte des
+   Markenblocks im Kopf.
+   Aktiv = tiefster SICHTBARER Knoten auf dem aktuellen Pfad:
+     markiert  = Inhalt .is-current / .is-current--top oder Label .is-current
+                 (.is-selected nicht: die TreeView-Auswahl wandert mit dem Tastatur-Fokus)
+     sichtbar  = zugeklappt/Blatt, oder aufgeklappt ohne markiertes Kind
+   (eingeklappte Icon-Leiste: immer der Top-Level-Knoten)
+   -------------------------------------------------------------------------- */
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top,
+.js-navExpanded .t-TreeNav .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current) > .a-TreeView-row,
+.js-navExpanded .t-TreeNav .a-TreeView-node.is-collapsible:has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current):not(:has(> ul > li > .a-TreeView-content:is(.is-current, .is-current--top), > ul > li > .a-TreeView-content .a-TreeView-label.is-current)) > .a-TreeView-row {
+  background-color: var(--fq-hover) !important;      /* gegen Vita-!important (Hover-Regel) */
+}
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top::before,
+.js-navExpanded .t-TreeNav .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current) > .a-TreeView-row::before,
+.js-navExpanded .t-TreeNav .a-TreeView-node.is-collapsible:has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current):not(:has(> ul > li > .a-TreeView-content:is(.is-current, .is-current--top), > ul > li > .a-TreeView-content .a-TreeView-label.is-current)) > .a-TreeView-row::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: var(--fq-nav-mark-w);
+  background-color: var(--fq-accent);
+  pointer-events: none;
+}
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top ~ .a-TreeView-content,
+.js-navExpanded .t-TreeNav .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current) > .a-TreeView-content,
+.js-navExpanded .t-TreeNav .a-TreeView-node.is-collapsible:has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current):not(:has(> ul > li > .a-TreeView-content:is(.is-current, .is-current--top), > ul > li > .a-TreeView-content .a-TreeView-label.is-current)) > .a-TreeView-content {
+  --a-treeview-node-font-weight: var(--fq-fw-heavy);
+  color: var(--fq-accent-text) !important;           /* gegen Vita-!important (StyleB-Hover) */
+}
+.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top ~ .a-TreeView-content .fa,
+.js-navExpanded .t-TreeNav .a-TreeView-node:not(.is-collapsible):has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current) > .a-TreeView-content :is(.fa, .a-TreeView-label),
+.js-navExpanded .t-TreeNav .a-TreeView-node.is-collapsible:has(> .a-TreeView-content:is(.is-current, .is-current--top), > .a-TreeView-content .a-TreeView-label.is-current):not(:has(> ul > li > .a-TreeView-content:is(.is-current, .is-current--top), > ul > li > .a-TreeView-content .a-TreeView-label.is-current)) > .a-TreeView-content :is(.fa, .a-TreeView-label) {
+  color: var(--fq-accent-text);
+}
+/* Rückfall ohne :has(): wenigstens der Top-Level-Knoten des aktuellen Asts */
+@supports not selector(:has(*)) {
+  .js-navExpanded .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top {
+    box-shadow: inset var(--fq-nav-mark-w) 0 0 var(--fq-accent);
+  }
+}
+
+/* Eingeklappte Icon-Leiste: Symbol mittig in der 64-px-Spalte unter dem Block */
+.apex-side-nav.js-navCollapsed .t-TreeNav .a-TreeView-node .a-TreeView-content {
+  padding-inline: calc((var(--fq-nav-rail-w) - var(--ut-treeview-toplevel-icon-container-width)) / 2);
+}
+
+/* ==========================================================================
+   3. Top-Navigation – Menüleiste (1102/1120) und Tabs-Navigation (1115/1121):
+      zweite Kopfzeile, fette dunkle Labels, aktiv Akzent mit Unterstrich an der Kopfkante
+   ========================================================================== */
+.t-Header-nav {
+  --fq-c-bar-h: 3rem;
+  --a-menubar-item-padding-y: calc((var(--fq-c-bar-h) - var(--fq-lh-lg)) / 2);
+  --a-menubar-item-padding-x: var(--fq-space-4);
+  --a-menubar-item-font-size: var(--fq-fs-lg);
+  --a-menubar-item-line-height: var(--fq-lh-lg);
+  --a-menubar-item-font-weight: var(--fq-fw-heavy);
+  --ut-header-menubar-item-border-width: 0px;
+  --ut-header-menubar-item-hover-background-color: transparent;
+  --ut-header-menubar-item-hover-text-color: var(--fq-accent-text);
+}
+.t-Header-nav .a-MenuBar {
+  box-shadow: none;
+}
+.t-Header-nav .a-MenuBar > ul {
+  /* erster Eintrag: Text auf der Inhaltskante */
+  padding-inline: calc(var(--fq-page-pad-x) - var(--fq-space-4));
+  gap: var(--fq-space-2);
+}
+/* Das li bleibt ohne position (es enthält das Dropdown; ein positioniertes li würde zum
+   Bezugsblock des Menüs). Der Unterstrich hängt deshalb am Label. */
+.t-Header-nav .a-MenuBar-item {
+  border-radius: 0;
+}
+@supports selector(:has(*)) {
+  .t-Header-nav .a-MenuBar-item {
+    --ut-focus-outline: none;
+  }
+  .t-Header-nav .a-MenuBar-item:has(:focus-visible) {
+    --ut-focus-outline: var(--fq-focus-outline);
+  }
+}
+.t-Header-nav .a-MenuBar-item:focus-within {
+  outline-offset: calc(-1 * var(--fq-focus-ring-width));
+}
+.t-Header-nav .a-Menu--current {
+  --a-menubar-item-font-weight: var(--fq-fw-heavy);
+}
+.t-Header-nav .a-MenuBar-label {
+  position: relative;
+}
+.t-Header-nav .a-MenuBar-item .a-MenuBar-label::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--a-menubar-item-padding-x);
+  inset-block-end: 0;
+  block-size: var(--fq-tab-mark-h);
+  background-color: transparent;
+  pointer-events: none;
+}
+.t-Header-nav .a-MenuBar-item:hover .a-MenuBar-label::after {
+  background-color: var(--fq-line-strong);
+}
+.t-Header-nav .a-MenuBar-item.a-Menu--current .a-MenuBar-label::after {
+  background-color: var(--fq-accent);
+}
+
+/* Tabs-Navigation (t-NavTabs): ab 768 px Einträge im Kopf, darunter die feste Leiste unten */
+.t-NavTabs {
+  --ut-navtabs-item-hover-background-color: transparent;
+  --ut-navtabs-item-hover-text-color: var(--fq-accent-text);
+  --ut-navtabs-item-font-weight: var(--fq-fw-heavy);
+  --ut-navtabs-item-active-font-weight: var(--fq-fw-heavy);
+  --ut-navtabs-item-border-width: 0px;
+  --ut-navtabs-item-highlight-width: var(--fq-tab-mark-h);
+  --ut-navtabs-badge-background-color: var(--fq-soft);
+  --ut-navtabs-badge-text-color: var(--fq-ink);
+  --ut-focus-outline-offset: calc(-1 * var(--fq-focus-ring-width));
+}
+.t-NavTabs-item .t-Icon {
+  color: currentColor;
+}
+@media (min-width: 768px) {
+  .t-NavTabs {
+    padding-inline: calc(var(--fq-page-pad-x) - var(--fq-space-4));
+    gap: var(--fq-space-2);
+  }
+  .t-NavTabs-item {
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+  .t-NavTabs-link {
+    --ut-navtabs-item-padding-y: calc((3rem - var(--fq-lh-lg)) / 2);
+    --ut-navtabs-item-padding-x: var(--fq-space-4);
+    --ut-navtabs-item-font-size: var(--fq-fs-lg);
+  }
+  .t-NavTabs-label {
+    line-height: var(--fq-lh-lg);
+  }
+  /* Unterstrich unter der Beschriftung (wie in der Menüleiste), nicht über das ganze Polster */
+  .t-NavTabs-link::before {
+    inset-inline: var(--fq-space-4);
+    width: auto;
+  }
+}
+@media (max-width: 767px) {
+  /* feste Leiste unten: weiß mit Haarlinie, aktiver Eintrag Akzent mit Kante oben */
+  .t-NavTabs {
+    --ut-navtabs-background-color: var(--fq-surface);
+    box-shadow: 0 -1px 0 var(--fq-line-subtle);
+  }
+  .t-NavTabs-link::before {
+    inset-block: 0 auto;
+  }
+}
+
+/* Mega Menu (1122/1124): weiße Tafel unter dem Kopf, aktueller Eintrag in der Akzentfarbe */
+.t-MegaMenu {
+  --a-menu-focused-background-color: var(--fq-raised-hover);
+  --a-menu-focused-text-color: var(--fq-ink);
+  --a-menu-border-radius: var(--fq-r-card);
+  --ut-megamenu-item-top-padding-y: var(--fq-space-3);
+  --ut-megamenu-item-top-padding-x: var(--fq-space-3);
+  --ut-megamenu-item-padding-y: .375rem;
+  --ut-megamenu-item-padding-x: var(--fq-space-3);
+  --ut-megamenu-label-font-size: var(--fq-fs-md);
+  --ut-megamenu-label-line-height: var(--fq-lh-md);
+  --ut-megamenu-desc-text-color: var(--fq-muted);
+  --ut-megamenu-desc-opacity: 1;
+  --ut-megamenu-icon-opacity: 1;
+  --ut-megamenu-badge-background-color: var(--fq-soft);
+  --ut-megamenu-badge-text-color: var(--fq-ink);
+  --ut-megamenu-badge-border-radius: var(--fq-r-pill);
+}
+@media (max-width: 639px) {
+  .t-MegaMenu.has-callout {
+    margin: 0;
+  }
+  .t-MegaMenu.has-callout > .u-callout {
+    display: none;
+  }
+}
+.t-MegaMenu .a-Menu-content {
+  padding: var(--fq-space-3);
+}
+.t-MegaMenu-itemBody {
+  position: relative;
+  border-radius: var(--fq-r-item);
+}
+.t-MegaMenu-itemBody.is-focused, .t-MegaMenu-itemBody:hover {
+  background-color: var(--fq-raised-hover);
+}
+.t-MegaMenu-itemBody.is-focused .t-MegaMenu-label,
+.t-MegaMenu-itemBody:hover .t-MegaMenu-label {
+  color: var(--fq-ink);
+  text-decoration: none;
+}
+.t-MegaMenu-item--top > .t-MegaMenu-itemBody .t-MegaMenu-label {
+  --ut-megamenu-label-font-weight: var(--fq-fw-heavy);
+  --ut-megamenu-label-font-size: var(--fq-fs-lg);
+  --ut-megamenu-label-line-height: var(--fq-lh-lg);
+}
+.t-MegaMenu-list--sub .t-MegaMenu-label {
+  color: var(--fq-ink-2);
+}
+.t-MegaMenu-item.is-active > .t-MegaMenu-itemBody .t-MegaMenu-label,
+.t-MegaMenu-item.is-active > .t-MegaMenu-itemBody:hover .t-MegaMenu-label,
+.t-MegaMenu-item.is-active > .t-MegaMenu-itemBody.is-focused .t-MegaMenu-label {
+  --ut-megamenu-label-font-weight: var(--fq-fw-heavy);
+  color: var(--fq-accent-text);
+}
+.t-MegaMenu-labelWrap {
+  position: relative;
+}
+.t-MegaMenu-list--sub .t-MegaMenu-item.is-active > .t-MegaMenu-itemBody > .t-MegaMenu-labelWrap::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: calc(-1 * var(--fq-space-3));
+  inline-size: var(--fq-nav-mark-w);
+  background-color: var(--fq-accent);
+}
+/* Tastatur: Ring nach innen (die Tafel schneidet ab) */
+.t-MegaMenu:has(:focus-visible) .t-MegaMenu-itemBody.is-focused {
+  box-shadow: var(--fq-focus-shadow-inset);
+}
+
+/* ==========================================================================
+   4. Seite und mobile Schublade
+   ========================================================================== */
+/* Mobil (< 640 px): Navigation als Schublade ÜBER dem Inhalt (kein Quetschen).
+   APEX schließt sie per Klick auf .t-Body-main – die Abdunklung ist ein Pseudo-Element
+   von .t-Body-main, Tippen darauf schließt also die Schublade.
+   640–991 px: die Navigation schiebt wie am Desktop. */
+@media (max-width: 639px) {
+  .apex-side-nav.js-navExpanded {
+    --ut-nav-collapsed-width: var(--ut-nav-collapsed-icon-width, 0px);
+  }
+  .apex-side-nav.js-navExpanded.js-navCollapsed--hidden {
+    --ut-nav-collapsed-width: 0px;
+  }
+  .apex-side-nav.js-navExpanded .t-Body-nav {
+    position: fixed;
+    inset-block: var(--js-sticky-top, 0px) 0;
+    inset-inline-start: 0;
+    height: auto;
+    max-width: calc(100vw - var(--fq-space-12));
+    z-index: 900;
+    border-inline-end: var(--fq-hairline) solid var(--fq-line);   /* dunkel: Schwarz vor Schwarz braucht eine Kante */
+    box-shadow: var(--fq-float-shadow);
+  }
+  .apex-side-nav.js-navExpanded .t-Body-main::after {
+    content: "";
+    grid-column: 1 / -1;
+    grid-row: 1;
+    position: fixed;
+    inset: var(--js-sticky-top, 0px) 0 0;
+    z-index: 899;
+    background: var(--fq-scrim);
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  /* rechte Spalte: ebenfalls als Tafel über dem Inhalt statt ihn auf 150 px zu quetschen */
+  .js-rightExpanded .t-Body-actions {
+    position: fixed;
+    inset-block: var(--js-sticky-top, 0px) 0;
+    inset-inline-end: 0;
+    height: auto;
+    max-width: calc(100vw - var(--fq-space-12));
+    z-index: 900;
+    border-inline-start: var(--fq-hairline) solid var(--fq-line);
+    box-shadow: var(--fq-float-shadow);
+  }
+  .js-rightExpanded .t-Body-actionsContent {
+    padding-inline: var(--fq-space-4);
+  }
+}
+
+/* ==========================================================================
+   5. Spalten: linke Spalte, rechte Actions-Spalte (weiß, Haarlinie)
+   ========================================================================== */
+.t-Body-side {
+  padding-block: var(--fq-page-pad-y);
+  padding-inline: var(--fq-page-pad-x);
+}
+@media (max-width: 639px) {
+  .t-Body-side {
+    --ut-body-sidebar-border-width: 0px;
+    box-shadow: inset 0 -1px 0 var(--fq-line-subtle);
+  }
+}
+@media (min-width: 640px) {
+  .t-Body-side {
+    --ut-body-sidebar-width: 16rem;
+    --ut-body-sidebar-border-width: 1px;
+    padding-inline-end: var(--fq-space-6);
+  }
+}
+.t-Body-actions {
+  --ut-body-actions-toggle-offset: var(--fq-space-4);
+  --ut-body-actionstoggle-padding-x: var(--fq-space-1);
+  --ut-body-actionstoggle-padding-y: var(--fq-space-2);
+}
+.t-Body-actionsContent {
+  padding-block: var(--fq-page-pad-y);
+  padding-inline: var(--fq-space-4);
+}
+.t-Body-actions .t-Region {
+  --ut-region-background-color: transparent;
+  --ut-region-header-padding-x: 0rem;
+  --ut-region-body-padding-x: 0rem;
+}
+/* Actions-Schalter: halbrunder Griff an der Spaltenkante statt Vita-Ausfahrfläche */
+.t-Body-actionsToggle,
+.t-Body-actionsToggle.is-active, .t-Body-actionsToggle:hover, .t-Body-actionsToggle:focus {
+  --ut-body-actionstoggle-padding-x: var(--fq-space-2);
+}
+.t-Body-actionsToggle {
+  border: var(--fq-hairline) solid var(--fq-line);
+  border-inline-end-width: 0;
+  border-start-start-radius: var(--fq-r-pill);
+  border-end-start-radius: var(--fq-r-pill);
+  color: var(--fq-ink);
+  transition: background-color var(--fq-duration) var(--fq-ease);
+}
+.t-Body-actionsToggle:hover {
+  --ut-body-actionstoggle-background-color: var(--ut-body-actionstoggle-hover-background-color);
+}
+.t-Body-actionsToggle:focus-visible {
+  outline-offset: calc(-1 * var(--fq-focus-ring-width));
+}
+.u-RTL .t-Body-actionsToggle {
+  border-inline-end-width: 0;
+  border-inline-start-width: var(--fq-hairline);
+  border-start-start-radius: var(--fq-r-pill);
+  border-end-start-radius: var(--fq-r-pill);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+/* Footer: Haarlinie, kleine graue Schrift, runder „nach oben“-Knopf */
+.t-Footer {
+  --ut-footer-padding-x: 0rem;
+  --ut-footer-border-width: var(--fq-hairline);
+  color: var(--fq-muted);
+  font-size: var(--fq-fs-sm);
+  margin-inline: var(--fq-page-pad-x);
+}
+.t-Footer-topButton {
+  --ut-footer-top-background-color: var(--fq-surface);
+  --ut-footer-top-text-color: var(--fq-ink);
+  opacity: 1;
+  box-shadow: inset 0 0 0 1px var(--fq-button-edge);
+}
+.t-Footer-topButton:hover {
+  --ut-footer-top-background-color: var(--fq-hover);
+}
+
+/* ==========================================================================
+   6. Title Bar & Breadcrumb: Titel 36/800, Schrägstrich als Trenner
+   ========================================================================== */
+/* Die Title Bar klebt ab dem ersten Pixel Scroll; mit Scroll-State-Query erscheint dann
+   eine Haarlinie im Innenabstand, sonst bleibt sie weg. */
+.t-Body-title::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--fq-page-pad-x);
+  bottom: 0;
+  height: var(--fq-hairline);
+  background-color: var(--fq-line-subtle);
+  pointer-events: none;
+  visibility: hidden;
+}
+@supports (container-type: scroll-state) {
+  .t-Body-title {
+    container-type: scroll-state;
+  }
+  @container scroll-state(stuck: top) {
+    .t-Body-title::after {
+      visibility: visible;
+    }
+  }
+}
+/* Mit Region Display Selector trennt dessen Linie – keine zweite darunter */
+.t-Body-title:has(.apex-rds)::after {
+  display: none;
+}
+.t-Breadcrumb-item::after {
+  content: "/";
+  color: var(--fq-line-strong);
+  font-weight: var(--fq-fw-regular);
+  margin-inline: var(--fq-space-2);
+}
+.t-Breadcrumb-item a {
+  color: inherit;
+  text-decoration: none;
+}
+.t-Breadcrumb-item a:hover {
+  color: var(--fq-ink);
+  text-decoration: underline;
+  text-decoration-thickness: var(--fq-link-underline-width);
+  text-underline-offset: var(--fq-link-underline-offset);
+}
+.t-BreadcrumbRegion-titleText,
+.t-BreadcrumbRegion--useBreadcrumbTitle .t-Breadcrumb-item:last-child {
+  letter-spacing: var(--fq-tracking-title);
+}
+@media (min-width: 640px) {
+  .t-Body-title:not(.t-Body-title-shrink) .t-BreadcrumbRegion--useBreadcrumbTitle:not(.t-BreadcrumbRegion--compactTitle) .t-Breadcrumb-item:last-child,
+  .t-BreadcrumbRegion-titleText {
+    margin-block-start: var(--fq-space-1);
+  }
+}
+
+/* ==========================================================================
+   7. Region Display Selector und Tabs: fette Labels, Akzent-Unterstrich,
+      Haarlinie unter der Leiste. Fokusring nach innen (die Leisten scrollen waagerecht).
+   ========================================================================== */
+.apex-rds-container,
+.t-Tabs {
+  --fq-c-tab-pad-x: var(--fq-space-3);
+  --fq-c-tab-pad-y: .625rem;
+  --ut-tabs-item-hint-highlight-width: var(--fq-tab-mark-h);   /* Höhe des Unterstrichs (UT-Name) */
+}
+.t-Body-title .apex-rds-container {
+  margin-inline: calc(var(--fq-page-pad-x) - var(--fq-c-tab-pad-x)) var(--fq-page-pad-x);
+  padding-block-end: var(--fq-space-2);
+}
+.t-BreadcrumbRegion + div > .apex-rds-container {
+  margin-block-start: calc(-1 * var(--fq-space-2));
+}
+/* Die Leiste beginnt um das Tab-Polster vor der Inhaltskante (die Beschriftung steht auf der
+   Kante, der Fokusring des ersten Tabs bleibt ganz sichtbar). Die Haarlinie ist ein Hintergrund,
+   der erst an der Inhaltskante beginnt – er scrollt nicht mit der Leiste (overflow-x der RDS). */
+.apex-rds {
+  --ut-tabs-item-padding-y: var(--fq-c-tab-pad-y);
+  --ut-tabs-item-padding-x: var(--fq-c-tab-pad-x);
+  --ut-focus-outline-offset: calc(-1 * var(--fq-focus-ring-width));
+  gap: var(--fq-space-2);
+  background-image: linear-gradient(var(--fq-line-subtle), var(--fq-line-subtle));
+  background-repeat: no-repeat;
+  background-position: var(--fq-c-tab-pad-x) 100%;
+  background-size: calc(100% - var(--fq-c-tab-pad-x)) var(--fq-hairline);
+}
+.apex-rds:dir(rtl) {
+  background-position: 0 100%;
+}
+.a-RDS-link {
+  color: var(--ut-tabs-item-text-color);
+}
+.a-RDS-link:hover {
+  --ut-tabs-item-highlight-color: var(--fq-line-strong);
+  color: var(--fq-ink);
+}
+.apex-rds-selected .a-RDS-link,
+.apex-rds-selected .a-RDS-link:hover {
+  --ut-tabs-item-highlight-color: var(--fq-accent);
+  color: var(--fq-ink);
+}
+/* Überlauf-Pfeile der RDS-Leiste: runde Icon-Schaltfläche auf der Tab-Zeile, davor ein Verlauf */
+.apex-rds-container > .apex-rds-slider {
+  top: 0;
+  bottom: 1px;
+}
+.apex-rds-container .apex-rds-hover a {
+  --a-button-background-color: var(--fq-surface);
+  --a-button-border-color: transparent;
+  --a-button-text-color: var(--fq-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--fq-control-h);
+  block-size: var(--fq-control-h);
+  padding: 0;
+  border-width: 0;
+  border-radius: var(--fq-r-pill);
+}
+.apex-rds-container .apex-rds-hover a:hover {
+  --a-button-background-color: var(--fq-hover);
+}
+.apex-rds-container .apex-rds-hover.left {
+  padding-right: var(--fq-space-6);
+  background-image: linear-gradient(to left, transparent, var(--fq-surface) var(--fq-space-6));
+}
+.apex-rds-container .apex-rds-hover.right {
+  padding-left: var(--fq-space-6);
+  background-image: linear-gradient(to right, transparent, var(--fq-surface) var(--fq-space-6));
+}
+/* senkrechte RDS (linke Spalte): Kante am Anfang wie in der Navigation */
+.vertical-rds .apex-rds,
+.t-Body-side .apex-rds {
+  background-image: none;
+  gap: 0;
+}
+.vertical-rds .a-RDS-link::before,
+.t-Body-side .a-RDS-link::before {
+  inset-inline: 0 auto;
+  inset-block: 0;
+  inline-size: var(--fq-nav-mark-w);
+}
+/* Marquee: der Info-Bereich hat in UT keinen eigenen Innenabstand; die Tab-Beschriftung steht
+   wie in der Title Bar auf der Inhaltskante (erster Tab zieht sein Polster zurück) */
+.t-Body-info {
+  padding-inline: var(--fq-page-pad-x);
+}
+.t-Body-info .apex-rds {
+  padding-inline: 0;
+  margin-inline-start: calc(-1 * var(--fq-c-tab-pad-x));
+}
+
+/* Tabs (Tabs-Liste, Tabs Container): dieselben Unterstrich-Tabs */
+.t-Tabs {
+  --ut-tabs-item-padding-y: var(--fq-c-tab-pad-y);
+  --ut-tabs-item-padding-x: var(--fq-c-tab-pad-x);
+  --ut-focus-outline-offset: calc(-1 * var(--fq-focus-ring-width));
+  --ut-tabs-item-outline-offset: calc(-1 * var(--fq-focus-ring-width));
+  gap: var(--fq-space-2);
+  box-shadow: inset 0 -1px 0 var(--fq-line-subtle);
+}
+.t-Tabs-link:hover {
+  --ut-tabs-item-highlight-color: var(--fq-line-strong);
+  color: var(--fq-ink);
+}
+.t-Tabs-item.is-active .t-Tabs-link,
+.t-Tabs-item.is-active .t-Tabs-link:hover {
+  --ut-tabs-item-highlight-color: var(--fq-accent);
+  color: var(--fq-ink);
+}
+/* Pill-Variante: Segment-Leiste als Pille, aktive Pille Anthrazit gefüllt */
+.t-Tabs--pill {
+  --ut-tabs-border-width: 0px;
+  --ut-tabs-border-radius: var(--fq-r-pill);
+  --ut-tabs-box-shadow: none;
+  --ut-tabs-background-color: var(--fq-panel);
+  --ut-tabs-item-hint-highlight-width: 0px;
+  --fq-c-tab-pad-y: .5rem;
+  --fq-c-tab-pad-x: var(--fq-space-4);
+  padding: .25rem;
+  gap: .25rem;
+  box-shadow: none;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+.t-Tabs--pill .t-Tabs-item {
+  border-inline-end-width: 0;
+}
+.t-Tabs--pill .t-Tabs-link,
+.t-Tabs--pill .t-Tabs-item:first-child .t-Tabs-link,
+.t-Tabs--pill .t-Tabs-item:last-child .t-Tabs-link {
+  border-radius: var(--fq-r-pill);
+}
+.t-Tabs--pill .t-Tabs-link:hover {
+  background-color: var(--fq-soft);
+}
+.t-Tabs--pill .t-Tabs-item.is-active .t-Tabs-link,
+.t-Tabs--pill .t-Tabs-item.is-active .t-Tabs-link:hover {
+  background-color: var(--fq-strong);
+  color: var(--fq-strong-on);
+}
+.t-Tabs--pill.t-Tabs--fillLabels,
+.t-Tabs--pill.t-Tabs--fitLabels {
+  inline-size: auto;
+}
+
+/* ==========================================================================
+   8. Druck: keine Schatten, keine Schublade
+   ========================================================================== */
+@media print {
+  .t-Header {
+    box-shadow: none;
+  }
+  .t-Body-title::after,
+  .t-Body-actionsToggle {
+    display: none;
+  }
+}

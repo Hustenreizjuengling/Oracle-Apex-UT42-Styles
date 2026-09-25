@@ -1,0 +1,436 @@
+/* ==========================================================================
+   Nonius · Mapping --precision-* → Universal Theme (--ut-*) / APP_UI (--a-*)
+   Modusneutral: dieselbe Datei für hell und dunkel, nur die Quellwerte wechseln.
+   Enthält alle :root-Hex-Kopien der Vita-Primärfarbe (#056AC8).
+   ========================================================================== */
+@import "./fonts.css";
+
+:root {
+  --precision-font: "Nonius Sans", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --precision-radius: 6px;
+  --precision-radius-sm: 4px;
+  --precision-radius-lg: 8px;
+
+  /* ---- Palette & Status --------------------------------------------------- */
+  --ut-palette-primary: var(--precision-signal);
+  --ut-palette-primary-contrast: var(--precision-on-signal);
+  --ut-palette-primary-shade: var(--precision-signal-tint);
+  --ut-palette-primary-text: var(--precision-signal-ink);
+  --ut-palette-primary-alt: var(--precision-ink);
+  --ut-palette-primary-alt-contrast: var(--precision-display);
+  --ut-palette-primary-alt-shade: var(--precision-housing);
+  --ut-palette-primary-alt-text: var(--precision-ink);
+  --ut-palette-success: var(--precision-success-fill);
+  --ut-palette-success-contrast: var(--precision-on-status);
+  --ut-palette-success-shade: var(--precision-success-tint);
+  --ut-palette-success-text: var(--precision-success);
+  --ut-palette-warning: var(--precision-warning-fill);
+  --ut-palette-warning-contrast: var(--precision-on-status);
+  --ut-palette-warning-shade: var(--precision-warning-tint);
+  --ut-palette-warning-text: var(--precision-warning);
+  --ut-palette-danger: var(--precision-danger-fill);
+  --ut-palette-danger-contrast: var(--precision-on-status);
+  --ut-palette-danger-shade: var(--precision-danger-tint);
+  --ut-palette-danger-text: var(--precision-danger);
+  --ut-palette-info: var(--precision-info-fill);
+  --ut-palette-info-contrast: var(--precision-on-status);
+  --ut-palette-info-shade: var(--precision-info-tint);
+  --ut-palette-info-text: var(--precision-info);
+  --ut-palette-generic: var(--precision-housing);
+
+  /* ---- Global: Links, Fokus ----------------------------------------------- */
+  --ut-link-text-color: var(--precision-ink);            /* kein Blau: Tusche + Unterstreichung */
+  --ut-focus-outline-color: var(--precision-focus);
+  --ut-focus-outline: 2px solid var(--precision-focus);  /* Hook, ersetzt „auto 1px“ überall */
+  --ut-focus-outline-offset: 2px;
+  --a-checkbox-outline-color: var(--precision-focus);
+
+  /* ---- Typografie ------------------------------------------------------------ */
+  --a-base-font-family: var(--precision-font);
+  --ut-base-font-family: var(--precision-font);
+  --a-base-font-weight-semibold: 600;
+  --a-base-font-weight-bold: 650;
+
+  /* ---- Generische Komponente, Schatten, Radien -------------------------------- */
+  --ut-body-background-color: var(--precision-page);
+  --ut-body-text-color: var(--precision-ink);
+  --ut-component-background-color: var(--precision-display);
+  --ut-component-border-color: var(--precision-line);
+  --ut-component-border-radius: var(--precision-radius);
+  --ut-component-box-shadow: var(--precision-shadow-float);
+  --ut-component-highlight-background-color: var(--precision-raise);
+  --ut-component-toolbar-background-color: var(--precision-housing);
+  --ut-component-inner-border-color: var(--precision-line-soft);
+  --ut-component-text-default-color: var(--precision-ink);
+  --ut-component-text-title-color: var(--precision-ink);
+  --ut-component-text-subtitle-color: var(--precision-ink-2);
+  --ut-component-text-muted-color: var(--precision-muted);
+  --ut-component-icon-background-color: var(--precision-ink);
+  --ut-component-icon-color: var(--precision-display);
+  --ut-component-badge-background-color: var(--precision-housing-2);
+  --ut-component-badge-text-color: var(--precision-ink);
+  --ut-component-badge-border-radius: var(--precision-radius-sm);
+  --ut-shadow-sm: none;
+  --ut-shadow-md: var(--precision-shadow-float);
+  --ut-shadow-lg: var(--precision-shadow-float);
+  --ut-border-radius: var(--precision-radius);
+  --ut-border-radius-sm: var(--precision-radius-sm);
+  --ut-border-radius-md: var(--precision-radius);
+  --ut-border-radius-lg: var(--precision-radius-lg);
+
+  /* ---- Header ------------------------------------------------------------------ */
+  --ut-header-height: 3.25rem;
+  --ut-header-padding-x: .75rem;
+  --ut-header-item-spacing: .5rem;
+  --ut-header-background-color: var(--precision-housing);
+  --ut-header-text-color: var(--precision-ink);
+  --ut-header-border-color: var(--precision-line);
+  --ut-header-border-width: 1px;
+  --ut-header-box-shadow: none;
+  --ut-logo-font-size: 1rem;
+  --ut-logo-line-height: 1.25rem;
+  --ut-logo-font-weight: 650;
+  --ut-navbar-button-badge-background-color: var(--precision-ink);
+  --ut-header-menubar-background-color: var(--precision-housing);
+  --ut-header-menubar-item-text-color: var(--precision-ink-2);
+  --ut-header-menubar-item-border-color: transparent;
+  --ut-header-menubar-item-current-background-color: var(--precision-display);
+  --ut-header-menubar-item-current-text-color: var(--precision-ink);
+  --ut-header-menubar-item-hover-background-color: var(--precision-housing-2);
+  --ut-header-menubar-item-hover-text-color: var(--precision-ink);
+  --ut-header-menubar-item-split-border-color: transparent;
+  --ut-header-menubar-item-split-icon-color: var(--precision-muted);
+  --ut-navtabs-background-color: var(--precision-housing);
+  --ut-navtabs-text-color: var(--precision-ink-2);
+  --ut-navtabs-item-border-color: var(--precision-line);
+  --ut-navtabs-item-active-background-color: var(--precision-display);
+  --ut-navtabs-item-active-highlight-color: var(--precision-signal);
+  --ut-navtabs-item-highlight-width: 3px;
+  --ut-navtabs-item-hover-background-color: var(--precision-housing-2);
+
+  /* Menüleiste außerhalb des Headers (Vita-Dark-Lücke: hell mit weißer Schrift) */
+  --a-menubar-background-color: var(--precision-housing);
+  --a-menubar-item-border-color: var(--precision-line);
+  --a-menubar-item-current-background-color: var(--precision-display);
+  --a-menubar-item-current-text-color: var(--precision-ink);
+  --a-menubar-item-split-border-color: var(--precision-line-soft);
+  --a-menubar-item-split-icon-color: var(--precision-muted);
+  --a-menubar-item-text-color: var(--precision-ink);
+
+  /* ---- Navigation (Tree Nav) --------------------------------------------------- */
+  --ut-nav-width: 15rem;
+  --ut-nav-collapsed-icon-width: 3.5rem;
+  --ut-body-nav-background-color: var(--precision-housing);
+  --ut-body-nav-text-color: var(--precision-ink-2);
+  --ut-body-nav-border-color: var(--precision-line);
+  --ut-body-nav-scrollbar-thumb-background-color: var(--precision-line-button);
+  --ut-body-nav-scrollbar-track-background-color: var(--precision-housing);
+  --a-treeview-node-selected-background-color: var(--precision-display);
+  --a-treeview-node-selected-text-color: var(--precision-ink);
+  --a-treeview-node-selected-icon-color: var(--precision-ink);
+  --a-treeview-node-focused-background-color: var(--precision-housing-2);
+  --a-treeview-node-focused-text-color: var(--precision-ink);
+  --a-treeview-node-focused-shadow: inset 0 0 0 2px var(--precision-focus);
+  --a-treeview-node-hover-background-color: var(--precision-housing-2);
+  --a-treeview-node-active-background-color: var(--precision-signal-tint);
+  --a-treeview-node-active-text-color: var(--precision-ink);
+  --a-treeview-node-placeholder-background-color: var(--precision-signal-tint);
+  --ut-treeview-badge-background-color: var(--precision-ink);
+  --ut-treeview-badge-text-color: var(--precision-display);
+
+  /* ---- Title Bar / Breadcrumb -------------------------------------------------- */
+  --ut-body-title-background-color: var(--precision-page);
+  --ut-body-title-text-color: var(--precision-ink);
+  --ut-body-title-box-shadow: none;
+  --ut-body-title-backdrop-filter: none;
+  --ut-body-title-border-width: 0px;
+  --ut-breadcrumb-item-text-color: var(--precision-muted);
+  --ut-breadcrumb-item-active-text-color: var(--precision-ink);
+  --ut-breadcrumb-item-font-size: .8125rem;
+  --ut-breadcrumb-item-line-height: 1.125rem;
+  --ut-breadcrumb-item-sep-opacity: 1;
+  --ut-breadcrumb-item-sep-spacing: .375rem;
+  --ut-breadcrumb-title-font-size: 1.625rem;
+  --ut-breadcrumb-title-line-height: 2rem;
+  --ut-breadcrumb-title-font-weight: 650;
+  --ut-breadcrumb-padding-y: .75rem;
+
+  /* ---- Seite, Spalten, Footer ------------------------------------------------- */
+  --ut-body-sidebar-background-color: var(--precision-housing);
+  --ut-body-sidebar-text-color: var(--precision-ink);
+  --ut-body-actions-background-color: var(--precision-housing);
+  --ut-body-actions-text-color: var(--precision-ink);
+  --ut-body-actionstoggle-background-color: var(--precision-housing);
+  --ut-body-actionstoggle-hover-background-color: var(--precision-housing-2);
+  --ut-footer-background-color: var(--precision-page);
+  --ut-footer-border-color: var(--precision-line);
+  --ut-footer-text-color: var(--precision-muted);
+
+  /* ---- Regionen: graue Einschübe ohne Kopfstreifen ------------------------------ */
+  --ut-region-background-color: var(--precision-housing);
+  --ut-region-text-color: var(--precision-ink);
+  --ut-region-header-background-color: var(--precision-housing);
+  --ut-region-header-text-color: var(--precision-ink);
+  --ut-region-border-color: var(--precision-line);
+  --ut-region-border-radius: var(--precision-radius);
+  --ut-region-box-shadow: none;
+  --ut-region-header-border-color: transparent;
+  --ut-region-header-border-width: 0px;
+  --ut-region-header-padding-y: .75rem;
+  --ut-region-header-padding-x: 1rem;
+  --ut-region-header-font-size: .9375rem;
+  --ut-region-header-line-height: 1.25rem;
+  --ut-region-body-padding-x: 1rem;
+  --ut-region-body-padding-y: 1rem;
+  --ut-region-font-size: .875rem;
+  --ut-region-line-height: 1.25rem;
+  --ut-button-region-border-radius: var(--precision-radius);
+  --ut-button-region-background-color: var(--precision-housing);
+  --ut-button-region-border-color: var(--precision-line);
+  --ut-button-region-box-shadow: none;
+  --ut-content-block-border-radius: var(--precision-radius);
+  --ut-content-block-shadow-background-color: var(--precision-housing);
+  --ut-content-block-border-color: var(--precision-line);
+  --ut-content-block-box-shadow: none;
+  --ut-content-block-header-font-weight: 650;
+  --ut-alert-horizontal-border-radius: var(--precision-radius);
+  --ut-alert-wizard-border-radius: var(--precision-radius);
+  --ut-alert-box-shadow: none;
+  --ut-hero-region-icon-border-radius: var(--precision-radius);
+
+  /* ---- Tabs / RDS ----------------------------------------------------------------- */
+  --ut-tabs-item-active-text-color: var(--precision-ink);
+  --ut-tabs-item-active-highlight-color: var(--precision-ink);   /* Gelb bleibt der Hauptaktion vorbehalten */
+  --ut-tabs-item-hint-highlight-width: 2px;
+  --ut-tabs-item-hover-background-color: transparent;
+  --ut-tabs-item-active-font-weight: 600;
+
+  /* ---- Buttons ------------------------------------------------------------------- */
+  --a-button-border-radius: var(--precision-radius);
+  --a-button-font-size: .8125rem;
+  --a-button-line-height: 1rem;
+  --a-button-font-weight: 550;
+  --a-button-padding-y: .5rem;
+  --a-button-padding-x: .875rem;
+  --a-button-gap-x: .5rem;
+  --a-button-background-color: var(--precision-display);
+  --a-button-text-color: var(--precision-ink);
+  --a-button-border-color: var(--precision-line-button);
+  --a-button-shadow: none;
+  --a-button-hover-background-color: var(--precision-housing);
+  --a-button-hover-text-color: var(--precision-ink);
+  --a-button-hover-border-color: var(--precision-line-control);
+  --a-button-hover-shadow: none;
+  --a-button-active-background-color: var(--precision-housing-2);
+  --a-button-active-border-color: var(--precision-line-control);
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--a-button-hover-background-color);
+  --a-button-focus-border-color: var(--precision-line-control);
+  --a-button-focus-shadow: 0 0 0 2px var(--precision-focus-halo);
+  --a-button-count-background-color: var(--precision-ink);
+  --a-button-count-text-color: var(--precision-display);
+  --a-button-disabled-opacity: .45;
+
+  /* ---- Formulare --------------------------------------------------------------- */
+  --a-field-input-background-color: var(--precision-display);
+  --a-field-input-text-color: var(--precision-ink);
+  --a-field-input-border-color: var(--precision-line-control);
+  --a-field-input-border-radius: var(--precision-radius);
+  --a-field-input-border-style: solid;                   /* 24.2-Vita setzt „dashed“ */
+  --a-field-input-hover-background-color: var(--precision-display);
+  --a-field-input-hover-border-color: var(--precision-ink-2);
+  --a-field-input-focus-background-color: var(--precision-display);
+  --a-field-input-focus-border-color: var(--precision-focus);
+  --a-field-input-focus-text-color: var(--precision-ink);
+  --a-field-input-font-size: .875rem;
+  --a-field-input-line-height: 1.25rem;
+  --a-field-input-padding-y: .375rem;
+  --a-field-input-padding-x: .625rem;
+  --a-field-placeholder-text-color: var(--precision-muted);
+  --a-field-placeholder-opacity: 1;
+  --a-field-select-background-image: var(--precision-select-arrow);
+  --ut-field-input-focus-icon-color: var(--precision-ink);
+  --ut-field-fl-input-focus-icon-background-color: var(--precision-housing-2);
+  --ut-field-label-text-color: var(--precision-ink-2);
+  --ut-field-label-font-size: .8125rem;
+  --ut-field-label-line-height: 1.125rem;
+  --ut-field-label-font-weight: 500;
+  --a-form-required-asterisk-text-color: var(--precision-danger);
+  --a-form-error-text-color: var(--precision-danger);
+  --ut-prepost-text-color: var(--precision-muted);
+
+  --a-checkbox-size: 1rem;
+  --a-checkbox-background-color: var(--precision-display);
+  --a-checkbox-border-color: var(--precision-line-control);
+  --a-checkbox-border-radius: var(--precision-radius-sm);
+  --a-checkbox-hover-background-color: var(--precision-housing);
+  --a-checkbox-checked-background-color: var(--precision-signal);
+  --a-checkbox-checked-text-color: var(--precision-on-signal);
+  --a-checkbox-text-color: var(--precision-on-signal);
+  --a-checkbox-label-font-size: .875rem;
+  --a-checkbox-label-spacing-x: .5rem;
+
+  --a-switch-background-color: var(--precision-switch-off);
+  --a-switch-hover-background-color: var(--precision-muted);
+  --a-switch-checked-background-color: var(--precision-signal);
+  --a-switch-checked-hover-background-color: var(--precision-signal-hover);
+  --a-switch-toggle-background-color: var(--precision-display);
+  --a-switch-border-color: transparent;
+  --a-switch-shadow: none;
+  --a-switch-focused-shadow: 0 0 0 2px var(--precision-page), 0 0 0 4px var(--precision-focus);
+
+  --a-chip-border-radius: var(--precision-radius-sm);
+  --a-chip-applied-background-color: var(--precision-housing-2);
+  --a-chip-applied-hover-background-color: var(--precision-housing-3);
+  --a-starrating-stars-fg-color: var(--precision-signal);
+  --a-percent-chart-background-color: var(--precision-housing-2);
+  --a-percent-chart-foreground-color: var(--precision-ink);
+
+  /* ---- Menüs, Dialoge, Tooltips --------------------------------------------------- */
+  --a-menu-background-color: var(--precision-display);
+  --a-menu-text-color: var(--precision-ink);
+  --a-menu-border-color: var(--precision-line);
+  --a-menu-border-radius: var(--precision-radius);
+  --a-menu-shadow: var(--precision-shadow-float);
+  --a-menu-font-size: .8125rem;
+  --a-menu-line-height: 1.125rem;
+  --a-menu-padding-x: .25rem;
+  --a-menu-padding-y: .25rem;
+  --a-menu-item-border-radius: var(--precision-radius-sm);
+  --a-menu-focused-background-color: var(--precision-housing-2);
+  --a-menu-focused-text-color: var(--precision-ink);
+  --a-menu-scroll-button-background-color: var(--precision-housing);
+
+  --jui-dialog-background-color: var(--precision-display);
+  --jui-dialog-text-color: var(--precision-ink);
+  --jui-dialog-border-radius: var(--precision-radius-lg);
+  --jui-dialog-shadow: var(--precision-shadow-float);
+  --jui-dialog-titlebar-border-color: var(--precision-line);
+  --jui-dialog-buttonpane-background-color: var(--precision-housing);
+  --jui-dialog-buttonpane-border-color: var(--precision-line);
+  --jui-overlay-background-color: var(--precision-overlay);
+  --jui-tooltip-background-color: var(--precision-tooltip-bg);
+  --jui-tooltip-text-color: var(--precision-tooltip-text);
+  --jui-tooltip-border-color: transparent;
+  --jui-tooltip-border-radius: var(--precision-radius-sm);
+  --a-tooltip-background-color: var(--precision-tooltip-bg);
+  --a-tooltip-text-color: var(--precision-tooltip-text);
+  --ojet-tooltip-primary-text-color: var(--precision-tooltip-text);
+  --ojet-tooltip-secondary-text-color: var(--precision-tooltip-text);
+  --a-splitter-bar-background-color: var(--precision-housing-2);
+  --a-splitter-bar-hover-background-color: var(--precision-housing-3);
+
+  /* ---- Date Picker ---------------------------------------------------------------- */
+  --a-datepicker-background-color: var(--precision-display);
+  --a-datepicker-border-radius: var(--precision-radius);
+  --a-datepicker-header-background-color: var(--precision-housing);
+  --a-datepicker-calendar-title-background-color: var(--precision-housing);
+  --a-datepicker-calendar-header-background-color: var(--precision-display);
+  --a-datepicker-calendar-week-background-color: var(--precision-display);
+  --a-datepicker-calendar-day-border-radius: var(--precision-radius-sm);
+  --a-datepicker-calendar-day-hover-background-color: var(--precision-housing-2);
+  --a-datepicker-calendar-day-current-background-color: transparent;
+  --a-datepicker-calendar-day-current-border-color: var(--precision-ink);
+  --a-datepicker-calendar-day-current-text-color: var(--precision-ink);
+
+  /* ---- Reports, IR, IG --------------------------------------------------------------- */
+  --a-gv-background-color: var(--precision-display);
+  --a-gv-border-color: var(--precision-line);
+  --a-gv-border-radius: var(--precision-radius);
+  --a-gv-cell-border-color: var(--precision-line-soft);
+  --a-gv-header-cell-border-color: var(--precision-line-soft);
+  --a-gv-header-background-color: var(--precision-display);
+  --a-gv-header-text-color: var(--precision-ink);
+  --a-gv-text-color: var(--precision-ink);
+  --a-gv-row-hover-background-color: var(--precision-raise);
+  --a-gv-selected-background-color: var(--precision-signal-tint);
+  --a-gv-selected-text-color: var(--precision-ink);
+  --a-gv-font-size: .8125rem;
+  --a-gv-line-height: 1.125rem;
+  --a-gv-deleted-background-color: var(--precision-housing);
+  --a-gv-grandtotal-background-color: var(--precision-housing-2);
+  --a-gv-row-disabled-background-color: var(--precision-housing);
+  --a-gv-pagination-button-selected-background-color: var(--precision-ink);
+  --a-gv-pagination-button-selected-text-color: var(--precision-display);
+  --a-toolbar-background-color: var(--precision-housing);
+  --a-toolbar-border-color: var(--precision-line);
+  --a-toolbar-sep-border-color: var(--precision-line);
+  --a-report-controls-cell-label-background-color: var(--precision-display);
+  --a-report-controls-cell-label-text-color: var(--precision-ink);
+  --a-report-controls-cell-border-radius: var(--precision-radius-sm);
+  --a-report-controls-cell-label-icon-text-color: var(--precision-display);
+  --ut-report-cell-border-color: var(--precision-line-soft);
+  --ut-report-cell-hover-background-color: var(--precision-raise);
+  --ut-report-cell-alt-background-color: var(--precision-zebra);
+  --ut-report-header-cell-background-color: var(--precision-display);
+  --ut-report-header-background-color: var(--precision-display);
+  --ut-report-header-cell-font-weight: 600;
+  --ut-report-header-cell-font-size: .8125rem;
+  --ut-report-cell-font-size: .8125rem;
+  --ut-report-cell-line-height: 1.125rem;
+  --ut-report-cell-padding-y: .5rem;
+  --ut-report-cell-padding-x: .75rem;
+
+  /* ---- Cards (a-CardView) -------------------------------------------------------------- */
+  --a-cv-background-color: var(--precision-display);
+  --a-cv-border-color: var(--precision-line);
+  --a-cv-border-radius: var(--precision-radius);
+  --a-cv-shadow: none;
+  --a-cv-hover-shadow: none;
+  --a-cv-hover-border-color: var(--precision-line-control);
+  --a-cv-header-border-color: var(--precision-line-soft);
+  --a-cv-actions-border-color: var(--precision-line-soft);
+  --a-cv-title-text-color: var(--precision-ink);
+  --a-cv-title-font-weight: 600;
+  --a-cv-subtitle-text-color: var(--precision-muted);
+  --a-cv-subcontent-text-color: var(--precision-muted);
+  --a-cv-icon-background-color: var(--precision-ink);
+  --a-cv-icon-text-color: var(--precision-display);
+  --a-cv-initials-background-color: var(--precision-ink);
+  --a-cv-initials-text-color: var(--precision-display);
+  --a-cv-icon-border-radius: var(--precision-radius);
+  --a-cv-initials-border-radius: var(--precision-radius);
+  --a-cv-focus-border-color: var(--precision-focus);
+  --a-cv-badge-background-color: var(--precision-housing);
+  --a-cv-badge-text-color: var(--precision-ink);
+  --a-cv-badge-border-radius: var(--precision-radius-sm);
+  --a-cv-selected-background-color: var(--precision-signal-tint);
+  --a-cv-grid-footer-background-color: transparent;
+  --a-resultsitem-background-color: var(--precision-display);
+  --ut-resultsregion-background-color: var(--precision-display);
+  --ut-badge-border-radius: var(--precision-radius-sm);
+  --ut-avatar-border-radius: var(--precision-radius);
+
+  /* ---- Login ------------------------------------------------------------------------ */
+  --ut-login-page-background-color: var(--precision-housing);
+  --ut-login-region-background-color: var(--precision-display);
+  --ut-login-region-filter: none;
+  --ut-login-region-box-shadow: none;
+  --ut-login-region-border-color: var(--precision-line);
+  --ut-login-region-border-radius: var(--precision-radius-lg);
+  --ut-login-logo-size: 3rem;
+  --ut-login-logo-font-size: 1.5rem;
+  --ut-login-logo-border-radius: var(--precision-radius);
+  --ut-base-filter: none;
+
+  /* ---- Diagramme (JET) ---------------------------------------------------------- */
+  --oj-core-text-color-primary: var(--precision-ink);
+  --oj-core-text-color-secondary: var(--precision-muted);
+
+  /* ---- Akzentpalette u-color 1–15: gedeckte Messtechnik-Töne (Daten, Avatare) --- */
+  --u-color-1: #3d6e8f;  --u-color-1-contrast: #ffffff;
+  --u-color-2: #2e7f73;  --u-color-2-contrast: #ffffff;
+  --u-color-3: #6f7f2f;  --u-color-3-contrast: #ffffff;
+  --u-color-4: #a8741a;  --u-color-4-contrast: #ffffff;
+  --u-color-5: #a24d3a;  --u-color-5-contrast: #ffffff;
+  --u-color-6: #6a5a8e;  --u-color-6-contrast: #ffffff;
+  --u-color-7: #4d7b58;  --u-color-7-contrast: #ffffff;
+  --u-color-8: #86674b;  --u-color-8-contrast: #ffffff;
+  --u-color-9: #45609a;  --u-color-9-contrast: #ffffff;
+  --u-color-10: #955078; --u-color-10-contrast: #ffffff;
+  --u-color-11: #5d7280; --u-color-11-contrast: #ffffff;
+  --u-color-12: #8a7a2c; --u-color-12-contrast: #ffffff;
+  --u-color-13: #2f6b6d; --u-color-13-contrast: #ffffff;
+  --u-color-14: #7d6f63; --u-color-14-contrast: #ffffff;
+  --u-color-15: #59626c; --u-color-15-contrast: #ffffff;
+}

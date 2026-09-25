@@ -1,0 +1,200 @@
+/* ==========================================================================
+   Kracherl – Login
+   Die Anmeldung unter freiem Himmel: sonnengelber Grund (dunkel: Nachthimmel-Violett) mit
+   großen Sprudelblasen, unten steigt der Seitengrund mit EINER Wellenkante auf, darauf die
+   weiße Anmeldekarte mit großer Slab-Headline. Einziger Bewegungsmoment des Themes: ein
+   paar Blasen steigen langsam auf (aus bei prefers-reduced-motion).
+   Regeln: nur Tokens (--kr-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Lokale Tokens: --kr-c-login-ground (Höhe des aufsteigenden Grundes),
+                  --kr-c-login-band (Himmel-Streifen über der geteilten Ansicht auf dem Telefon),
+                  --kr-c-login-bubbles / --kr-c-login-fizz (Blasenmuster, Farben aus den Tokens).
+   ========================================================================== */
+
+.t-PageBody--login {
+  --ut-login-page-background-color: var(--kr-band);
+  --ut-login-region-background-color: var(--kr-surface);
+  --ut-login-region-filter: none;
+  --ut-login-region-border-width: 0px;
+  --ut-login-region-border-radius: var(--kr-r-xl);
+  --ut-login-region-box-shadow: var(--kr-float-shadow);
+  --ut-login-region-padding: var(--kr-space-6) var(--kr-space-8) var(--kr-space-8);
+  --ut-login-logo-border-radius: var(--kr-r-lg);
+  --ut-login-container-item-spacing: var(--kr-space-4);
+  --kr-c-login-ground: 34vh;
+  /* ruhende Blasen im Himmel: große Ringe und Perlen, locker verteilt */
+  --kr-c-login-bubbles:
+    radial-gradient(circle at 12% 18%, transparent 34px, var(--kr-bubble-ring) 35px, var(--kr-bubble-ring) 38px, transparent 39px),
+    radial-gradient(circle at 18% 34%, var(--kr-bubble) 12px, transparent 13px),
+    radial-gradient(circle at 8% 52%, transparent 14px, var(--kr-bubble-ring) 15px, var(--kr-bubble-ring) 17px, transparent 18px),
+    radial-gradient(circle at 26% 10%, var(--kr-bubble) 6px, transparent 7px),
+    radial-gradient(circle at 84% 14%, var(--kr-bubble) 22px, transparent 23px),
+    radial-gradient(circle at 90% 30%, transparent 44px, var(--kr-bubble-ring) 45px, var(--kr-bubble-ring) 48px, transparent 49px),
+    radial-gradient(circle at 78% 44%, transparent 9px, var(--kr-bubble-ring) 10px, var(--kr-bubble-ring) 12px, transparent 13px),
+    radial-gradient(circle at 94% 56%, var(--kr-bubble) 8px, transparent 9px),
+    radial-gradient(circle at 70% 8%, transparent 5px, var(--kr-bubble-ring) 6px, var(--kr-bubble-ring) 7.5px, transparent 8.5px);
+  /* aufsteigende Perlen: zwei schmale Ströme links und rechts der Karte, wie im Glas.
+     Jede Perle ist eine Ebene mit derselben Kachelhöhe (26rem) – so läuft die Bewegung nahtlos. */
+  --kr-c-login-fizz:
+    radial-gradient(circle at 50% 88%, var(--kr-bubble) 4px, transparent 5px),
+    radial-gradient(circle at 30% 52%, transparent 5px, var(--kr-bubble-ring) 6px, var(--kr-bubble-ring) 7.5px, transparent 8.5px),
+    radial-gradient(circle at 70% 18%, var(--kr-bubble) 2.5px, transparent 3.5px),
+    radial-gradient(circle at 40% 76%, transparent 3px, var(--kr-bubble-ring) 4px, var(--kr-bubble-ring) 5.5px, transparent 6.5px),
+    radial-gradient(circle at 60% 36%, var(--kr-bubble) 5px, transparent 6px),
+    radial-gradient(circle at 45% 6%, var(--kr-bubble) 2px, transparent 3px);
+  background-image: var(--kr-c-login-bubbles);
+}
+@media (max-width: 639px) {
+  .t-PageBody--login {
+    --ut-login-region-padding: var(--kr-space-4) var(--kr-space-5) var(--kr-space-6);
+    --kr-c-login-ground: 26vh;
+  }
+  .t-PageBody--login .t-Login-container {
+    padding-inline: var(--kr-space-3);
+  }
+}
+
+/* Hintergrund-Varianten 1–3: keine Oracle-Motive (Streifen, Radar, Kreise) – der Himmel bleibt */
+.t-LoginPage--bg1,
+.t-LoginPage--bg2,
+.t-LoginPage--bg3 {
+  --ut-body-background-color: var(--kr-band);
+}
+.t-LoginPage--bg1:before,
+.t-LoginPage--bg2:before,
+.t-LoginPage--bg3:before,
+.t-LoginPage--bg1 .t-Login-bgImg,
+.t-LoginPage--bg2 .t-Login-bgImg,
+.t-LoginPage--bg3 .t-Login-bgImg {
+  background-image: none;
+}
+
+/* Der aufsteigende Grund mit Wellenkante (hinter der Karte, fix im Fenster) */
+.t-Login-bg::before,
+.t-Login-bg::after {
+  content: "";
+  grid-area: bg;
+  align-self: end;
+  z-index: 1;                       /* vor den aufsteigenden Perlen: sie kommen hinter dem Grund hervor */
+  background-color: var(--kr-page);
+}
+.t-Login-bg::before {
+  height: var(--kr-c-login-ground);
+}
+.t-Login-bg::after {
+  height: calc(2 * var(--kr-wave-h));
+  margin-block-end: calc(var(--kr-c-login-ground) - 1px);
+  mask-image: var(--kr-wave-rise);
+  mask-repeat: repeat-x;
+  mask-size: calc(2 * var(--kr-wave-w)) 100%;
+  mask-position: 30% 0;
+}
+/* Sprudel: ein paar Perlen steigen langsam auf (die Kachel wandert um genau ihre Höhe) */
+.t-Login-bg .t-Login-bgImg,
+.t-LoginPage--bg1 .t-Login-bg .t-Login-bgImg,
+.t-LoginPage--bg2 .t-Login-bg .t-Login-bgImg,
+.t-LoginPage--bg3 .t-Login-bg .t-Login-bgImg {
+  background-image: var(--kr-c-login-fizz);
+  background-size: 4rem 26rem;
+  background-repeat: repeat-y;
+  background-position: 16% 0, 16% 0, 16% 0, 84% 0, 84% 0, 84% 0;
+  animation: kr-login-fizz var(--kr-rise) linear infinite;
+}
+@keyframes kr-login-fizz {
+  from {
+    background-position: 16% 0, 16% 0, 16% 0, 84% 0, 84% 0, 84% 0;
+  }
+  to {
+    background-position: 16% -26rem, 16% -26rem, 16% -26rem, 84% -26rem, 84% -26rem, 84% -26rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .t-Login-bg .t-Login-bgImg,
+  .t-LoginPage--bg1 .t-Login-bg .t-Login-bgImg,
+  .t-LoginPage--bg2 .t-Login-bg .t-Login-bgImg,
+  .t-LoginPage--bg3 .t-Login-bg .t-Login-bgImg {
+    animation: none;
+  }
+}
+
+/* Kopf der Karte: App-Symbol als Etikett, große Slab-Headline */
+.t-Login-header {
+  padding-block: var(--kr-space-4) var(--kr-space-5);
+}
+.t-Login-title {
+  font-family: var(--kr-font-slab);
+  font-size: var(--kr-fs-2xl);
+  line-height: var(--kr-lh-2xl);
+  font-weight: var(--kr-fw-slab-heavy);
+  letter-spacing: var(--kr-tracking-title);
+  color: var(--kr-heading);
+  margin-block: var(--kr-space-2) 0;
+  text-wrap: balance;
+}
+
+/* Anmelde-Button: große Control-Höhe (40 px, Touch 48 px), das Etikett in voller Breite */
+.t-Login-buttons {
+  --a-button-padding-y: calc((var(--kr-control-h-lg) - var(--kr-control-lh)) / 2);
+  --a-button-font-size: var(--kr-fs-md);
+  --a-button-line-height: var(--kr-control-lh);
+  --a-button-font-weight: var(--kr-fw-semibold);
+  margin-block-start: var(--kr-space-2);
+}
+
+/* Fehlerseite (Error Page Template, gleiches Login-Gerüst): die Meldung ist eine weiße Karte
+   auf dem Himmel – nicht die Hinweiskarte der Alerts (regions.css, 0,1,0) */
+.t-Login-containerBody > .t-Alert--wizard {
+  --ut-alert-background-color: var(--kr-surface);
+  --ut-alert-border-width: 0px;
+  --ut-alert-wizard-border-radius: var(--kr-r-xl);
+  --ut-alert-box-shadow: var(--kr-float-shadow);
+}
+.t-LoginPage--split .t-Login-containerBody > .t-Alert--wizard {
+  --ut-alert-box-shadow: none;     /* steht dort schon in der weißen Tafel */
+}
+
+/* Geteilte Ansicht: die Anmeldung als weiße Tafel, bündig am Rand, die freie Kante gerundet –
+   wie ein Etikett, das von der Seite hereingezogen wird (Drawer, overlays.css) */
+.t-LoginPage--split .t-Login-container {
+  border-start-end-radius: var(--kr-r-xl);
+  border-end-end-radius: var(--kr-r-xl);
+  box-shadow: var(--kr-float-shadow);
+}
+/* Telefon (< 640 px): Die Tafel füllt die Breite. Damit die Signatur bleibt, beginnt sie unter einem
+   schmalen Himmel-Streifen (--kr-c-login-band) mit ein paar Blasen; ihre Oberkante ist dieselbe
+   aufsteigende Welle wie beim Grund der Kartenansicht – EINE einfarbige Kante. Die Tafel trägt dafür
+   die Farbe des Seitengrunds: Sie IST hier der aufsteigende Grund (hell Lavendel, dunkel Violett-Schwarz –
+   auf der Kartenfläche verschwände die Welle im Dunkeln im Nachthimmel). Alle Paare der Anmeldung
+   (Felder, Kanten, Text, Fokus) sind auch gegen den Seitengrund geprüft (check-tokens.mjs). */
+@media (max-width: 639px) {
+  .t-LoginPage--split {
+    --kr-c-login-band: 4.5rem;
+    --kr-c-login-bubbles:
+      radial-gradient(circle at 13% 30px, transparent 15px, var(--kr-bubble-ring) 16px, var(--kr-bubble-ring) 18px, transparent 19px),
+      radial-gradient(circle at 24% 58px, var(--kr-bubble) 5px, transparent 6px),
+      radial-gradient(circle at 34% 18px, var(--kr-bubble) 3px, transparent 4px),
+      radial-gradient(circle at 78% 26px, var(--kr-bubble) 11px, transparent 12px),
+      radial-gradient(circle at 90% 56px, transparent 7px, var(--kr-bubble-ring) 8px, var(--kr-bubble-ring) 9.5px, transparent 10.5px),
+      radial-gradient(circle at 66% 60px, transparent 3px, var(--kr-bubble-ring) 4px, var(--kr-bubble-ring) 5.5px, transparent 6.5px);
+  }
+  .t-LoginPage--split .t-Login-container {
+    max-width: none;
+    margin-block-start: calc(var(--kr-c-login-band) + 2 * var(--kr-wave-h));
+    padding-inline: 0;
+    border-radius: 0;
+    background-color: var(--kr-page);
+    box-shadow: none;
+  }
+  .t-LoginPage--split .t-Login-container::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: calc(100% - 1px);
+    height: calc(2 * var(--kr-wave-h));
+    background-color: var(--kr-page);
+    mask-image: var(--kr-wave-rise);
+    mask-repeat: repeat-x;
+    mask-size: calc(2 * var(--kr-wave-w)) 100%;
+    mask-position: 30% 0;
+    pointer-events: none;
+  }
+}

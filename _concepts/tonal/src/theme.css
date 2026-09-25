@@ -1,0 +1,847 @@
+/* ==========================================================================
+   Loden – Komponentenregeln (modusunabhängig, lesen nur Tokens)
+   Reihenfolge: Mapping → Schrift → Shell (Rahmen & Bogen) → Navigation →
+   Title-Bar → Regionen → Buttons → Formulare → Popups → Reports → Karten →
+   Login → Responsive.  Kein @layer (verliert gegen ungelayertes Oracle-CSS).
+   ========================================================================== */
+@import "./map.css";
+
+/* ---- Schrift: Figtree Variable (OFL 1.1), selbst gehostet ----------------- */
+@font-face {
+  font-family: "Figtree Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 900;
+  src: url("fonts/figtree-latin-ext-wght-normal.woff2") format("woff2-variations"), url("fonts/figtree-latin-ext-wght-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Figtree Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 900;
+  src: url("fonts/figtree-latin-wght-normal.woff2") format("woff2-variations"), url("fonts/figtree-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+body {
+  font-feature-settings: "cv11" 0;
+  text-rendering: optimizeLegibility;
+}
+/* Zahlen in Daten immer tabellarisch */
+.t-Report-report, .a-IRR-table, .a-GV-table, .a-CardView-badge, .t-Badge, .apex-item-number, .a-DatePicker-calendar {
+  font-variant-numeric: tabular-nums;
+}
+h1, h2, h3, .t-Region-title, .t-BreadcrumbRegion-titleText { letter-spacing: -.01em; }
+
+/* ==========================================================================
+   1. SHELL – Rahmen (Header + Navigation)
+   ========================================================================== */
+.t-Header-branding {
+  /* Höhe statisch: 12 + 40 + 12 = 64px = --ut-header-height */
+  --ut-header-item-spacing: .5rem;
+}
+.t-Header-logo-link { letter-spacing: -.015em; }
+
+/* Header-Buttons: transparente Pills mit Zustandsschleier */
+.t-Button--header {
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--tonal-text-muted);
+  --a-button-border-color: transparent;
+  --a-button-shadow: none;
+  --a-button-hover-background-color: var(--tonal-hover);
+  --a-button-hover-text-color: var(--tonal-text);
+  --a-button-hover-border-color: transparent;
+  --a-button-active-background-color: var(--tonal-pressed);
+  --a-button-active-border-color: transparent;
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--tonal-hover);
+  --a-button-padding-x: .875rem;
+  --a-button-font-size: .8125rem;
+  --a-button-font-weight: 500;
+}
+.t-Button--header.is-active {
+  --a-button-background-color: var(--tonal-secondary);
+  --a-button-text-color: var(--tonal-on-secondary);
+}
+/* Hamburger: runder 40-px-Knopf, drei gleich lange Linien (kein APEX-Stufenmuster) */
+.t-Button--headerTree {
+  --a-button-border-width: 0px;
+  --a-button-padding-y: .75rem;
+  --a-button-padding-x: .75rem;
+  --a-button-text-color: var(--tonal-text);
+  --ut-header-controls-icon-top-width: 1rem;
+  --ut-header-controls-icon-middle-width: 1rem;
+  --ut-header-controls-icon-bottom-width: 1rem;
+}
+.t-Button--header .t-Button-badge,
+.t-NavigationBar .t-Button-badge {
+  background-color: var(--tonal-primary);
+  color: var(--tonal-on-primary);
+}
+.t-Button--headerUser,
+.t-NavigationBar-item.has-username .t-Button-label { text-transform: none; }
+
+/* Top-Navigation (Menüleiste) als Pills im Rahmen */
+.t-Header-nav .a-MenuBar { box-shadow: none; padding-inline: .5rem; }
+.t-Header-nav .a-MenuBar-item { border-radius: var(--tonal-radius-pill); margin-block: .25rem; }
+.t-Header-nav .a-Menu--current { --a-menubar-item-font-weight: 600; }
+
+/* ==========================================================================
+   2. DER BOGEN – helle Arbeitsfläche, in den Rahmen eingelegt
+   ========================================================================== */
+.t-Body-main {
+  border-start-start-radius: var(--tonal-radius-sheet);
+  border-start-end-radius: var(--tonal-radius-sheet);
+  margin-inline-end: .5rem;
+}
+/* Title-Bar ist sticky: ihre oberen Ecken werden über zwei Hintergrund-
+   schichten in Rahmenfarbe „ausgestanzt“, damit gescrollter Inhalt nicht
+   in den Ecken durchscheint (kein border-radius → keine Lücke). */
+.t-Body-title {
+  --tonal-r: var(--tonal-radius-sheet);
+  background:
+    radial-gradient(circle at 100% 100%, transparent calc(var(--tonal-r) - .5px), var(--tonal-frame) var(--tonal-r)) top left / var(--tonal-r) var(--tonal-r) no-repeat,
+    radial-gradient(circle at 0 100%, transparent calc(var(--tonal-r) - .5px), var(--tonal-frame) var(--tonal-r)) top right / var(--tonal-r) var(--tonal-r) no-repeat,
+    var(--tonal-sheet);
+}
+/* Beim Scrollen (Title schrumpft) trennt eine Haarlinie Titel und Inhalt */
+.t-Body-title.t-Body-title-shrink { box-shadow: 0 1px 0 0 var(--tonal-line); }
+.t-Body-content { min-width: 0; }
+.t-Footer { --ut-footer-padding-x: 1.5rem; font-size: .75rem; }
+.t-Footer-topButton { border-radius: var(--tonal-radius-pill); }
+
+/* Seitenspalten */
+.t-Body-side { box-shadow: none; }
+.t-Body-actions { box-shadow: none; }
+.t-Body-actionsToggle {
+  border-start-start-radius: var(--tonal-radius-pill);
+  border-end-start-radius: var(--tonal-radius-pill);
+}
+
+/* ==========================================================================
+   3. SIDE-NAVIGATION – getönte Pills (inkl. Vita-Hardcodes)
+   ========================================================================== */
+.t-TreeNav {
+  --a-treeview-node-padding-y: .5rem;
+  --a-treeview-node-padding-x: 1.125rem;
+  --a-treeview-node-font-size: .875rem;
+  --a-treeview-node-line-height: 1.25rem;
+  --ut-treeview-toplevel-node-font-size: .875rem;
+  --ut-treeview-icon-size: 1.125rem;
+  --ut-treeview-icon-container-width: 1.5rem;
+  --ut-treeview-toplevel-icon-container-width: 1.75rem;
+  --ut-treeview-toggle-width: 2.5rem;
+  --ut-treeview-node-indent: 1.25rem;
+  --ut-treeview-toplevel-leaf-padding-y: .125rem;
+  --ut-treeview-icon-opacity: 1;
+}
+.t-TreeNav > ul { padding-block: .5rem; }
+.t-TreeNav .a-TreeView-node { margin-block: 2px; }
+.t-TreeNav .a-TreeView-node .a-TreeView-row {
+  width: auto;
+  margin-inline: .5rem;
+  border-radius: var(--tonal-radius-pill);
+}
+.t-TreeNav .a-TreeView-label { padding-inline-start: .5rem; }
+.t-TreeNav .a-TreeView-toggle { margin-inline-end: .5rem; opacity: .8; }
+
+/* Vita: #1e2225 / #171a1d / #25292d !important → neu gesetzt */
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-selected,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected {
+  background-color: var(--a-treeview-node-selected-background-color);
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav .a-TreeView-node--topLevel.is-collapsible > .a-TreeView-row,
+.t-TreeNav .a-TreeView-node--topLevel ul {
+  background-color: transparent;
+  color: inherit;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-current.is-selected {
+  background-color: var(--a-treeview-node-selected-background-color);
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover {
+  background-color: var(--tonal-hover) !important;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-selected.is-hover {
+  background-color: var(--tonal-primary-container-hover) !important;
+}
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-toggle,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-content,
+.t-TreeNav .a-TreeView-node--topLevel .a-TreeView-row.is-hover + .a-TreeView-toggle + .a-TreeView-content {
+  color: var(--tonal-text);
+}
+.t-TreeNav .a-TreeView-row.is-selected + .a-TreeView-content,
+.t-TreeNav .a-TreeView-row.is-selected + .a-TreeView-toggle + .a-TreeView-content,
+.t-TreeNav .a-TreeView-row.is-selected.is-hover + .a-TreeView-content,
+.t-TreeNav .a-TreeView-row.is-selected.is-hover + .a-TreeView-toggle + .a-TreeView-content {
+  color: var(--a-treeview-node-selected-text-color);
+}
+.t-TreeNav .is-current,
+.t-TreeNav .is-current--top { --a-treeview-node-font-weight: 700; }
+.t-TreeNav .a-TreeView-content.is-current--top,
+.t-TreeNav .a-TreeView-content.is-current { color: var(--tonal-text); }
+
+/* Aktuelle Seite = Pill am Blatt; der aufgeklappte Elternknoten bleibt nur fett */
+.t-TreeNav .a-TreeView-node:not(.a-TreeView-node--topLevel) > .a-TreeView-row:has(~ .a-TreeView-content > .a-TreeView-label.is-current) {
+  background-color: var(--a-treeview-node-selected-background-color);
+}
+.t-TreeNav .a-TreeView-node:not(.a-TreeView-node--topLevel) > .a-TreeView-content:has(> .a-TreeView-label.is-current) {
+  color: var(--a-treeview-node-selected-text-color);
+}
+.js-navExpanded .t-TreeNav .a-TreeView-node--topLevel.is-collapsible:has(ul .a-TreeView-label.is-current) > .a-TreeView-row.is-selected {
+  background-color: transparent;
+}
+.js-navExpanded .t-TreeNav .a-TreeView-node--topLevel.is-collapsible:has(ul .a-TreeView-label.is-current) > .a-TreeView-row.is-selected ~ .a-TreeView-content {
+  color: var(--tonal-text);
+}
+
+/* Stil-Varianten A/B der Template-Optionen auf dieselbe Sprache ziehen */
+.t-TreeNav--styleA .a-TreeView-node--topLevel { border-bottom: 0; }
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top ~ ul .a-TreeView-row { box-shadow: none; }
+.t-TreeNav--styleA .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav--styleA .a-TreeView-node--topLevel ul { background-color: transparent; color: inherit; }
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top,
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected {
+  background-color: var(--a-treeview-node-selected-background-color);
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-selected + .a-TreeView-toggle,
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-content.is-current--top { color: var(--a-treeview-node-selected-text-color); }
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-content.is-current--top.is-hover { color: var(--a-treeview-node-selected-text-color) !important; }
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row.is-current--top.is-hover {
+  background-color: var(--tonal-primary-container-hover) !important;
+}
+.t-TreeNav--styleB .a-TreeView-node--topLevel .a-TreeView-row { border-radius: var(--tonal-radius-pill); }
+
+/* Eingeklappt: 72-px-Schiene, Icon zentriert in 56-px-Pill; der aktive
+   Bereich (is-current--top) wird hier gefüllt, weil das Kind unsichtbar ist */
+.apex-side-nav.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-content {
+  padding-inline: .5rem;
+}
+.apex-side-nav.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top {
+  background-color: var(--a-treeview-node-selected-background-color);
+}
+.apex-side-nav.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top + .a-TreeView-content,
+.apex-side-nav.js-navCollapsed .t-TreeNav .a-TreeView-node--topLevel > .a-TreeView-row.is-current--top + .a-TreeView-toggle + .a-TreeView-content {
+  color: var(--a-treeview-node-selected-text-color);
+}
+
+/* Tree im Inhalt (nicht Navigation): ruhige Auswahl statt Nav-Pill */
+.a-TreeView:not(.t-TreeNav) {
+  --a-treeview-node-selected-background-color: var(--tonal-primary-soft);
+  --a-treeview-node-selected-text-color: var(--tonal-text);
+  --a-treeview-node-focused-background-color: var(--tonal-primary-soft);
+  --a-treeview-node-focused-text-color: var(--tonal-text);
+}
+
+/* ==========================================================================
+   4. TITLE-BAR, BREADCRUMB, TABS/RDS
+   ========================================================================== */
+.t-Breadcrumb-item:after { content: "\203A"; font-size: 1.1em; }
+.u-RTL .t-Breadcrumb-item:after { content: "\2039"; }
+.t-Breadcrumb-item a { color: inherit; }
+.t-Breadcrumb-item a:hover { color: var(--tonal-link); }
+.t-BreadcrumbRegion-titleText { letter-spacing: -.015em; }
+
+/* Tabs & Region Display Selector als Pills */
+.t-Tabs, .apex-rds { gap: .25rem; }
+.apex-rds {
+  --ut-tabs-item-padding-y: .375rem;
+  --ut-tabs-item-padding-x: .875rem;
+}
+.t-Tabs {
+  --ut-tabs-item-padding-y: .5rem;
+  --ut-tabs-item-padding-x: .875rem;
+}
+.t-Tabs-link,
+.a-RDS-link {
+  border-radius: var(--tonal-radius-pill);
+  background-color: var(--ut-tabs-item-background-color);
+  transition: background-color .15s ease;
+}
+.t-Tabs-link:before, .a-RDS-link:before { display: none; }
+.apex-rds-item:hover { --ut-tabs-item-background-color: var(--ut-tabs-item-hover-background-color); }
+.apex-rds-item.apex-rds-selected { --ut-tabs-item-background-color: var(--ut-tabs-item-active-background-color); }
+.apex-rds-item--hint:not(.apex-rds-selected) { --ut-tabs-item-background-color: var(--tonal-hover); }
+.t-Body-title .apex-rds-container {
+  margin-inline: var(--ut-breadcrumb-padding-x);
+  padding-block-end: .75rem;
+}
+.t-Tabs--pill {
+  --ut-tabs-border-width: 0px;
+  --ut-tabs-box-shadow: none;
+  --ut-tabs-background-color: var(--tonal-panel);
+  --ut-tabs-border-radius: var(--tonal-radius-pill);
+  padding: .25rem;
+}
+.t-Tabs--pill .t-Tabs-item { border-inline-end-width: 0; }
+.t-TabsRegion { --ut-tabs-item-active-background-color: var(--tonal-secondary); }
+
+/* ==========================================================================
+   5. REGIONEN, CONTENT BLOCKS, ALERTS, BUTTON CONTAINER
+   ========================================================================== */
+.t-Region-header { padding-block-end: .25rem; }
+.t-Region--hideShow.is-collapsed > .t-Region-header,
+.t-Region--noUI > .t-Region-header,
+.t-Region--textContent > .t-Region-header { padding-block-end: var(--ut-region-header-padding-y); }
+.t-Region-title { font-weight: 650; }
+.t-Region-headerIcon .t-Icon {
+  background-color: var(--tonal-primary-container);
+  color: var(--tonal-on-primary-container);
+  border-radius: var(--tonal-radius-s);
+}
+/* Tabellen/IR ohne Innenabstand bündig in die runde Region einpassen */
+.t-Region--noPadding > .t-Region-bodyWrap { border-end-start-radius: inherit; border-end-end-radius: inherit; overflow: clip; }
+/* Regionen in Seitenspalten bleiben flach */
+.t-Body-side .t-Region, .t-Body-actions .t-Region { --ut-region-background-color: transparent; }
+
+/* Collapsible-Knopf als kleine runde Fläche */
+.t-Button--hideShow { --a-button-background-color: transparent; --a-button-border-radius: var(--tonal-radius-pill); }
+
+/* Content Blocks (Übersicht/Anleitung-Kästen) */
+.t-ContentBlock--shadowBG,
+.t-ContentBlock--lightBG {
+  --ut-content-block-border-width: 0px;
+  --ut-content-block-box-shadow: none;
+  --ut-content-block-padding-y: 1rem;
+  --ut-content-block-padding-x: 1.25rem;
+}
+.t-ContentBlock--shadowBG .t-ContentBlock-body,
+.t-ContentBlock--lightBG .t-ContentBlock-body { border-radius: var(--tonal-radius-l); }
+.t-ContentBlock-body > :first-child { margin-block-start: 0; }
+.t-ContentBlock-body > :last-child { margin-block-end: 0; }
+.t-ContentBlock--h1 { --ut-content-block-header-font-size: 1.75rem; }
+.t-ContentBlock--h2 { --ut-content-block-header-font-size: 1.375rem; }
+.t-ContentBlock--h3 { --ut-content-block-header-font-size: 1.125rem; }
+.t-ContentBlock-title { letter-spacing: -.012em; }
+
+/* Alerts: tonale Statusflächen statt weißer Kasten mit Farbicon */
+.t-Alert--warning, .t-Alert--yellow { --ut-alert-type-background-color: var(--tonal-warning-container); --ut-alert-type-text-color: var(--tonal-text); }
+.t-Alert--success { --ut-alert-type-background-color: var(--tonal-success-container); --ut-alert-type-text-color: var(--tonal-text); }
+.t-Alert--danger, .t-Alert--red { --ut-alert-type-background-color: var(--tonal-danger-container); --ut-alert-type-text-color: var(--tonal-text); }
+.t-Alert--info { --ut-alert-type-background-color: var(--tonal-info-container); --ut-alert-type-text-color: var(--tonal-text); }
+.t-Alert--horizontal .t-Alert-icon { background-color: transparent; }
+/* Seitenmeldungen: Fehler nicht gelb, sondern Fehler-Ton; Schließen-Knopf tonal */
+.t-Alert--page.t-Alert--warning { --ut-alert-type-background-color: var(--tonal-danger-container); --ut-alert-type-text-color: var(--tonal-text); }
+.t-Alert--page.t-Alert--success { --ut-alert-type-background-color: var(--tonal-success-container); --ut-alert-type-text-color: var(--tonal-text); }
+.t-Alert--page { --ut-alert-type-box-shadow: var(--tonal-shadow-float); }
+.t-Alert--page .t-Button.t-Button--closeAlert {
+  background-color: var(--tonal-secondary);
+  color: var(--tonal-on-secondary);
+  border-color: transparent;
+}
+
+.t-Wizard { border-radius: var(--tonal-radius-l); overflow: clip; }
+
+/* Karussell: Pfeile und Punkte in Rahmentönen (Vita-Fallbacks sind schwarz-transparent) */
+.t-Region--carousel {
+  --ut-carousel-button-background-color: var(--tonal-float);
+  --ut-carousel-button-text-color: var(--tonal-text);
+  --ut-carousel-button-border-radius: var(--tonal-radius-pill);
+  --ut-carousel-nav-background-color: var(--tonal-line-strong);
+  --ut-carousel-nav-active-background-color: var(--tonal-primary);
+}
+
+/* Kalender (FullCalendar 5 definiert --fc-* am Element, nicht auf :root) */
+.apex-fullcalendar-5 {
+  --fc-today-bg-color: var(--tonal-primary-soft);
+  --fc-neutral-bg-color: var(--tonal-panel-2);
+  --fc-non-business-color: var(--tonal-hover);
+  --fc-highlight-color: var(--tonal-primary-soft);
+  --fc-border-color: var(--tonal-line);
+}
+
+/* Badges & Chips */
+.t-Badge { font-weight: 600; }
+.t-LinksList-link { border-radius: var(--tonal-radius-s); }
+
+/* ==========================================================================
+   6. BUTTONS
+   Basis = tonaler Button (Tokens in map.css). Hier alle Vita-Selektoren mit
+   lokal gesetzten Farben (Hot, Status, Primary, Simple/Link/NoUI, .fa:after).
+   ========================================================================== */
+.t-Button, .a-Button, .ui-button { letter-spacing: .005em; }
+
+/* Hot = gefüllter Loden-Button */
+.t-Button--hot,
+.a-Button--hot,
+.ui-button--hot,
+.a-CardView-button--hot,
+.apex-button-group input:checked + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label {
+  --a-button-background-color: var(--tonal-primary);
+  --a-button-text-color: var(--tonal-on-primary);
+  --a-button-hover-background-color: var(--tonal-primary-hover);
+  --a-button-hover-text-color: var(--tonal-on-primary);
+  --a-button-active-background-color: var(--tonal-primary-active);
+  --a-button-active-text-color: var(--tonal-on-primary);
+  --a-button-focus-background-color: var(--tonal-primary-hover);
+  --a-button-focus-text-color: var(--tonal-on-primary);
+  --a-button-font-weight: 650;
+}
+.t-Button--hot.t-Button--simple,
+.a-Button--hot.t-Button--simple,
+.ui-button--hot.t-Button--simple,
+.a-CardView-button--hot.t-Button--simple,
+.apex-button-group input:checked + label.t-Button--simple,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--simple {
+  --a-button-border-color: var(--tonal-primary);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--tonal-link);
+  --a-button-hover-text-color: var(--tonal-on-primary);
+}
+.t-Button--hot.t-Button--link,
+.a-Button--hot.t-Button--link,
+.ui-button--hot.t-Button--link,
+.a-CardView-button--hot.t-Button--link,
+.apex-button-group input:checked + label.t-Button--link,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--tonal-link);
+}
+.t-Button--hot.t-Button--noUI, .t-Button--hot.a-Button--noUI,
+.a-Button--hot.t-Button--noUI,
+.a-Button--hot.a-Button--noUI,
+.ui-button--hot.t-Button--noUI,
+.ui-button--hot.a-Button--noUI,
+.a-CardView-button--hot.t-Button--noUI,
+.a-CardView-button--hot.a-Button--noUI,
+.apex-button-group input:checked + label.t-Button--noUI,
+.apex-button-group input:checked + label.a-Button--noUI,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--noUI,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.a-Button--noUI {
+  --a-button-text-color: var(--tonal-link);
+  color: var(--tonal-link);
+}
+/* Segmentierte Auswahl (Radio-Gruppe als Buttons, Pill-Yes/No): Salbei statt Vollton */
+.apex-button-group input:checked + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label {
+  --a-button-background-color: var(--tonal-primary-container);
+  --a-button-text-color: var(--tonal-on-primary-container);
+  --a-button-hover-background-color: var(--tonal-primary-container-hover);
+  --a-button-hover-text-color: var(--tonal-on-primary-container);
+  --a-button-active-background-color: var(--tonal-primary-container-hover);
+  --a-button-active-text-color: var(--tonal-on-primary-container);
+  --a-button-focus-background-color: var(--tonal-primary-container-hover);
+  --a-button-focus-text-color: var(--tonal-on-primary-container);
+}
+.apex-button-group label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input + label {
+  --a-button-background-color: var(--tonal-field);
+  --a-button-hover-background-color: var(--tonal-field-hover);
+}
+.apex-button-group input:focus-visible + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:focus-visible + label {
+  outline: var(--ut-focus-outline);
+  outline-offset: 2px;
+}
+
+/* Primary (Alt) = Salbei-Container */
+.t-Button--primary {
+  --a-button-background-color: var(--tonal-primary-container);
+  --a-button-text-color: var(--tonal-on-primary-container);
+  --a-button-hover-background-color: var(--tonal-primary-container-hover);
+  --a-button-hover-text-color: var(--tonal-on-primary-container);
+  --a-button-active-background-color: var(--tonal-primary-container-hover);
+  --a-button-active-text-color: var(--tonal-on-primary-container);
+  --a-button-focus-background-color: var(--tonal-primary-container-hover);
+  --a-button-focus-text-color: var(--tonal-on-primary-container);
+}
+.t-Button--primary.t-Button--simple { --a-button-border-color: var(--tonal-outline); --a-button-text-color: var(--tonal-link); --a-button-hover-text-color: var(--tonal-on-primary-container); }
+.t-Button--primary.t-Button--link { --a-button-text-color: var(--tonal-link); }
+.t-Button--primary.t-Button--noUI, .t-Button--primary.a-Button--noUI { --a-button-text-color: var(--tonal-link); color: var(--tonal-link); }
+
+/* Status */
+.t-Button--warning {
+  --a-button-background-color: var(--tonal-warning);
+  --a-button-text-color: var(--tonal-on-warning);
+  --a-button-hover-background-color: color-mix(in srgb, var(--tonal-warning) 88%, var(--tonal-text));
+  --a-button-hover-text-color: var(--tonal-on-warning);
+  --a-button-active-background-color: color-mix(in srgb, var(--tonal-warning) 80%, var(--tonal-text));
+  --a-button-active-text-color: var(--tonal-on-warning);
+  --a-button-focus-background-color: color-mix(in srgb, var(--tonal-warning) 88%, var(--tonal-text));
+  --a-button-focus-text-color: var(--tonal-on-warning);
+}
+.t-Button--warning.t-Button--simple { --a-button-border-color: var(--tonal-warning); --a-button-background-color: transparent; --a-button-text-color: var(--tonal-warning-text); --a-button-hover-text-color: var(--tonal-on-warning); }
+.t-Button--warning.t-Button--link { --a-button-border-color: transparent; --a-button-background-color: transparent; --a-button-text-color: var(--tonal-warning-text); }
+.t-Button--warning.t-Button--noUI, .t-Button--warning.a-Button--noUI { --a-button-text-color: var(--tonal-warning-text); color: var(--tonal-warning-text); }
+
+.t-Button--success {
+  --a-button-background-color: var(--tonal-success);
+  --a-button-text-color: var(--tonal-on-success);
+  --a-button-hover-background-color: color-mix(in srgb, var(--tonal-success) 86%, var(--tonal-text));
+  --a-button-hover-text-color: var(--tonal-on-success);
+  --a-button-active-background-color: color-mix(in srgb, var(--tonal-success) 76%, var(--tonal-text));
+  --a-button-active-text-color: var(--tonal-on-success);
+  --a-button-focus-background-color: color-mix(in srgb, var(--tonal-success) 86%, var(--tonal-text));
+  --a-button-focus-text-color: var(--tonal-on-success);
+}
+.t-Button--success.t-Button--simple { --a-button-border-color: var(--tonal-success); --a-button-background-color: transparent; --a-button-text-color: var(--tonal-success-text); --a-button-hover-text-color: var(--tonal-on-success); }
+.t-Button--success.t-Button--link { --a-button-border-color: transparent; --a-button-background-color: transparent; --a-button-text-color: var(--tonal-success-text); }
+.t-Button--success.t-Button--noUI, .t-Button--success.a-Button--noUI { --a-button-text-color: var(--tonal-success-text); color: var(--tonal-success-text); }
+
+.ui-button--danger,
+.t-Button--danger {
+  --a-button-background-color: var(--tonal-danger);
+  --a-button-text-color: var(--tonal-on-danger);
+  --a-button-hover-background-color: color-mix(in srgb, var(--tonal-danger) 86%, var(--tonal-text));
+  --a-button-hover-text-color: var(--tonal-on-danger);
+  --a-button-active-background-color: color-mix(in srgb, var(--tonal-danger) 76%, var(--tonal-text));
+  --a-button-active-text-color: var(--tonal-on-danger);
+  --a-button-focus-background-color: color-mix(in srgb, var(--tonal-danger) 86%, var(--tonal-text));
+  --a-button-focus-text-color: var(--tonal-on-danger);
+}
+.ui-button--danger.t-Button--simple,
+.t-Button--danger.t-Button--simple { --a-button-border-color: var(--tonal-danger); --a-button-background-color: transparent; --a-button-text-color: var(--tonal-danger-text); --a-button-hover-text-color: var(--tonal-on-danger); }
+.ui-button--danger.t-Button--link,
+.t-Button--danger.t-Button--link { --a-button-border-color: transparent; --a-button-background-color: transparent; --a-button-text-color: var(--tonal-danger-text); }
+.ui-button--danger.t-Button--noUI, .ui-button--danger.a-Button--noUI,
+.t-Button--danger.t-Button--noUI,
+.t-Button--danger.a-Button--noUI { --a-button-text-color: var(--tonal-danger-text); color: var(--tonal-danger-text); }
+
+/* Simple (Outline) für normale Buttons: Kontur ≥3:1 bleibt auch bei Hover */
+.t-Button--simple {
+  --a-button-border-color: var(--tonal-outline);
+  --a-button-hover-border-color: var(--tonal-outline);
+  --a-button-active-border-color: var(--tonal-outline);
+  --a-button-hover-background-color: var(--tonal-hover);
+  --a-button-active-background-color: var(--tonal-pressed);
+  --a-button-focus-background-color: var(--tonal-hover);
+  --a-button-text-color: var(--tonal-link);
+  --a-button-hover-text-color: var(--tonal-link);
+}
+/* Status-/Hot-Simple: Kontur in Statusfarbe, Füllung bei Hover (Vita-Verhalten) */
+.t-Button--hot.t-Button--simple, .t-Button--success.t-Button--simple, .t-Button--danger.t-Button--simple, .t-Button--warning.t-Button--simple, .t-Button--primary.t-Button--simple {
+  --a-button-hover-border-color: var(--a-button-border-color);
+  --a-button-active-border-color: var(--a-button-border-color);
+}
+.t-Button--hot.t-Button--simple { --a-button-hover-background-color: var(--tonal-primary); --a-button-active-background-color: var(--tonal-primary-hover); --a-button-focus-background-color: var(--tonal-primary); --a-button-focus-text-color: var(--tonal-on-primary); }
+.t-Button--success.t-Button--simple { --a-button-hover-background-color: var(--tonal-success); --a-button-active-background-color: var(--tonal-success); --a-button-focus-background-color: var(--tonal-success); --a-button-focus-text-color: var(--tonal-on-success); }
+.t-Button--danger.t-Button--simple { --a-button-hover-background-color: var(--tonal-danger); --a-button-active-background-color: var(--tonal-danger); --a-button-focus-background-color: var(--tonal-danger); --a-button-focus-text-color: var(--tonal-on-danger); }
+.t-Button--warning.t-Button--simple { --a-button-hover-background-color: var(--tonal-warning); --a-button-active-background-color: var(--tonal-warning); --a-button-focus-background-color: var(--tonal-warning); --a-button-focus-text-color: var(--tonal-on-warning); }
+.t-Button--primary.t-Button--simple { --a-button-hover-background-color: var(--tonal-primary-container); --a-button-active-background-color: var(--tonal-primary-container-hover); }
+
+/* Link-Buttons: Text in Loden, Unterstreichung nur bei Hover */
+.t-Button--link { --a-button-text-color: var(--tonal-link); }
+
+/* Font-APEX-Modifier-Overlays (.fa:after) – in Vita weiß/hart */
+.t-Button.t-Button--noUI .fa:after,
+.t-Button.t-Button--link .fa:after,
+.t-Button.t-Button--simple .fa:after,
+.a-Button.a-Button--noUI .fa:after { background-color: var(--tonal-sheet); }
+.t-Button--danger .fa:after, .t-Button--simple.t-Button--danger:hover .fa:after { background-color: var(--tonal-danger); }
+.t-Button--success .fa:after, .t-Button--simple.t-Button--success:hover .fa:after { background-color: var(--tonal-success); }
+.t-Button--primary .fa:after, .t-Button--simple.t-Button--primary:hover .fa:after { background-color: var(--tonal-primary-container); }
+.t-Button--warning .fa:after, .t-Button--simple.t-Button--warning:hover .fa:after { background-color: var(--tonal-warning); }
+.t-Button--hot .fa:after, .t-Button--simple.t-Button--hot:hover .fa:after { background-color: var(--tonal-primary); }
+.fa[class*=fam-]:after { background-color: var(--tonal-sheet); }
+
+/* Hilfe-Button, Pagination, IG/IR-Steuerknöpfe (lokal hart in Vita) */
+.t-Form-helpButton {
+  --a-button-text-color: var(--tonal-text-muted);
+  --a-button-hover-text-color: var(--tonal-text);
+  --a-button-hover-background-color: var(--tonal-hover);
+}
+.a-IG-button.a-IG-button--controls,
+.a-IRR-button.a-IRR-button--controls { --a-button-background-color: var(--tonal-secondary); }
+.t-Button--small, .t-Button--tiny, .t-Button--xsmall { --a-button-font-weight: 600; }
+
+/* Icon-only-Buttons werden kreisrund */
+.t-Button--icon.t-Button--noLabel { --a-button-padding-x: .625rem; }
+
+/* ==========================================================================
+   7. FORMULARE – gefüllte Felder mit Unterkante
+   ========================================================================== */
+.t-Form-labelContainer { text-align: start; }
+.t-Form-label { letter-spacing: .005em; }
+/* Pflicht: „*“ nach dem Label statt Glyphe davor / rotem Dreieck */
+.t-Form-fieldContainer.is-required .t-Form-label:before { display: none; }
+.t-Form-fieldContainer.is-required .t-Form-label:after {
+  display: inline;
+  content: "*";
+  margin-inline-start: .1875rem;
+  font-family: var(--tonal-font) !important;
+  color: var(--a-form-required-asterisk-text-color);
+  font-weight: 700;
+}
+.t-Form-fieldContainer--floatingLabel.is-required .t-Form-itemRequired-marker:before { display: none; }
+.t-Form-fieldContainer--floatingLabel.is-required .t-Form-label:after { display: inline; }
+
+/* Floating Label = gefülltes Feld mit innenliegendem Label (größer, luftiger) */
+.t-Form-fieldContainer--floatingLabel {
+  --a-field-input-padding-x: .875rem;
+  --a-field-input-padding-y: .5rem;
+  --a-field-input-font-size: .9375rem;
+  --ut-field-label-font-size: .9375rem;
+  --ut-field-fl-label-font-size: .75rem;
+  --ut-field-fl-label-line-height: 1.125rem;
+}
+.t-Form-fieldContainer--floatingLabel .t-Form-label { color: var(--tonal-text-muted); font-weight: 500; }
+.t-Form-fieldContainer--floatingLabel:focus-within .t-Form-label { color: var(--tonal-primary); }
+
+/* Horizontale Labels mittig zur 40-px-Feldzeile; gestapelte Labels eng */
+:root { --ut-field-label-padding-y: .625rem; }
+.t-Form-fieldContainer--stacked, .t-Form--labelsAbove,
+.apex-item-wrapper--checkbox, .apex-item-wrapper--radiogroup, .apex-item-wrapper--yes-no,
+.apex-item-wrapper--single-checkbox, .apex-item-wrapper--display-only, .apex-item-wrapper--star-rating,
+.apex-item-wrapper--pct-graph { --ut-field-label-padding-y: .25rem; }
+.apex-item-wrapper--display-only .t-Form-label, .apex-item-wrapper--display-only .apex-item-display-only { line-height: 1.25rem; }
+
+/* Fokus: Feld hellt auf, Loden-Rand + Ring direkt am Feld */
+.t-Form-inputContainer, .a-IRR-search, .a-Toolbar-group--search, .t-Login-region { --ut-focus-outline-offset: 1px; }
+
+/* Icon im Feld (Login, Suche) */
+.apex-item-icon { color: var(--tonal-text-muted); }
+
+/* Checkbox & Radio */
+.u-checkbox, .u-radio { --a-checkbox-label-font-size: .875rem; }
+.apex-item-option { margin-block: .125rem; }
+.apex-item-single-checkbox input:checked + label { font-weight: 600; }
+
+/* Switch: ruhige Schiene, Knopf ohne Schatten */
+.a-Switch-toggle { box-shadow: none; }
+
+/* Auswahllisten, Combobox, Popup LOV übernehmen Feld-Tokens; Gruppen rund */
+.apex-item-group--popup-lov,
+.apex-item-group--auto-complete { border-radius: var(--tonal-radius-s); }
+.a-Button--popupLOV, .a-Button--calendar, .a-Button--colorPicker, .a-Button--comboSelect, .a-Button--listManager,
+.apex-item-group > .a-Button {
+  --a-button-background-color: var(--tonal-field);
+  --a-button-hover-background-color: var(--tonal-field-hover);
+  --a-button-text-color: var(--tonal-text-muted);
+  --a-button-shadow: var(--a-field-input-shadow);
+  --a-button-hover-shadow: var(--a-field-input-shadow);
+  --a-button-active-shadow: var(--a-field-input-shadow);
+  --a-button-font-weight: 400;
+}
+/* Select One / Combobox: der Container trägt die Füllung, innen alles transparent */
+a-select .apex-item-comboselect,
+a-combobox .apex-item-comboselect {
+  background-color: var(--tonal-field);
+  border-radius: var(--a-field-input-border-radius);
+}
+a-select .apex-item-comboselect:hover,
+a-combobox .apex-item-comboselect:hover { background-color: var(--tonal-field-hover); }
+a-select .apex-item-comboselect:focus-within,
+a-combobox .apex-item-comboselect:focus-within { background-color: var(--tonal-sheet); }
+a-select .apex-item-comboselect .apex-item-text,
+a-combobox .apex-item-comboselect .apex-item-text { background-color: transparent; box-shadow: none; }
+a-select .apex-item-comboselect .a-Button--comboSelect,
+a-combobox .apex-item-comboselect .a-Button--comboSelect {
+  --a-button-background-color: transparent;
+  --a-button-shadow: none;
+  --a-button-hover-shadow: none;
+  border-inline-start-color: transparent;
+}
+
+/* Date Picker (Popup + Inline) */
+.a-DatePicker { border-radius: var(--tonal-radius-l); }
+.a-DatePicker-inline, .a-DatePicker-inline .a-DatePicker { background-color: var(--tonal-panel-2); }
+.a-DatePicker-calendar td.is-current > span,
+.a-DatePicker-calendar td[aria-current=date] > span { font-weight: 700; }
+.a-DatePicker-nav { --a-button-background-color: transparent; --a-button-hover-background-color: var(--tonal-hover); }
+
+/* Datei-Upload */
+.a-FileDrop { border-style: dashed; }
+
+/* Prozentbalken & Sterne */
+.a-Report-percentChart { overflow: hidden; }
+
+/* ==========================================================================
+   8. MENÜS, DIALOGE, POPUPS
+   ========================================================================== */
+.a-Menu .a-Menu-item { border-radius: var(--a-menu-item-border-radius); }
+.a-Menu-hSeparator { margin-inline: .5rem; }
+.ui-dialog .ui-dialog-titlebar { border-bottom-width: 0; }
+.ui-dialog .ui-dialog-title { font-weight: 650; }
+.ui-dialog--apex .t-Dialog-body, .t-Dialog, .t-Drawer { background-color: var(--tonal-float); }
+.t-Dialog-page, .t-Drawer-page { --ut-body-background-color: var(--tonal-float); }
+.ui-tooltip, .a-GV-tooltip { border-radius: .5rem; font-size: .8125rem; }
+
+/* ==========================================================================
+   9. REPORTS – Tabellen liegen auf Kreide, Kopf getönt, nur waagrechte Linien
+   ========================================================================== */
+/* Classic Report */
+.t-Report-tableWrap {
+  border-radius: var(--tonal-radius-m);
+  overflow: clip;
+  background-color: var(--tonal-sheet);
+}
+.t-Report:not(.t-Report--verticalBorders) .t-Report-cell,
+.t-Report:not(.t-Report--verticalBorders) .t-Report-colHead { border-inline-width: 0; }
+.t-Report-colHead { color: var(--tonal-text-muted); text-align: start; }
+.t-Report-colHead a, .t-Report-colHead .a-Report-SortHeading-Anchor--event { color: inherit; }
+.t-Report-report tr:first-child .t-Report-colHead { border-top-width: 0; }
+.t-Report-report tr:last-child .t-Report-cell { border-bottom-width: 0; }
+.t-Report-pagination { font-size: .8125rem; }
+
+/* Interactive Report: Region = Filz-Tablett, Toolbar auf Filz, Tabelle auf Kreide */
+.t-IRR-region { border-radius: var(--tonal-radius-l); }
+.a-IRR {
+  --a-gv-border-radius: var(--tonal-radius-l);
+  --a-gv-header-cell-padding-x: var(--a-gv-cell-padding-x);
+  --a-gv-cell-padding-y: .5625rem;
+  --a-gv-cell-padding-x: .875rem;
+  background-color: var(--tonal-panel);
+}
+.a-IRR-toolbar { padding: .75rem; }
+.a-IRR-content {
+  background-color: var(--a-gv-background-color);
+  border-radius: var(--tonal-radius-m);
+  margin: 0 .5rem .5rem;
+  overflow: clip;
+}
+.a-IRR-header { background-color: var(--a-gv-header-background-color); }               /* Vita: #fafafa */
+.a-IRR-header:hover { background-color: color-mix(in srgb, var(--tonal-text) 6%, var(--a-gv-header-background-color)); } /* Vita: #f2f2f2 */
+.a-IRR-header.is-active,
+.a-GV-header.is-active { background-color: var(--tonal-primary-container); color: var(--tonal-on-primary-container); }
+.a-IRR-header--group { background-color: var(--tonal-panel); border-top-color: var(--tonal-line); }
+.a-IRR-headerLink, .a-IRR-headerLabel { color: var(--tonal-text-muted); font-weight: 600; }
+.a-IRR-table td { color: var(--tonal-text); }
+.a-IRR-table tr:first-child th { border-top-width: 0; }
+.a-IRR-table th, .a-IRR-table td { border-inline-width: 0; }
+.a-IRR-button.a-IRR-button--pagination { --a-button-border-radius: var(--tonal-radius-pill); }
+.a-IRR-button.a-IRR-button--pagination:hover { background-color: var(--tonal-primary-container); color: var(--tonal-on-primary-container); }
+.a-IRR-paginationWrap { font-size: .8125rem; }
+/* Suchfeld + Spaltenwahl + Go als EIN gefülltes Pill-Feld */
+.a-IRR-search {
+  background-color: var(--tonal-field);
+  border-radius: var(--tonal-radius-pill);
+  box-shadow: inset 0 -1px 0 0 var(--tonal-outline);
+}
+.a-IRR-search .a-IRR-search-field,
+.a-IRR-search .a-Button {
+  --a-field-input-background-color: transparent;
+  --a-field-input-hover-background-color: transparent;
+  --a-field-input-shadow: none;
+  --a-button-background-color: transparent;
+  --a-button-hover-background-color: var(--tonal-hover);
+  border-color: transparent;
+  box-shadow: none;
+}
+.a-IRR-search:focus-within { background-color: var(--tonal-sheet); box-shadow: inset 0 0 0 1px var(--tonal-primary); }
+.a-IRR-search .a-Button { border-radius: var(--tonal-radius-pill); }
+.a-IRR-search .a-IRR-search-field { background-color: transparent; font-size: .875rem; line-height: 1.25rem; }
+.a-IRR, .a-IG { --a-report-controls-input-font-size: .875rem; --a-report-controls-input-line-height: 1.25rem; }
+/* Filterleiste: bunte Vita-Kacheln → ein ruhiger Ton */
+.a-IRR-controls-item, .a-IG-controls-item,
+.a-IRR-reportSummary-item, .a-IG-reportSummary-item {
+  --a-report-controls-cell-label-icon-background-color: var(--tonal-primary-container);
+  --a-report-controls-cell-label-icon-text-color: var(--tonal-on-primary-container);
+  --a-report-controls-cell-label-hover-background-color: var(--tonal-panel-2);
+}
+.a-IRR-controls-item--savedReport, .a-IG-controls-item--savedReport, .a-IRR-reportSummary-item--savedReport, .a-IG-reportSummary-item--savedReport,
+.a-IRR-controls-item--search, .a-IG-controls-item--search, .a-IRR-reportSummary-item--search, .a-IG-reportSummary-item--search,
+.a-IRR-controls-item--filter, .a-IG-controls-item--filter, .a-IRR-reportSummary-item--filter, .a-IG-reportSummary-item--filter,
+.a-IRR-controls-item--controlBreak, .a-IG-controls-item--controlBreak, .a-IRR-reportSummary-item--controlBreak, .a-IG-reportSummary-item--controlBreak,
+.a-IRR-controls-item--groupBy, .a-IG-controls-item--groupBy, .a-IRR-reportSummary-item--groupBy, .a-IG-reportSummary-item--groupBy,
+.a-IRR-controls-item--aggregate, .a-IG-controls-item--aggregate, .a-IRR-reportSummary-item--aggregate, .a-IG-reportSummary-item--aggregate,
+.a-IRR-controls-item--highlight, .a-IG-controls-item--highlight, .a-IRR-reportSummary-item--highlight, .a-IG-reportSummary-item--highlight,
+.a-IRR-controls-item--flashback, .a-IG-controls-item--flashback, .a-IRR-reportSummary-item--flashback, .a-IG-reportSummary-item--flashback,
+.a-IRR-controls-item--chart, .a-IG-controls-item--chart, .a-IRR-reportSummary-item--chart, .a-IG-reportSummary-item--chart,
+.a-IRR-controls-item--pivot, .a-IG-controls-item--pivot, .a-IRR-reportSummary-item--pivot, .a-IG-reportSummary-item--pivot,
+.a-IRR-controls-item--invalidSettings, .a-IG-controls-item--invalidSettings, .a-IRR-reportSummary-item--invalidSettings, .a-IG-reportSummary-item--invalidSettings,
+.a-IRR-controls-item--inactiveSettings, .a-IG-controls-item--inactiveSettings, .a-IRR-reportSummary-item--inactiveSettings, .a-IG-reportSummary-item--inactiveSettings {
+  --a-report-controls-cell-label-icon-background-color: var(--tonal-primary-container);
+  --a-report-controls-cell-label-hover-background-color: var(--tonal-panel-2);
+}
+.a-IRR-controlsContainer { background-color: transparent; }
+
+/* Interactive Grid */
+.a-IG { border-radius: var(--tonal-radius-l); background-color: var(--tonal-panel); overflow: clip; }
+.a-IG-header { padding: .5rem; }
+.a-GV-table th.a-GV-controlBreakHeader { background-color: var(--tonal-panel); color: var(--tonal-text-muted); }   /* Vita: whitesmoke */
+.a-GV-table .a-GV-cell.is-active { background-color: var(--tonal-primary-soft); }                                 /* Vita: #e6e6e6 */
+.a-GV--editMode .a-GV-row.is-readonly .a-GV-cell,
+.a-GV--editMode .a-GV-cell.is-readonly { background-color: var(--tonal-panel-2); color: var(--tonal-text-muted); } /* Vita: #f2f2f2 */
+.a-GV-cell .a-GV-columnItem input:not([type=radio]):not([type=checkbox]):focus,
+.a-GV-cell .a-GV-columnItem select[size="1"]:focus { background-color: var(--tonal-sheet); }                       /* Vita: #fff */
+.a-GV-header { color: var(--tonal-text-muted); font-weight: 600; }
+.a-GV-status, .a-GV-rownum, .is-aggregate .a-GV-rowHeader { color: var(--tonal-text-muted); }
+.a-GV-columnControls .a-Button { background-color: var(--tonal-panel-2); color: var(--tonal-text-muted); }
+.a-GV-pageSelector-item .a-GV-pageButton { border-radius: var(--tonal-radius-pill); }
+
+/* ==========================================================================
+   10. KARTEN (Card Regions a-CardView, Legacy t-Cards)
+   ========================================================================== */
+.a-CardView { transition: background-color .15s ease; }
+.a-CardView-title { font-weight: 650; letter-spacing: -.01em; }
+.a-CardView-badge { font-weight: 600; }
+.a-CardView-media { border-radius: 0; }
+.t-CardsRegion--styleA,
+.t-CardsRegion--styleB,
+.t-CardsRegion--styleC {
+  --a-cv-media-background-color: var(--tonal-panel-2);
+  --a-cv-media-overlay-color: rgb(8 16 12 / .72);
+  --a-cv-icon-border-radius: .75rem;
+  --a-cv-badge-border-radius: var(--tonal-radius-pill);
+}
+.t-CardsRegion--styleA .has-media--body,
+.t-CardsRegion--styleA .has-media--first { --a-cv-media-border-radius: var(--tonal-radius-m); }
+.t-CardsRegion--styleA .has-icon--top,
+.t-CardsRegion--styleB .has-icon--top { --a-cv-icon-border-radius: 1rem; }
+.has-media--background { --a-cv-badge-background-color: rgb(255 255 255 / .22); }
+.t-Card-wrap { border-radius: var(--tonal-radius-l); }
+
+/* ==========================================================================
+   11. LOGIN – Rahmenfarbe, der Login ist ein einzelner Bogen
+   ========================================================================== */
+.t-LoginPage--bg1, .t-LoginPage--bg2, .t-LoginPage--bg3 { --ut-body-background-color: var(--tonal-frame); }
+.t-LoginPage--bg1:before, .t-LoginPage--bg1 .t-Login-bgImg,
+.t-LoginPage--bg2:before, .t-LoginPage--bg2 .t-Login-bgImg,
+.t-LoginPage--bg3:before, .t-LoginPage--bg3 .t-Login-bgImg { background-image: none; }
+.t-PageBody--login { background-color: var(--tonal-frame); }
+.t-Login-region {
+  --ut-field-padding-y: .5rem;
+  --a-field-input-padding-y: .75rem;
+}
+.t-Login-header { padding-block: .5rem 1.25rem; }
+.t-Login-title { font-size: 1.625rem; font-weight: 700; letter-spacing: -.015em; }
+.t-Login-buttons {
+  --a-button-padding-y: .875rem;
+  --a-button-font-size: .9375rem;
+  --a-button-line-height: 1.25rem;
+  margin-block-start: .75rem;
+}
+.t-Login-links { font-size: .875rem; }
+
+/* ==========================================================================
+   12. RESPONSIVE
+   ========================================================================== */
+@media (max-width: 639px) {
+  :root {
+    --tonal-radius-sheet: 1.25rem;
+    --ut-breadcrumb-padding-x: 1rem;
+    --ut-breadcrumb-title-font-size: 1.375rem;
+    --ut-breadcrumb-title-line-height: 1.75rem;
+  }
+  .t-Body-main { margin-inline-end: 0; }
+  .t-Region { --ut-region-header-padding-x: 1rem; --ut-region-body-padding-x: 1rem; }
+}
+@media (max-width: 479px) {
+  :root { --ut-header-padding-x: .5rem; }
+  .t-Button--header { --a-button-padding-x: .625rem; }
+  .t-Login-region { --ut-login-region-padding: 1.5rem; }
+}
+/* Overlay-Navigation unter 992 px statt Push (Rezept ut-shell §5.7) */
+@media (max-width: 991px) {
+  .apex-side-nav.js-navExpanded { --ut-nav-collapsed-width: 0px; }
+  .apex-side-nav.js-navExpanded .t-Body-nav {
+    position: fixed;
+    inset-block: var(--js-sticky-top, 0px) 0;
+    inset-inline-start: 0;
+    height: auto;
+    z-index: 900;
+    border-start-end-radius: var(--tonal-radius-l);
+    box-shadow: var(--tonal-shadow-dialog);
+  }
+}
+
+/* ==========================================================================
+   13. FOKUS – sichtbar nur bei Tastatur, sonst ruhig
+   ========================================================================== */
+*:focus:not(:focus-visible) { outline: none; }

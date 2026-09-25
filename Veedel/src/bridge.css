@@ -1,0 +1,658 @@
+/* ==========================================================================
+   Veedel – Brücke: --ve-* → Universal Theme (--ut-*), APEX (--a-*, --jui-*), JET (--oj-*)
+   Modusneutral: ausschließlich var()-Verweise auf eigene Tokens (keine Farbwerte), gilt für
+   hell, dunkel und auto. Enthält
+     · alle 102 Kern-Hebel aus _docs/ut-tokens.json (lever: true, Tier 1),
+     · alle :root-Hex-Kopien der Vita-Primärfarbe #056AC8 (hardcodedPrimary, ut-tokens.md §8.1,
+       _tmp/research/diff-vita-red.txt). Die Selektor-Kopien (Hot-Buttons, TreeNav Style B)
+       deklarieren components/buttons.css und components/shell.css mit gleicher Spezifität neu.
+     · die Dichte (36 px Desktop, 44 px bei pointer: coarse) und die Fokus-Hooks.
+   Reihenfolge der Abschnitte = Reihenfolge in docs/ARCHITECTURE.md.
+   Rollen: Blau (--ve-accent*) = Marke, Auswahl, Aktiv; Rot (--ve-action*) = nur die Hauptaktion
+   (Hot/Primary, components/buttons.css); Karminrot (--ve-danger*) = Gefahr.
+   ========================================================================== */
+:root {
+  /* 1. Typografie ---------------------------------------------------------- */
+  --a-base-font-family: var(--ve-font);                         /* ◆ */
+  --ut-base-font-family: var(--ve-font);
+  --a-base-font-family-mono: var(--ve-font-mono);               /* ◆ */
+  --a-base-font-family-serif: var(--ve-font);                   /* keine Serifenschrift im Theme */
+  --ut-alternate-heading-font-family: var(--ve-font);
+  --a-base-font-weight-normal: var(--ve-fw-regular);
+  --a-base-font-weight-semibold: var(--ve-fw-semibold);         /* ◆ */
+  --a-base-font-weight-bold: var(--ve-fw-bold);                 /* ◆ Hook */
+  --a-base-font-weight-heavy: var(--ve-fw-black);               /* Figtree hat die 900 */
+  --ut-base-font-size: var(--ve-fs-md);                         /* body: 14 statt 16 px */
+
+  /* 2. Palette und Status (UT Core spiegelt auf --a-palette-*) ------------- */
+  --ut-palette-primary: var(--ve-accent);                       /* ◆ */
+  --ut-palette-primary-contrast: var(--ve-accent-on);           /* ◆ */
+  --ut-palette-primary-shade: var(--ve-accent-tint);            /* ◆ */
+  --ut-palette-primary-text: var(--ve-accent-text);             /* ◆ */
+  --ut-palette-primary-alt: var(--ve-header-text);             /* ◆ UT: Sprunglink („Skip to Main Content“) auf dem Kopfband: */
+  --ut-palette-primary-alt-contrast: var(--ve-header);          /* ◆ weißes Kästchen mit Schrift in Kopfblau; t-Button--primary = Rot (buttons.css) */
+  --ut-palette-primary-alt-shade: var(--ve-accent-tint);
+  --ut-palette-primary-alt-text: var(--ve-accent-text);
+  --ut-palette-success: var(--ve-success);                      /* ◆ */
+  --ut-palette-success-contrast: var(--ve-success-on);          /* ◆ */
+  --ut-palette-success-shade: var(--ve-success-tint);           /* ◆ */
+  --ut-palette-success-text: var(--ve-success-text);            /* ◆ */
+  --ut-palette-info: var(--ve-info);                            /* ◆ Vita: Hex-Kopie #056AC8 → Markenblau (Token) */
+  --ut-palette-info-contrast: var(--ve-info-on);                /* ◆ */
+  --ut-palette-info-shade: var(--ve-info-tint);                 /* ◆ */
+  --ut-palette-info-text: var(--ve-info-text);
+  --ut-palette-warning: var(--ve-warning);                      /* ◆ */
+  --ut-palette-warning-contrast: var(--ve-warning-on);          /* ◆ */
+  --ut-palette-warning-shade: var(--ve-warning-tint);           /* ◆ */
+  --ut-palette-warning-text: var(--ve-warning-text);            /* ◆ */
+  --ut-palette-danger: var(--ve-danger);                        /* ◆ */
+  --ut-palette-danger-contrast: var(--ve-danger-on);            /* ◆ */
+  --ut-palette-danger-shade: var(--ve-danger-tint);             /* ◆ */
+  --ut-palette-danger-text: var(--ve-danger-text);              /* ◆ */
+  --ut-palette-generic: var(--ve-soft);
+  --ut-palette-generic-contrast: var(--ve-ink);
+  --ut-palette-generic-shade: var(--ve-surface-sunken);
+  --ut-palette-generic-text: var(--ve-ink);
+
+  /* 3. Global: Links, Fokus, Text ----------------------------------------- */
+  --ut-link-text-color: var(--ve-link-text);                    /* ◆ Vita: Hex-Kopie */
+  --ut-link-text-decoration: underline;
+  --a-base-link-hover-text-color: var(--ve-link-text);
+  --ut-body-text-color: var(--ve-ink);                          /* ◆ */
+  /* EIN Fokus-System: Ringfarbe + Breite + Abstand aus den Tokens, überall ≥ 3:1 */
+  --ut-focus-outline-color: var(--ve-focus-ring-color);         /* ◆ Vita: Hex-Kopie */
+  --ut-focus-outline: var(--ve-focus-outline);                  /* Hook (*:focus in UT Core) */
+  --ut-focus-outline-offset: var(--ve-focus-ring-offset);       /* Hook */
+  --a-combo-select-focus-outline-color: var(--ve-focus-ring-color);
+  --a-combo-select-focus-border-color: var(--ve-focus-ring-color);
+  --a-combo-select-item-hover-background-color: var(--ve-raised-hover);
+  --a-combo-select-item-preselected-background-color: var(--ve-raised-hover);
+  --a-combo-select-item-preselected-hover-background-color: var(--ve-press);
+  --a-combo-select-item-focus-box-shadow: var(--ve-focus-shadow-inset);
+  --a-combo-select-focus-outline: var(--ve-focus-outline);
+  --a-combo-select-item-focus-outline-color: var(--ve-focus-ring-color);
+  --a-gv-focus-outline: var(--ve-focus-outline);                /* Hook: IR-Icon-Ansicht, Zellen */
+  --a-gv-focus-outline-offset: calc(-1 * var(--ve-focus-ring-width));
+  --a-cv-focus-outline: var(--ve-focus-outline);                /* Hook: Card-Volllink */
+  --a-cv-focus-outline-offset: var(--ve-focus-ring-offset);
+  --a-checkbox-outline-color: var(--ve-focus-ring-color);
+  --a-chat-transcript-outline-color: var(--ve-focus-ring-color);
+  --oj-core-focus-border-color: var(--ve-focus-ring-color);
+
+  /* 4. Generische Komponente (Fallback vieler Widgets) --------------------- */
+  --ut-component-background-color: var(--ve-surface);           /* ◆ */
+  --ut-component-border-color: var(--ve-line);                  /* ◆ */
+  --ut-component-border-width: var(--ve-hairline);              /* ◆ */
+  --ut-component-border-radius: var(--ve-r-lg);                 /* ◆ */
+  --ut-component-box-shadow: var(--ve-float-shadow);            /* ◆ */
+  --ut-component-highlight-background-color: var(--ve-hover);   /* ◆ */
+  --ut-component-toolbar-background-color: var(--ve-surface-sunken); /* ◆ */
+  --ut-component-inner-border-color: var(--ve-line);            /* ◆ */
+  --ut-component-inner-border-width: var(--ve-hairline);
+  --ut-component-text-default-color: var(--ve-ink);             /* ◆ */
+  --ut-component-text-title-color: var(--ve-ink);               /* ◆ */
+  --ut-component-text-subtitle-color: var(--ve-ink-2);          /* ◆ */
+  --ut-component-text-muted-color: var(--ve-muted);             /* ◆ */
+  --ut-component-icon-background-color: var(--ve-accent-tint);  /* ◆ Icon-Kacheln: Blau-Tönung, Icon in Markenblau */
+  --ut-component-icon-color: var(--ve-accent-text);             /* ◆ */
+  --ut-component-badge-background-color: var(--ve-accent);      /* ◆ Etikett („Störer“): blaue Fläche, weiße fette Schrift */
+  --ut-component-badge-text-color: var(--ve-accent-on);         /* ◆ */
+  --ut-component-badge-border-radius: 0px;                      /* ◆ flaches Rechteck */
+  --ut-component-pre-background-color: var(--ve-surface-sunken);
+
+  /* 5. Schatten und Radien ------------------------------------------------ */
+  --ut-shadow-sm: none;                                         /* ◆ keine Deko-Schatten */
+  --ut-shadow-md: var(--ve-float-shadow);                       /* ◆ */
+  --ut-shadow-lg: var(--ve-float-shadow);                       /* ◆ */
+  --ut-border-radius-sm: var(--ve-r-sm);
+  --ut-border-radius-md: var(--ve-r-md);
+  --ut-border-radius-lg: var(--ve-r-float);
+  --ut-border-radius: var(--ve-r-md);
+
+  /* 6. Shell: Seitengrund, Kopfband, Navigation, Verlaufsband, Inhalt -------- */
+  --ut-body-background-color: var(--ve-page);                   /* ◆ Seitengrund */
+  --ut-body-main-background-color: var(--ve-page);
+  --ut-body-sidebar-background-color: var(--ve-surface);        /* Spalten = weiße Flächen mit Kante */
+  --ut-body-sidebar-text-color: var(--ve-ink);
+  --ut-body-sidebar-border-color: var(--ve-line);
+  --ut-body-actions-background-color: var(--ve-surface);
+  --ut-body-actions-text-color: var(--ve-ink);
+  --ut-body-actions-border-width: 1px;
+  --ut-body-actions-border-color: var(--ve-line);
+  --ut-body-actionstoggle-background-color: var(--ve-surface);
+  --ut-body-actionstoggle-hover-background-color: var(--ve-hover);
+  --ut-body-actionstoggle-text-color: var(--ve-accent-text);
+  --ut-footer-background-color: transparent;
+  --ut-footer-border-color: var(--ve-line);
+  --ut-footer-text-color: var(--ve-muted);
+  --ut-login-page-background-color: var(--ve-band-from);
+  --ut-login-region-background-color: var(--ve-surface);
+
+  /* Kopf (Höhe statisch; Branding mit fester Zeilenhöhe, siehe base.css) */
+  --ut-header-height: var(--ve-header-h);
+  --ut-header-padding-x: var(--ve-space-3);
+  --ut-header-item-spacing: var(--ve-space-2);
+  --ut-header-background-color: var(--ve-header);               /* ◆ Vita: Hex-Kopie → Markenband (Token) */
+  --ut-header-text-color: var(--ve-header-text);                /* ◆ */
+  --ut-header-border-color: transparent;                        /* ◆ */
+  --ut-header-border-width: 0px;
+  --ut-header-box-shadow: none;                                 /* ◆ */
+  --ut-logo-font-size: 1.25rem;                                 /* 20 px, Figtree Black */
+  --ut-logo-line-height: var(--ve-brand-lh);
+  --ut-logo-font-weight: var(--ve-fw-black);
+  --ut-logo-text-color: var(--ve-header-text);
+  --ut-navbar-button-badge-background-color: var(--ve-header-text);  /* Zähler: weißes Kästchen auf dem Band */
+  --ut-navbar-button-badge-text-color: var(--ve-header);
+  --ut-header-menubar-background-color: var(--ve-surface);      /* ◆ Menüzeile weiß unter dem Band */
+  --ut-header-menubar-item-text-color: var(--ve-ink);           /* ◆ */
+  --ut-header-menubar-item-border-color: transparent;
+  --ut-header-menubar-item-current-background-color: transparent; /* ◆ aktiv = Blau + Balken (shell.css) */
+  --ut-header-menubar-item-current-text-color: var(--ve-accent-text); /* ◆ */
+  --ut-header-menubar-item-split-border-color: transparent;
+  --ut-header-menubar-item-split-icon-color: var(--ve-muted);
+  --ut-navtabs-background-color: var(--ve-surface);
+  --ut-navtabs-text-color: var(--ve-ink);
+  --ut-navtabs-item-border-color: transparent;
+  --ut-navtabs-item-active-background-color: transparent;
+  --ut-navtabs-item-active-text-color: var(--ve-accent-text);
+  --ut-navtabs-item-active-highlight-color: var(--ve-accent-text);
+
+  /* Navigation (Tree Nav: weiße Spalte, aktiver Eintrag = blauer Block, shell.css) */
+  --ut-nav-width: var(--ve-nav-w);
+  --ut-nav-collapsed-icon-width: var(--ve-nav-rail-w);
+  --ut-body-nav-background-color: var(--ve-surface);            /* ◆ */
+  --ut-body-nav-text-color: var(--ve-ink);                      /* ◆ */
+  --ut-body-nav-border-width: 1px;
+  --ut-body-nav-border-color: var(--ve-line);
+  --ut-body-nav-scrollbar-thumb-background-color: var(--ve-scrollbar-thumb);
+  --ut-body-nav-scrollbar-track-background-color: var(--ve-scrollbar-track);
+  --a-treeview-node-selected-background-color: transparent;     /* ◆ Aktiv-Block zeichnet shell.css */
+  --a-treeview-node-selected-text-color: var(--ve-ink);         /* ◆ */
+  --a-treeview-node-selected-icon-color: var(--ve-ink);
+  --a-treeview-node-focused-background-color: transparent;
+  --a-treeview-node-focused-text-color: var(--ve-ink);
+  --a-treeview-node-focused-shadow: var(--ve-focus-shadow-inset);
+  --a-treeview-node-hover-background-color: var(--ve-hover);
+  --a-treeview-node-icon-color: var(--ve-ink-2);
+  --ut-treeview-badge-background-color: var(--ve-soft);         /* Vita: Hex-Kopie; Zähler neutral, im Aktiv-Block weiß (shell.css) */
+  --ut-treeview-badge-text-color: var(--ve-ink);
+
+  /* Title Bar = Verlaufsband (Signatur; der Verlauf selbst steht in shell.css, hier der Grundton) */
+  --ut-body-title-background-color: var(--ve-band-from);        /* ◆ */
+  --ut-body-title-text-color: var(--ve-band-text);              /* ◆ */
+  --ut-body-title-box-shadow: none;                             /* ◆ */
+  --ut-body-title-border-width: 0px;
+  --ut-body-title-border-color: transparent;
+  --ut-body-title-backdrop-filter: none;
+  --ut-breadcrumb-padding-x: var(--ve-page-pad-x);
+  --ut-breadcrumb-padding-y: var(--ve-band-pad-y);
+  --ut-breadcrumb-item-text-color: var(--ve-muted);             /* ◆ außerhalb des Bands; im Band weiß (shell.css) */
+  --ut-breadcrumb-item-font-size: var(--ve-fs-sm);
+  --ut-breadcrumb-item-line-height: var(--ve-lh-sm);
+  --ut-breadcrumb-item-font-weight: var(--ve-fw-bold);
+  --ut-breadcrumb-item-active-text-color: var(--ve-ink);
+  --ut-breadcrumb-item-sep-opacity: 1;
+  --ut-breadcrumb-item-sep-spacing: .625rem;
+  --ut-breadcrumb-title-font-size: var(--ve-fs-display);
+  --ut-breadcrumb-title-line-height: var(--ve-lh-display);     /* Seitentitel 40/44, Figtree Black */
+  --ut-breadcrumb-title-font-weight: var(--ve-fw-black);
+  /* Marquee-Kopfbereich (.t-Body-info): UT fällt sonst auf die Farben der Title Bar (Band) zurück */
+  --ut-body-info-background-color: var(--ve-surface);
+  --ut-body-info-text-color: var(--ve-ink);
+
+  /* Inhalt: Seitengrund mit Innenabstand */
+  --ut-body-content-padding-x: var(--ve-page-pad-x);
+  --ut-body-content-padding-y: var(--ve-page-pad-y);
+  --ut-xs-body-content-padding-x: var(--ve-page-pad-x);         /* < 640 px folgt scale.css */
+  --ut-xs-body-content-padding-y: var(--ve-page-pad-y);
+  --ut-xs-breadcrumb-padding-x: var(--ve-page-pad-x);
+
+  /* 7. Regionen: weiße, eckige Flächen ohne Schatten, Titel in Leuchtblau ---- */
+  --ut-region-background-color: var(--ve-surface);              /* ◆ */
+  --ut-region-text-color: var(--ve-ink);                        /* ◆ */
+  --ut-region-header-background-color: transparent;             /* ◆ */
+  --ut-region-header-text-color: var(--ve-heading);             /* ◆ 19 px/800 = großer Text */
+  --ut-region-border-color: transparent;                        /* ◆ Hook */
+  --ut-region-border-width: 0px;
+  --ut-region-border-radius: var(--ve-r-lg);                    /* ◆ */
+  --ut-region-box-shadow: var(--ve-card-shadow);                /* ◆ */
+  --ut-region-header-border-width: 0px;
+  --ut-region-header-border-color: transparent;
+  --ut-region-header-padding-x: var(--ve-region-pad-x);
+  --ut-region-header-padding-y: var(--ve-space-4);
+  --ut-region-header-font-size: var(--ve-fs-xl);
+  --ut-region-header-line-height: var(--ve-lh-xl);
+  --ut-region-body-padding-x: var(--ve-region-pad-x);
+  --ut-region-body-padding-y: var(--ve-region-pad-y);
+  --ut-region-buttons-padding-x: var(--ve-region-pad-x);
+  --ut-region-font-size: var(--ve-fs-md);
+  --ut-region-line-height: var(--ve-lh-body);
+  --ut-region-margin: var(--ve-region-gap);
+  --ut-region-hideshow-header-padding-x: var(--ve-space-2);       /* Luft Chevron → Titel */
+
+  --ut-content-block-shadow-background-color: var(--ve-surface-sunken);
+  --ut-content-block-light-background-color: var(--ve-surface);
+  --ut-content-block-border-color: transparent;
+  --ut-content-block-font-size: var(--ve-fs-md);
+  --ut-content-block-line-height: var(--ve-lh-body);
+
+  --ut-button-region-border-radius: var(--ve-r-lg);
+  --ut-button-region-border-color: transparent;
+  --ut-button-region-box-shadow: none;
+  --ut-button-region-background-color: var(--ve-surface);
+
+  --ut-alert-horizontal-border-radius: var(--ve-r-lg);
+  --ut-alert-wizard-border-radius: var(--ve-r-lg);
+  --ut-alert-box-shadow: none;
+  --ut-alert-border-color: var(--ve-line);
+
+  --ut-hero-region-icon-border-radius: var(--ve-r-lg);
+  --ut-wizard-header-background-color: transparent;
+  /* --ut-wizard-border-radius: wirkungslos (UT Core deklariert keinen Radius für .t-Wizard) – Radius in regions.css */
+  --ut-wp-marker-color: var(--ve-line-strong);
+  --ut-wp-track-color: var(--ve-line-strong);
+  --ut-linkslist-hover-background-color: var(--ve-hover);
+  --ut-linkslist-arrow-color: var(--ve-muted);
+  --ut-comment-chat-background-color: var(--ve-surface-sunken);
+  --ut-comment-chat-active-background-color: var(--ve-soft);
+  --ut-carousel-nav-background-color: var(--ve-line-strong);
+  --ut-carousel-nav-selected-background-color: var(--ve-accent-text); /* UT Core liest "selected", nicht "active" */
+
+  /* 8. Tabs / Region Display Selector (aktiv = Blau + Balken unten, shell.css) ---- */
+  --ut-tabs-item-text-color: var(--ve-ink);
+  --ut-tabs-item-active-text-color: var(--ve-accent-text);
+  --ut-tabs-item-active-background-color: transparent;
+  --ut-tabs-item-active-highlight-color: var(--ve-accent-text);
+  --ut-tabs-item-hint-highlight-color: transparent;
+  --ut-tabs-item-hint-highlight-width: 0px;
+  --ut-tabs-item-hover-background-color: var(--ve-hover);
+  --ut-tabs-item-font-size: var(--ve-fs-md);
+  --ut-tabs-item-line-height: var(--ve-lh-md);
+  --ut-tabs-item-font-weight: var(--ve-fw-bold);
+  --ut-tabs-item-active-font-weight: var(--ve-fw-bold);
+
+  /* 9. Buttons (36 px: Polster inkl. 1 px Rand, app_ui-Konvention).
+        Normal = weiß mit Blau-Kontur und fetter blauer Schrift; Rot nur für Hot/Primary (buttons.css). */
+  --a-button-border-radius: var(--ve-r-md);                     /* ◆ */
+  --a-button-padding-y: var(--ve-control-pad-y);
+  --a-button-padding-x: calc(var(--ve-control-pad-x) + 2px);
+  --a-button-font-size: var(--ve-fs-md);
+  --a-button-line-height: var(--ve-control-lh);
+  --a-button-font-weight: var(--ve-fw-bold);
+  --a-button-gap-x: var(--ve-space-2);
+  --a-button-icon-spacing: var(--ve-space-2);
+  --a-button-background-color: var(--ve-surface);               /* ◆ */
+  --a-button-text-color: var(--ve-accent-text);                 /* ◆ */
+  --a-button-border-color: var(--ve-accent-text);               /* ◆ Blau-Kontur (≥ 3:1) */
+  --a-button-shadow: none;                                      /* ◆ */
+  --a-button-hover-background-color: var(--ve-accent-tint);     /* ◆ */
+  --a-button-hover-text-color: var(--ve-accent-text);
+  --a-button-hover-border-color: var(--ve-accent-text);
+  --a-button-hover-shadow: none;
+  --a-button-active-background-color: var(--ve-accent-tint-2);  /* ◆ */
+  --a-button-active-border-color: var(--ve-accent-text);
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--ve-accent-tint);
+  --a-button-focus-border-color: var(--ve-accent-text);         /* ◆ Fokus zeigt der Ring, die Kante bleibt */
+  --a-button-focus-shadow: none;
+  --a-button-count-background-color: var(--ve-ink);             /* Vita: Hex-Kopie (26.1); Zähler in Nachtblau */
+  --a-button-count-text-color: var(--ve-surface);
+
+  /* 10. Formulare (36 px, Touch 44 px) ------------------------------------ */
+  --a-field-input-background-color: var(--ve-field);            /* ◆ */
+  --a-field-input-text-color: var(--ve-ink);                    /* ◆ */
+  --a-field-input-border-color: var(--ve-edge);                 /* ◆ */
+  --a-field-input-border-width: 1px;
+  --a-field-input-border-style: solid;
+  --a-field-input-border-radius: var(--ve-r-field);             /* ◆ eckig */
+  --a-field-input-padding-y: var(--ve-control-pad-y);
+  --a-field-input-padding-x: var(--ve-control-pad-x);
+  --a-field-input-font-size: var(--ve-fs-md);
+  --a-field-input-line-height: var(--ve-control-lh);
+  --a-field-input-hover-background-color: var(--ve-field);
+  --a-field-input-hover-border-color: var(--ve-edge-hover);
+  --a-field-input-focus-background-color: var(--ve-field);      /* ◆ */
+  --a-field-input-focus-border-color: var(--ve-focus-ring-color); /* ◆ Vita: Hex-Kopie */
+  --a-field-input-focus-text-color: var(--ve-ink);
+  --a-field-placeholder-text-color: var(--ve-placeholder);
+  --a-field-placeholder-opacity: 1;
+  --a-field-select-background-image: var(--ve-select-arrow);
+  --a-filedrop-border-radius: var(--ve-r-lg);
+  --a-filedrop-progress-background-color: var(--ve-line);
+  --a-filedrop-progress-bar-background-color: var(--ve-accent-text);
+  --a-filedrop-icon-action-background-color: var(--ve-field);     /* Vita-Dark: hart #000 */
+
+  /* Prozentbalken (Items + Reports): Daten, keine Aktion → Kategorie-Farbe (Serie 1 = Leuchtazur) */
+  --a-percent-chart-background-color: var(--ve-soft);
+  --a-percent-chart-bar-background-color: var(--ve-cat-1);
+  --a-percent-chart-bar-text-color: var(--ve-cat-1-on);
+  --ut-field-label-text-color: var(--ve-muted);                 /* ◆ graue Labels */
+  --ut-field-label-font-size: var(--ve-fs-sm);
+  --ut-field-label-line-height: var(--ve-lh-sm);
+  --ut-field-label-font-weight: var(--ve-fw-semibold);
+  --ut-field-input-focus-icon-color: var(--ve-accent-text);     /* Vita: Hex-Kopie */
+  --ut-field-fl-input-focus-icon-background-color: var(--ve-accent-tint); /* Vita: Hex-Kopie */
+  --ut-field-fl-input-focus-icon-color: var(--ve-accent-text);
+  --ut-field-input-icon-color: var(--ve-muted);
+  --ut-prepost-text-color: var(--ve-muted);
+  --a-form-required-asterisk-text-color: var(--ve-required-color);
+  --a-form-error-text-color: var(--ve-danger-text);
+  --ut-field-inline-help-text-color: var(--ve-muted);
+  --ut-pillbutton-padding-y: var(--ve-control-pad-y);
+  --ut-pillbutton-padding-x: .625rem;
+  --ut-pillbutton-font-size: var(--ve-fs-sm);
+  --ut-pillbutton-line-height: var(--ve-control-lh);             /* Pill-Gruppen = Control-Höhe */
+
+  --a-checkbox-size: var(--ve-checkbox-size);
+  --a-checkbox-icon-size: .8125rem;
+  --a-checkbox-border-radius: var(--ve-r-sm);
+  --a-checkbox-background-color: var(--ve-field);
+  --a-checkbox-border-color: var(--ve-edge);                    /* ◆ */
+  --a-checkbox-hover-background-color: var(--ve-hover);
+  --a-checkbox-checked-background-color: var(--ve-accent-text); /* ◆ Vita: Hex-Kopie → Markenblau als Marke: dunkel ≥ 3:1 (WCAG 1.4.11) */
+  --a-checkbox-checked-text-color: var(--ve-surface);
+  --a-checkbox-text-color: var(--ve-surface);
+  --a-checkbox-label-font-size: var(--ve-fs-sm);
+  --a-checkbox-label-spacing-x: var(--ve-space-2);
+  --a-cr-checkbox-background-color: var(--ve-field);
+
+  --a-switch-background-color: var(--ve-edge);
+  --a-switch-checked-background-color: var(--ve-accent-text);   /* dunkel ≥ 3:1 gegen die Fläche */
+  --a-switch-checked-hover-background-color: var(--ve-accent-text);
+  --a-switch-toggle-background-color: var(--ve-surface);
+  --a-switch-toggle-checked-background-color: var(--ve-surface);
+  --a-switch-width: 2.5rem;
+  --a-switch-toggle-width: 1.125rem;
+  --a-switch-toggle-height: 1.125rem;
+  --a-switch-padding-y: .1875rem;
+  --a-switch-padding-x: .1875rem;
+
+  --a-starrating-stars-fg-color: var(--ve-accent-text);
+  --a-starrating-stars-bg-color: var(--ve-edge);                 /* leere Sterne ≥ 3:1 */
+
+  --a-chip-border-radius: var(--ve-r-md);
+  --a-chip-font-size: var(--ve-fs-sm);
+  --a-chip-line-height: 1.125rem;
+  --a-chip-hover-background-color: var(--ve-hover);
+  --a-chip-active-background-color: var(--ve-soft);
+  --a-chip-applied-background-color: var(--ve-soft);
+  --a-chip-applied-hover-background-color: var(--ve-soft-hover);
+  --a-chip-remove-hover-background-color: var(--ve-tint-hover);
+  --a-chip-remove-active-background-color: var(--ve-tint-press);
+  --a-combo-select-item-selected-background-color: var(--ve-accent-tint);
+  --a-popuplov-chip-background-color: var(--ve-soft);
+
+  /* Date Picker */
+  --a-datepicker-background-color: var(--ve-surface-raised);
+  --a-datepicker-border-radius: var(--ve-r-float);
+  --a-datepicker-header-background-color: var(--ve-surface-raised);
+  --a-datepicker-calendar-background-color: var(--ve-surface-raised);
+  --a-datepicker-border-color: var(--ve-line);
+  --a-datepicker-calendar-title-background-color: transparent;
+  --a-datepicker-calendar-header-background-color: transparent;
+  --a-datepicker-calendar-header-text-color: var(--ve-muted);
+  --a-datepicker-calendar-day-hover-background-color: var(--ve-raised-hover); /* Popup = schwebende Fläche */
+  --a-datepicker-calendar-day-selected-background-color: var(--ve-accent);
+  --a-datepicker-calendar-day-selected-text-color: var(--ve-accent-on);
+  --a-datepicker-calendar-day-selected-border-color: var(--ve-accent);
+  --a-datepicker-calendar-day-current-background-color: transparent;
+  --a-datepicker-calendar-day-current-text-color: var(--ve-accent-text);
+  --a-datepicker-calendar-day-current-border-color: var(--ve-accent-text);
+  --a-datepicker-calendar-week-background-color: transparent;
+  --a-datepicker-footer-background-color: transparent;
+  --a-datepicker-footer-border-color: var(--ve-line);
+
+  /* 11. Menüs, Dialoge, Tooltips ------------------------------------------ */
+  --a-menu-background-color: var(--ve-surface-raised);          /* ◆ */
+  --a-menu-text-color: var(--ve-ink);                           /* ◆ */
+  --a-menu-border-color: var(--ve-line);
+  --a-menu-border-radius: var(--ve-r-float);
+  --a-menu-shadow: var(--ve-float-shadow);
+  --a-menu-padding-y: .375rem;
+  --a-menu-padding-x: .375rem;
+  --a-menu-item-border-radius: var(--ve-r-sm);
+  --a-menu-font-size: var(--ve-fs-md);
+  --a-menu-focused-background-color: var(--ve-raised-hover);    /* ◆ Vita: Hex-Kopie; Hover auf schwebender Fläche (auch IconList, Popup-LOV-Links, JET, CKEditor) */
+  --a-menu-focused-text-color: var(--ve-ink);                   /* ◆ */
+
+  --jui-dialog-background-color: var(--ve-surface-raised);
+  --jui-dialog-text-color: var(--ve-ink);
+  --jui-dialog-border-radius: var(--ve-r-float);
+  --jui-dialog-shadow: var(--ve-float-shadow);
+  --jui-dialog-titlebar-background-color: transparent;
+  --jui-dialog-titlebar-text-color: var(--ve-ink);
+  --jui-dialog-titlebar-border-color: var(--ve-line);
+  --jui-dialog-titlebar-padding-y: var(--ve-space-3);
+  --jui-dialog-font-size: var(--ve-fs-md);                      /* Vita: 12 px */
+  --jui-dialog-titlebar-padding-x: var(--ve-space-5);
+  --jui-dialog-title-font-size: var(--ve-fs-lg);
+  --jui-dialog-title-font-weight: var(--ve-fw-heavy);
+  --jui-dialog-buttonpane-background-color: transparent;
+  --jui-dialog-buttonpane-border-color: var(--ve-line);
+  --jui-overlay-background-color: var(--ve-scrim);
+  --jui-tooltip-background-color: var(--ve-tooltip-bg);
+  --jui-tooltip-text-color: var(--ve-tooltip-text);
+  --jui-tooltip-border-color: transparent;
+  --jui-tooltip-border-radius: var(--ve-r-sm);
+  --a-tooltip-background-color: var(--ve-tooltip-bg);
+  --a-tooltip-text-color: var(--ve-tooltip-text);
+
+  /* 12. Reports / IR / IG (Zeile 34 px, Kopf 36 px, Haarlinien) ------------ */
+  --a-gv-background-color: var(--ve-surface);                   /* ◆ */
+  --a-gv-border-color: var(--ve-line);
+  --a-gv-font-size: var(--ve-fs-sm);
+  --a-gv-line-height: var(--ve-row-lh);
+  --a-gv-cell-height: var(--ve-row-h);                          /* Hook */
+  --a-gv-cell-padding-y: var(--ve-row-pad-y);
+  --a-gv-cell-padding-x: var(--ve-row-pad-x);
+  --a-gv-header-cell-height: var(--ve-head-h);                  /* Hook */
+  --a-gv-header-cell-padding-x: var(--ve-row-pad-x);
+  --a-gv-cell-border-color: var(--ve-line);                     /* ◆ */
+  --a-gv-header-cell-border-color: var(--ve-line);              /* ◆ */
+  --a-gv-header-background-color: var(--ve-surface);            /* ◆ offene Tabelle: kein Kopfbalken */
+  --a-gv-header-text-color: var(--ve-ink);                      /* Tabellenköpfe in Nachtblau (reports.css) */
+  --a-gv-row-hover-background-color: var(--ve-hover);
+  --a-gv-selected-background-color: var(--ve-accent-tint);
+  --a-gv-selected-text-color: var(--ve-ink);
+  --a-gv-deleted-background-color: var(--ve-surface-sunken);
+  --a-gv-grandtotal-background-color: var(--ve-surface-sunken);
+  --a-gv-row-disabled-background-color: var(--ve-surface-sunken);
+  --a-gv-pagination-button-selected-background-color: var(--ve-accent);             /* aktive Seite = blauer Block */
+  --a-gv-pagination-button-selected-text-color: var(--ve-accent-on);
+  --a-toolbar-background-color: transparent;
+  --a-toolbar-border-color: var(--ve-line);
+  --a-toolbar-sep-border-color: var(--ve-line);
+  --a-report-controls-cell-label-background-color: var(--ve-surface);
+  --a-report-controls-cell-label-text-color: var(--ve-ink);
+  --a-splitter-bar-background-color: var(--ve-surface-sunken);
+  --a-resultsitem-background-color: var(--ve-surface);
+  --a-resultsitem-badge-background-color: var(--ve-soft);
+  --ut-resultsregion-background-color: var(--ve-surface);
+  --ut-resultsregion-search-background-color: var(--ve-surface-sunken);
+  --ut-resultsregion-search-border-color: var(--ve-line);
+  --a-kb-shortcut-background-color: var(--ve-soft);
+  --a-kb-shortcut-border-color: var(--ve-line-strong);
+
+  --ut-report-cell-border-color: var(--ve-line);
+  --ut-report-cell-hover-background-color: var(--ve-hover);
+  --ut-report-cell-alt-background-color: var(--ve-surface-sunken);
+  --ut-report-header-background-color: var(--ve-surface);
+  --ut-report-header-cell-background-color: var(--ve-surface);
+  --ut-report-header-cell-font-weight: var(--ve-fw-bold);
+  --ut-report-header-cell-font-size: var(--ve-fs-head);
+  --ut-report-header-cell-padding-y: calc((var(--ve-head-h) - var(--ve-lh-xs) - var(--ve-head-rule-width)) / 2);
+  --ut-report-header-cell-padding-x: var(--ve-row-pad-x);
+  --ut-report-cell-font-size: var(--ve-fs-sm);
+  --ut-report-cell-line-height: var(--ve-row-lh);
+  --ut-report-cell-padding-y: var(--ve-row-pad-y);
+  --ut-report-cell-padding-x: var(--ve-row-pad-x);
+
+  /* 13. Cards -------------------------------------------------------------- */
+  --a-cv-background-color: var(--ve-surface);                   /* ◆ */
+  --a-cv-border-color: var(--ve-line);                          /* ◆ */
+  --a-cv-border-radius: var(--ve-r-lg);                         /* ◆ */
+  --a-cv-shadow: none;                                          /* ◆ */
+  --a-cv-hover-shadow: var(--ve-lift-shadow);
+  --a-cv-header-border-color: var(--ve-line);
+  --a-cv-actions-border-color: var(--ve-line);
+  --a-cv-subtitle-text-color: var(--ve-muted);
+  --a-cv-subcontent-text-color: var(--ve-muted);
+  --a-cv-badge-background-color: var(--ve-accent);             /* Etikett („Störer“) */
+  --a-cv-badge-text-color: var(--ve-accent-on);
+  --a-cv-badge-border-radius: 0px;
+  --a-cv-icon-background-color: var(--ve-accent-tint);          /* Vita: Hex-Kopie */
+  --a-cv-icon-text-color: var(--ve-accent-text);
+  --a-cv-initials-background-color: var(--ve-accent-tint);      /* Vita: Hex-Kopie */
+  --a-cv-initials-text-color: var(--ve-accent-text);
+  --a-cv-focus-border-color: var(--ve-focus-ring-color);        /* Vita: Hex-Kopie */
+  --ut-cardlist-box-shadow: none;
+  --ut-cardlist-border-radius: var(--ve-r-lg);
+
+  /* 14. Badges / Avatare --------------------------------------------------- */
+  --ut-badge-border-radius: 0px;                                /* Etiketten: flache Rechtecke */
+  --ut-avatar-border-radius: var(--ve-r-md);
+
+  /* 15. Akzentpalette --u-color-1…45 (Charts, Avatare, Karten-Icons, u-colors).
+         1–15 aus den Kategorie-Tokens; 16–30 heller (45 % + Weiß, Text Nachtblau),
+         31–45 dunkler (55 % + Schwarz, Text Weiß) – so scheint keine Vita-Farbe durch. */
+  --u-color-1: var(--ve-cat-1);   --u-color-1-contrast: var(--ve-cat-1-on);
+  --u-color-2: var(--ve-cat-2);   --u-color-2-contrast: var(--ve-cat-2-on);
+  --u-color-3: var(--ve-cat-3);   --u-color-3-contrast: var(--ve-cat-3-on);
+  --u-color-4: var(--ve-cat-4);   --u-color-4-contrast: var(--ve-cat-4-on);
+  --u-color-5: var(--ve-cat-5);   --u-color-5-contrast: var(--ve-cat-5-on);
+  --u-color-6: var(--ve-cat-6);   --u-color-6-contrast: var(--ve-cat-6-on);
+  --u-color-7: var(--ve-cat-7);   --u-color-7-contrast: var(--ve-cat-7-on);
+  --u-color-8: var(--ve-cat-8);   --u-color-8-contrast: var(--ve-cat-8-on);
+  --u-color-9: var(--ve-cat-9);   --u-color-9-contrast: var(--ve-cat-9-on);
+  --u-color-10: var(--ve-cat-10); --u-color-10-contrast: var(--ve-cat-10-on);
+  --u-color-11: var(--ve-cat-11); --u-color-11-contrast: var(--ve-cat-11-on);
+  --u-color-12: var(--ve-cat-12); --u-color-12-contrast: var(--ve-cat-12-on);
+  --u-color-13: var(--ve-cat-13); --u-color-13-contrast: var(--ve-cat-13-on);
+  --u-color-14: var(--ve-cat-14); --u-color-14-contrast: var(--ve-cat-14-on);
+  --u-color-15: var(--ve-cat-15); --u-color-15-contrast: var(--ve-cat-15-on);
+  --u-color-16: color-mix(in srgb, var(--ve-cat-1) 45%, #fff);  --u-color-16-contrast: var(--ve-on-light);
+  --u-color-17: color-mix(in srgb, var(--ve-cat-2) 45%, #fff);  --u-color-17-contrast: var(--ve-on-light);
+  --u-color-18: color-mix(in srgb, var(--ve-cat-3) 45%, #fff);  --u-color-18-contrast: var(--ve-on-light);
+  --u-color-19: color-mix(in srgb, var(--ve-cat-4) 45%, #fff);  --u-color-19-contrast: var(--ve-on-light);
+  --u-color-20: color-mix(in srgb, var(--ve-cat-5) 45%, #fff);  --u-color-20-contrast: var(--ve-on-light);
+  --u-color-21: color-mix(in srgb, var(--ve-cat-6) 45%, #fff);  --u-color-21-contrast: var(--ve-on-light);
+  --u-color-22: color-mix(in srgb, var(--ve-cat-7) 45%, #fff);  --u-color-22-contrast: var(--ve-on-light);
+  --u-color-23: color-mix(in srgb, var(--ve-cat-8) 45%, #fff);  --u-color-23-contrast: var(--ve-on-light);
+  --u-color-24: color-mix(in srgb, var(--ve-cat-9) 45%, #fff);  --u-color-24-contrast: var(--ve-on-light);
+  --u-color-25: color-mix(in srgb, var(--ve-cat-10) 45%, #fff); --u-color-25-contrast: var(--ve-on-light);
+  --u-color-26: color-mix(in srgb, var(--ve-cat-11) 45%, #fff); --u-color-26-contrast: var(--ve-on-light);
+  --u-color-27: color-mix(in srgb, var(--ve-cat-12) 45%, #fff); --u-color-27-contrast: var(--ve-on-light);
+  --u-color-28: color-mix(in srgb, var(--ve-cat-13) 45%, #fff); --u-color-28-contrast: var(--ve-on-light);
+  --u-color-29: color-mix(in srgb, var(--ve-cat-14) 45%, #fff); --u-color-29-contrast: var(--ve-on-light);
+  --u-color-30: color-mix(in srgb, var(--ve-cat-15) 45%, #fff); --u-color-30-contrast: var(--ve-on-light);
+  --u-color-31: color-mix(in srgb, var(--ve-cat-1) 55%, #000);  --u-color-31-contrast: var(--ve-on-dark);
+  --u-color-32: color-mix(in srgb, var(--ve-cat-2) 55%, #000);  --u-color-32-contrast: var(--ve-on-dark);
+  --u-color-33: color-mix(in srgb, var(--ve-cat-3) 55%, #000);  --u-color-33-contrast: var(--ve-on-dark);
+  --u-color-34: color-mix(in srgb, var(--ve-cat-4) 55%, #000);  --u-color-34-contrast: var(--ve-on-dark);
+  --u-color-35: color-mix(in srgb, var(--ve-cat-5) 55%, #000);  --u-color-35-contrast: var(--ve-on-dark);
+  --u-color-36: color-mix(in srgb, var(--ve-cat-6) 55%, #000);  --u-color-36-contrast: var(--ve-on-dark);
+  --u-color-37: color-mix(in srgb, var(--ve-cat-7) 55%, #000);  --u-color-37-contrast: var(--ve-on-dark);
+  --u-color-38: color-mix(in srgb, var(--ve-cat-8) 55%, #000);  --u-color-38-contrast: var(--ve-on-dark);
+  --u-color-39: color-mix(in srgb, var(--ve-cat-9) 55%, #000);  --u-color-39-contrast: var(--ve-on-dark);
+  --u-color-40: color-mix(in srgb, var(--ve-cat-10) 55%, #000); --u-color-40-contrast: var(--ve-on-dark);
+  --u-color-41: color-mix(in srgb, var(--ve-cat-11) 55%, #000); --u-color-41-contrast: var(--ve-on-dark);
+  --u-color-42: color-mix(in srgb, var(--ve-cat-12) 55%, #000); --u-color-42-contrast: var(--ve-on-dark);
+  --u-color-43: color-mix(in srgb, var(--ve-cat-13) 55%, #000); --u-color-43-contrast: var(--ve-on-dark);
+  --u-color-44: color-mix(in srgb, var(--ve-cat-14) 55%, #000); --u-color-44-contrast: var(--ve-on-dark);
+  --u-color-45: color-mix(in srgb, var(--ve-cat-15) 55%, #000); --u-color-45-contrast: var(--ve-on-dark);
+
+  /* 16. Charts (Oracle JET) ------------------------------------------------ */
+  --oj-core-text-color-primary: var(--ve-ink);
+  --oj-core-text-color-secondary: var(--ve-muted);
+  --oj-heading-text-color: var(--ve-ink);
+  --oj-link-text-color: var(--ve-link-text);
+  --oj-core-divider-color: var(--ve-line);
+  --oj-popup-bg-color: var(--ve-surface-raised);
+  --oj-collection-bg-color: var(--ve-surface);
+  --oj-collection-header-bg-color: var(--ve-surface-sunken);
+  --oj-collection-free-space-bg-color: var(--ve-surface);
+  /* Datatip: Vita lässt die Textfarben schwarz – auf der inversen Tooltip-Fläche unlesbar */
+  --ojet-tooltip-primary-text-color: var(--ve-tooltip-text);
+  --ojet-tooltip-secondary-text-color: var(--ve-tooltip-text);
+  --ojet-tooltip-disabled-text-color: var(--ve-tooltip-text);
+
+  /* 17. Code (PrismJS) und Markdown ---------------------------------------- */
+  /* app_ui (hell) und Vita-Dark bringen die VS-Code-Paletten Light+/Dark+ mit (Violett, Navy,
+     Rot; dunkel Schlüsselwörter #C586C0 = ΔE00 9 neben dem Akzent-Text, Kommentar 4,2:1).
+     Hier: drei --ve-code-*-Töne, Kommentare Grau, Namen in Nachtblau. Die abgeleiteten
+     Namen aus app_ui (--prism-selector/-keyword-control → keyword, -regex → string,
+     -decorator → class, -json-property → property) folgen von selbst. */
+  --prism-comment: var(--ve-muted);
+  --prism-keyword: var(--ve-code-keyword);
+  --prism-class: var(--ve-code-keyword);
+  --prism-namespace: var(--ve-code-keyword);
+  --prism-string: var(--ve-code-string);
+  --prism-number: var(--ve-code-number);
+  --prism-boolean: var(--ve-code-number);
+  --prism-constant: var(--ve-code-number);
+  --prism-function: var(--ve-ink);
+  --prism-builtin: var(--ve-ink);                               /* auch HTML-Tags */
+  --prism-literal: var(--ve-ink-2);
+  --prism-property: var(--ve-ink-2);                            /* auch HTML-Attribute */
+  --prism-variable: var(--ve-ink-2);
+  --prism-symbol: var(--ve-ink-2);                              /* auch URLs im Markdown-Editor */
+  --prism-interpolation: var(--ve-ink-2);
+  --prism-deleted: var(--ve-danger-text);
+
+  /* Markdown-Inhalte (.is-markdownified, Markdown-Vorschau): Überschriften auf der Skala statt
+     40/32/28/24/20/16 px – eine #-Überschrift im Feld darf nicht größer sein als der Seitentitel.
+     Der Chat (.a-ChatClient .is-markdownified) setzt eigene, kleinere Werte lokal. */
+  --a-md-h1-font-size: var(--ve-fs-xl);
+  --a-md-h1-line-height: var(--ve-lh-xl);
+  --a-md-h2-font-size: var(--ve-fs-lg);
+  --a-md-h2-line-height: var(--ve-lh-lg);
+  --a-md-h3-font-size: var(--ve-fs-md);
+  --a-md-h3-line-height: var(--ve-lh-md);
+  --a-md-h4-font-size: var(--ve-fs-sm);
+  --a-md-h4-line-height: var(--ve-lh-sm);
+  --a-md-h5-font-size: var(--ve-fs-xs);
+  --a-md-h5-line-height: var(--ve-lh-xs);
+  --a-md-h6-font-size: var(--ve-fs-xs);
+  --a-md-h6-line-height: var(--ve-lh-xs);
+  --a-md-blockquote-font-size: var(--ve-fs-lg);                 /* app_ui: 18 px */
+  --a-md-blockquote-line-height: var(--ve-lh-lg);
+  /* Vorschau-Panel und CodeMirror mit Feldpolster (app_ui: 8 px rundum) – Text steht wie im Feld */
+  --a-mdeditor-padding: var(--ve-control-pad-y) var(--ve-control-pad-x);
+}
+
+/* 18. Schwebende Ebenen: aktuelle Grundfläche ----------------------------------
+   Menüs (.a-Menu, auch Mega Menu), jQuery-UI-Dialoge (.ui-dialog: IR/IG-Dialoge, Popup-LOV,
+   Date-Picker- und Combobox-Popup, Inline-Dialoge, Drawer, Hülle der Seiten-Dialoge), das
+   Sortier-Widget der Spaltenköpfe (.a-IRR-sortWidget, hängt an <body>) und der Inhalt der
+   Seiten-Dialoge/-Drawer (eigenes iframe-Dokument) liegen auf --ve-surface-raised. Was „in der
+   Farbe des Grundes“ gezeichnet wird, folgt dort der schwebenden Fläche:
+     · --ve-ground        z. B. die Mitte des aktiven Wizard-Schritts im Modal-Wizard,
+     · --ve-focus-gap     die Lücke des Fokus-Doppelrings (sonst dunkel eine Flächen-Linie im Ring).
+   Abgeleitete Tokens werden auf dem Element aufgelöst, auf dem sie deklariert sind (:root) –
+   darum stehen die Lücke und die beiden Fokus-Schatten hier noch einmal. Die Formeln sind
+   dieselben wie in tokens/scale.css bzw. light/dark.css (check-tokens.mjs vergleicht sie).
+   Spezifität 0,1,0: Komponenten können einen eigenen Grund lokal setzen. */
+.a-Menu,
+.ui-dialog,
+.a-IRR-sortWidget,
+.t-Dialog-page,
+.t-Drawer-page {
+  --ve-ground: var(--ve-surface-raised);
+  --ve-focus-gap: var(--ve-ground);
+  --ve-focus-shadow: 0 0 0 var(--ve-focus-ring-offset) var(--ve-focus-gap), 0 0 0 calc(var(--ve-focus-ring-offset) + var(--ve-focus-ring-width)) var(--ve-focus-ring-color);
+  --ve-focus-shadow-inset: inset 0 0 0 var(--ve-focus-ring-width) var(--ve-focus-ring-color), inset 0 0 0 calc(var(--ve-focus-ring-width) + 1px) var(--ve-focus-gap);
+}
+
+/* Dichte für Touch (Tablets, Außendienst): Bedienelemente und Zeilen 44 px.
+   Nur Token-Werte – die Hebel oben (Polster, Zellenhöhen) rechnen sich daraus neu. */
+@media (pointer: coarse) {
+  :root {
+    --ve-control-h: 2.75rem;
+    --ve-control-h-sm: 2.25rem;
+    --ve-control-h-lg: 3.25rem;
+    --ve-row-h: 2.75rem;
+    --ve-head-h: 2.75rem;
+    --ve-hit-min: 2.75rem;
+    --ve-checkbox-size: 1.25rem;
+  }
+}

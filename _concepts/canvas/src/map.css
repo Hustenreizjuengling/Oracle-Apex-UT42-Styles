@@ -1,0 +1,505 @@
+/* ==========================================================================
+   Passepartout – Mapping --canvas-* → Universal Theme (--ut-*) / APEX (--a-*, --jui-*)
+   Modusneutral: nur var()-Verweise auf eigene Tokens. Gilt für hell und dunkel.
+   Enthält alle :root-Hex-Kopien der Vita-Primärfarbe (#056AC8), siehe
+   _docs/ut-tokens.md §8.1 und _tmp/research/diff-vita-red.txt.
+   ========================================================================== */
+
+/* Schrift (selbst gehostet, OFL) – url relativ zur gebündelten CSS-Datei */
+@font-face {
+  font-family: "Passepartout Sans";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 700;
+  src: url("fonts/instrument-sans-latin-wght-normal.woff2") format("woff2-variations"),
+       url("fonts/instrument-sans-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Passepartout Sans";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 700;
+  src: url("fonts/instrument-sans-latin-ext-wght-normal.woff2") format("woff2-variations"),
+       url("fonts/instrument-sans-latin-ext-wght-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  /* Geometrie --------------------------------------------------------------- */
+  --canvas-gutter: .75rem;          /* Rahmenbreite um die Leinwand */
+  --canvas-r-canvas: 1.125rem;      /* 18px Leinwand */
+  --canvas-r-lg: .75rem;            /* 12px Container */
+  --canvas-r-md: .5rem;             /* 8px Controls */
+  --canvas-r-sm: .3125rem;          /* 5px Checkbox, kleine Badges */
+  --canvas-pad-x: 2rem;             /* Innenrand der Leinwand */
+  --canvas-font: "Passepartout Sans", "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Typografie ------------------------------------------------------------- */
+  --a-base-font-family: var(--canvas-font);
+  --ut-base-font-family: var(--canvas-font);
+  --a-base-font-weight-semibold: 600;
+  --a-base-font-weight-bold: 650;
+  --ut-alternate-heading-font-family: var(--canvas-font);
+
+  /* Palette (Akzent + Status) ---------------------------------------------- */
+  --ut-palette-primary: var(--canvas-accent);
+  --ut-palette-primary-contrast: var(--canvas-accent-on);
+  --ut-palette-primary-shade: var(--canvas-accent-tint);
+  --ut-palette-primary-text: var(--canvas-accent-text);
+  --ut-palette-primary-alt: var(--canvas-accent-tint-2);
+  --ut-palette-primary-alt-contrast: var(--canvas-ink);
+  --ut-palette-primary-alt-shade: var(--canvas-accent-tint);
+  --ut-palette-primary-alt-text: var(--canvas-accent-text);
+  --ut-palette-success: var(--canvas-success);
+  --ut-palette-success-contrast: var(--canvas-success-on);
+  --ut-palette-success-shade: var(--canvas-success-tint);
+  --ut-palette-success-text: var(--canvas-success-text);
+  --ut-palette-info: var(--canvas-info);
+  --ut-palette-info-contrast: var(--canvas-info-on);
+  --ut-palette-info-shade: var(--canvas-info-tint);
+  --ut-palette-info-text: var(--canvas-info-text);
+  --ut-palette-warning: var(--canvas-warning);
+  --ut-palette-warning-contrast: var(--canvas-warning-on);
+  --ut-palette-warning-shade: var(--canvas-warning-tint);
+  --ut-palette-warning-text: var(--canvas-warning-text);
+  --ut-palette-danger: var(--canvas-danger);
+  --ut-palette-danger-contrast: var(--canvas-danger-on);
+  --ut-palette-danger-shade: var(--canvas-danger-tint);
+  --ut-palette-danger-text: var(--canvas-danger-text);
+  --ut-palette-generic: var(--canvas-soft);
+
+  /* Global ----------------------------------------------------------------- */
+  --ut-link-text-color: var(--canvas-accent-text);
+  --ut-focus-outline-color: var(--canvas-accent);
+  --ut-focus-outline: 2px solid var(--canvas-accent);
+  --ut-focus-outline-offset: 2px;
+  --ut-body-text-color: var(--canvas-ink);
+
+  /* Generische Komponente -------------------------------------------------- */
+  --ut-component-background-color: var(--canvas-surface);
+  --ut-component-border-color: var(--canvas-line);
+  --ut-component-border-radius: var(--canvas-r-lg);
+  --ut-component-box-shadow: var(--canvas-float-shadow);
+  --ut-component-highlight-background-color: var(--canvas-hover);
+  --ut-component-toolbar-background-color: var(--canvas-surface-sunken);
+  --ut-component-inner-border-color: var(--canvas-line);
+  --ut-component-text-default-color: var(--canvas-ink);
+  --ut-component-text-title-color: var(--canvas-ink);
+  --ut-component-text-subtitle-color: var(--canvas-ink-2);
+  --ut-component-text-muted-color: var(--canvas-muted);
+  --ut-component-icon-background-color: var(--canvas-soft);
+  --ut-component-icon-color: var(--canvas-ink);
+  --ut-component-badge-background-color: var(--canvas-soft);
+  --ut-component-badge-text-color: var(--canvas-ink);
+  --ut-component-badge-border-radius: var(--canvas-r-sm);
+  --ut-component-pre-background-color: var(--canvas-surface-sunken);
+
+  --ut-shadow-sm: none;
+  --ut-shadow-md: var(--canvas-float-shadow);
+  --ut-shadow-lg: var(--canvas-float-shadow);
+  --ut-border-radius-sm: var(--canvas-r-sm);
+  --ut-border-radius-md: var(--canvas-r-md);
+  --ut-border-radius-lg: var(--canvas-r-lg);
+  --ut-border-radius: var(--canvas-r-md);
+
+  /* Rahmen + Leinwand (Shell) ---------------------------------------------- */
+  --ut-body-background-color: var(--canvas-frame);
+  --ut-body-main-background-color: var(--canvas-surface);
+  --ut-body-sidebar-background-color: transparent;
+  --ut-body-sidebar-text-color: var(--canvas-ink);
+  --ut-body-sidebar-border-color: var(--canvas-line);
+  --ut-body-actions-background-color: var(--canvas-frame);
+  --ut-body-actions-text-color: var(--canvas-ink);
+  --ut-body-actions-border-width: 0px;
+  --ut-body-actionstoggle-background-color: var(--canvas-frame);
+  --ut-body-actionstoggle-hover-background-color: var(--canvas-soft-hover);
+  --ut-body-actionstoggle-text-color: var(--canvas-ink);
+  --ut-footer-background-color: transparent;
+  --ut-footer-border-color: var(--canvas-line);
+  --ut-footer-text-color: var(--canvas-muted);
+
+  /* Kopf */
+  --ut-header-height: 3.5rem;
+  --ut-header-padding-x: .875rem;
+  --ut-header-item-spacing: .5rem;
+  --ut-header-background-color: var(--canvas-frame);
+  --ut-header-text-color: var(--canvas-ink);
+  --ut-header-border-color: transparent;
+  --ut-header-border-width: 0px;
+  --ut-header-box-shadow: none;
+  --ut-logo-font-size: 1rem;
+  --ut-logo-line-height: 1.5rem;
+  --ut-logo-font-weight: 600;
+  --ut-logo-text-color: var(--canvas-ink);
+  --ut-navbar-button-badge-background-color: var(--canvas-accent);
+  --ut-navbar-button-badge-text-color: var(--canvas-accent-on);
+  --ut-header-menubar-background-color: var(--canvas-frame);
+  --ut-header-menubar-item-text-color: var(--canvas-ink-2);
+  --ut-header-menubar-item-border-color: transparent;
+  --ut-header-menubar-item-current-background-color: var(--canvas-surface);
+  --ut-header-menubar-item-current-text-color: var(--canvas-ink);
+  --ut-header-menubar-item-split-border-color: transparent;
+  --ut-header-menubar-item-split-icon-color: var(--canvas-muted);
+  --ut-navtabs-background-color: var(--canvas-frame);
+  --ut-navtabs-text-color: var(--canvas-ink-2);
+  --ut-navtabs-item-border-color: transparent;
+  --ut-navtabs-item-active-background-color: var(--canvas-surface);
+  --ut-navtabs-item-active-text-color: var(--canvas-ink);
+
+  /* Navigation */
+  --ut-nav-width: 15.5rem;
+  --ut-nav-collapsed-icon-width: 4rem;
+  --ut-body-nav-background-color: var(--canvas-frame);
+  --ut-body-nav-text-color: var(--canvas-ink);
+  --ut-body-nav-border-width: 0px;
+  --ut-body-nav-border-color: transparent;
+  --ut-body-nav-scrollbar-thumb-background-color: var(--canvas-line-2);
+  --ut-body-nav-scrollbar-track-background-color: transparent;
+  --a-treeview-node-selected-background-color: transparent;
+  --a-treeview-node-selected-text-color: var(--canvas-ink);
+  --a-treeview-node-selected-icon-color: var(--canvas-ink);
+  --a-treeview-node-focused-background-color: transparent;
+  --a-treeview-node-focused-text-color: var(--canvas-ink);
+  --a-treeview-node-focused-shadow: inset 0 0 0 2px var(--canvas-accent);
+  --a-treeview-node-hover-background-color: var(--canvas-frame-hover);
+  --a-treeview-node-icon-color: var(--canvas-ink-2);
+  --ut-treeview-badge-background-color: var(--canvas-accent);
+  --ut-treeview-badge-text-color: var(--canvas-accent-on);
+
+  /* Title Bar / Breadcrumb */
+  --ut-body-title-background-color: var(--canvas-surface);
+  --ut-body-title-text-color: var(--canvas-ink);
+  --ut-body-title-box-shadow: none;
+  --ut-body-title-border-width: 0px;
+  --ut-body-title-border-color: var(--canvas-line);
+  --ut-body-title-backdrop-filter: none;
+  --ut-breadcrumb-padding-x: var(--canvas-pad-x);
+  --ut-breadcrumb-padding-y: 1.25rem;
+  --ut-breadcrumb-item-text-color: var(--canvas-muted);
+  --ut-breadcrumb-item-font-size: .8125rem;
+  --ut-breadcrumb-item-line-height: 1.25rem;
+  --ut-breadcrumb-item-font-weight: 500;
+  --ut-breadcrumb-item-active-text-color: var(--canvas-ink);
+  --ut-breadcrumb-item-sep-opacity: 1;
+  --ut-breadcrumb-item-sep-spacing: .625rem;
+  --ut-breadcrumb-title-font-size: 1.75rem;
+  --ut-breadcrumb-title-line-height: 2.25rem;
+  --ut-breadcrumb-title-font-weight: 600;
+
+  /* Inhalt */
+  --ut-body-content-padding-x: var(--canvas-pad-x);
+  --ut-body-content-padding-y: 1.25rem;
+  --ut-xs-body-content-padding-x: 1rem;
+  --ut-xs-body-content-padding-y: .75rem;
+  --ut-xs-breadcrumb-padding-x: 1rem;
+
+  /* Regionen: flach, Titel + Haarlinie ----------------------------------- */
+  --ut-region-background-color: transparent;
+  --ut-region-text-color: var(--canvas-ink);
+  --ut-region-header-background-color: transparent;
+  --ut-region-header-text-color: var(--canvas-ink);
+  --ut-region-border-color: transparent;
+  --ut-region-border-width: 0px;
+  --ut-region-border-radius: var(--canvas-r-lg);
+  --ut-region-box-shadow: none;
+  --ut-region-header-border-width: 1px;
+  --ut-region-header-border-color: var(--canvas-line);
+  --ut-region-header-padding-x: 0rem;
+  --ut-region-header-padding-y: .625rem;
+  --ut-region-header-font-size: 1rem;
+  --ut-region-header-line-height: 1.5rem;
+  --ut-region-body-padding-x: 0rem;
+  --ut-region-body-padding-y: 1rem;
+  --ut-region-buttons-padding-x: 0rem;
+  --ut-region-font-size: .875rem;
+  --ut-region-line-height: 1.375rem;
+  --ut-region-margin: 2rem;
+  --ut-region-hideshow-header-padding-x: 0rem;
+
+  --ut-content-block-shadow-background-color: var(--canvas-surface-sunken);
+  --ut-content-block-light-background-color: var(--canvas-surface);
+  --ut-content-block-border-color: transparent;
+  --ut-content-block-font-size: .875rem;
+  --ut-content-block-line-height: 1.375rem;
+
+  --ut-button-region-border-radius: var(--canvas-r-lg);
+  --ut-button-region-border-color: var(--canvas-line);
+  --ut-button-region-box-shadow: none;
+  --ut-button-region-background-color: transparent;
+
+  --ut-alert-horizontal-border-radius: var(--canvas-r-lg);
+  --ut-alert-wizard-border-radius: var(--canvas-r-lg);
+  --ut-alert-box-shadow: none;
+  --ut-alert-border-color: var(--canvas-line);
+
+  --ut-hero-region-icon-border-radius: var(--canvas-r-lg);
+  --ut-wizard-header-background-color: transparent;
+  --ut-wizard-border-radius: var(--canvas-r-lg);
+  --ut-wp-marker-color: var(--canvas-line-2);
+  --ut-wp-track-color: var(--canvas-line-2);
+  --ut-linkslist-hover-background-color: var(--canvas-hover);
+  --ut-linkslist-arrow-color: var(--canvas-muted);
+  --ut-comment-chat-background-color: var(--canvas-surface-sunken);
+  --ut-comment-chat-active-background-color: var(--canvas-soft);
+  --ut-carousel-nav-background-color: var(--canvas-line-2);
+  --ut-carousel-nav-active-background-color: var(--canvas-ink);
+
+  /* Tabs / RDS (aktive Lasche = Rahmen-Grau, kein Unterstrich) ---------- */
+  --ut-tabs-item-text-color: var(--canvas-muted);
+  --ut-tabs-item-active-text-color: var(--canvas-ink);
+  --ut-tabs-item-active-background-color: var(--canvas-soft);
+  --ut-tabs-item-active-highlight-color: transparent;
+  --ut-tabs-item-hint-highlight-color: transparent;
+  --ut-tabs-item-hint-highlight-width: 0px;
+  --ut-tabs-item-hover-background-color: var(--canvas-hover);
+  --ut-tabs-item-font-size: .875rem;
+  --ut-tabs-item-line-height: 1.25rem;
+  --ut-tabs-item-font-weight: 500;
+  --ut-tabs-item-active-font-weight: 600;
+
+  /* Buttons ---------------------------------------------------------------- */
+  --a-button-border-radius: var(--canvas-r-md);
+  --a-button-padding-y: .5rem;
+  --a-button-padding-x: .875rem;
+  --a-button-font-size: .875rem;
+  --a-button-line-height: 1.25rem;
+  --a-button-font-weight: 500;
+  --a-button-gap-x: .5rem;
+  --a-button-icon-spacing: .5rem;
+  --a-button-background-color: var(--canvas-soft);
+  --a-button-text-color: var(--canvas-ink);
+  --a-button-border-color: transparent;
+  --a-button-shadow: none;
+  --a-button-hover-background-color: var(--canvas-soft-hover);
+  --a-button-hover-text-color: var(--canvas-ink);
+  --a-button-hover-border-color: transparent;
+  --a-button-hover-shadow: none;
+  --a-button-active-background-color: var(--canvas-soft-press);
+  --a-button-active-border-color: transparent;
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--canvas-soft-hover);
+  --a-button-focus-border-color: transparent;
+  --a-button-focus-shadow: none;
+  --a-button-count-background-color: var(--canvas-accent);
+  --a-button-count-text-color: var(--canvas-accent-on);
+
+  /* Formulare -------------------------------------------------------------- */
+  --a-field-input-background-color: var(--canvas-field);
+  --a-field-input-text-color: var(--canvas-ink);
+  --a-field-input-border-color: var(--canvas-edge);
+  --a-field-input-border-width: 1px;
+  --a-field-input-border-style: solid;
+  --a-field-input-border-radius: var(--canvas-r-md);
+  --a-field-input-padding-y: .5rem;
+  --a-field-input-padding-x: .75rem;
+  --a-field-input-font-size: .875rem;
+  --a-field-input-line-height: 1.25rem;
+  --a-field-input-hover-background-color: var(--canvas-field);
+  --a-field-input-hover-border-color: var(--canvas-edge-hover);
+  --a-field-input-focus-background-color: var(--canvas-field);
+  --a-field-input-focus-border-color: var(--canvas-accent);
+  --a-field-input-focus-text-color: var(--canvas-ink);
+  --a-field-placeholder-text-color: var(--canvas-placeholder);
+  --a-field-placeholder-opacity: 1;
+  --a-field-select-background-image: var(--canvas-select-arrow);
+  --a-filedrop-border-radius: var(--canvas-r-lg);
+  --ut-field-label-text-color: var(--canvas-ink-2);
+  --ut-field-label-font-size: .8125rem;
+  --ut-field-label-line-height: 1.25rem;
+  --ut-field-label-font-weight: 500;
+  --ut-field-input-focus-icon-color: var(--canvas-accent-text);
+  --ut-field-fl-input-focus-icon-background-color: var(--canvas-accent-tint);
+  --ut-field-fl-input-focus-icon-color: var(--canvas-accent-text);
+  --ut-field-input-icon-color: var(--canvas-muted);
+  --ut-prepost-text-color: var(--canvas-muted);
+  --a-form-required-asterisk-text-color: var(--canvas-accent);
+  --a-form-error-text-color: var(--canvas-danger-text);
+  --ut-field-inline-help-text-color: var(--canvas-muted);
+
+  --a-checkbox-size: 1.125rem;
+  --a-checkbox-icon-size: .8125rem;
+  --a-checkbox-border-radius: var(--canvas-r-sm);
+  --a-checkbox-background-color: var(--canvas-field);
+  --a-checkbox-border-color: var(--canvas-edge);
+  --a-checkbox-hover-background-color: var(--canvas-hover);
+  --a-checkbox-checked-background-color: var(--canvas-accent);
+  --a-checkbox-checked-text-color: var(--canvas-accent-on);
+  --a-checkbox-text-color: var(--canvas-accent-on);
+  --a-checkbox-label-font-size: .8125rem;
+  --a-checkbox-label-spacing-x: .5rem;
+  --a-checkbox-outline-color: var(--canvas-accent);
+  --a-cr-checkbox-background-color: var(--canvas-field);
+
+  --a-switch-background-color: var(--canvas-edge);
+  --a-switch-checked-background-color: var(--canvas-accent);
+  --a-switch-toggle-background-color: #FFFFFF;
+  --a-switch-width: 2.5rem;
+  --a-switch-toggle-width: 1.125rem;
+  --a-switch-toggle-height: 1.125rem;
+  --a-switch-padding-y: .1875rem;
+  --a-switch-padding-x: .1875rem;
+
+  --a-starrating-stars-fg-color: var(--canvas-accent);
+  --a-starrating-stars-bg-color: var(--canvas-line-2);
+
+  --ut-pillbutton-padding-y: .4375rem;
+  --ut-pillbutton-padding-x: .625rem;
+  --ut-pillbutton-font-size: .8125rem;
+
+  --a-chip-border-radius: var(--canvas-r-sm);
+  --a-chip-font-size: .8125rem;
+  --a-chip-line-height: 1.125rem;
+  --a-chip-hover-background-color: var(--canvas-hover);
+  --a-chip-active-background-color: var(--canvas-soft);
+  --a-chip-applied-background-color: var(--canvas-soft);
+  --a-chip-applied-hover-background-color: var(--canvas-soft-hover);
+  --a-chip-remove-hover-background-color: var(--canvas-frame-hover);
+  --a-chip-remove-active-background-color: var(--canvas-frame-press);
+  --a-combo-select-item-selected-background-color: var(--canvas-accent-tint);
+  --a-popuplov-chip-background-color: var(--canvas-soft);
+
+  /* Date Picker */
+  --a-datepicker-background-color: var(--canvas-surface-raised);
+  --a-datepicker-border-radius: var(--canvas-r-lg);
+  --a-datepicker-header-background-color: var(--canvas-surface-raised);
+  --a-datepicker-calendar-background-color: var(--canvas-surface-raised);
+  --a-datepicker-border-color: var(--canvas-line);
+  --a-datepicker-calendar-title-background-color: transparent;
+  --a-datepicker-calendar-header-background-color: transparent;
+  --a-datepicker-calendar-header-text-color: var(--canvas-muted);
+  --a-datepicker-calendar-day-hover-background-color: var(--canvas-soft);
+  --a-datepicker-calendar-day-selected-background-color: var(--canvas-accent);
+  --a-datepicker-calendar-day-selected-text-color: var(--canvas-accent-on);
+  --a-datepicker-calendar-day-selected-border-color: var(--canvas-accent);
+  --a-datepicker-calendar-day-current-background-color: transparent;
+  --a-datepicker-calendar-day-current-text-color: var(--canvas-accent-text);
+  --a-datepicker-calendar-day-current-border-color: var(--canvas-accent);
+  --a-datepicker-calendar-week-background-color: transparent;
+  --a-datepicker-footer-background-color: transparent;
+  --a-datepicker-footer-border-color: var(--canvas-line);
+
+  /* Menüs, Dialoge, Tooltips ----------------------------------------------- */
+  --a-menu-background-color: var(--canvas-surface-raised);
+  --a-menu-text-color: var(--canvas-ink);
+  --a-menu-border-color: var(--canvas-line);
+  --a-menu-border-radius: var(--canvas-r-lg);
+  --a-menu-shadow: var(--canvas-float-shadow);
+  --a-menu-padding-y: .375rem;
+  --a-menu-padding-x: .375rem;
+  --a-menu-item-border-radius: .375rem;
+  --a-menu-font-size: .875rem;
+  --a-menu-focused-background-color: var(--canvas-soft);
+  --a-menu-focused-text-color: var(--canvas-ink);
+
+  --jui-dialog-background-color: var(--canvas-surface-raised);
+  --jui-dialog-text-color: var(--canvas-ink);
+  --jui-dialog-border-radius: 1rem;
+  --jui-dialog-shadow: var(--canvas-float-shadow);
+  --jui-dialog-titlebar-background-color: transparent;
+  --jui-dialog-titlebar-text-color: var(--canvas-ink);
+  --jui-dialog-titlebar-border-color: var(--canvas-line);
+  --jui-dialog-titlebar-padding-y: .875rem;
+  --jui-dialog-titlebar-padding-x: 1.25rem;
+  --jui-dialog-title-font-size: 1rem;
+  --jui-dialog-title-font-weight: 600;
+  --jui-dialog-buttonpane-background-color: transparent;
+  --jui-dialog-buttonpane-border-color: var(--canvas-line);
+  --jui-overlay-background-color: var(--canvas-scrim);
+  --jui-tooltip-background-color: var(--canvas-tooltip-bg);
+  --jui-tooltip-text-color: var(--canvas-tooltip-text);
+  --jui-tooltip-border-color: transparent;
+  --jui-tooltip-border-radius: .375rem;
+  --a-tooltip-background-color: var(--canvas-tooltip-bg);
+  --a-tooltip-text-color: var(--canvas-tooltip-text);
+
+  /* Reports / IR / IG ------------------------------------------------------ */
+  --a-gv-background-color: var(--canvas-surface);
+  --a-gv-border-color: var(--canvas-line);
+  --a-gv-font-size: .8125rem;
+  --a-gv-line-height: 1.25rem;
+  --a-gv-cell-border-color: var(--canvas-line);
+  --a-gv-header-cell-border-color: var(--canvas-line);
+  --a-gv-header-background-color: var(--canvas-surface-sunken);
+  --a-gv-header-text-color: var(--canvas-muted);
+  --a-gv-row-hover-background-color: var(--canvas-hover);
+  --a-gv-selected-background-color: var(--canvas-accent-tint);
+  --a-gv-selected-text-color: var(--canvas-ink);
+  --a-gv-deleted-background-color: var(--canvas-surface-sunken);
+  --a-gv-grandtotal-background-color: var(--canvas-surface-sunken);
+  --a-gv-row-disabled-background-color: var(--canvas-surface-sunken);
+  --a-gv-pagination-button-selected-background-color: var(--canvas-accent);
+  --a-gv-pagination-button-selected-text-color: var(--canvas-accent-on);
+  --a-toolbar-background-color: transparent;
+  --a-toolbar-border-color: var(--canvas-line);
+  --a-toolbar-sep-border-color: var(--canvas-line);
+  --a-report-controls-cell-label-background-color: var(--canvas-surface);
+  --a-report-controls-cell-label-text-color: var(--canvas-ink);
+  --a-splitter-bar-background-color: var(--canvas-surface-sunken);
+  --a-resultsitem-background-color: var(--canvas-surface);
+  --a-resultsitem-badge-background-color: var(--canvas-soft);
+  --ut-resultsregion-background-color: var(--canvas-surface);
+  --ut-resultsregion-search-background-color: var(--canvas-surface-sunken);
+  --ut-resultsregion-search-border-color: var(--canvas-line);
+  --a-kb-shortcut-background-color: var(--canvas-soft);
+  --a-kb-shortcut-border-color: var(--canvas-line-2);
+
+  --ut-report-cell-border-color: var(--canvas-line);
+  --ut-report-cell-hover-background-color: var(--canvas-hover);
+  --ut-report-cell-alt-background-color: var(--canvas-surface-sunken);
+  --ut-report-header-background-color: var(--canvas-surface-sunken);
+  --ut-report-header-cell-background-color: var(--canvas-surface-sunken);
+  --ut-report-header-cell-font-weight: 600;
+  --ut-report-header-cell-font-size: .78125rem;
+  --ut-report-header-cell-padding-y: .625rem;
+  --ut-report-header-cell-padding-x: .75rem;
+  --ut-report-cell-font-size: .8125rem;
+  --ut-report-cell-line-height: 1.25rem;
+  --ut-report-cell-padding-y: .5625rem;
+  --ut-report-cell-padding-x: .75rem;
+
+  /* Cards ------------------------------------------------------------------ */
+  --a-cv-background-color: var(--canvas-surface);
+  --a-cv-border-color: var(--canvas-line);
+  --a-cv-border-radius: var(--canvas-r-lg);
+  --a-cv-shadow: none;
+  --a-cv-hover-shadow: 0 0 0 1px var(--canvas-line-2);
+  --a-cv-header-border-color: var(--canvas-line);
+  --a-cv-actions-border-color: var(--canvas-line);
+  --a-cv-subtitle-text-color: var(--canvas-muted);
+  --a-cv-subcontent-text-color: var(--canvas-muted);
+  --a-cv-badge-background-color: var(--canvas-soft);
+  --a-cv-badge-border-radius: var(--canvas-r-sm);
+  --a-cv-icon-background-color: var(--canvas-soft);
+  --a-cv-icon-text-color: var(--canvas-ink);
+  --a-cv-initials-background-color: var(--canvas-soft);
+  --a-cv-initials-text-color: var(--canvas-ink);
+  --a-cv-focus-border-color: var(--canvas-accent);
+  --ut-cardlist-box-shadow: none;
+  --ut-cardlist-border-radius: var(--canvas-r-lg);
+
+  /* Badges / Avatare --------------------------------------------------------- */
+  --ut-badge-border-radius: var(--canvas-r-sm);
+  --ut-avatar-border-radius: var(--canvas-r-md);
+
+  /* Akzentpalette u-color (Charts, Avatare, Karten-Icons): ruhig, kartografisch */
+  --u-color-1: #3F6C9A;  --u-color-1-contrast: #FFFFFF;
+  --u-color-2: #2E8083;  --u-color-2-contrast: #FFFFFF;
+  --u-color-3: #3D7F57;  --u-color-3-contrast: #FFFFFF;
+  --u-color-4: #6E7B2E;  --u-color-4-contrast: #FFFFFF;
+  --u-color-5: #B07A12;  --u-color-5-contrast: #FFFFFF;
+  --u-color-6: #C0602A;  --u-color-6-contrast: #FFFFFF;
+  --u-color-7: #B0106E;  --u-color-7-contrast: #FFFFFF;
+  --u-color-8: #7A4B97;  --u-color-8-contrast: #FFFFFF;
+  --u-color-9: #56606C;  --u-color-9-contrast: #FFFFFF;
+  --u-color-10: #93583C; --u-color-10-contrast: #FFFFFF;
+  --u-color-11: #5B78B0; --u-color-11-contrast: #FFFFFF;
+  --u-color-12: #3E8C8C; --u-color-12-contrast: #FFFFFF;
+  --u-color-13: #587A3E; --u-color-13-contrast: #FFFFFF;
+  --u-color-14: #8A929C; --u-color-14-contrast: #FFFFFF;
+  --u-color-15: #6B5E4E; --u-color-15-contrast: #FFFFFF;
+
+  /* Charts (JET) */
+  --oj-core-text-color-primary: var(--canvas-ink);
+  --oj-core-text-color-secondary: var(--canvas-muted);
+}

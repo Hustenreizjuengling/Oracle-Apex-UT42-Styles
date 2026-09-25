@@ -1,0 +1,681 @@
+/* ==========================================================================
+   Frequenz – Buttons
+   t-Button/a-Button/ui-button, Hot/Primary/Status, Größen, Icon-Buttons, Pills,
+   Gruppen (Radio-Pills, Ja/Nein), Zähler, Link-Stil, Buttons in Feldern, Disabled/Busy.
+   Regeln: nur Tokens (--fq-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Basis-Hebel (Höhe 36 px, 4 px Radius, Standard = Kontur) setzt bridge.css §9;
+   hier stehen nur die Vita-Selektoren mit gleicher Spezifität (Vita.css 2029–2321).
+   Zustandsmodell (UT/app_ui): Fläche = state → type → Basis-Token; :hover/:active/:focus
+   setzen die state-Ebene, --simple/--noUI die type-Ebene, Typen (--hot …) die Basis.
+   ========================================================================== */
+
+/* 1. Grundform aller Button-Familien --------------------------------------- */
+.t-Button,
+.a-Button,
+.ui-button,
+.a-CardView-button,
+.t-Form-helpButton {
+  letter-spacing: var(--fq-tracking-ui);
+  transition-property: background-color, border-color, box-shadow, color;
+  transition-duration: var(--fq-duration);
+  transition-timing-function: var(--fq-ease);
+}
+
+/* Maus-Fokus: kein „hängender“ Hover-Zustand nach dem Klick (Ring regelt base.css).
+   UT schaltet .t-Button/.a-Button/.ui-button schon bei :focus auf die Fokus-Fläche;
+   nur Tastatur-Fokus (:focus-visible) soll sie zeigen. Hover/Active bleiben sichtbar. */
+.t-Button:focus:where(:not(:focus-visible)),
+.a-Button:focus:where(:not(:focus-visible)),
+.ui-button:focus:where(:not(:focus-visible)),
+.a-CardView-button:focus:where(:not(:focus-visible)),
+.t-Form-helpButton:focus:where(:not(:focus-visible)) {
+  --a-button-state-background-color: initial;
+  --a-button-state-text-color: initial;
+  --a-button-state-border-color: initial;
+  --a-button-state-shadow: initial;
+}
+.t-Button:focus:where(:not(:focus-visible)):hover,
+.a-Button:focus:where(:not(:focus-visible)):hover,
+.ui-button:focus:where(:not(:focus-visible)):hover,
+.a-CardView-button:focus:where(:not(:focus-visible)):hover,
+.t-Form-helpButton:focus:where(:not(:focus-visible)):hover {
+  --a-button-state-background-color: var(--a-button-hover-background-color);
+  --a-button-state-text-color: var(--a-button-hover-text-color);
+  --a-button-state-border-color: var(--a-button-hover-border-color);
+  --a-button-state-shadow: var(--a-button-hover-shadow);
+}
+.t-Button:focus:where(:not(:focus-visible)):active,
+.a-Button:focus:where(:not(:focus-visible)):active,
+.ui-button:focus:where(:not(:focus-visible)):active,
+.a-CardView-button:focus:where(:not(:focus-visible)):active,
+.t-Form-helpButton:focus:where(:not(:focus-visible)):active,
+.t-Button.is-active:focus:where(:not(:focus-visible)),
+.a-Button.is-active:focus:where(:not(:focus-visible)),
+.ui-button.ui-state-active:focus:where(:not(:focus-visible)) {
+  --a-button-state-background-color: var(--a-button-active-background-color, var(--a-button-hover-background-color));
+  --a-button-state-text-color: var(--a-button-active-text-color, var(--a-button-hover-text-color));
+}
+
+/* 2. Größen: Höhen aus den Dichte-Tokens (Desktop 28/36/44/52, Touch 36/44/48/56).
+      Polster = (Höhe − Zeilenhöhe) / 2, inkl. 1 px Rand (app_ui-Konvention).
+      tiny = Höhe von small (Trefferfläche ≥ 24 px, WCAG 2.5.8), nur engere Polster. */
+.t-Button--tiny,
+.t-Button--xsmall,
+.t-InlineActions--tiny,
+.t-InlineActions--xsmall {
+  --a-button-font-size: var(--fq-fs-xs);
+  --a-button-line-height: var(--fq-lh-xs);
+  --a-button-padding-y: calc((var(--fq-control-h-sm) - var(--fq-lh-xs)) / 2);
+  --a-button-padding-x: calc(var(--fq-space-1) + 2px);
+  --a-button-icon-size: .75rem;
+  --a-button-icon-spacing: var(--fq-space-1);
+}
+.t-Button--small,
+.t-InlineActions--small {
+  --a-button-font-size: var(--fq-fs-xs);
+  --a-button-line-height: var(--fq-lh-xs);
+  --a-button-padding-y: calc((var(--fq-control-h-sm) - var(--fq-lh-xs)) / 2);
+  --a-button-padding-x: var(--fq-space-3);
+  --a-button-icon-size: .875rem;
+  --a-button-icon-spacing: calc(var(--fq-space-1) + 2px);
+}
+.t-Button--large,
+.t-InlineActions--large {
+  --a-button-font-size: var(--fq-fs-md);
+  --a-button-line-height: var(--fq-control-lh);
+  --a-button-padding-y: calc((var(--fq-control-h-lg) - var(--fq-control-lh)) / 2);
+  --a-button-padding-x: var(--fq-space-5);
+}
+.t-Button--xlarge,
+.t-InlineActions--xlarge {
+  --a-button-font-size: var(--fq-fs-lg);
+  --a-button-line-height: var(--fq-lh-lg);
+  --a-button-padding-y: calc((var(--fq-control-h-lg) + var(--fq-space-2) - var(--fq-lh-lg)) / 2);
+  --a-button-padding-x: var(--fq-space-6);
+  --a-button-icon-size: 1.25rem;
+}
+.t-Button--xlarge.t-Button--withIcon,
+.t-InlineActions--xlarge.t-Button--withIcon {
+  --a-button-padding-y: calc((var(--fq-control-h-lg) + var(--fq-space-2) - var(--fq-lh-lg)) / 2);
+  --a-button-padding-x: var(--fq-space-5);
+}
+/* app_ui-Buttons mit Icon: UT rechnet 8/10 px Polster → 34 px; zurück auf die Control-Höhe */
+.a-Button--withIcon {
+  --a-button-padding-y: var(--fq-control-pad-y);
+  --a-button-padding-x: var(--fq-control-pad-x);
+}
+
+/* 3. Icon-Buttons: rund in jeder Größe (Breite = Höhe, Radius = Pille).
+      Polster-x rechnet mit der Zeile als Inhaltshöhe: Seite = 2 × Polster-y + Zeilenhöhe.
+      In Pill-Gruppen rundet UT nur die Außenseiten – die Gruppe wird zur Pille.
+      app_ui-Knöpfe (a-Button) in Toolbars bleiben bei 4 px, sie stehen oft in Gruppen. */
+.t-Button--noLabel,
+.a-Button--noLabel {
+  --a-button-padding-x: calc(var(--a-button-padding-y) + (var(--a-button-line-height) - var(--a-button-icon-size)) / 2);
+}
+.t-Button--noLabel {
+  --a-button-border-radius: var(--fq-r-pill);
+}
+.t-Button--noLabel.t-Button--pill {
+  --a-button-border-radius: 0;
+}
+/* app_ui-Buttons sind inline-flex (UT Core): Ohne Beschriftung bestimmt das Icon (16 px) die
+   Inhaltshöhe, nicht die Zeile (20 px) → 32 × 28 (Facetten-Menü ⋮). Mindesthöhe = Polster + Zeile
+   wie ein Text-Button derselben Größe, höchstens so hoch wie breit (2 × Polster-x + Icon).
+   Kontexte, die das Polster aus der Icon-Größe rechnen (Shuttle 24 px, Date-Picker-Pfeile), und
+   Knöpfe ohne Polster-y, deren Höhe der Container vorgibt (Suchfeld IR/IG), bleiben unverändert. */
+.a-Button--noLabel {
+  min-block-size: min(
+    calc(2 * var(--a-button-padding-y) + var(--a-button-line-height)),
+    calc(2 * var(--a-button-padding-x) + var(--a-icon-size, 1rem))
+  );
+}
+.t-Button--icon.t-Button--slim {
+  --a-button-padding-x: var(--fq-space-2);
+}
+/* 4. Stil-Modifier (neutral) ----------------------------------------------- */
+/* Simple: leisere Kontur (Standard ist schon Kontur) – hellgrauer Rand, Hover füllt weich */
+.t-Button--simple {
+  --a-button-type-background-color: transparent;
+  --a-button-type-shadow: none;
+  --a-button-border-color: var(--fq-line-strong);
+  --a-button-hover-border-color: var(--fq-button-edge);
+  --a-button-active-border-color: var(--fq-button-edge);
+  --a-button-hover-background-color: var(--fq-wash-hover);
+  --a-button-active-background-color: var(--fq-wash-press);
+  --a-button-focus-background-color: var(--fq-wash-hover);
+  --a-button-focus-border-color: var(--fq-button-edge);
+}
+/* Link: Petrol mit Unterstrich wie Fließtext-Links; nie eine Fläche */
+.t-Button--link {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+}
+.t-Button.t-Button--link {
+  --a-button-text-color: var(--fq-link-text);
+  --a-button-hover-text-color: var(--a-button-text-color);
+  --a-button-active-text-color: var(--a-button-text-color);
+  --a-button-focus-text-color: var(--a-button-text-color);
+  text-decoration-line: underline;
+  text-decoration-color: var(--fq-link-underline);
+  text-decoration-thickness: var(--fq-link-underline-width);
+  text-underline-offset: var(--fq-link-underline-offset);
+}
+.t-Button.t-Button--link:hover {
+  text-decoration-line: underline;
+  text-decoration-color: var(--fq-link-underline-hover);
+  text-decoration-thickness: var(--fq-link-underline-width-hover);
+}
+/* app_ui „Alle laden“-Link (Vita: Primärfarbe) */
+.a-Button--link {
+  --a-button-link-text-color: var(--fq-link-text);
+  text-decoration-color: var(--fq-link-underline);
+  text-decoration-thickness: var(--fq-link-underline-width);
+  text-underline-offset: var(--fq-link-underline-offset);
+}
+.a-Button--link:hover {
+  text-decoration-color: var(--fq-link-underline-hover);
+  text-decoration-thickness: var(--fq-link-underline-width-hover);
+}
+/* NoUI: keine Fläche, keine Kante; Hover nur als transparente Tönung (passt auf jede Fläche) */
+.t-Button--noUI,
+.t-Button--noUI:hover,
+.t-Button--noUI:active,
+.a-Button--noUI,
+.a-Button--noUI:hover,
+.a-Button--noUI:active {
+  --a-button-type-shadow: none;
+  --a-button-type-background-color: transparent;
+  --a-button-type-border-color: transparent;
+  --a-button-type-text-color: inherit;
+  color: inherit;
+  background-color: transparent;
+  text-shadow: none;
+}
+.t-Button--noUI:hover,
+.a-Button--noUI:hover {
+  background-color: var(--fq-wash-hover);
+}
+.t-Button--noUI:active,
+.a-Button--noUI:active {
+  background-color: var(--fq-wash-press);
+}
+
+/* 5. Hot = Akzent gefüllt, weiße Schrift (vollständige Vita-Selektorliste) --- */
+.t-Button--hot,
+.a-Button--hot,
+.ui-button--hot,
+.a-CardView-button--hot,
+.apex-button-group input:checked + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label {
+  --a-button-background-color: var(--fq-accent);
+  --a-button-text-color: var(--fq-accent-on);
+  --a-button-border-color: var(--fq-accent);
+  --a-button-hover-background-color: var(--fq-accent-hover);
+  --a-button-hover-text-color: var(--fq-accent-on);
+  --a-button-hover-border-color: var(--fq-accent-hover);
+  --a-button-active-background-color: var(--fq-accent-press);
+  --a-button-active-text-color: var(--fq-accent-on);
+  --a-button-active-border-color: var(--fq-accent-press);
+  --a-button-focus-background-color: var(--fq-accent-hover);
+  --a-button-focus-text-color: var(--fq-accent-on);
+  --a-button-focus-border-color: var(--fq-accent-hover);
+}
+.t-Button--hot.t-Button--simple,
+.a-Button--hot.t-Button--simple,
+.ui-button--hot.t-Button--simple,
+.a-CardView-button--hot.t-Button--simple,
+.apex-button-group input:checked + label.t-Button--simple,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--simple {
+  --a-button-border-color: var(--fq-accent);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--fq-accent-text);
+  --a-button-hover-text-color: var(--fq-accent-on);
+  --a-button-hover-border-color: var(--fq-accent-hover);
+  --a-button-active-border-color: var(--fq-accent-press);
+  --a-button-focus-border-color: var(--fq-accent);
+}
+.t-Button--hot.t-Button--link,
+.a-Button--hot.t-Button--link,
+.ui-button--hot.t-Button--link,
+.a-CardView-button--hot.t-Button--link,
+.apex-button-group input:checked + label.t-Button--link,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-shadow: none;
+  --a-button-text-color: var(--fq-accent-text);
+}
+.t-Button--hot.t-Button--noUI, .t-Button--hot.a-Button--noUI,
+.a-Button--hot.t-Button--noUI,
+.a-Button--hot.a-Button--noUI,
+.ui-button--hot.t-Button--noUI,
+.ui-button--hot.a-Button--noUI,
+.a-CardView-button--hot.t-Button--noUI,
+.a-CardView-button--hot.a-Button--noUI,
+.apex-button-group input:checked + label.t-Button--noUI,
+.apex-button-group input:checked + label.a-Button--noUI,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.t-Button--noUI,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label.a-Button--noUI {
+  --a-button-text-color: var(--fq-accent-text);
+  color: var(--fq-accent-text);
+}
+/* HUD-Dialog (app_ui: var(--a-button-primary-background-color, #0572CE)) */
+.ui-dialog--hud .ui-dialog-buttonset .ui-button--hot {
+  --a-button-background-color: var(--fq-accent);
+  --a-button-text-color: var(--fq-accent-on);
+}
+
+/* 6. Status: Fläche --fq-<s> + Schrift --fq-<s>-on; Kontur/Text --fq-<s>-text (≥ 4,5:1) */
+.t-Button--warning {
+  --a-button-background-color: var(--fq-warning);
+  --a-button-border-color: var(--fq-warning);
+  --a-button-hover-border-color: var(--fq-warning-hover);
+  --a-button-active-border-color: var(--fq-warning-hover);
+  --a-button-focus-border-color: var(--fq-warning-hover);
+  --a-button-text-color: var(--fq-warning-on);
+  --a-button-hover-background-color: var(--fq-warning-hover);
+  --a-button-hover-text-color: var(--fq-warning-on);
+  --a-button-active-background-color: var(--fq-warning);
+  --a-button-active-text-color: var(--fq-warning-on);
+  --a-button-focus-background-color: var(--fq-warning-hover);
+  --a-button-focus-text-color: var(--fq-warning-on);
+}
+.t-Button--warning.t-Button--simple {
+  --a-button-border-color: var(--fq-warning-text);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--fq-warning-text);
+  --a-button-hover-text-color: var(--fq-warning-on);
+  --a-button-hover-border-color: var(--fq-warning-hover);
+  --a-button-active-border-color: var(--fq-warning);
+  --a-button-focus-border-color: var(--fq-warning-text);
+}
+.t-Button--warning.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-shadow: none;
+  --a-button-text-color: var(--fq-warning-text);
+}
+.t-Button--warning.t-Button--noUI, .t-Button--warning.a-Button--noUI {
+  --a-button-text-color: var(--fq-warning-text);
+  color: var(--fq-warning-text);
+}
+
+.t-Button--success {
+  --a-button-background-color: var(--fq-success);
+  --a-button-border-color: var(--fq-success);
+  --a-button-hover-border-color: var(--fq-success-hover);
+  --a-button-active-border-color: var(--fq-success-hover);
+  --a-button-focus-border-color: var(--fq-success-hover);
+  --a-button-text-color: var(--fq-success-on);
+  --a-button-hover-background-color: var(--fq-success-hover);
+  --a-button-hover-text-color: var(--fq-success-on);
+  --a-button-active-background-color: var(--fq-success-hover);
+  --a-button-active-text-color: var(--fq-success-on);
+  --a-button-focus-background-color: var(--fq-success-hover);
+  --a-button-focus-text-color: var(--fq-success-on);
+}
+.t-Button--success.t-Button--simple {
+  --a-button-border-color: var(--fq-success-text);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--fq-success-text);
+  --a-button-hover-text-color: var(--fq-success-on);
+  --a-button-hover-border-color: var(--fq-success-hover);
+  --a-button-active-border-color: var(--fq-success-hover);
+  --a-button-focus-border-color: var(--fq-success-text);
+}
+.t-Button--success.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-shadow: none;
+  --a-button-text-color: var(--fq-success-text);
+}
+.t-Button--success.t-Button--noUI, .t-Button--success.a-Button--noUI {
+  --a-button-text-color: var(--fq-success-text);
+  color: var(--fq-success-text);
+}
+
+/* Danger: Rot (deutlich dunkler als der Akzent); .a-Button--danger zusätzlich, sonst Hover = Grau */
+.ui-button--danger,
+.t-Button--danger,
+.a-Button--danger {
+  --a-button-background-color: var(--fq-danger);
+  --a-button-border-color: var(--fq-danger);
+  --a-button-hover-border-color: var(--fq-danger-hover);
+  --a-button-active-border-color: var(--fq-danger-hover);
+  --a-button-focus-border-color: var(--fq-danger-hover);
+  --a-button-text-color: var(--fq-danger-on);
+  --a-button-hover-background-color: var(--fq-danger-hover);
+  --a-button-hover-text-color: var(--fq-danger-on);
+  --a-button-active-background-color: var(--fq-danger-hover);
+  --a-button-active-text-color: var(--fq-danger-on);
+  --a-button-focus-background-color: var(--fq-danger-hover);
+  --a-button-focus-text-color: var(--fq-danger-on);
+}
+.ui-button--danger.t-Button--simple,
+.t-Button--danger.t-Button--simple {
+  --a-button-border-color: var(--fq-danger-text);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--fq-danger-text);
+  --a-button-hover-text-color: var(--fq-danger-on);
+  --a-button-hover-border-color: var(--fq-danger-hover);
+  --a-button-active-border-color: var(--fq-danger-hover);
+  --a-button-focus-border-color: var(--fq-danger-text);
+}
+.ui-button--danger.t-Button--link,
+.t-Button--danger.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-shadow: none;
+  --a-button-text-color: var(--fq-danger-text);
+}
+.ui-button--danger.t-Button--noUI, .ui-button--danger.a-Button--noUI,
+.t-Button--danger.t-Button--noUI,
+.t-Button--danger.a-Button--noUI {
+  --a-button-text-color: var(--fq-danger-text);
+  color: var(--fq-danger-text);
+}
+
+/* Primary (Typ) = Magenta-Kontur mit Magenta-Schrift: die Marke als zweite Stufe neben der
+   Magenta-Fläche (Hot). Fläche wie der Standard-Button (hell ohne, dunkel Tafelgrau – bleibt auf fest
+   weißen App-Flächen lesbar); Hover, Fokus und Druck tönen die Fläche magenta, Schrift und Kontur bleiben.
+   Schrift --fq-accent-text ≥ 4,5 : 1 auf Seite, Tafel und Tönung; Kontur --fq-accent ≥ 3 : 1 (check-tokens). */
+.t-Button--primary {
+  --a-button-background-color: var(--fq-button-fill);
+  --a-button-text-color: var(--fq-accent-text);
+  --a-button-border-color: var(--fq-accent);
+  --a-button-hover-background-color: var(--fq-accent-tint);
+  --a-button-hover-text-color: var(--fq-accent-text);
+  --a-button-hover-border-color: var(--fq-accent);
+  --a-button-active-background-color: var(--fq-accent-tint);
+  --a-button-active-text-color: var(--fq-accent-text);
+  --a-button-active-border-color: var(--fq-accent);
+  --a-button-focus-background-color: var(--fq-accent-tint);
+  --a-button-focus-text-color: var(--fq-accent-text);
+  --a-button-focus-border-color: var(--fq-accent);
+}
+/* Simple = leisere Kontur wie bei allen Simple-Buttons, die Schrift bleibt Magenta; Hover zeigt die Magenta-Kante */
+.t-Button--primary.t-Button--simple {
+  --a-button-border-color: var(--fq-line-strong);
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--fq-accent-text);
+  --a-button-hover-text-color: var(--fq-accent-text);
+  --a-button-hover-border-color: var(--fq-accent);
+  --a-button-active-border-color: var(--fq-accent);
+  --a-button-focus-border-color: var(--fq-accent);
+}
+.t-Button--primary.t-Button--link {
+  --a-button-border-color: transparent;
+  --a-button-background-color: transparent;
+  --a-button-shadow: none;
+  --a-button-text-color: var(--fq-accent-text);
+}
+.t-Button--primary.t-Button--noUI, .t-Button--primary.a-Button--noUI {
+  --a-button-text-color: var(--fq-accent-text);
+  color: var(--fq-accent-text);
+}
+
+/* 7. Pill-Gruppen (t-Button--pillStart/pill/pillEnd): Außenseiten als Pille,
+      innen eine feine Naht (transparente Abdunklung → passt auf jede Fläche). */
+.t-Button--pillStart,
+.t-Button--pillEnd {
+  --a-button-border-radius: var(--fq-r-pill);
+}
+/* Kontur-Buttons teilen sich die Kante (UT: -1 px Versatz); gefüllte bekommen eine Naht */
+:is(.t-Button--hot, .t-Button--success, .t-Button--warning, .t-Button--danger):is(.t-Button--pill, .t-Button--pillEnd) {
+  border-inline-start-color: var(--fq-wash-press);
+}
+.t-Button--simple.t-Button--pill,
+.t-Button--simple.t-Button--pillEnd {
+  border-inline-start-color: var(--a-button-state-border-color, var(--a-button-type-border-color, var(--a-button-border-color)));
+}
+/* Ohne Fläche und Kante (noUI, Link) gibt es nichts zu trennen: eine Naht stünde als freier
+   Strich zwischen den Beschriftungen (bei Links wie ein Trennzeichen im Text). */
+.t-Button--noUI.t-Button--pill,
+.t-Button--noUI.t-Button--pillEnd,
+.t-Button--link.t-Button--pill,
+.t-Button--link.t-Button--pillEnd {
+  border-inline-start-color: transparent;
+}
+
+/* 8. Button-Gruppen: Radio-Gruppe als Segmentleiste, Ja/Nein als Pillen-Schalter --
+      Radio-Gruppe: Leiste mit Button-Kante und Trennern, gewähltes Segment magenta gefüllt;
+      Ja/Nein (apex-button-group): graue Pillen, die gewählte als Akzentpille (Auswahl = Akzent).
+      Zeilenhöhe/Polster kommen aus bridge.css (:root) und forms.css (Item Size large/xlarge). */
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input + label,
+.apex-button-group label {
+  --a-button-background-color: var(--fq-soft);
+  --a-button-text-color: var(--fq-ink);
+  --a-button-border-color: transparent;
+  --a-button-hover-background-color: var(--fq-soft-hover);
+  --a-button-hover-border-color: transparent;
+  --a-button-active-border-color: transparent;
+  --a-button-focus-border-color: transparent;
+  --a-button-border-radius: var(--fq-r-pill);
+  font-weight: var(--fq-fw-semibold);
+}
+.apex-button-group input:checked + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:checked + label {
+  font-weight: var(--fq-fw-bold);
+  border-radius: var(--fq-r-pill);
+}
+/* Fokus: UT zeichnet hart „outline: auto -webkit-focus-ring-color“ bei jedem :focus */
+.apex-button-group input:focus + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:focus + label {
+  outline: none;
+}
+.apex-button-group input:focus-visible + label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input:focus-visible + label {
+  outline: var(--ut-focus-outline, var(--fq-focus-outline));
+  outline-offset: var(--ut-focus-outline-offset, var(--fq-focus-ring-offset));
+  z-index: 2;
+}
+
+/* Segmentleiste (eine Options-Zeile; UT: Tabelle, bricht nie um und läuft bei schmaler Spalte
+   oder Item Size Large/X Large über die Spalte ins Nachbar-Label): fließende Zeile, die nur
+   zwischen den Segmenten umbricht. Umbrochene Zeilen füllen die Breite.
+   Kontur wie ein Kontur-Button: die Leiste trägt die Button-Kante (≥ 3 : 1 auf Seite und Tafel),
+   ihr Grund in derselben Farbe scheint durch 1-px-Fugen als Trenner zwischen den Segmenten und
+   zwischen umbrochenen Zeilen; die Segmente liegen in Feldfläche darüber. So liest sich die Gruppe
+   auch ohne Auswahl als Bedienelement (früher: graue Spur 1,17 : 1 gegen Weiß, ohne Trenner).
+   Eine Zeile = Pille (36 px inkl. Kante), umbrochen = gerundeter Block; clip rundet die Segmente.
+   Mehrzeilige Gitter (Number of Columns) bleiben UT-Tabelle (Spalten fluchten). */
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid:where(:has(> .apex-item-grid-row:only-child)) {
+  display: block;
+}
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid-row:where(:only-child) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fq-hairline);
+  border: var(--fq-hairline) solid var(--fq-button-edge);
+  border-radius: calc(var(--fq-control-h) / 2);   /* eine Zeile = Pille; umbrochen = gerundeter Block */
+  background-color: var(--fq-button-edge);        /* Trenner-Ton in den Fugen */
+  overflow: clip;
+}
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid-row:where(:only-child) > .apex-item-option > input + label {
+  border-block-width: 0;                          /* die Kante trägt die Leiste */
+  border-inline-width: 0;
+}
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid-row:where(:only-child) > .apex-item-option > input:not(:checked) + label {
+  --a-button-background-color: var(--fq-field);
+  --a-button-hover-background-color: var(--fq-hover);
+  --a-button-active-background-color: var(--fq-press);
+  --a-button-focus-background-color: var(--fq-hover);
+}
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid-row:where(:only-child) > .apex-item-option {
+  flex: 1 1 max-content;
+  min-inline-size: 0;
+}
+/* In der Segmentleiste sind die Segmente eckige Zellen; die Rundung der Leiste (clip) schneidet
+   die äußeren Ecken ab – auch umbrochen, wo UT (nur erste/letzte Option gerundet) eckige Ecken
+   über den Rand ragen ließe. Gleiche Selektoren wie UT Core („Horizontal Pills“, inkl. RTL), später geladen. */
+.t-Form-fieldContainer--radioButtonGroup .apex-item-grid .apex-item-grid-row:only-child .apex-item-option label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-grid .apex-item-grid-row:only-child .apex-item-option:first-of-type label,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-grid .apex-item-grid-row:only-child .apex-item-option:last-of-type label,
+.u-RTL .t-Form-fieldContainer--radioButtonGroup .apex-item-grid .apex-item-grid-row:only-child .apex-item-option:first-of-type label,
+.u-RTL .t-Form-fieldContainer--radioButtonGroup .apex-item-grid .apex-item-grid-row:only-child .apex-item-option:last-of-type label {
+  border-radius: 0;
+}
+/* Tastatur-Fokus in der Leiste: Ring nach innen (die Leiste schneidet am Rand ab) */
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid-row:only-child input:focus-visible + label {
+  outline: none;
+  box-shadow: var(--fq-focus-shadow-inset);
+}
+/* Deaktivierte Optionen sind je Label halbtransparent (app_ui/UT): Trenner und Kante leise,
+   sonst wirkt die Gruppe kräftiger als „deaktiviert“ */
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid-row:where(:only-child:has(input:disabled, label.is-disabled, label[disabled])) {
+  border-color: var(--fq-line);
+  background-color: var(--fq-line);
+}
+
+/* Schmal (< 640 px): UT legt die Pills per float auf 50/33 % Breite – lange Beschriftungen
+   brechen dann in 2–3 Zeilen um (ungleich hohe Segmente). Stattdessen fließende Zeile:
+   jedes Segment so breit wie sein Text, gleich hoch, Umbruch nur zwischen Segmenten. Nur ein
+   Segment, das allein breiter ist als die Zeile, bricht in sich um (steht dann allein in seiner
+   Zeile) – die Leiste schneidet am Rand ab und ließe sonst Text verschwinden. */
+@media (max-width: 639px) {
+  .t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-grid-row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc .apex-item-option {
+    float: none;
+    flex: 1 0 max-content;
+    max-inline-size: 100%;
+  }
+}
+
+/* 9. Zähler (26.1 data-count) und Badge im Label: Akzentpunkt wie an Kopf-Symbolen */
+.t-Button {
+  --a-button-count-background-color: var(--fq-accent);
+  --a-button-count-text-color: var(--fq-accent-on);
+}
+.t-Button[data-count]:after {
+  font-size: var(--fq-fs-xs);
+  font-weight: var(--fq-fw-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--fq-lh-xs);
+  border-radius: var(--fq-r-pill);
+}
+.t-Button-badge {
+  min-inline-size: 1.125rem;
+  padding-inline: calc(var(--fq-space-1) + 1px);
+  border-radius: var(--fq-r-pill);
+  background-color: var(--a-button-count-background-color);
+  color: var(--a-button-count-text-color);
+  font-size: var(--fq-fs-xs);
+  font-weight: var(--fq-fw-bold);
+  line-height: var(--fq-lh-xs);
+  vertical-align: baseline;
+}
+.t-Button--hot .t-Button-badge {
+  background-color: var(--fq-accent-on);
+  color: var(--fq-accent);
+}
+
+/* 10. Font-APEX-Modifier (.fa:after): ausgestanzter Kreis in der aktuellen Button-Fläche */
+.t-Button .fa:after,
+.a-Button .fa:after {
+  background-color: var(--a-button-state-background-color, var(--a-button-background-color, var(--fq-surface)));
+}
+.t-Button.t-Button--noUI .fa:after,
+.t-Button.t-Button--link .fa:after,
+.t-Button.t-Button--simple .fa:after,
+.a-Button.a-Button--noUI .fa:after {
+  background-color: var(--fq-surface);
+}
+.t-Button.t-Button--simple .fa:after {
+  background-color: var(--a-button-state-background-color, var(--fq-surface));
+}
+.t-Button--danger .fa:after,
+.t-Button--simple.t-Button--danger:hover .fa:after { background-color: var(--a-button-state-background-color, var(--fq-danger)); }
+.t-Button--success .fa:after,
+.t-Button--simple.t-Button--success:hover .fa:after { background-color: var(--a-button-state-background-color, var(--fq-success)); }
+.t-Button--primary .fa:after,
+.t-Button--simple.t-Button--primary:hover .fa:after { background-color: var(--a-button-state-background-color, var(--a-button-background-color, var(--fq-surface))); }
+.t-Button--warning .fa:after,
+.t-Button--simple.t-Button--warning:hover .fa:after { background-color: var(--a-button-state-background-color, var(--fq-warning)); }
+.t-Button--hot .fa:after,
+.t-Button--simple.t-Button--hot:hover .fa:after { background-color: var(--a-button-state-background-color, var(--fq-accent)); }
+
+/* 11. Deaktiviert und beschäftigt ------------------------------------------ */
+.t-Button.is-disabled, .t-Button[disabled],
+.a-Button.is-disabled,
+.a-Button[disabled],
+.ui-button.is-disabled,
+.ui-button[disabled],
+.a-CardView-button.is-disabled,
+.a-CardView-button[disabled],
+.apex-button-group label.is-disabled,
+.apex-button-group label[disabled],
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input + label.is-disabled,
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc input + label[disabled],
+.t-Form-helpButton.is-disabled,
+.t-Form-helpButton[disabled] {
+  box-shadow: none;
+}
+/* Busy: aria-busy + apex.util.showSpinner() im Button → kleiner Kreisel in Schriftfarbe */
+.t-Button[aria-busy="true"],
+.a-Button[aria-busy="true"],
+.ui-button[aria-busy="true"] {
+  cursor: progress;
+}
+.t-Button .u-Processing,
+.a-Button .u-Processing,
+.ui-button .u-Processing {
+  --a-spinner-size: var(--a-button-icon-size, 1rem);
+  --a-spinner-container-padding: 0px;
+  --a-spinner-container-background-color: transparent;
+  --a-spinner-container-shadow: none;
+  --a-spinner-border-width: 2px;
+  --a-spinner-color: currentColor;
+  --a-spinner-border-color: color-mix(in srgb, currentColor 25%, transparent);
+  inset-block-start: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 12. Buttons IN Feldern (Popup LOV, Kalender, Farbwähler, Passwort): Teil des Feldes */
+.a-Button--popupLOV,
+.a-Button--calendar,
+.a-Button--colorPicker,
+.t-Button--passwordVisibility {
+  --a-button-background-color: var(--fq-field);
+  --a-button-border-color: var(--a-field-input-border-color);
+  --a-button-text-color: var(--fq-muted);
+  --a-button-hover-background-color: var(--fq-hover);
+  --a-button-hover-border-color: var(--a-field-input-border-color);
+  --a-button-hover-text-color: var(--fq-ink);
+  --a-button-active-background-color: var(--fq-soft);
+  --a-button-active-border-color: var(--a-field-input-border-color);
+  --a-button-focus-background-color: var(--fq-hover);
+  --a-button-focus-border-color: var(--a-field-input-border-color);
+  --a-button-shadow: none;
+  --a-button-font-weight: var(--fq-fw-regular);
+}
+.a-Button--comboSelect {
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-text-color: var(--fq-muted);
+  --a-button-hover-background-color: var(--fq-hover);
+  --a-button-shadow: none;
+}
+
+/* Hilfe-Button: leise, rund, ohne Kante */
+.t-Form-helpButton {
+  --a-button-border-color: transparent;
+  --a-button-hover-border-color: transparent;
+  --a-button-active-border-color: transparent;
+  --a-button-focus-border-color: transparent;
+  --a-button-text-color: var(--fq-muted);
+  --a-button-hover-text-color: var(--fq-ink);
+  --a-button-hover-background-color: var(--fq-wash-hover);
+  --a-button-active-background-color: var(--fq-wash-press);
+  --a-button-border-radius: var(--fq-r-pill);
+}
+
+/* 13. IR/IG-Steuer-Buttons (Vita hart #f8f8f8 / Vita-Dark #494a4b) */
+.a-IG-button.a-IG-button--controls,
+.a-IRR-button.a-IRR-button--controls {
+  --a-button-background-color: transparent;
+}

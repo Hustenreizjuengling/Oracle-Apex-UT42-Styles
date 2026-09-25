@@ -1,0 +1,562 @@
+/* ==========================================================================
+   Loden – Mapping der eigenen Tokens auf UT- (--ut-*) und APP_UI-Tokens (--a-*)
+   Modusunabhängig: alle Farben kommen aus --tonal-* (tokens-light/-dark.css).
+   Enthält auch alle :root-Hex-Kopien der Vita-Primärfarbe (#056AC8).
+   ========================================================================== */
+:root {
+  /* ---- Geometrie & Typografie (modusunabhängige Theme-Tokens) ---------- */
+  --tonal-radius-sheet: 1.75rem;   /* 28px – der Bogen */
+  --tonal-radius-l: 1.25rem;       /* 20px – Regionen, Karten, Dialoge */
+  --tonal-radius-m: .875rem;       /* 14px – Tabellenkörper, Menüs, Popups */
+  --tonal-radius-s: .625rem;       /* 10px – Felder, Menüeinträge */
+  --tonal-radius-xs: .375rem;      /*  6px – Checkbox */
+  --tonal-radius-pill: 999px;
+  --tonal-font: "Figtree Variable", "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* ---- Schrift ---------------------------------------------------------- */
+  --a-base-font-family: var(--tonal-font);
+  --a-base-font-weight-normal: 400;
+  --a-base-font-weight-semibold: 600;
+  --a-base-font-weight-bold: 700;
+  --ut-alternate-heading-font-family: var(--tonal-font);   /* Vita: Serif */
+  --ut-alternate-heading-font-weight: 700;
+
+  /* ---- Palette & Status -------------------------------------------------- */
+  --ut-palette-primary: var(--tonal-primary);
+  --ut-palette-primary-contrast: var(--tonal-on-primary);
+  --ut-palette-primary-shade: var(--tonal-primary-soft);
+  --ut-palette-primary-text: var(--tonal-link);
+  --ut-palette-primary-alt: var(--tonal-primary-container);
+  --ut-palette-primary-alt-contrast: var(--tonal-on-primary-container);
+  --ut-palette-primary-alt-shade: var(--tonal-primary-soft);
+  --ut-palette-primary-alt-text: var(--tonal-link);
+  --ut-palette-success: var(--tonal-success);
+  --ut-palette-success-contrast: var(--tonal-on-success);
+  --ut-palette-success-shade: var(--tonal-success-container);
+  --ut-palette-success-text: var(--tonal-success-text);
+  --ut-palette-info: var(--tonal-info);
+  --ut-palette-info-contrast: var(--tonal-on-info);
+  --ut-palette-info-shade: var(--tonal-info-container);
+  --ut-palette-info-text: var(--tonal-info-text);
+  --ut-palette-warning: var(--tonal-warning);
+  --ut-palette-warning-contrast: var(--tonal-on-warning);
+  --ut-palette-warning-shade: var(--tonal-warning-container);
+  --ut-palette-warning-text: var(--tonal-warning-text);
+  --ut-palette-danger: var(--tonal-danger);
+  --ut-palette-danger-contrast: var(--tonal-on-danger);
+  --ut-palette-danger-shade: var(--tonal-danger-container);
+  --ut-palette-danger-text: var(--tonal-danger-text);
+  --ut-palette-generic: var(--tonal-panel-2);
+  --ut-palette-generic-contrast: var(--tonal-text);
+  --ut-palette-generic-shade: var(--tonal-panel);
+  --ut-palette-generic-text: var(--tonal-text);
+
+  /* ---- Links & Fokus ---------------------------------------------------- */
+  --ut-link-text-color: var(--tonal-link);
+  --ut-focus-outline-color: var(--tonal-focus);
+  --ut-focus-outline: 2px solid var(--tonal-focus);
+  --ut-focus-outline-offset: 2px;
+  --a-checkbox-outline-color: var(--tonal-focus);
+
+  /* ---- Generische Komponente ------------------------------------------- */
+  --ut-component-background-color: var(--tonal-panel);
+  --ut-component-border-color: var(--tonal-line);
+  --ut-component-border-width: 1px;
+  --ut-component-border-radius: var(--tonal-radius-l);
+  --ut-component-box-shadow: var(--tonal-shadow-float);
+  --ut-component-highlight-background-color: var(--tonal-hover);
+  --ut-component-toolbar-background-color: var(--tonal-panel-2);
+  --ut-component-inner-border-color: var(--tonal-line);
+  --ut-component-text-default-color: var(--tonal-text);
+  --ut-component-text-title-color: var(--tonal-text);
+  --ut-component-text-subtitle-color: var(--tonal-text);
+  --ut-component-text-muted-color: var(--tonal-text-muted);
+  --ut-component-icon-background-color: var(--tonal-primary-container);
+  --ut-component-icon-color: var(--tonal-on-primary-container);
+  --ut-component-badge-background-color: var(--tonal-panel-2);
+  --ut-component-badge-text-color: var(--tonal-text);
+  --ut-component-badge-border-radius: var(--tonal-radius-pill);
+  --ut-component-pre-background-color: var(--tonal-panel-2);
+  --ut-shadow-sm: none;
+  --ut-shadow-md: var(--tonal-shadow-float);
+  --ut-shadow-lg: var(--tonal-shadow-dialog);
+  --ut-border-radius-sm: .5rem;
+  --ut-border-radius-md: .75rem;
+  --ut-border-radius-lg: 1.25rem;
+  --ut-border-radius: var(--ut-border-radius-md);
+
+  /* ---- Seite, Bogen, Spalten, Footer ----------------------------------- */
+  --ut-body-background-color: var(--tonal-frame);
+  --ut-body-text-color: var(--tonal-text);
+  --ut-body-main-background-color: var(--tonal-sheet);
+  --ut-body-content-padding-x: 1.5rem;
+  --ut-body-content-padding-y: 1.25rem;
+  --ut-xs-body-content-padding-x: .75rem;
+  --ut-xs-body-content-padding-y: .75rem;
+  --ut-body-sidebar-background-color: var(--tonal-sheet);
+  --ut-body-sidebar-text-color: var(--tonal-text);
+  --ut-body-sidebar-border-color: var(--tonal-line);
+  --ut-body-actions-background-color: var(--tonal-frame);
+  --ut-body-actions-text-color: var(--tonal-text);
+  --ut-body-actions-border-width: 0px;
+  --ut-body-actionstoggle-background-color: var(--tonal-frame);
+  --ut-body-actionstoggle-hover-background-color: var(--tonal-secondary);
+  --ut-footer-background-color: transparent;
+  --ut-footer-border-color: transparent;
+  --ut-footer-text-color: var(--tonal-text-muted);
+  --ut-footer-top-background-color: var(--tonal-secondary);
+  --ut-footer-top-text-color: var(--tonal-on-secondary);
+  --ut-footer-top-border-color: transparent;
+  --ut-footer-top-opacity: 1;
+  --ut-footer-top-box-shadow: none;
+
+  /* ---- Header (verschmilzt mit dem Rahmen) ------------------------------ */
+  --ut-header-height: 4rem;
+  --ut-header-padding-x: .75rem;
+  --ut-header-padding-y: .75rem;
+  --ut-header-background-color: var(--tonal-frame);
+  --ut-header-text-color: var(--tonal-text);
+  --ut-header-border-width: 0px;
+  --ut-header-border-color: transparent;
+  --ut-header-box-shadow: none;
+  --ut-logo-font-size: 1.125rem;
+  --ut-logo-line-height: 1.5rem;
+  --ut-logo-font-weight: 700;
+  --ut-logo-text-color: var(--tonal-primary);
+  --ut-header-controls-icon-border-radius: 1rem;
+  --ut-navbar-button-badge-background-color: var(--tonal-primary);
+  --ut-navbar-button-badge-border-radius: var(--tonal-radius-pill);
+  /* Top-Navigation (Menüleiste) */
+  --ut-header-menubar-background-color: var(--tonal-frame);
+  --ut-header-menubar-item-text-color: var(--tonal-text-muted);
+  --ut-header-menubar-item-current-background-color: var(--tonal-primary-container);
+  --ut-header-menubar-item-current-text-color: var(--tonal-on-primary-container);
+  --ut-header-menubar-item-hover-background-color: var(--tonal-secondary);
+  --ut-header-menubar-item-hover-text-color: var(--tonal-text);
+  --ut-header-menubar-item-border-color: transparent;
+  --ut-header-menubar-item-split-icon-color: currentColor;
+  --ut-header-menubar-item-split-border-color: transparent;
+  /* Tabs-Navigation (mobil unten) */
+  --ut-navtabs-background-color: var(--tonal-frame);
+  --ut-navtabs-text-color: var(--tonal-text-muted);
+  --ut-navtabs-item-border-color: transparent;
+  --ut-navtabs-item-active-background-color: var(--tonal-primary-container);
+  --ut-navtabs-item-active-text-color: var(--tonal-on-primary-container);
+  --ut-navtabs-item-hover-background-color: var(--tonal-secondary);
+  --ut-navtabs-item-active-highlight-color: transparent;
+
+  /* ---- Side-Navigation (Tree Nav) --------------------------------------- */
+  --ut-nav-width: 16.5rem;
+  --ut-nav-collapsed-icon-width: 4.5rem;
+  --ut-body-nav-background-color: var(--tonal-frame);
+  --ut-body-nav-text-color: var(--tonal-text-muted);
+  --ut-body-nav-border-width: 0px;
+  --ut-body-nav-border-color: transparent;
+  --ut-body-nav-scrollbar-thumb-background-color: var(--tonal-line-strong);
+  --ut-body-nav-scrollbar-track-background-color: var(--tonal-frame);
+  --a-treeview-node-selected-background-color: var(--tonal-primary-container);
+  --a-treeview-node-selected-text-color: var(--tonal-on-primary-container);
+  --a-treeview-node-selected-icon-color: var(--tonal-on-primary-container);
+  --a-treeview-node-focused-background-color: var(--tonal-primary-container);
+  --a-treeview-node-focused-text-color: var(--tonal-on-primary-container);
+  --a-treeview-node-focused-shadow: inset 0 0 0 2px var(--tonal-focus);
+  --a-treeview-node-hover-background-color: var(--tonal-hover);
+  --a-treeview-node-icon-color: inherit;
+  --ut-treeview-badge-background-color: var(--tonal-primary);
+  --ut-treeview-badge-text-color: var(--tonal-on-primary);
+  --ut-treeview-badge-border-radius: var(--tonal-radius-pill);
+
+  /* ---- Title-Bar / Breadcrumb ------------------------------------------- */
+  --ut-body-title-background-color: var(--tonal-sheet);
+  --ut-body-title-text-color: var(--tonal-text);
+  --ut-body-title-border-width: 0px;
+  --ut-body-title-box-shadow: none;
+  --ut-body-title-backdrop-filter: none;
+  --ut-breadcrumb-padding-x: 1.5rem;
+  --ut-breadcrumb-padding-y: 1.25rem;
+  --ut-breadcrumb-item-text-color: var(--tonal-text-muted);
+  --ut-breadcrumb-item-active-text-color: var(--tonal-text);
+  --ut-breadcrumb-item-font-size: .8125rem;
+  --ut-breadcrumb-item-line-height: 1.25rem;
+  --ut-breadcrumb-item-sep-opacity: .7;
+  --ut-breadcrumb-item-sep-spacing: .375rem;
+  --ut-breadcrumb-title-font-size: 1.75rem;
+  --ut-breadcrumb-title-line-height: 2.25rem;
+  --ut-breadcrumb-title-font-weight: 700;
+  --ut-hero-region-title-text-color: var(--tonal-text);
+  --ut-hero-region-icon-border-radius: var(--tonal-radius-l);
+
+  /* ---- Regionen, Content Block, Button Container, Wizard ------------------ */
+  --ut-region-background-color: var(--tonal-panel);
+  --ut-region-text-color: var(--tonal-text);
+  --ut-region-header-background-color: var(--tonal-panel);
+  --ut-region-header-text-color: var(--tonal-text);
+  --ut-region-border-width: 0px;
+  --ut-region-border-color: transparent;
+  --ut-region-border-radius: var(--tonal-radius-l);
+  --ut-region-box-shadow: none;
+  --ut-region-header-border-color: transparent;
+  --ut-region-header-padding-y: 1rem;
+  --ut-region-header-padding-x: 1.25rem;
+  --ut-region-body-padding-y: 1rem;
+  --ut-region-body-padding-x: 1.25rem;
+  --ut-region-buttons-padding-x: 1.25rem;
+  --ut-region-font-size: .875rem;
+  --ut-region-line-height: 1.25rem;
+  --ut-region-margin: 1.25rem;
+  --ut-content-block-shadow-background-color: var(--tonal-panel);
+  --ut-content-block-light-background-color: var(--tonal-panel);
+  --ut-content-block-header-font-weight: 700;
+  --ut-button-region-background-color: var(--tonal-panel);
+  --ut-button-region-border-radius: var(--tonal-radius-l);
+  --ut-button-region-border-color: transparent;
+  --ut-button-region-border-width: 0px;
+  --ut-button-region-box-shadow: none;
+  --ut-wizard-background-color: var(--tonal-panel);
+  --ut-wizard-header-background-color: var(--tonal-panel-2);
+  --ut-wizard-border-color: transparent;
+  --ut-wizard-box-shadow: none;
+  --ut-wp-track-color: var(--tonal-line-strong);
+  --ut-wp-marker-color: var(--tonal-line-strong);
+  --ut-wp-active-background-color: var(--tonal-primary);
+  --ut-wp-complete-background-color: var(--tonal-primary-container);
+  --ut-wp-checkmark-color: var(--tonal-on-primary-container);
+
+  /* ---- Alerts ----------------------------------------------------------- */
+  --ut-alert-horizontal-border-radius: var(--tonal-radius-l);
+  --ut-alert-wizard-border-radius: var(--tonal-radius-l);
+  --ut-alert-type-border-radius: var(--tonal-radius-l);
+  --ut-alert-border-width: 0px;
+  --ut-alert-box-shadow: none;
+
+  /* ---- Buttons (Basis = tonaler Button) ---------------------------------- */
+  --a-button-border-radius: var(--tonal-radius-pill);
+  --a-button-padding-y: .5rem;
+  --a-button-padding-x: 1rem;
+  --a-button-font-size: .875rem;
+  --a-button-line-height: 1.25rem;
+  --a-button-font-weight: 600;
+  --a-button-gap-x: .5rem;
+  --a-button-icon-spacing: .5rem;
+  --a-button-background-color: var(--tonal-secondary);
+  --a-button-text-color: var(--tonal-on-secondary);
+  --a-button-border-color: transparent;
+  --a-button-shadow: none;
+  --a-button-hover-background-color: var(--tonal-secondary-hover);
+  --a-button-hover-text-color: var(--tonal-on-secondary);
+  --a-button-hover-border-color: transparent;
+  --a-button-hover-shadow: none;
+  --a-button-active-background-color: var(--tonal-secondary-active);
+  --a-button-active-border-color: transparent;
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--a-button-hover-background-color);
+  --a-button-focus-border-color: transparent;
+  --a-button-focus-shadow: none;
+  --a-button-count-background-color: var(--tonal-primary);   /* Hex-Kopie in Vita */
+  --a-button-count-text-color: var(--tonal-on-primary);
+
+  /* ---- Formulare --------------------------------------------------------- */
+  --a-field-input-font-size: .875rem;
+  --a-field-input-line-height: 1.25rem;
+  --a-field-input-padding-y: .625rem;
+  --a-field-input-padding-x: .75rem;
+  --a-field-input-background-color: var(--tonal-field);
+  --a-field-input-text-color: var(--tonal-text);
+  --a-field-input-border-color: transparent;
+  --a-field-input-border-width: 1px;
+  --a-field-input-border-style: solid;           /* 24.2-Vita: dashed */
+  --a-field-input-border-radius: var(--tonal-radius-s);
+  --a-field-input-shadow: inset 0 -1px 0 0 var(--tonal-outline);
+  --a-field-input-hover-background-color: var(--tonal-field-hover);
+  --a-field-input-hover-border-color: transparent;
+  --a-field-input-hover-text-color: var(--tonal-text);
+  --a-field-input-focus-background-color: var(--tonal-sheet);
+  --a-field-input-focus-border-color: var(--tonal-primary);   /* Hex-Kopie in Vita */
+  --a-field-input-focus-text-color: var(--tonal-text);
+  --a-field-placeholder-text-color: var(--tonal-text-muted);
+  --a-field-placeholder-opacity: 1;
+  --a-field-select-background-image: var(--tonal-select-arrow);
+  --a-filedrop-border-radius: var(--tonal-radius-l);
+  --a-filedrop-border-color: var(--tonal-outline);
+  --ut-field-label-text-color: var(--tonal-text-muted);
+  --ut-field-label-font-size: .8125rem;
+  --ut-field-label-line-height: 1.25rem;
+  --ut-field-label-font-weight: 500;
+  --ut-field-input-focus-icon-color: var(--tonal-primary);             /* Hex-Kopie */
+  --ut-field-fl-input-focus-icon-background-color: transparent;        /* Hex-Kopie */
+  --ut-field-fl-input-focus-icon-color: var(--tonal-primary);
+  --ut-field-input-icon-color: var(--tonal-text-muted);
+  --ut-field-required-text-color: var(--tonal-danger-text);
+  --a-form-required-asterisk-text-color: var(--tonal-danger-text);
+  --a-form-error-text-color: var(--tonal-danger-text);
+  --ut-field-inline-help-font-size: .75rem;
+  --ut-field-assistance-font-size: .75rem;
+  --ut-prepost-text-color: var(--tonal-text-muted);
+  --ut-pillbutton-padding-y: .375rem;
+  --ut-pillbutton-padding-x: .875rem;
+  --ut-pillbutton-font-size: .8125rem;
+
+  /* Checkbox / Radio */
+  --a-checkbox-size: 1.125rem;
+  --a-checkbox-border-width: 2px;
+  --a-checkbox-border-radius: var(--tonal-radius-xs);
+  --a-checkbox-background-color: transparent;
+  --a-checkbox-border-color: var(--tonal-outline);
+  --a-checkbox-shadow: none;
+  --a-checkbox-text-color: var(--tonal-on-primary);
+  --a-checkbox-hover-background-color: var(--tonal-hover);
+  --a-checkbox-checked-background-color: var(--tonal-primary);   /* Hex-Kopie in Vita */
+  --a-checkbox-checked-text-color: var(--tonal-on-primary);
+  --a-checkbox-label-font-size: .875rem;
+  --a-checkbox-label-spacing-x: .5rem;
+  --a-checkbox-icon-size: .75rem;
+
+  /* Switch */
+  --a-switch-width: 2.75rem;
+  --a-switch-padding-y: .1875rem;
+  --a-switch-padding-x: .1875rem;
+  --a-switch-toggle-width: 1.125rem;
+  --a-switch-toggle-height: 1.125rem;
+  --a-switch-background-color: var(--tonal-switch-track);
+  --a-switch-hover-background-color: var(--tonal-switch-track);
+  --a-switch-border-color: transparent;
+  --a-switch-shadow: none;
+  --a-switch-checked-background-color: var(--tonal-primary);
+  --a-switch-checked-hover-background-color: var(--tonal-primary-hover);
+  --a-switch-toggle-background-color: var(--tonal-switch-thumb);
+  --a-switch-toggle-checked-background-color: var(--tonal-switch-thumb-on);
+  --a-switch-toggle-checked-hover-background-color: var(--tonal-switch-thumb-on);
+  --a-switch-toggle-checked-active-background-color: var(--tonal-switch-thumb-on);
+  --a-switch-toggle-border-color: transparent;
+  --a-switch-focused-shadow: 0 0 0 2px var(--tonal-sheet), 0 0 0 4px var(--tonal-focus);
+
+  /* Chips, Star Rating, Prozent */
+  --a-chip-border-radius: var(--tonal-radius-pill);
+  --a-chip-padding-y: .1875rem;
+  --a-chip-padding-x: .5rem;
+  --a-chip-font-size: .8125rem;
+  --a-chip-border-color: transparent;
+  --a-chip-applied-background-color: var(--tonal-primary-container);
+  --a-chip-applied-hover-background-color: var(--tonal-primary-container-hover);
+  --a-popuplov-chip-background-color: var(--tonal-primary-container);
+  --a-starrating-stars-bg-color: var(--tonal-line-strong);
+  --a-percent-chart-border-radius: var(--tonal-radius-pill);
+  --a-percent-chart-border-color: transparent;
+  --a-percent-chart-bar-border-color: transparent;
+
+  /* Date Picker */
+  --a-datepicker-background-color: var(--tonal-float);
+  --a-datepicker-border-radius: var(--tonal-radius-l);
+  --a-datepicker-header-background-color: transparent;
+  --a-datepicker-calendar-background-color: transparent;
+  --a-datepicker-calendar-title-background-color: transparent;
+  --a-datepicker-calendar-header-background-color: transparent;
+  --a-datepicker-calendar-week-background-color: transparent;
+  --a-datepicker-footer-background-color: transparent;
+  --a-datepicker-calendar-day-hover-background-color: var(--tonal-hover);
+  --a-datepicker-calendar-day-selected-background-color: var(--tonal-primary);
+  --a-datepicker-calendar-day-selected-text-color: var(--tonal-on-primary);
+  --a-datepicker-calendar-day-selected-border-color: var(--tonal-primary);
+
+  /* ---- Menüs, Dialoge, Tooltips ----------------------------------------- */
+  --a-menu-background-color: var(--tonal-float);
+  --a-menu-text-color: var(--tonal-text);
+  --a-menu-border-color: var(--tonal-line);
+  --a-menu-border-radius: var(--tonal-radius-m);
+  --a-menu-padding-y: .375rem;
+  --a-menu-padding-x: .375rem;
+  --a-menu-item-border-radius: var(--tonal-radius-s);
+  --a-menu-font-size: .875rem;
+  --a-menu-line-height: 1.25rem;
+  --a-menu-shadow: var(--tonal-shadow-float);
+  --a-menu-focused-background-color: var(--tonal-secondary);    /* Hex-Kopie in Vita */
+  --a-menu-focused-text-color: var(--tonal-on-secondary);
+  --a-menubar-background-color: var(--tonal-panel);              /* Vita-Dark-Lücke */
+  --a-menubar-text-color: var(--tonal-text);
+  --a-menubar-item-border-color: transparent;
+  --a-menubar-item-current-background-color: var(--tonal-primary-container);
+  --a-menubar-item-current-text-color: var(--tonal-on-primary-container);
+  --jui-dialog-background-color: var(--tonal-float);
+  --jui-dialog-text-color: var(--tonal-text);
+  --jui-dialog-border-radius: 1.5rem;
+  --jui-dialog-shadow: var(--tonal-shadow-dialog);
+  --jui-dialog-titlebar-padding-y: 1rem;
+  --jui-dialog-titlebar-padding-x: 1.25rem;
+  --jui-dialog-titlebar-border-width: 0px;
+  --jui-dialog-title-font-size: 1.125rem;
+  --jui-dialog-title-line-height: 1.5rem;
+  --jui-dialog-buttonpane-background-color: transparent;
+  --jui-dialog-buttonpane-border-color: transparent;
+  --jui-dialog-font-size: .875rem;
+  --jui-overlay-background-color: var(--tonal-scrim);
+  --jui-tooltip-background-color: var(--tonal-text);
+  --jui-tooltip-text-color: var(--tonal-text-inverse);
+  --jui-tooltip-border-color: transparent;
+  --jui-tooltip-border-radius: .5rem;
+  --a-tooltip-background-color: var(--tonal-text);
+  --a-tooltip-text-color: var(--tonal-text-inverse);
+  --ojet-tooltip-primary-text-color: var(--tonal-text-inverse);
+  --ojet-tooltip-secondary-text-color: var(--tonal-text-inverse);
+
+  /* ---- Tabs / RDS -------------------------------------------------------- */
+  --ut-tabs-item-font-size: .875rem;
+  --ut-tabs-item-line-height: 1.25rem;
+  --ut-tabs-item-text-color: var(--tonal-text-muted);
+  --ut-tabs-item-active-text-color: var(--tonal-on-secondary);
+  --ut-tabs-item-active-background-color: var(--tonal-secondary);
+  --ut-tabs-item-active-font-weight: 600;
+  --ut-tabs-item-active-highlight-color: transparent;
+  --ut-tabs-item-hint-highlight-width: 0px;
+  --ut-tabs-item-hover-background-color: var(--tonal-hover);
+
+  /* ---- Badges, Avatare, Links List -------------------------------------- */
+  --ut-badge-border-radius: var(--tonal-radius-pill);
+  --ut-badge-background-color: var(--tonal-panel-2);
+  --ut-avatar-border-radius: .75rem;
+  --ut-linkslist-hover-background-color: var(--tonal-hover);
+  --ut-linkslist-arrow-color: var(--tonal-text-muted);
+
+  /* ---- Reports: Grid View (IR/IG), Classic Report, Toolbar ---------------- */
+  --a-gv-font-size: .8125rem;
+  --a-gv-line-height: 1.25rem;
+  --a-gv-background-color: var(--tonal-sheet);
+  --a-gv-border-color: transparent;
+  --a-gv-cell-border-color: var(--tonal-line);
+  --a-gv-header-cell-border-color: var(--tonal-line);
+  --a-gv-header-background-color: var(--tonal-panel-2);
+  --a-gv-header-text-color: var(--tonal-text-muted);
+  --a-gv-header-font-weight: 600;
+  --a-gv-text-color: var(--tonal-text);
+  --a-gv-row-hover-background-color: color-mix(in srgb, var(--tonal-text) 5%, var(--tonal-sheet));
+  --a-gv-selected-background-color: var(--tonal-primary-soft);
+  --a-gv-selected-text-color: var(--tonal-text);
+  --a-gv-deleted-background-color: var(--tonal-panel-2);
+  --a-gv-grandtotal-background-color: var(--tonal-panel-2);
+  --a-gv-row-disabled-background-color: var(--tonal-panel-2);
+  --a-gv-pagination-button-selected-background-color: var(--tonal-primary-container);
+  --a-gv-pagination-button-selected-text-color: var(--tonal-on-primary-container);
+  --a-gv-pagination-button-hover-background-color: var(--tonal-hover);
+  --a-toolbar-background-color: transparent;
+  --a-toolbar-border-color: transparent;
+  --a-toolbar-sep-border-color: var(--tonal-line);
+  --a-toolbar-item-spacing: .5rem;
+  --a-report-controls-cell-label-background-color: var(--tonal-sheet);
+  --a-report-controls-cell-label-text-color: var(--tonal-text);
+  --a-report-controls-border-color: transparent;
+  --a-report-controls-cell-border-radius: var(--tonal-radius-s);
+  --a-report-controls-input-border-radius: var(--tonal-radius-s);
+  --a-splitter-bar-background-color: var(--tonal-panel-2);
+  --ut-report-cell-font-size: .8125rem;
+  --ut-report-cell-line-height: 1.25rem;
+  --ut-report-cell-padding-y: .5rem;
+  --ut-report-cell-padding-x: .875rem;
+  --ut-report-cell-background-color: var(--tonal-sheet);
+  --ut-report-cell-border-color: var(--tonal-line);
+  --ut-report-cell-hover-background-color: color-mix(in srgb, var(--tonal-text) 5%, var(--tonal-sheet));
+  --ut-report-cell-alt-background-color: color-mix(in srgb, var(--tonal-text) 2.5%, var(--tonal-sheet));
+  --ut-report-header-cell-background-color: var(--tonal-panel-2);
+  --ut-report-header-cell-font-weight: 600;
+  --ut-report-header-cell-font-size: .8125rem;
+  --ut-report-header-cell-padding-y: .625rem;
+  --ut-report-header-cell-padding-x: .875rem;
+  --ut-report-header-background-color: var(--tonal-panel-2);
+  --ut-report-border-width: 0px;
+  --ut-report-pagination-link-border-radius: var(--tonal-radius-pill);
+  --ut-report-pagination-link-hover-background-color: var(--tonal-primary-container);
+  --ut-report-pagination-link-hover-text-color: var(--tonal-on-primary-container);
+
+  /* ---- Cards (a-CardView) – Hex-Kopien der Primärfarbe ------------------- */
+  --a-cv-background-color: var(--tonal-panel);
+  --a-cv-text-color: var(--tonal-text);
+  --a-cv-border-width: 0px;
+  --a-cv-border-color: transparent;
+  --a-cv-border-radius: var(--tonal-radius-l);
+  --a-cv-shadow: none;
+  --a-cv-hover-background-color: var(--tonal-panel-2);
+  --a-cv-hover-shadow: none;
+  --a-cv-active-shadow: none;
+  --a-cv-focus-border-color: var(--tonal-focus);
+  --a-cv-header-border-color: transparent;
+  --a-cv-actions-border-color: transparent;
+  --a-cv-icon-background-color: var(--tonal-primary-container);
+  --a-cv-icon-text-color: var(--tonal-on-primary-container);
+  --a-cv-initials-background-color: var(--tonal-primary-container);
+  --a-cv-initials-text-color: var(--tonal-on-primary-container);
+  --a-cv-subtitle-text-color: var(--tonal-text-muted);
+  --a-cv-subcontent-text-color: var(--tonal-text-muted);
+  --a-cv-badge-background-color: var(--tonal-secondary);
+  --a-cv-badge-border-radius: var(--tonal-radius-pill);
+  --a-cv-title-font-size: 1rem;
+  --a-cv-selected-background-color: var(--tonal-primary-soft);
+  --ut-cardlist-background-color: var(--tonal-panel);
+  --ut-cardlist-border-radius: var(--tonal-radius-l);
+  --ut-cardlist-box-shadow: none;
+  --ut-cardlist-wrap-border-width: 0px;
+  --a-resultsitem-background-color: var(--tonal-panel);
+  --a-resultsitem-border-color: transparent;
+  --a-resultsitem-border-radius: var(--tonal-radius-l);
+  --ut-resultsregion-background-color: var(--tonal-panel);
+
+  /* ---- Login ------------------------------------------------------------ */
+  --ut-login-page-background-color: var(--tonal-frame);
+  --ut-login-region-background-color: var(--tonal-sheet);
+  --ut-login-region-filter: none;
+  --ut-login-region-box-shadow: none;
+  --ut-login-region-border-width: 0px;
+  --ut-login-region-border-radius: var(--tonal-radius-sheet);
+  --ut-login-region-padding: 2.5rem;
+  --ut-login-region-max-width: 27rem;
+  --ut-login-logo-border-radius: var(--tonal-radius-l);
+
+  /* ---- Charts (Oracle JET) ---------------------------------------------- */
+  --oj-core-text-color-primary: var(--tonal-text);
+  --oj-core-text-color-secondary: var(--tonal-text-muted);
+  --oj-core-divider-color: var(--tonal-line);
+
+  /* ---- Akzentpalette --u-color-1..45 ----------------------------------- */
+  --u-color-1: var(--tonal-accent-1);   --u-color-1-contrast: var(--tonal-accent-on);
+  --u-color-2: var(--tonal-accent-2);   --u-color-2-contrast: var(--tonal-accent-on);
+  --u-color-3: var(--tonal-accent-3);   --u-color-3-contrast: var(--tonal-accent-on);
+  --u-color-4: var(--tonal-accent-4);   --u-color-4-contrast: var(--tonal-accent-on);
+  --u-color-5: var(--tonal-accent-5);   --u-color-5-contrast: var(--tonal-accent-on);
+  --u-color-6: var(--tonal-accent-6);   --u-color-6-contrast: var(--tonal-accent-on);
+  --u-color-7: var(--tonal-accent-7);   --u-color-7-contrast: var(--tonal-accent-on);
+  --u-color-8: var(--tonal-accent-8);   --u-color-8-contrast: var(--tonal-accent-on);
+  --u-color-9: var(--tonal-accent-9);   --u-color-9-contrast: var(--tonal-accent-on);
+  --u-color-10: var(--tonal-accent-10); --u-color-10-contrast: var(--tonal-accent-on);
+  --u-color-11: var(--tonal-accent-11); --u-color-11-contrast: var(--tonal-accent-on);
+  --u-color-12: var(--tonal-accent-12); --u-color-12-contrast: var(--tonal-accent-on);
+  --u-color-13: var(--tonal-accent-13); --u-color-13-contrast: var(--tonal-accent-on);
+  --u-color-14: var(--tonal-accent-14); --u-color-14-contrast: var(--tonal-accent-on);
+  --u-color-15: var(--tonal-accent-15); --u-color-15-contrast: var(--tonal-accent-on);
+  --u-color-16: color-mix(in oklab, var(--tonal-accent-1) 55%, var(--tonal-accent-light-mix));  --u-color-16-contrast: var(--tonal-accent-on);
+  --u-color-17: color-mix(in oklab, var(--tonal-accent-2) 55%, var(--tonal-accent-light-mix));  --u-color-17-contrast: var(--tonal-accent-on);
+  --u-color-18: color-mix(in oklab, var(--tonal-accent-3) 55%, var(--tonal-accent-light-mix));  --u-color-18-contrast: var(--tonal-accent-on);
+  --u-color-19: color-mix(in oklab, var(--tonal-accent-4) 55%, var(--tonal-accent-light-mix));  --u-color-19-contrast: var(--tonal-accent-on);
+  --u-color-20: color-mix(in oklab, var(--tonal-accent-5) 55%, var(--tonal-accent-light-mix));  --u-color-20-contrast: var(--tonal-accent-on);
+  --u-color-21: color-mix(in oklab, var(--tonal-accent-6) 55%, var(--tonal-accent-light-mix));  --u-color-21-contrast: var(--tonal-accent-on);
+  --u-color-22: color-mix(in oklab, var(--tonal-accent-7) 55%, var(--tonal-accent-light-mix));  --u-color-22-contrast: var(--tonal-accent-on);
+  --u-color-23: color-mix(in oklab, var(--tonal-accent-8) 55%, var(--tonal-accent-light-mix));  --u-color-23-contrast: var(--tonal-accent-on);
+  --u-color-24: color-mix(in oklab, var(--tonal-accent-9) 55%, var(--tonal-accent-light-mix));  --u-color-24-contrast: var(--tonal-accent-on);
+  --u-color-25: color-mix(in oklab, var(--tonal-accent-10) 55%, var(--tonal-accent-light-mix)); --u-color-25-contrast: var(--tonal-accent-on);
+  --u-color-26: color-mix(in oklab, var(--tonal-accent-11) 55%, var(--tonal-accent-light-mix)); --u-color-26-contrast: var(--tonal-accent-on);
+  --u-color-27: color-mix(in oklab, var(--tonal-accent-12) 55%, var(--tonal-accent-light-mix)); --u-color-27-contrast: var(--tonal-accent-on);
+  --u-color-28: color-mix(in oklab, var(--tonal-accent-13) 55%, var(--tonal-accent-light-mix)); --u-color-28-contrast: var(--tonal-accent-on);
+  --u-color-29: color-mix(in oklab, var(--tonal-accent-14) 55%, var(--tonal-accent-light-mix)); --u-color-29-contrast: var(--tonal-accent-on);
+  --u-color-30: color-mix(in oklab, var(--tonal-accent-15) 55%, var(--tonal-accent-light-mix)); --u-color-30-contrast: var(--tonal-accent-on);
+  --u-color-31: color-mix(in oklab, var(--tonal-accent-1) 60%, var(--tonal-accent-dark-mix));  --u-color-31-contrast: #FFFFFF;
+  --u-color-32: color-mix(in oklab, var(--tonal-accent-2) 60%, var(--tonal-accent-dark-mix));  --u-color-32-contrast: #FFFFFF;
+  --u-color-33: color-mix(in oklab, var(--tonal-accent-3) 60%, var(--tonal-accent-dark-mix));  --u-color-33-contrast: #FFFFFF;
+  --u-color-34: color-mix(in oklab, var(--tonal-accent-4) 60%, var(--tonal-accent-dark-mix));  --u-color-34-contrast: #FFFFFF;
+  --u-color-35: color-mix(in oklab, var(--tonal-accent-5) 60%, var(--tonal-accent-dark-mix));  --u-color-35-contrast: #FFFFFF;
+  --u-color-36: color-mix(in oklab, var(--tonal-accent-6) 60%, var(--tonal-accent-dark-mix));  --u-color-36-contrast: #FFFFFF;
+  --u-color-37: color-mix(in oklab, var(--tonal-accent-7) 60%, var(--tonal-accent-dark-mix));  --u-color-37-contrast: #FFFFFF;
+  --u-color-38: color-mix(in oklab, var(--tonal-accent-8) 60%, var(--tonal-accent-dark-mix));  --u-color-38-contrast: #FFFFFF;
+  --u-color-39: color-mix(in oklab, var(--tonal-accent-9) 60%, var(--tonal-accent-dark-mix));  --u-color-39-contrast: #FFFFFF;
+  --u-color-40: color-mix(in oklab, var(--tonal-accent-10) 60%, var(--tonal-accent-dark-mix)); --u-color-40-contrast: #FFFFFF;
+  --u-color-41: color-mix(in oklab, var(--tonal-accent-11) 60%, var(--tonal-accent-dark-mix)); --u-color-41-contrast: #FFFFFF;
+  --u-color-42: color-mix(in oklab, var(--tonal-accent-12) 60%, var(--tonal-accent-dark-mix)); --u-color-42-contrast: #FFFFFF;
+  --u-color-43: color-mix(in oklab, var(--tonal-accent-13) 60%, var(--tonal-accent-dark-mix)); --u-color-43-contrast: #FFFFFF;
+  --u-color-44: color-mix(in oklab, var(--tonal-accent-14) 60%, var(--tonal-accent-dark-mix)); --u-color-44-contrast: #FFFFFF;
+  --u-color-45: color-mix(in oklab, var(--tonal-accent-15) 60%, var(--tonal-accent-dark-mix)); --u-color-45-contrast: #FFFFFF;
+}

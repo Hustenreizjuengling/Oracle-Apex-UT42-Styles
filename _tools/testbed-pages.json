@@ -1,0 +1,1815 @@
+{
+ "sets": {
+  "core": [
+   1101,
+   1201,
+   1500,
+   1601,
+   1402,
+   1410,
+   3100
+  ],
+  "shell": [
+   1101,
+   1102,
+   1103,
+   1105,
+   1107,
+   1109,
+   1113,
+   1114,
+   1115,
+   1116,
+   1120,
+   1121,
+   1122,
+   1123
+  ],
+  "regions": [
+   1201,
+   1202,
+   1203,
+   1204,
+   1205,
+   1206,
+   1207,
+   1208,
+   1209,
+   1210,
+   1250,
+   1907,
+   1923,
+   3110
+  ],
+  "lists": [
+   1301,
+   1303,
+   1304,
+   1305,
+   1306,
+   1307,
+   3810,
+   407
+  ],
+  "reports": [
+   1401,
+   1402,
+   1403,
+   1405,
+   1406,
+   1407,
+   1410,
+   1411,
+   1412,
+   1413,
+   1700,
+   1710,
+   1720
+  ],
+  "components": [
+   3001,
+   3002,
+   3003,
+   3004,
+   3005,
+   3006,
+   3007,
+   3008,
+   3100,
+   3110
+  ],
+  "forms": [
+   1500,
+   1600,
+   1601,
+   1903,
+   6100
+  ],
+  "dialogs": [
+   1910,
+   1911,
+   1915,
+   1916,
+   1917,
+   1111,
+   1112,
+   1912,
+   1918,
+   1920
+  ],
+  "misc": [
+   1800,
+   1901,
+   1902,
+   1906,
+   4000,
+   6302,
+   6303,
+   6304,
+   9999,
+   402,
+   405,
+   6307
+  ]
+ },
+ "apps": {
+  "9042": [
+   {
+    "id": 0,
+    "alias": "",
+    "name": "Page Zero",
+    "mode": "Normal",
+    "template": ""
+   },
+   {
+    "id": 100,
+    "alias": "REDIRECT",
+    "name": "Redirect",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 300,
+    "alias": "GRID-LAYOUT",
+    "name": "Grid Layout",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 400,
+    "alias": "DESIGN",
+    "name": "Design",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 401,
+    "alias": "DESIGN-OVERVIEW",
+    "name": "Design Overview",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 402,
+    "alias": "COLORS",
+    "name": "Colors",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 405,
+    "alias": "THEME-STYLES",
+    "name": "Theme Styles",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 407,
+    "alias": "NAVIGATION",
+    "name": "Navigation",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 421,
+    "alias": "NAVIGATION2",
+    "name": "Navigation",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 422,
+    "alias": "HEADERS-AND-FOOTERS",
+    "name": "Headers and Footers",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 423,
+    "alias": "DATA-ENTRY2",
+    "name": "Data Entry",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 424,
+    "alias": "TOUCH-GESTURES",
+    "name": "Touch Gestures",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 425,
+    "alias": "JQUERY-MOBILE-COMPONENTS",
+    "name": "jQuery Mobile Components",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 500,
+    "alias": "GETTING-STARTED",
+    "name": "Getting Started",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 700,
+    "alias": "LAYOUT",
+    "name": "Layout",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1100,
+    "alias": "PAGES",
+    "name": "Pages",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1101,
+    "alias": "STANDARD-PAGE-TEMPLATE-WITH-SIDE-NAVIGATION",
+    "name": "Standard Page Template with Side Navigation",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1102,
+    "alias": "STANDARD-PAGE-TEMPLATE-WITH-TOP-NAVIGATION",
+    "name": "Standard Page Template with Top Navigation",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1103,
+    "alias": "LEFT-COLUMN-PAGE-WITH-SIDE-NAVIGATION",
+    "name": "Left Column Page with Side Navigation",
+    "mode": "Normal",
+    "template": "Left Side Column"
+   },
+   {
+    "id": 1104,
+    "alias": "LEFT-COLUMN-PAGE-WITH-TOP-NAVIGATION",
+    "name": "Left Column Page with Top Navigation",
+    "mode": "Normal",
+    "template": "Left Side Column"
+   },
+   {
+    "id": 1105,
+    "alias": "RIGHT-COLUMN-PAGE-WITH-SIDE-NAVIGATION",
+    "name": "Right Column Page with Side Navigation",
+    "mode": "Normal",
+    "template": "Right Side Column"
+   },
+   {
+    "id": 1106,
+    "alias": "RIGHT-COLUMN-PAGE-WITH-TOP-NAVIGATION",
+    "name": "Right Column Page with Top Navigation",
+    "mode": "Normal",
+    "template": "Right Side Column"
+   },
+   {
+    "id": 1107,
+    "alias": "MARQUEE-DETAIL-PAGE-WITH-SIDE-NAVIGATION",
+    "name": "Marquee Detail Page with Side Navigation",
+    "mode": "Normal",
+    "template": "Marquee"
+   },
+   {
+    "id": 1108,
+    "alias": "MARQUEE-DETAIL-PAGE-WITH-TOP-NAVIGATION",
+    "name": "Marquee Detail Page with Top Navigation",
+    "mode": "Normal",
+    "template": "Marquee"
+   },
+   {
+    "id": 1109,
+    "alias": "SIDE-COLUMNS-PAGE-WITH-SIDE-NAVIGATION",
+    "name": "Side Columns Page with Side Navigation",
+    "mode": "Normal",
+    "template": "Left and Right Side Columns"
+   },
+   {
+    "id": 1110,
+    "alias": "SIDE-COLUMNS-PAGE-WITH-TOP-NAVIGATION",
+    "name": "Side Columns Page with Top Navigation",
+    "mode": "Normal",
+    "template": "Left and Right Side Columns"
+   },
+   {
+    "id": 1111,
+    "alias": "STANDARD-DIALOG-PAGE",
+    "name": "Standard Dialog Page",
+    "mode": "Modal Dialog",
+    "template": "Modal Dialog"
+   },
+   {
+    "id": 1112,
+    "alias": "WIZARD-DIALOG-PAGE",
+    "name": "Wizard Dialog Page",
+    "mode": "Modal Dialog",
+    "template": "Wizard Modal Dialog"
+   },
+   {
+    "id": 1113,
+    "alias": "MINIMAL-PAGE-TEMPLATE",
+    "name": "Minimal Page Template",
+    "mode": "Normal",
+    "template": "Minimal (No Navigation)"
+   },
+   {
+    "id": 1114,
+    "alias": "LOGIN-PAGE-TEMPLATE",
+    "name": "Login Page Template",
+    "mode": "Normal",
+    "template": "Login"
+   },
+   {
+    "id": 1115,
+    "alias": "STANDARD-PAGE-TEMPLATE-WITH-TABS-NAVIGATION",
+    "name": "Standard Page Template with Tabs Navigation",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1116,
+    "alias": "STICKY-MOBILE-HEADER",
+    "name": "Sticky Mobile Header",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1117,
+    "alias": "STICKY-MOBILE-FOOTER",
+    "name": "Sticky Mobile Footer",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1120,
+    "alias": "NAVIGATION-MENU-BAR-PREVIEW",
+    "name": "Navigation Menu - Menu Bar Preview",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1121,
+    "alias": "NAVIGATION-MENU-TABS-PREVIEW",
+    "name": "Navigation Menu - Tabs Preview",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1122,
+    "alias": "NAVIGATION-MENU-MEGA-MENU-PREVIEW",
+    "name": "Navigation Menu - Mega Menu Preview",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1123,
+    "alias": "NAVIGATION-MENU-SIDE-TREE-NAVIGATION-PREVIEW",
+    "name": "Navigation Menu - Side Tree Navigation Preview",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1124,
+    "alias": "NAVIGATION-MENU-MEGA-MENU-PREVIEW-2",
+    "name": "Navigation Menu - Mega Menu Preview 2",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1201,
+    "alias": "STANDARD-REGION",
+    "name": "Regions - Standard",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1202,
+    "alias": "ALERT-REGION",
+    "name": "Region - Alert",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1203,
+    "alias": "HERO-REGION",
+    "name": "Region - Hero",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1204,
+    "alias": "BUTTON-CONTAINER-REGION",
+    "name": "Region - Button Container",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1205,
+    "alias": "CAROUSEL-REGION",
+    "name": "Region - Carousel",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1206,
+    "alias": "COLLAPSIBLE-REGION",
+    "name": "Region - Collapsible",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1207,
+    "alias": "TITLE-BAR-REGION",
+    "name": "Region - Title Bar",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1208,
+    "alias": "WIZARD-REGION",
+    "name": "Region - Wizard",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1209,
+    "alias": "CONTENT-BLOCK",
+    "name": "Content Block",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1210,
+    "alias": "REGION-IMAGE",
+    "name": "Region Image",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1250,
+    "alias": "BUTTON-CONTAINER",
+    "name": "Button Container",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1301,
+    "alias": "MEDIA-LIST",
+    "name": "Lists - Media List",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1303,
+    "alias": "LINKS-LIST",
+    "name": "Lists - Links",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1304,
+    "alias": "BADGES-LIST",
+    "name": "List - Badges",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1305,
+    "alias": "MENU-BAR-LIST",
+    "name": "List - Menu Bar",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1306,
+    "alias": "MENU-POPUP",
+    "name": "Menu Popup",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1307,
+    "alias": "CONTEXTUAL-INFO",
+    "name": "Contextual Info",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1401,
+    "alias": "STANDARD-REPORTS",
+    "name": "Reports - Standard",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1402,
+    "alias": "INTERACTIVE-REPORT",
+    "name": "Reports - Interactive Report",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1403,
+    "alias": "VALUE-ATTR-PAIRS-REPORT",
+    "name": "Value Attribute Pairs",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1405,
+    "alias": "COMMENTS-REPORT",
+    "name": "Reports - Comments",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1406,
+    "alias": "TIMELINE-REPORTS",
+    "name": "Reports - Timeline",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1407,
+    "alias": "CONTENT-ROW-REPORT",
+    "name": "Reports - Content Row",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1410,
+    "alias": "INTERACTIVE-GRID",
+    "name": "Interactive Grid",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1411,
+    "alias": "REPORTS-FACETED-SEARCH",
+    "name": "Reports - Faceted Search",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1412,
+    "alias": "REPORTS-SMART-FILTERS",
+    "name": "Reports - Smart Filters",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1413,
+    "alias": "REPORTS-SEARCH-REGION",
+    "name": "Reports - Search Region",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1500,
+    "alias": "BUTTONS",
+    "name": "Buttons",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1600,
+    "alias": "FORMS",
+    "name": "Forms",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1601,
+    "alias": "FORM-ITEM-TYPES",
+    "name": "Form Item Types",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1700,
+    "alias": "LIST-VIEW",
+    "name": "List View",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1701,
+    "alias": "REGION-LIST-VIEW-MOBILE-EXAMPLE",
+    "name": "Region - List View Mobile Example",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1710,
+    "alias": "REFLOW-REPORT",
+    "name": "Reflow Report",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1711,
+    "alias": "REFLOW-REPORT-MOBILE-EXAMPLES",
+    "name": "Reflow Report - Mobile Examples",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1720,
+    "alias": "COLUMN-TOGGLE-REPORT",
+    "name": "Column Toggle Report",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1721,
+    "alias": "COLUMN-TOGGLE-REPORT-MOBILE-EXAMPLES",
+    "name": "Column Toggle Report - Mobile Examples",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1800,
+    "alias": "CALENDARS",
+    "name": "Calendars",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1901,
+    "alias": "TREE",
+    "name": "Tree",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1902,
+    "alias": "CHARTS",
+    "name": "Charts",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1903,
+    "alias": "HELP-TEXT",
+    "name": "Help Text",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1905,
+    "alias": "STATIC-CONTENT",
+    "name": "Static Content",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1906,
+    "alias": "MAP",
+    "name": "Map",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1907,
+    "alias": "TABS",
+    "name": "Tabs",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1908,
+    "alias": "DYNAMIC-CONTENT-REGION",
+    "name": "Dynamic Content Region",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1909,
+    "alias": "REDIRECT1",
+    "name": "Redirect",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1910,
+    "alias": "PAGE-DIALOG",
+    "name": "Page Dialog",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1911,
+    "alias": "INLINE-DIALOG",
+    "name": "Inline Dialog",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1912,
+    "alias": "MODAL-DIALOG-DEMO",
+    "name": "Modal Dialog Demo",
+    "mode": "Modal Dialog",
+    "template": "Modal Dialog"
+   },
+   {
+    "id": 1913,
+    "alias": "MODAL-DIALOG-DEMO-FIXED-SIZE",
+    "name": "Modal Dialog Demo - Fixed Size",
+    "mode": "Modal Dialog",
+    "template": "Modal Dialog"
+   },
+   {
+    "id": 1914,
+    "alias": "MODAL-DIALOG-DEMO-FIT-WINDOW",
+    "name": "Modal Dialog Demo - Fit Window",
+    "mode": "Modal Dialog",
+    "template": "Modal Dialog"
+   },
+   {
+    "id": 1915,
+    "alias": "INLINE-POPUP",
+    "name": "Inline Popup",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1916,
+    "alias": "INLINE-DRAWER",
+    "name": "Inline Drawer",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1917,
+    "alias": "PAGE-DRAWER",
+    "name": "Page Drawer",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1918,
+    "alias": "DRAWER-DEMO",
+    "name": "Drawer Demo",
+    "mode": "Modal Dialog",
+    "template": "Drawer"
+   },
+   {
+    "id": 1919,
+    "alias": "DRAWER-DEMO-FIXED-SIZE",
+    "name": "Drawer Demo - Fixed Size",
+    "mode": "Modal Dialog",
+    "template": "Drawer"
+   },
+   {
+    "id": 1920,
+    "alias": "STEP-1",
+    "name": "Step 1",
+    "mode": "Modal Dialog",
+    "template": "Wizard Modal Dialog"
+   },
+   {
+    "id": 1921,
+    "alias": "STEP-2",
+    "name": "Step 2",
+    "mode": "Modal Dialog",
+    "template": "Wizard Modal Dialog"
+   },
+   {
+    "id": 1922,
+    "alias": "STEP-3",
+    "name": "Step 3",
+    "mode": "Modal Dialog",
+    "template": "Wizard Modal Dialog"
+   },
+   {
+    "id": 1923,
+    "alias": "REGION-DISPLAY-SELECTOR",
+    "name": "Region Display Selector",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 2000,
+    "alias": "MIGRATION-GUIDE",
+    "name": "Migration Guide",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3000,
+    "alias": "COMPONENTS",
+    "name": "Components",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3001,
+    "alias": "AVATAR-COMPONENT",
+    "name": "Components - Avatar",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3002,
+    "alias": "BADGE-COMPONENT",
+    "name": "Components - Badge",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3003,
+    "alias": "COMMENTS-COMPONENT",
+    "name": "Components - Comments",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3004,
+    "alias": "CONTENT-ROW-COMPONENT",
+    "name": "Components - Content Row",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3005,
+    "alias": "MEDIA-LIST-COMPONENT",
+    "name": "Components - Media List",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3006,
+    "alias": "TIMELINE-COMPONENT",
+    "name": "Components - Timeline",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3007,
+    "alias": "METRIC-CARD",
+    "name": "Components: Metric Card",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3008,
+    "alias": "FLEXBOX-CONTAINER-COMPONENT",
+    "name": "Components - Flexbox Container",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3100,
+    "alias": "CARD-TEMPLATES",
+    "name": "Card Templates",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3110,
+    "alias": "CARD-REGIONS",
+    "name": "Card Regions",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3810,
+    "alias": "BREADCRUMB",
+    "name": "Breadcrumb",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 4000,
+    "alias": "ICONS",
+    "name": "Icons",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6000,
+    "alias": "REFERENCE",
+    "name": "Reference",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6100,
+    "alias": "BUTTON-BUILDER",
+    "name": "Button Builder",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6200,
+    "alias": "JAVASCRIPT-EVENTS",
+    "name": "JavaScript Events",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6201,
+    "alias": "JAVASCRIPT-APIS",
+    "name": "JavaScript APIs",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6302,
+    "alias": "COLOR-AND-STATUS-MODIFIERS",
+    "name": "Color and Status Modifiers",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6303,
+    "alias": "LAYOUT-MODIFIERS",
+    "name": "Layout Modifiers",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6304,
+    "alias": "CONTENT-MODIFIERS",
+    "name": "Content Modifiers",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6305,
+    "alias": "CHANGE-LOG",
+    "name": "Change Log",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6307,
+    "alias": "CSS-VARIABLES",
+    "name": "CSS Variables",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6400,
+    "alias": "TEMPLATE-DIRECTIVES",
+    "name": "Template Directives",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 9999,
+    "alias": "LOGIN-PAGE2",
+    "name": "Login Page",
+    "mode": "Normal",
+    "template": "Login"
+   }
+  ],
+  "9242": [
+   {
+    "id": 0,
+    "alias": "",
+    "name": "Page Zero",
+    "mode": "Normal",
+    "template": ""
+   },
+   {
+    "id": 100,
+    "alias": "REDIRECT",
+    "name": "Redirect",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 300,
+    "alias": "GRID-LAYOUT",
+    "name": "Grid Layout",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 400,
+    "alias": "DESIGN",
+    "name": "Design",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 401,
+    "alias": "DESIGN-OVERVIEW",
+    "name": "Design Overview",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 402,
+    "alias": "COLORS",
+    "name": "Colors",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 405,
+    "alias": "THEME-STYLES",
+    "name": "Theme Styles",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 407,
+    "alias": "NAVIGATION",
+    "name": "Navigation",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 421,
+    "alias": "NAVIGATION2",
+    "name": "Navigation",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 422,
+    "alias": "HEADERS-AND-FOOTERS",
+    "name": "Headers and Footers",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 423,
+    "alias": "DATA-ENTRY2",
+    "name": "Data Entry",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 424,
+    "alias": "TOUCH-GESTURES",
+    "name": "Touch Gestures",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 425,
+    "alias": "JQUERY-MOBILE-COMPONENTS",
+    "name": "jQuery Mobile Components",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 500,
+    "alias": "GETTING-STARTED",
+    "name": "Getting Started",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 700,
+    "alias": "LAYOUT",
+    "name": "Layout",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1100,
+    "alias": "PAGES",
+    "name": "Pages",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1101,
+    "alias": "STANDARD-PAGE-TEMPLATE-WITH-SIDE-NAVIGATION",
+    "name": "Standard Page Template with Side Navigation",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1102,
+    "alias": "STANDARD-PAGE-TEMPLATE-WITH-TOP-NAVIGATION",
+    "name": "Standard Page Template with Top Navigation",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1103,
+    "alias": "LEFT-COLUMN-PAGE-WITH-SIDE-NAVIGATION",
+    "name": "Left Column Page with Side Navigation",
+    "mode": "Normal",
+    "template": "Left Side Column"
+   },
+   {
+    "id": 1104,
+    "alias": "LEFT-COLUMN-PAGE-WITH-TOP-NAVIGATION",
+    "name": "Left Column Page with Top Navigation",
+    "mode": "Normal",
+    "template": "Left Side Column"
+   },
+   {
+    "id": 1105,
+    "alias": "RIGHT-COLUMN-PAGE-WITH-SIDE-NAVIGATION",
+    "name": "Right Column Page with Side Navigation",
+    "mode": "Normal",
+    "template": "Right Side Column"
+   },
+   {
+    "id": 1106,
+    "alias": "RIGHT-COLUMN-PAGE-WITH-TOP-NAVIGATION",
+    "name": "Right Column Page with Top Navigation",
+    "mode": "Normal",
+    "template": "Right Side Column"
+   },
+   {
+    "id": 1107,
+    "alias": "MARQUEE-DETAIL-PAGE-WITH-SIDE-NAVIGATION",
+    "name": "Marquee Detail Page with Side Navigation",
+    "mode": "Normal",
+    "template": "Marquee"
+   },
+   {
+    "id": 1108,
+    "alias": "MARQUEE-DETAIL-PAGE-WITH-TOP-NAVIGATION",
+    "name": "Marquee Detail Page with Top Navigation",
+    "mode": "Normal",
+    "template": "Marquee"
+   },
+   {
+    "id": 1109,
+    "alias": "SIDE-COLUMNS-PAGE-WITH-SIDE-NAVIGATION",
+    "name": "Side Columns Page with Side Navigation",
+    "mode": "Normal",
+    "template": "Left and Right Side Columns"
+   },
+   {
+    "id": 1110,
+    "alias": "SIDE-COLUMNS-PAGE-WITH-TOP-NAVIGATION",
+    "name": "Side Columns Page with Top Navigation",
+    "mode": "Normal",
+    "template": "Left and Right Side Columns"
+   },
+   {
+    "id": 1111,
+    "alias": "STANDARD-DIALOG-PAGE",
+    "name": "Standard Dialog Page",
+    "mode": "Modal Dialog",
+    "template": "Modal Dialog"
+   },
+   {
+    "id": 1112,
+    "alias": "WIZARD-DIALOG-PAGE",
+    "name": "Wizard Dialog Page",
+    "mode": "Modal Dialog",
+    "template": "Wizard Modal Dialog"
+   },
+   {
+    "id": 1113,
+    "alias": "MINIMAL-PAGE-TEMPLATE",
+    "name": "Minimal Page Template",
+    "mode": "Normal",
+    "template": "Minimal (No Navigation)"
+   },
+   {
+    "id": 1114,
+    "alias": "LOGIN-PAGE-TEMPLATE",
+    "name": "Login Page Template",
+    "mode": "Normal",
+    "template": "Login"
+   },
+   {
+    "id": 1115,
+    "alias": "STANDARD-PAGE-TEMPLATE-WITH-TABS-NAVIGATION",
+    "name": "Standard Page Template with Tabs Navigation",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1116,
+    "alias": "STICKY-MOBILE-HEADER",
+    "name": "Sticky Mobile Header",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1117,
+    "alias": "STICKY-MOBILE-FOOTER",
+    "name": "Sticky Mobile Footer",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1120,
+    "alias": "NAVIGATION-MENU-BAR-PREVIEW",
+    "name": "Navigation Menu - Menu Bar Preview",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1121,
+    "alias": "NAVIGATION-MENU-TABS-PREVIEW",
+    "name": "Navigation Menu - Tabs Preview",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1122,
+    "alias": "NAVIGATION-MENU-MEGA-MENU-PREVIEW",
+    "name": "Navigation Menu - Mega Menu Preview",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1123,
+    "alias": "NAVIGATION-MENU-SIDE-TREE-NAVIGATION-PREVIEW",
+    "name": "Navigation Menu - Side Tree Navigation Preview",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1124,
+    "alias": "NAVIGATION-MENU-MEGA-MENU-PREVIEW-2",
+    "name": "Navigation Menu - Mega Menu Preview 2",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1201,
+    "alias": "STANDARD-REGION",
+    "name": "Regions - Standard",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1202,
+    "alias": "ALERT-REGION",
+    "name": "Region - Alert",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1203,
+    "alias": "HERO-REGION",
+    "name": "Region - Hero",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1204,
+    "alias": "BUTTON-CONTAINER-REGION",
+    "name": "Region - Button Container",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1205,
+    "alias": "CAROUSEL-REGION",
+    "name": "Region - Carousel",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1206,
+    "alias": "COLLAPSIBLE-REGION",
+    "name": "Region - Collapsible",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1207,
+    "alias": "TITLE-BAR-REGION",
+    "name": "Region - Title Bar",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1208,
+    "alias": "WIZARD-REGION",
+    "name": "Region - Wizard",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1209,
+    "alias": "CONTENT-BLOCK",
+    "name": "Content Block",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1210,
+    "alias": "REGION-IMAGE",
+    "name": "Region Image",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1250,
+    "alias": "BUTTON-CONTAINER",
+    "name": "Button Container",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1301,
+    "alias": "MEDIA-LIST",
+    "name": "Lists - Media List",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1303,
+    "alias": "LINKS-LIST",
+    "name": "Lists - Links",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1304,
+    "alias": "BADGES-LIST",
+    "name": "List - Badges",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1305,
+    "alias": "MENU-BAR-LIST",
+    "name": "List - Menu Bar",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1306,
+    "alias": "MENU-POPUP",
+    "name": "Menu Popup",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1307,
+    "alias": "CONTEXTUAL-INFO",
+    "name": "Contextual Info",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1401,
+    "alias": "STANDARD-REPORTS",
+    "name": "Reports - Standard",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1402,
+    "alias": "INTERACTIVE-REPORT",
+    "name": "Reports - Interactive Report",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1403,
+    "alias": "VALUE-ATTR-PAIRS-REPORT",
+    "name": "Value Attribute Pairs",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1405,
+    "alias": "COMMENTS-REPORT",
+    "name": "Reports - Comments",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1406,
+    "alias": "TIMELINE-REPORTS",
+    "name": "Reports - Timeline",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1407,
+    "alias": "CONTENT-ROW-REPORT",
+    "name": "Reports - Content Row",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1410,
+    "alias": "INTERACTIVE-GRID",
+    "name": "Interactive Grid",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1411,
+    "alias": "REPORTS-FACETED-SEARCH",
+    "name": "Reports - Faceted Search",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1412,
+    "alias": "REPORTS-SMART-FILTERS",
+    "name": "Reports - Smart Filters",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1413,
+    "alias": "REPORTS-SEARCH-REGION",
+    "name": "Reports - Search Region",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1500,
+    "alias": "BUTTONS",
+    "name": "Buttons",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1600,
+    "alias": "FORMS",
+    "name": "Forms",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1601,
+    "alias": "FORM-ITEM-TYPES",
+    "name": "Form Item Types",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1700,
+    "alias": "LIST-VIEW",
+    "name": "List View",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1701,
+    "alias": "REGION-LIST-VIEW-MOBILE-EXAMPLE",
+    "name": "Region - List View Mobile Example",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1710,
+    "alias": "REFLOW-REPORT",
+    "name": "Reflow Report",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1711,
+    "alias": "REFLOW-REPORT-MOBILE-EXAMPLES",
+    "name": "Reflow Report - Mobile Examples",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1720,
+    "alias": "COLUMN-TOGGLE-REPORT",
+    "name": "Column Toggle Report",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1721,
+    "alias": "COLUMN-TOGGLE-REPORT-MOBILE-EXAMPLES",
+    "name": "Column Toggle Report - Mobile Examples",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1800,
+    "alias": "CALENDARS",
+    "name": "Calendars",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1901,
+    "alias": "TREE",
+    "name": "Tree",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1902,
+    "alias": "CHARTS",
+    "name": "Charts",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1903,
+    "alias": "HELP-TEXT",
+    "name": "Help Text",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1905,
+    "alias": "STATIC-CONTENT",
+    "name": "Static Content",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1906,
+    "alias": "MAP",
+    "name": "Map",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1907,
+    "alias": "TABS",
+    "name": "Tabs",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1908,
+    "alias": "DYNAMIC-CONTENT-REGION",
+    "name": "Dynamic Content Region",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1909,
+    "alias": "REDIRECT1",
+    "name": "Redirect",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1910,
+    "alias": "PAGE-DIALOG",
+    "name": "Page Dialog",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1911,
+    "alias": "INLINE-DIALOG",
+    "name": "Inline Dialog",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1912,
+    "alias": "MODAL-DIALOG-DEMO",
+    "name": "Modal Dialog Demo",
+    "mode": "Modal Dialog",
+    "template": "Modal Dialog"
+   },
+   {
+    "id": 1913,
+    "alias": "MODAL-DIALOG-DEMO-FIXED-SIZE",
+    "name": "Modal Dialog Demo - Fixed Size",
+    "mode": "Modal Dialog",
+    "template": "Modal Dialog"
+   },
+   {
+    "id": 1914,
+    "alias": "MODAL-DIALOG-DEMO-FIT-WINDOW",
+    "name": "Modal Dialog Demo - Fit Window",
+    "mode": "Modal Dialog",
+    "template": "Modal Dialog"
+   },
+   {
+    "id": 1915,
+    "alias": "INLINE-POPUP",
+    "name": "Inline Popup",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1916,
+    "alias": "INLINE-DRAWER",
+    "name": "Inline Drawer",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1917,
+    "alias": "PAGE-DRAWER",
+    "name": "Page Drawer",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 1918,
+    "alias": "DRAWER-DEMO",
+    "name": "Drawer Demo",
+    "mode": "Modal Dialog",
+    "template": "Drawer"
+   },
+   {
+    "id": 1919,
+    "alias": "DRAWER-DEMO-FIXED-SIZE",
+    "name": "Drawer Demo - Fixed Size",
+    "mode": "Modal Dialog",
+    "template": "Drawer"
+   },
+   {
+    "id": 1920,
+    "alias": "STEP-1",
+    "name": "Step 1",
+    "mode": "Modal Dialog",
+    "template": "Wizard Modal Dialog"
+   },
+   {
+    "id": 1921,
+    "alias": "STEP-2",
+    "name": "Step 2",
+    "mode": "Modal Dialog",
+    "template": "Wizard Modal Dialog"
+   },
+   {
+    "id": 1922,
+    "alias": "STEP-3",
+    "name": "Step 3",
+    "mode": "Modal Dialog",
+    "template": "Wizard Modal Dialog"
+   },
+   {
+    "id": 1923,
+    "alias": "REGION-DISPLAY-SELECTOR",
+    "name": "Region Display Selector",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 2000,
+    "alias": "MIGRATION-GUIDE",
+    "name": "Migration Guide",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3000,
+    "alias": "COMPONENTS",
+    "name": "Components",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3001,
+    "alias": "AVATAR-COMPONENT",
+    "name": "Components - Avatar",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3002,
+    "alias": "BADGE-COMPONENT",
+    "name": "Components - Badge",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3003,
+    "alias": "COMMENTS-COMPONENT",
+    "name": "Components - Comments",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3004,
+    "alias": "CONTENT-ROW-COMPONENT",
+    "name": "Components - Content Row",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3005,
+    "alias": "MEDIA-LIST-COMPONENT",
+    "name": "Components - Media List",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3006,
+    "alias": "TIMELINE-COMPONENT",
+    "name": "Components - Timeline",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3100,
+    "alias": "CARD-TEMPLATES",
+    "name": "Card Templates",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3110,
+    "alias": "CARD-REGIONS",
+    "name": "Card Regions",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 3810,
+    "alias": "BREADCRUMB",
+    "name": "Breadcrumb",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 4000,
+    "alias": "ICONS",
+    "name": "Icons",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6000,
+    "alias": "REFERENCE",
+    "name": "Reference",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6100,
+    "alias": "BUTTON-BUILDER",
+    "name": "Button Builder",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6200,
+    "alias": "JAVASCRIPT-EVENTS",
+    "name": "JavaScript Events",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6201,
+    "alias": "JAVASCRIPT-APIS",
+    "name": "JavaScript APIs",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6302,
+    "alias": "COLOR-AND-STATUS-MODIFIERS",
+    "name": "Color and Status Modifiers",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6303,
+    "alias": "LAYOUT-MODIFIERS",
+    "name": "Layout Modifiers",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6304,
+    "alias": "CONTENT-MODIFIERS",
+    "name": "Content Modifiers",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6305,
+    "alias": "CHANGE-LOG",
+    "name": "Change Log",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6307,
+    "alias": "CSS-VARIABLES",
+    "name": "CSS Variables",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 6400,
+    "alias": "TEMPLATE-DIRECTIVES",
+    "name": "Template Directives",
+    "mode": "Normal",
+    "template": "Standard"
+   },
+   {
+    "id": 9999,
+    "alias": "LOGIN-PAGE2",
+    "name": "Login Page",
+    "mode": "Normal",
+    "template": "Login"
+   }
+  ]
+ }
+}

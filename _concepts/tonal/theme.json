@@ -1,0 +1,3 @@
+{"name":"Loden","prefix":"tonal","version":"0.1.0","description":"Tonal-materielles Theme: ein Loden-Grundton in tonalen Ebenen, heller Arbeitsbogen im Loden-Rahmen, Pill-Buttons, gefüllte Felder, Figtree.","styles":[
+  {"id":"light","name":"Loden Light","base":"Vita","entry":"src/light.css"},
+  {"id":"dark","name":"Loden Dark","base":"Vita-Dark","entry":"src/dark.css"}]}

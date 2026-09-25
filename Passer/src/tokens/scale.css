@@ -1,0 +1,131 @@
+/* ==========================================================================
+   Passer – Tokens MODUSNEUTRAL (Maße, Schrift, Dichte, Druckbild, Fokus-Geometrie)
+   Gilt für hell, dunkel und auto gleichermaßen; wird von index.css als Erstes geladen.
+   Nur :root-Deklarationen eigener Tokens (--pa-*). Farben stehen in light.css/dark.css.
+   Abgeleitete Tokens (calc/var) werden auf :root aufgelöst: Wer einen Basis-Token lokal
+   ändert, muss die daraus abgeleiteten Hebel dort mitsetzen (siehe docs/ARCHITECTURE.md).
+   ========================================================================== */
+:root {
+  /* Schrift ---------------------------------------------------------------- */
+  --pa-font: "Passer Grotesk", "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --pa-font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --pa-fw-regular: 400;
+  --pa-fw-medium: 500;             /* Labels, Buttons, Navigation */
+  --pa-fw-semibold: 620;           /* Titel, aktive Einträge, Tabellenköpfe */
+  --pa-fw-bold: 680;               /* „fett“ im Fließtext (<b>, <strong>) – variable Achse */
+  --pa-fw-display: 760;            /* Seitentitel, Login-Titel: Plakatgewicht */
+  --pa-stretch-narrow: 88%;        /* schmal geschnitten (wdth 88): Tabellenköpfe, dichte Spaltenlabels, Zellen auf dem Telefon */
+
+  /* Größen-Skala 12 · 13 · 14 · 16 · 20 · 32 (+ 12,5 für Tabellenköpfe) --- */
+  --pa-fs-xs: .75rem;              /* 12  Klein: Hilfe, Badges, Zähler */
+  --pa-fs-head: .78125rem;         /* 12,5 Tabellenköpfe */
+  --pa-fs-sm: .8125rem;            /* 13  Tabellenzellen, Labels, Breadcrumb, Menüs klein */
+  --pa-fs-md: .875rem;             /* 14  UI, Fließtext, Felder, Buttons */
+  --pa-fs-lg: 1rem;                /* 16  Region-Titel */
+  --pa-fs-xl: 1.25rem;             /* 20  Abschnitt (Content Block h2) */
+  --pa-fs-2xl: 2rem;               /* 32  Seitentitel (Plakat-Schnitt, schmal) */
+  --pa-fs-display: 3.25rem;        /* 52  Login-Titel (Plakat) */
+  --pa-lh-xs: 1rem;                /* zu 12 / 12,5 */
+  --pa-lh-sm: 1.25rem;             /* zu 13 (Tabellenzellen 13/20) */
+  --pa-lh-md: 1.25rem;             /* zu 14 */
+  --pa-lh-body: 1.375rem;          /* zu 14 im Fließtext (Regionen, Content Blocks) */
+  --pa-lh-lg: 1.5rem;              /* zu 16 */
+  --pa-lh-xl: 1.75rem;             /* zu 20 */
+  --pa-lh-2xl: 2.5rem;             /* zu 32 */
+  --pa-lh-display: 3.25rem;        /* zu 52 (1,0) */
+  --pa-tracking-title: -.025em;    /* Seitentitel, Login-Titel */
+  --pa-tracking-heading: -.012em;  /* Region-/Abschnittstitel, h1–h4 */
+  --pa-tracking-ui: 0em;           /* Buttons */
+
+  /* Geometrie: Papier ------------------------------------------------------ */
+  --pa-page-pad-x: 2rem;           /* Innenabstand des Inhalts, waagerecht */
+  --pa-page-pad-y: 1.25rem;        /* Innenabstand des Inhalts, senkrecht (Title Bar, Inhalt) */
+  --pa-r-lg: .25rem;               /* 4  Bögen: Tabellen, Karten, Menüs, Alerts – gestanzt, nicht weich */
+  --pa-r-md: .1875rem;             /* 3  Controls: Buttons, Felder, Tabs */
+  --pa-r-sm: .125rem;              /* 2  Checkbox, Chips */
+  --pa-r-dialog: .375rem;          /* 6  Dialoge/Drawer */
+  --pa-r-pill: 62rem;              /* Pillen (Zähler, Badges, Avatare rund) */
+  --pa-header-h: 3.5rem;           /* Kopfzeile (statisch – nie per JS/Font verändern) */
+  --pa-brand-lh: 1.5rem;           /* feste Zeilenhöhe Logo/Branding: Font-Swap verschiebt nichts */
+  --pa-nav-w: 15rem;               /* aufgeklappte Side-Navigation */
+  --pa-nav-rail-w: 3.5rem;         /* eingeklappte Icon-Leiste */
+
+  /* Druckbild: Passer, Raster, Korn ---------------------------------------- */
+  --pa-passer: 2px;                /* Versatz der Pink-Platte in Ruhe (Hot-Button, Badge, Nav-Marke) */
+  --pa-passer-hover: 3px;          /* bei Hover driftet die Platte weiter */
+  --pa-passer-press: 0px;          /* gedrückt: Platten in Passung */
+  --pa-passer-text: .06em;         /* Versatz an Schrift (Seitentitel, Logo) – wächst mit der Größe */
+  --pa-halftone-step: 6px;         /* Rasterweite der Halbton-Punkte */
+  --pa-halftone-dot: 1.35px;       /* Punktradius bei voller Deckung */
+  --pa-grain-size: 180px;          /* Kachel des Papierkorns */
+
+  /* Abstände (4er-Raster) -------------------------------------------------- */
+  --pa-space-1: .25rem;            /* 4 */
+  --pa-space-2: .5rem;             /* 8 */
+  --pa-space-3: .75rem;            /* 12 */
+  --pa-space-4: 1rem;              /* 16 */
+  --pa-space-5: 1.25rem;           /* 20 */
+  --pa-space-6: 1.5rem;            /* 24 */
+  --pa-space-8: 2rem;              /* 32 */
+  --pa-space-12: 3rem;             /* 48 */
+  --pa-region-gap: 2rem;           /* Abstand zwischen Regionen */
+
+  /* Dichte (Desktop 32 px; unter pointer: coarse 40 px – siehe bridge.css) --- */
+  --pa-control-h: 2rem;            /* Höhe Buttons, Felder, Selects, Pillen (inkl. Rand) */
+  --pa-control-h-sm: 1.5rem;       /* kleine Buttons (t-Button--small), Toolbar-Icons */
+  --pa-control-h-lg: 2.5rem;       /* große Buttons (t-Button--large), Login */
+  --pa-control-lh: 1.25rem;        /* Zeilenhöhe im Control */
+  --pa-control-pad-x: .75rem;      /* Innenabstand waagerecht (Felder); Buttons +2 px */
+  --pa-control-pad-y: calc((var(--pa-control-h) - var(--pa-control-lh)) / 2);  /* inkl. 1 px Rand (app_ui-Konvention) */
+  --pa-row-h: 2.125rem;            /* Tabellenzeile 34 px inkl. Haarlinie */
+  --pa-row-lh: 1.25rem;            /* Zeilenhöhe in Zellen (13/20) */
+  --pa-row-pad-x: .75rem;          /* Zellen-Innenabstand waagerecht */
+  --pa-row-pad-y: calc((var(--pa-row-h) - var(--pa-row-lh) - 1px) / 2);        /* = 6,5 px */
+  --pa-head-h: 2.25rem;            /* Tabellenkopf 36 px */
+  --pa-hit-min: 1.5rem;            /* Mindest-Trefferfläche (WCAG 2.5.8); coarse: 2.5rem */
+  --pa-checkbox-size: 1.125rem;    /* Checkbox/Radio */
+
+  /* Linien-Geometrie ------------------------------------------------------ */
+  --pa-hairline: 1px;              /* Haarlinie: Zeilen, Trenner, Region-Titel */
+  --pa-head-rule-width: 2px;       /* Grundlinie unter Tabellenköpfen (Tusche, gedruckte Formularlinie) */
+  --pa-rule-strong: 2px;           /* kräftige Tusche-Linie (Summenzeile, Region-Titel) */
+
+  /* Fokus-Geometrie (Farben: --pa-focus-ring-color / --pa-focus-gap) ------ */
+  --pa-focus-ring-width: 2px;
+  --pa-focus-ring-offset: 2px;
+  --pa-focus-outline: var(--pa-focus-ring-width) solid var(--pa-focus-ring-color);
+  /* Doppelring als Schatten (wo outline abgeschnitten würde): innen Grundfläche (--pa-focus-gap),
+     außen Teal. Beide Schatten stehen für schwebende Ebenen noch einmal in bridge.css §18. */
+  --pa-focus-shadow: 0 0 0 var(--pa-focus-ring-offset) var(--pa-focus-gap), 0 0 0 calc(var(--pa-focus-ring-offset) + var(--pa-focus-ring-width)) var(--pa-focus-ring-color);
+  /* nach innen (Zeilen, Zellen, Nav-Einträge in overflow-Containern) */
+  --pa-focus-shadow-inset: inset 0 0 0 var(--pa-focus-ring-width) var(--pa-focus-ring-color), inset 0 0 0 calc(var(--pa-focus-ring-width) + 1px) var(--pa-focus-gap);
+  /* Felder: Randfarbe = Ringfarbe + 1 px Schatten = 2 px Ring ohne Layoutsprung */
+  --pa-focus-field-shadow: 0 0 0 1px var(--pa-focus-ring-color);
+
+  /* Links (Farben in light/dark) ----------------------------------------- */
+  --pa-link-underline-width: 1px;
+  --pa-link-underline-width-hover: 2px;
+  --pa-link-underline-offset: .2em;
+
+  /* Pflichtfeld ----------------------------------------------------------- */
+  --pa-required-mark: "*";         /* in Textschrift, nicht als Icon */
+  --pa-required-gap: .25rem;       /* Abstand Label-Text → Markierung */
+
+  /* Bewegung -------------------------------------------------------------- */
+  --pa-duration: .12s;
+  --pa-ease: cubic-bezier(.2, 0, 0, 1);
+  --pa-ease-snap: cubic-bezier(.3, 1.6, .5, 1);   /* Einrasten der Passung (Login) – kurzer Überschwinger */
+}
+
+/* Mobil (< 640 px): kleinerer Innenabstand ------------------------------- */
+@media (max-width: 639px) {
+  :root {
+    --pa-page-pad-x: .75rem;       /* 12 px – Inhaltsbreite bei 390 px: 366 px */
+    --pa-page-pad-y: .75rem;       /* 12 px */
+    --pa-region-gap: 1.5rem;       /* 24 px zwischen Regionen */
+    --pa-fs-2xl: 1.5rem;           /* 24 Seitentitel auf dem Telefon */
+    --pa-lh-2xl: 1.875rem;
+    --pa-fs-display: 2.5rem;       /* 40 Login-Titel */
+    --pa-lh-display: 2.625rem;
+  }
+}

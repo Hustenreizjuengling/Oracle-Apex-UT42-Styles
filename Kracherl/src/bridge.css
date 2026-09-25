@@ -1,0 +1,656 @@
+/* ==========================================================================
+   Kracherl – Brücke: --kr-* → Universal Theme (--ut-*), APEX (--a-*, --jui-*), JET (--oj-*)
+   Modusneutral: ausschließlich var()-Verweise auf eigene Tokens (keine Farbwerte), gilt für
+   hell, dunkel und auto. Enthält
+     · alle 102 Kern-Hebel aus _docs/ut-tokens.json (lever: true, Tier 1),
+     · alle :root-Hex-Kopien der Vita-Primärfarbe #056AC8 (hardcodedPrimary, ut-tokens.md §8.1,
+       _tmp/research/diff-vita-red.txt). Die Selektor-Kopien (Hot-Buttons, TreeNav Style B)
+       deklarieren components/buttons.css und components/shell.css mit gleicher Spezifität neu.
+     · die Dichte (32 px Desktop, 40 px bei pointer: coarse) und die Fokus-Hooks.
+   Reihenfolge der Abschnitte = Reihenfolge in docs/ARCHITECTURE.md.
+   ========================================================================== */
+:root {
+  /* 1. Typografie ---------------------------------------------------------- */
+  --a-base-font-family: var(--kr-font);                         /* ◆ */
+  --ut-base-font-family: var(--kr-font);
+  --a-base-font-family-mono: var(--kr-font-mono);               /* ◆ */
+  --a-base-font-family-serif: var(--kr-font-slab);              /* Serifenschrift = Bitter (Slab) */
+  --ut-alternate-heading-font-family: var(--kr-font-slab);      /* Template-Option Heading Font Alternative */
+  --ut-alternate-heading-font-weight: var(--kr-fw-slab-heavy);
+  --ut-breadcrumb-title-font-family: var(--kr-font-slab);       /* Seitentitel in Slab */
+  --ut-content-block-header-font-family: var(--kr-font-slab);
+  --ut-hero-region-title-font-family: var(--kr-font-slab);
+  --a-base-font-weight-normal: var(--kr-fw-regular);
+  --a-base-font-weight-semibold: var(--kr-fw-semibold);         /* ◆ */
+  --a-base-font-weight-bold: var(--kr-fw-bold);                 /* ◆ Hook */
+  --a-base-font-weight-heavy: 700;                              /* PT Sans hat nur 400/700 (UT will 900) */
+  --ut-base-font-size: var(--kr-fs-md);                         /* body: 15 statt 16 px */
+
+  /* 2. Palette und Status (UT Core spiegelt auf --a-palette-*) ------------- */
+  --ut-palette-primary: var(--kr-accent);                       /* ◆ */
+  --ut-palette-primary-contrast: var(--kr-accent-on);           /* ◆ */
+  --ut-palette-primary-shade: var(--kr-accent-tint);            /* ◆ */
+  --ut-palette-primary-text: var(--kr-accent-text);             /* ◆ */
+  --ut-palette-primary-alt: var(--kr-accent-tint-2);            /* ◆ t-Button--primary: Sonnenstrahl statt zweiter Violett-Fläche */
+  --ut-palette-primary-alt-contrast: var(--kr-ink);             /* ◆ */
+  --ut-palette-primary-alt-shade: var(--kr-accent-tint);
+  --ut-palette-primary-alt-text: var(--kr-accent-text);
+  --ut-palette-success: var(--kr-success);                      /* ◆ */
+  --ut-palette-success-contrast: var(--kr-success-on);          /* ◆ */
+  --ut-palette-success-shade: var(--kr-success-tint);           /* ◆ */
+  --ut-palette-success-text: var(--kr-success-text);            /* ◆ */
+  --ut-palette-info: var(--kr-info);                            /* ◆ Vita: Hex-Kopie #056AC8 */
+  --ut-palette-info-contrast: var(--kr-info-on);                /* ◆ */
+  --ut-palette-info-shade: var(--kr-info-tint);                 /* ◆ */
+  --ut-palette-info-text: var(--kr-info-text);
+  --ut-palette-warning: var(--kr-warning);                      /* ◆ */
+  --ut-palette-warning-contrast: var(--kr-warning-on);          /* ◆ */
+  --ut-palette-warning-shade: var(--kr-warning-tint);           /* ◆ */
+  --ut-palette-warning-text: var(--kr-warning-text);            /* ◆ */
+  --ut-palette-danger: var(--kr-danger);                        /* ◆ */
+  --ut-palette-danger-contrast: var(--kr-danger-on);            /* ◆ */
+  --ut-palette-danger-shade: var(--kr-danger-tint);             /* ◆ */
+  --ut-palette-danger-text: var(--kr-danger-text);              /* ◆ */
+  --ut-palette-generic: var(--kr-soft);
+  --ut-palette-generic-contrast: var(--kr-ink);
+  --ut-palette-generic-shade: var(--kr-surface-sunken);
+  --ut-palette-generic-text: var(--kr-ink);
+
+  /* 3. Global: Links, Fokus, Text ----------------------------------------- */
+  --ut-link-text-color: var(--kr-link-text);                    /* ◆ Vita: Hex-Kopie */
+  --ut-link-text-decoration: underline;
+  --a-base-link-hover-text-color: var(--kr-link-text);
+  --ut-body-text-color: var(--kr-ink);                          /* ◆ */
+  /* EIN Fokus-System: Ringfarbe + Breite + Abstand aus den Tokens, überall ≥ 3:1 */
+  --ut-focus-outline-color: var(--kr-focus-ring-color);         /* ◆ Vita: Hex-Kopie */
+  --ut-focus-outline: var(--kr-focus-outline);                  /* Hook (*:focus in UT Core) */
+  --ut-focus-outline-offset: var(--kr-focus-ring-offset);       /* Hook */
+  --a-combo-select-focus-outline-color: var(--kr-focus-ring-color);
+  --a-combo-select-focus-border-color: var(--kr-focus-ring-color);
+  --a-combo-select-item-hover-background-color: var(--kr-soft);
+  --a-combo-select-item-preselected-background-color: var(--kr-soft);
+  --a-combo-select-item-preselected-hover-background-color: var(--kr-soft-hover);
+  --a-combo-select-item-focus-box-shadow: var(--kr-focus-shadow-inset);
+  --a-combo-select-focus-outline: var(--kr-focus-outline);
+  --a-combo-select-item-focus-outline-color: var(--kr-focus-ring-color);
+  --a-gv-focus-outline: var(--kr-focus-outline);                /* Hook: IR-Icon-Ansicht, Zellen */
+  --a-gv-focus-outline-offset: calc(-1 * var(--kr-focus-ring-width));
+  --a-cv-focus-outline: var(--kr-focus-outline);                /* Hook: Card-Volllink */
+  --a-cv-focus-outline-offset: var(--kr-focus-ring-offset);
+  --a-checkbox-outline-color: var(--kr-focus-ring-color);
+  --a-chat-transcript-outline-color: var(--kr-focus-ring-color);
+  --oj-core-focus-border-color: var(--kr-focus-ring-color);
+
+  /* 4. Generische Komponente (Fallback vieler Widgets) --------------------- */
+  --ut-component-background-color: var(--kr-surface);           /* ◆ */
+  --ut-component-border-color: var(--kr-line);                  /* ◆ */
+  --ut-component-border-width: var(--kr-hairline);              /* ◆ */
+  --ut-component-border-radius: var(--kr-r-lg);                 /* ◆ */
+  --ut-component-box-shadow: var(--kr-float-shadow);            /* ◆ */
+  --ut-component-highlight-background-color: var(--kr-hover);   /* ◆ */
+  --ut-component-toolbar-background-color: var(--kr-surface-sunken); /* ◆ */
+  --ut-component-inner-border-color: var(--kr-line);            /* ◆ */
+  --ut-component-inner-border-width: var(--kr-hairline);
+  --ut-component-text-default-color: var(--kr-ink);             /* ◆ */
+  --ut-component-text-title-color: var(--kr-ink);               /* ◆ */
+  --ut-component-text-subtitle-color: var(--kr-ink-2);          /* ◆ */
+  --ut-component-text-muted-color: var(--kr-muted);             /* ◆ */
+  --ut-component-icon-background-color: var(--kr-soft);         /* ◆ Icon-Kacheln: neutral statt Akzent */
+  --ut-component-icon-color: var(--kr-ink);                     /* ◆ */
+  --ut-component-badge-background-color: var(--kr-soft);        /* ◆ */
+  --ut-component-badge-text-color: var(--kr-ink);               /* ◆ */
+  --ut-component-badge-border-radius: var(--kr-r-pill);         /* ◆ */
+  --ut-component-pre-background-color: var(--kr-surface-sunken);
+
+  /* 5. Schatten und Radien ------------------------------------------------ */
+  --ut-shadow-sm: none;                                         /* ◆ keine Deko-Schatten */
+  --ut-shadow-md: var(--kr-float-shadow);                       /* ◆ */
+  --ut-shadow-lg: var(--kr-float-shadow);                       /* ◆ */
+  --ut-border-radius-sm: var(--kr-r-sm);
+  --ut-border-radius-md: var(--kr-r-md);
+  --ut-border-radius-lg: var(--kr-r-lg);
+  --ut-border-radius: var(--kr-r-md);
+
+  /* 6. Shell: Band, Seitengrund, Navigation, Title Bar, Inhalt ------------ */
+  --ut-body-background-color: var(--kr-page);                   /* ◆ Seitengrund */
+  --ut-body-main-background-color: transparent;
+  --ut-body-sidebar-background-color: transparent;
+  --ut-body-sidebar-text-color: var(--kr-ink);
+  --ut-body-sidebar-border-color: var(--kr-line);
+  --ut-body-actions-background-color: var(--kr-page);
+  --ut-body-actions-text-color: var(--kr-ink);
+  --ut-body-actions-border-width: 0px;
+  --ut-body-actionstoggle-background-color: var(--kr-surface);
+  --ut-body-actionstoggle-hover-background-color: var(--kr-soft);
+  --ut-body-actionstoggle-text-color: var(--kr-brand-ink);
+  --ut-footer-background-color: transparent;
+  --ut-footer-border-color: var(--kr-line);
+  --ut-footer-text-color: var(--kr-muted);
+  --ut-login-page-background-color: var(--kr-page);
+  --ut-login-region-background-color: var(--kr-surface);
+
+  /* Kopf = sonnengelbes Band (Höhe statisch; Branding mit fester Zeilenhöhe, siehe base.css).
+     Die Farbe trägt .t-Header selbst (shell.css), damit Branding und Menüleiste EIN Band sind. */
+  --ut-header-height: var(--kr-header-h);
+  --ut-header-padding-x: var(--kr-space-3);
+  --ut-header-item-spacing: var(--kr-space-2);
+  --ut-header-background-color: transparent;                    /* ◆ Vita: Hex-Kopie – das Band sitzt auf .t-Header */
+  --ut-header-text-color: var(--kr-band-ink);                   /* ◆ */
+  --ut-header-border-color: transparent;                        /* ◆ */
+  --ut-header-border-width: 0px;
+  --ut-header-box-shadow: none;                                 /* ◆ */
+  --ut-logo-font-size: 1.375rem;                                /* 22 px Bitter 800 */
+  --ut-logo-line-height: var(--kr-brand-lh);
+  --ut-logo-font-weight: var(--kr-fw-slab-heavy);
+  --ut-logo-text-color: var(--kr-band-brand);
+  --ut-navbar-button-badge-background-color: var(--kr-band-ink);  /* Zähler: Tinte des Bands */
+  --ut-navbar-button-badge-text-color: var(--kr-band);
+  --ut-header-menubar-background-color: transparent;            /* ◆ Menüleiste liegt im Band */
+  --ut-header-menubar-item-text-color: var(--kr-band-ink);      /* ◆ */
+  --ut-header-menubar-item-border-color: transparent;
+  --ut-header-menubar-item-current-background-color: var(--kr-accent); /* ◆ aktueller Eintrag = Etikett der Primäraktion: hell violett/gelb, dunkel gelb/violett */
+  --ut-header-menubar-item-current-text-color: var(--kr-accent-on);  /* ◆ */
+  --ut-header-menubar-item-split-border-color: transparent;
+  --ut-header-menubar-item-split-icon-color: var(--kr-band-ink);
+  --ut-navtabs-background-color: transparent;
+  --ut-navtabs-text-color: var(--kr-band-ink);
+  --ut-navtabs-item-border-color: transparent;
+  --ut-navtabs-item-active-background-color: var(--kr-accent);   /* wie die Menüleiste */
+  --ut-navtabs-item-active-text-color: var(--kr-accent-on);
+  --ut-navtabs-item-active-highlight-color: transparent;
+
+  /* Navigation (Tree Nav auf dem Seitengrund) */
+  --ut-nav-width: var(--kr-nav-w);
+  --ut-nav-collapsed-icon-width: var(--kr-nav-rail-w);
+  --ut-body-nav-background-color: var(--kr-page);               /* ◆ */
+  --ut-body-nav-text-color: var(--kr-ink);                      /* ◆ */
+  --ut-body-nav-border-width: 0px;
+  --ut-body-nav-border-color: transparent;
+  --ut-body-nav-scrollbar-thumb-background-color: var(--kr-scrollbar-thumb);
+  --ut-body-nav-scrollbar-track-background-color: var(--kr-scrollbar-track);
+  --a-treeview-node-selected-background-color: transparent;     /* ◆ das Etikett zeichnet shell.css */
+  --a-treeview-node-selected-text-color: var(--kr-sun-ink);     /* ◆ */
+  --a-treeview-node-selected-icon-color: var(--kr-sun-ink);
+  --a-treeview-node-focused-background-color: transparent;
+  --a-treeview-node-focused-text-color: var(--kr-ink);
+  --a-treeview-node-focused-shadow: var(--kr-focus-shadow-inset);
+  --a-treeview-node-hover-background-color: var(--kr-page-hover);
+  --a-treeview-node-icon-color: var(--kr-brand-ink);
+  --ut-treeview-badge-background-color: var(--kr-brand-ink);      /* Vita: Hex-Kopie; Zähler in Etikett-Violett */
+  --ut-treeview-badge-text-color: var(--kr-page);
+
+  /* Title Bar / Breadcrumb (liegt auf dem Seitengrund, unter der Welle) */
+  --ut-body-title-background-color: var(--kr-page);             /* ◆ */
+  --ut-body-title-text-color: var(--kr-heading);                /* ◆ */
+  --ut-body-title-box-shadow: none;                             /* ◆ */
+  --ut-body-title-border-width: 0px;
+  --ut-body-title-border-color: var(--kr-line);
+  --ut-body-title-backdrop-filter: none;
+  --ut-breadcrumb-padding-x: var(--kr-content-pad-x);
+  --ut-breadcrumb-padding-y: var(--kr-content-pad-y);
+  --ut-breadcrumb-item-text-color: var(--kr-muted);             /* ◆ */
+  --ut-breadcrumb-item-font-size: var(--kr-fs-sm);
+  --ut-breadcrumb-item-line-height: var(--kr-lh-sm);
+  --ut-breadcrumb-item-font-weight: var(--kr-fw-regular);
+  --ut-breadcrumb-item-active-text-color: var(--kr-ink);
+  --ut-breadcrumb-item-sep-opacity: 1;
+  --ut-breadcrumb-item-sep-spacing: .625rem;
+  --ut-breadcrumb-title-font-size: var(--kr-fs-2xl);
+  --ut-breadcrumb-title-line-height: var(--kr-lh-2xl);         /* Seitentitel 32/38 Bitter 800 */
+  --ut-breadcrumb-title-font-weight: var(--kr-fw-slab-heavy);
+
+  /* Inhalt */
+  --ut-body-content-padding-x: var(--kr-content-pad-x);
+  --ut-body-content-padding-y: var(--kr-content-pad-y);
+  --ut-xs-body-content-padding-x: var(--kr-content-pad-x);      /* < 640 px folgt scale.css */
+  --ut-xs-body-content-padding-y: var(--kr-content-pad-y);
+  --ut-xs-breadcrumb-padding-x: var(--kr-content-pad-x);
+
+  /* 7. Regionen: weiße Etiketten-Karten mit weichen Radien auf dem Seitengrund */
+  --ut-region-background-color: var(--kr-surface);              /* ◆ */
+  --ut-region-text-color: var(--kr-ink);                        /* ◆ */
+  --ut-region-header-background-color: transparent;             /* ◆ */
+  --ut-region-header-text-color: var(--kr-heading);             /* ◆ Titel in Etikett-Violett (dunkel: Laternengelb) */
+  --ut-region-border-color: var(--kr-line);                     /* ◆ Hook */
+  --ut-region-border-width: var(--kr-hairline);
+  --ut-region-border-radius: var(--kr-r-lg);                    /* ◆ */
+  --ut-region-box-shadow: var(--kr-card-shadow);                /* ◆ */
+  --ut-region-header-border-width: 0px;
+  --ut-region-header-border-color: var(--kr-line);
+  --ut-region-header-padding-x: var(--kr-region-pad-x);
+  --ut-region-header-padding-y: var(--kr-space-3);
+  --ut-region-header-font-size: var(--kr-fs-lg);
+  --ut-region-header-line-height: var(--kr-lh-lg);
+  --ut-region-body-padding-x: var(--kr-region-pad-x);
+  --ut-region-body-padding-y: var(--kr-region-pad-y);
+  --ut-region-buttons-padding-x: var(--kr-region-pad-x);
+  --ut-region-font-size: var(--kr-fs-md);
+  --ut-region-line-height: var(--kr-lh-body);
+  --ut-region-margin: var(--kr-region-gap);
+  --ut-region-hideshow-header-padding-x: var(--kr-space-3);
+
+  --ut-content-block-shadow-background-color: var(--kr-surface-sunken);
+  --ut-content-block-light-background-color: var(--kr-surface);
+  --ut-content-block-header-text-color: var(--kr-heading);
+  --ut-content-block-border-color: transparent;
+  --ut-content-block-font-size: var(--kr-fs-md);
+  --ut-content-block-line-height: var(--kr-lh-body);
+
+  --ut-button-region-border-radius: var(--kr-r-lg);
+  --ut-button-region-border-color: var(--kr-line);
+  --ut-button-region-box-shadow: none;
+  --ut-button-region-background-color: transparent;
+
+  --ut-alert-horizontal-border-radius: var(--kr-r-lg);
+  --ut-alert-wizard-border-radius: var(--kr-r-lg);
+  --ut-alert-box-shadow: none;
+  --ut-alert-border-color: var(--kr-line);
+
+  --ut-hero-region-icon-border-radius: var(--kr-r-lg);
+  --ut-wizard-header-background-color: transparent;
+  /* --ut-wizard-border-radius: wirkungslos (UT Core deklariert keinen Radius für .t-Wizard) – Radius in regions.css */
+  --ut-wp-marker-color: var(--kr-line-strong);
+  --ut-wp-track-color: var(--kr-line-strong);
+  --ut-linkslist-hover-background-color: var(--kr-hover);
+  --ut-linkslist-arrow-color: var(--kr-muted);
+  --ut-comment-chat-background-color: var(--kr-surface-sunken);
+  --ut-comment-chat-active-background-color: var(--kr-soft);
+  --ut-carousel-nav-background-color: var(--kr-line-strong);
+  --ut-carousel-nav-selected-background-color: var(--kr-ink);   /* UT Core liest "selected", nicht "active" */
+
+  /* 8. Tabs / Region Display Selector: aktive Pille in Violett-Tinte + Orange-Marke (shell.css) */
+  --ut-tabs-item-text-color: var(--kr-muted);
+  --ut-tabs-item-active-text-color: var(--kr-brand-ink);
+  --ut-tabs-item-active-background-color: var(--kr-surface);
+  --ut-tabs-item-active-highlight-color: transparent;
+  --ut-tabs-item-hint-highlight-color: transparent;
+  --ut-tabs-item-hint-highlight-width: 0px;
+  --ut-tabs-item-hover-background-color: var(--kr-page-hover);
+  --ut-tabs-item-font-size: var(--kr-fs-md);
+  --ut-tabs-item-line-height: var(--kr-lh-md);
+  --ut-tabs-item-font-weight: var(--kr-fw-regular);
+  --ut-tabs-item-active-font-weight: var(--kr-fw-semibold);
+
+  /* 9. Buttons (32 px: Polster inkl. 1 px Rand, app_ui-Konvention) --------- */
+  --a-button-border-radius: var(--kr-r-pill);                   /* ◆ Etikett: Pille */
+  --a-button-padding-y: var(--kr-control-pad-y);
+  --a-button-padding-x: calc(var(--kr-control-pad-x) + 4px);
+  --a-button-font-size: var(--kr-fs-md);
+  --a-button-line-height: var(--kr-control-lh);
+  --a-button-font-weight: var(--kr-fw-semibold);
+  --a-button-gap-x: var(--kr-space-2);
+  --a-button-icon-spacing: var(--kr-space-2);
+  --a-button-background-color: var(--kr-soft);                  /* ◆ Sekundär = Lavendel-Pille */
+  --a-button-text-color: var(--kr-brand-ink);                     /* ◆ Violett-Tinte */
+  --a-button-border-color: transparent;                         /* ◆ */
+  --a-button-shadow: none;                                      /* ◆ */
+  --a-button-hover-background-color: var(--kr-soft-hover);      /* ◆ */
+  --a-button-hover-text-color: var(--kr-brand-ink);
+  --a-button-hover-border-color: transparent;
+  --a-button-hover-shadow: none;
+  --a-button-active-background-color: var(--kr-soft-press);     /* ◆ */
+  --a-button-active-border-color: transparent;
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--kr-soft-hover);
+  --a-button-focus-border-color: transparent;                   /* ◆ Fokus zeigt der Ring, nicht die Kante */
+  --a-button-focus-shadow: none;
+  --a-button-count-background-color: var(--kr-brand-ink);         /* Vita: Hex-Kopie (26.1); Zähler in Violett */
+  --a-button-count-text-color: var(--kr-surface);
+
+  /* 10. Formulare (32 px) ------------------------------------------------- */
+  --a-field-input-background-color: var(--kr-field);            /* ◆ */
+  --a-field-input-text-color: var(--kr-ink);                    /* ◆ */
+  --a-field-input-border-color: var(--kr-edge);                 /* ◆ */
+  --a-field-input-border-width: 1px;
+  --a-field-input-border-style: solid;
+  --a-field-input-border-radius: var(--kr-r-md);                /* ◆ 10 px: weicher als Tabellen, ruhiger als Pillen */
+  --a-field-input-padding-y: var(--kr-control-pad-y);
+  --a-field-input-padding-x: var(--kr-control-pad-x);
+  --a-field-input-font-size: var(--kr-fs-md);
+  --a-field-input-line-height: var(--kr-control-lh);
+  --a-field-input-hover-background-color: var(--kr-field);
+  --a-field-input-hover-border-color: var(--kr-edge-hover);
+  --a-field-input-focus-background-color: var(--kr-field);      /* ◆ */
+  --a-field-input-focus-border-color: var(--kr-focus-ring-color); /* ◆ Vita: Hex-Kopie */
+  --a-field-input-focus-text-color: var(--kr-ink);
+  --a-field-placeholder-text-color: var(--kr-placeholder);
+  --a-field-placeholder-opacity: 1;
+  --a-field-select-background-image: var(--kr-select-arrow);
+  --a-filedrop-border-radius: var(--kr-r-lg);
+  --a-filedrop-progress-background-color: var(--kr-line);
+  --a-filedrop-progress-bar-background-color: var(--kr-brand-ink);
+  --a-filedrop-icon-action-background-color: var(--kr-field);     /* Vita-Dark: hart #000 */
+
+  /* Prozentbalken (Items + Reports): Daten, keine Aktion → Kategorie-Farbe statt Akzent */
+  --a-percent-chart-background-color: var(--kr-soft);
+  --a-percent-chart-bar-background-color: var(--kr-cat-1);
+  --a-percent-chart-bar-text-color: var(--kr-cat-1-on);
+  --ut-field-label-text-color: var(--kr-ink-2);                 /* ◆ */
+  --ut-field-label-font-size: var(--kr-fs-sm);
+  --ut-field-label-line-height: var(--kr-lh-sm);
+  --ut-field-label-font-weight: var(--kr-fw-regular);
+  --ut-field-input-focus-icon-color: var(--kr-accent-text);     /* Vita: Hex-Kopie */
+  --ut-field-fl-input-focus-icon-background-color: var(--kr-accent-tint); /* Vita: Hex-Kopie */
+  --ut-field-fl-input-focus-icon-color: var(--kr-accent-text);
+  --ut-field-input-icon-color: var(--kr-muted);
+  --ut-prepost-text-color: var(--kr-muted);
+  --a-form-required-asterisk-text-color: var(--kr-required-color);
+  --a-form-error-text-color: var(--kr-danger-text);
+  --ut-field-inline-help-text-color: var(--kr-muted);
+  --ut-pillbutton-padding-y: var(--kr-control-pad-y);
+  --ut-pillbutton-padding-x: .625rem;
+  --ut-pillbutton-font-size: var(--kr-fs-sm);
+  --ut-pillbutton-line-height: var(--kr-control-lh);             /* Pill-Gruppen = Control-Höhe */
+
+  --a-checkbox-size: var(--kr-checkbox-size);
+  --a-checkbox-icon-size: .8125rem;
+  --a-checkbox-border-radius: var(--kr-r-sm);
+  --a-checkbox-background-color: var(--kr-field);
+  --a-checkbox-border-color: var(--kr-edge);                    /* ◆ */
+  --a-checkbox-hover-background-color: var(--kr-hover);
+  --a-checkbox-checked-background-color: var(--kr-accent-text); /* ◆ Vita: Hex-Kopie; Akzent als Text-/Kantenton: dunkel ≥ 3:1 (WCAG 1.4.11) */
+  --a-checkbox-checked-text-color: var(--kr-surface);
+  --a-checkbox-text-color: var(--kr-accent-on);
+  --a-checkbox-label-font-size: var(--kr-fs-sm);
+  --a-checkbox-label-spacing-x: var(--kr-space-2);
+  --a-cr-checkbox-background-color: var(--kr-field);
+
+  --a-switch-background-color: var(--kr-edge);
+  --a-switch-checked-background-color: var(--kr-accent-text);   /* dunkel ≥ 3:1 gegen die Region */
+  --a-switch-checked-hover-background-color: var(--kr-accent-text);
+  --a-switch-toggle-background-color: var(--kr-surface);
+  --a-switch-toggle-checked-background-color: var(--kr-surface);
+  --a-switch-width: 2.5rem;
+  --a-switch-toggle-width: 1.125rem;
+  --a-switch-toggle-height: 1.125rem;
+  --a-switch-padding-y: .1875rem;
+  --a-switch-padding-x: .1875rem;
+
+  --a-starrating-stars-fg-color: var(--kr-mark);                 /* Brause-Orange: warm, ≥ 3:1 hell und dunkel */
+  --a-starrating-stars-bg-color: var(--kr-edge);                 /* leere Sterne ≥ 3:1 */
+
+  --a-chip-border-radius: var(--kr-r-pill);
+  --a-chip-font-size: var(--kr-fs-sm);
+  --a-chip-line-height: 1.125rem;
+  --a-chip-hover-background-color: var(--kr-hover);
+  --a-chip-active-background-color: var(--kr-soft);
+  --a-chip-applied-background-color: var(--kr-soft);
+  --a-chip-applied-hover-background-color: var(--kr-soft-hover);
+  --a-chip-remove-hover-background-color: var(--kr-page-hover);
+  --a-chip-remove-active-background-color: var(--kr-page-press);
+  --a-combo-select-item-selected-background-color: var(--kr-accent-tint);
+  --a-popuplov-chip-background-color: var(--kr-soft);
+
+  /* Date Picker */
+  --a-datepicker-background-color: var(--kr-surface-raised);
+  --a-datepicker-border-radius: var(--kr-r-lg);
+  --a-datepicker-header-background-color: var(--kr-surface-raised);
+  --a-datepicker-calendar-background-color: var(--kr-surface-raised);
+  --a-datepicker-border-color: var(--kr-line);
+  --a-datepicker-calendar-title-background-color: transparent;
+  --a-datepicker-calendar-header-background-color: transparent;
+  --a-datepicker-calendar-header-text-color: var(--kr-muted);
+  --a-datepicker-calendar-day-hover-background-color: var(--kr-raised-hover); /* Popup = schwebende Fläche */
+  --a-datepicker-calendar-day-selected-background-color: var(--kr-accent);
+  --a-datepicker-calendar-day-selected-text-color: var(--kr-accent-on);
+  --a-datepicker-calendar-day-selected-border-color: var(--kr-accent);
+  --a-datepicker-calendar-day-current-background-color: transparent;
+  --a-datepicker-calendar-day-current-text-color: var(--kr-ink);
+  --a-datepicker-calendar-day-current-border-color: var(--kr-mark);   /* heute: Orange-Marke */
+  --a-datepicker-calendar-week-background-color: transparent;
+  --a-datepicker-footer-background-color: transparent;
+  --a-datepicker-footer-border-color: var(--kr-line);
+
+  /* 11. Menüs, Dialoge, Tooltips ------------------------------------------ */
+  --a-menu-background-color: var(--kr-surface-raised);          /* ◆ */
+  --a-menu-text-color: var(--kr-ink);                           /* ◆ */
+  --a-menu-border-color: var(--kr-line);
+  --a-menu-border-radius: var(--kr-r-lg);
+  --a-menu-shadow: var(--kr-float-shadow);
+  --a-menu-padding-y: .375rem;
+  --a-menu-padding-x: .375rem;
+  --a-menu-item-border-radius: var(--kr-r-md);
+  --a-menu-font-size: var(--kr-fs-md);
+  --a-menu-focused-background-color: var(--kr-raised-hover);    /* ◆ Vita: Hex-Kopie; Hover auf schwebender Fläche (auch IconList, Popup-LOV-Links, JET, CKEditor) */
+  --a-menu-focused-text-color: var(--kr-ink);                   /* ◆ */
+
+  --jui-dialog-background-color: var(--kr-surface-raised);
+  --jui-dialog-text-color: var(--kr-ink);
+  --jui-dialog-border-radius: var(--kr-r-dialog);
+  --jui-dialog-shadow: var(--kr-float-shadow);
+  --jui-dialog-titlebar-background-color: transparent;
+  --jui-dialog-titlebar-text-color: var(--kr-heading);
+  --jui-dialog-titlebar-border-color: var(--kr-line);
+  --jui-dialog-titlebar-padding-y: var(--kr-space-3);
+  --jui-dialog-font-size: var(--kr-fs-md);                      /* Vita: 12 px */
+  --jui-dialog-titlebar-padding-x: var(--kr-space-5);
+  --jui-dialog-title-font-size: var(--kr-fs-lg);
+  --jui-dialog-title-font-weight: var(--kr-fw-slab);
+  --jui-dialog-buttonpane-background-color: transparent;
+  --jui-dialog-buttonpane-border-color: var(--kr-line);
+  --jui-overlay-background-color: var(--kr-scrim);
+  --jui-tooltip-background-color: var(--kr-tooltip-bg);
+  --jui-tooltip-text-color: var(--kr-tooltip-text);
+  --jui-tooltip-border-color: transparent;
+  --jui-tooltip-border-radius: var(--kr-r-md);
+  --a-tooltip-background-color: var(--kr-tooltip-bg);
+  --a-tooltip-text-color: var(--kr-tooltip-text);
+
+  /* 12. Reports / IR / IG (Zeile 34 px, Kopf 36 px, Haarlinien) ------------ */
+  --a-gv-background-color: var(--kr-surface);                   /* ◆ */
+  --a-gv-border-color: var(--kr-line);
+  --a-gv-font-size: var(--kr-fs-sm);
+  --a-gv-line-height: var(--kr-row-lh);
+  --a-gv-cell-height: var(--kr-row-h);                          /* Hook */
+  --a-gv-cell-padding-y: var(--kr-row-pad-y);
+  --a-gv-cell-padding-x: var(--kr-row-pad-x);
+  --a-gv-header-cell-height: var(--kr-head-h);                  /* Hook */
+  --a-gv-header-cell-padding-x: var(--kr-row-pad-x);
+  --a-gv-cell-border-color: var(--kr-line);                     /* ◆ */
+  --a-gv-header-cell-border-color: var(--kr-line);              /* ◆ */
+  --a-gv-header-background-color: var(--kr-surface-sunken);     /* ◆ Kopf: zartes Lavendel-Band */
+  --a-gv-header-text-color: var(--kr-brand-ink);                  /* Tabellenköpfe in Violett (reports.css) */
+  --a-gv-row-hover-background-color: var(--kr-hover);
+  --a-gv-selected-background-color: var(--kr-accent-tint);
+  --a-gv-selected-text-color: var(--kr-ink);
+  --a-gv-deleted-background-color: var(--kr-surface-sunken);
+  --a-gv-grandtotal-background-color: var(--kr-surface-sunken);
+  --a-gv-row-disabled-background-color: var(--kr-surface-sunken);
+  --a-gv-pagination-button-selected-background-color: var(--kr-sun);                /* aktive Seite = Etikett */
+  --a-gv-pagination-button-selected-text-color: var(--kr-sun-ink);
+  --a-toolbar-background-color: transparent;
+  --a-toolbar-border-color: var(--kr-line);
+  --a-toolbar-sep-border-color: var(--kr-line);
+  --a-report-controls-cell-label-background-color: var(--kr-surface);
+  --a-report-controls-cell-label-text-color: var(--kr-ink);
+  --a-splitter-bar-background-color: var(--kr-surface-sunken);
+  --a-resultsitem-background-color: var(--kr-surface);
+  --a-resultsitem-badge-background-color: var(--kr-soft);
+  --ut-resultsregion-background-color: var(--kr-surface);
+  --ut-resultsregion-search-background-color: var(--kr-surface-sunken);
+  --ut-resultsregion-search-border-color: var(--kr-line);
+  --a-kb-shortcut-background-color: var(--kr-soft);
+  --a-kb-shortcut-border-color: var(--kr-line-strong);
+
+  --ut-report-cell-border-color: var(--kr-line);
+  --ut-report-cell-hover-background-color: var(--kr-hover);
+  --ut-report-cell-alt-background-color: var(--kr-surface-sunken);
+  --ut-report-header-background-color: var(--kr-surface-sunken);
+  --ut-report-header-cell-background-color: var(--kr-surface-sunken);
+  --ut-report-header-cell-font-weight: var(--kr-fw-semibold);
+  --ut-report-header-cell-font-size: var(--kr-fs-head);
+  --ut-report-header-cell-padding-y: calc((var(--kr-head-h) - var(--kr-lh-xs) - var(--kr-head-rule-width)) / 2);
+  --ut-report-header-cell-padding-x: var(--kr-row-pad-x);
+  --ut-report-cell-font-size: var(--kr-fs-sm);
+  --ut-report-cell-line-height: var(--kr-row-lh);
+  --ut-report-cell-padding-y: var(--kr-row-pad-y);
+  --ut-report-cell-padding-x: var(--kr-row-pad-x);
+
+  /* 13. Cards -------------------------------------------------------------- */
+  --a-cv-background-color: var(--kr-surface);                   /* ◆ */
+  --a-cv-border-color: var(--kr-line);                          /* ◆ */
+  --a-cv-border-radius: var(--kr-r-lg);                         /* ◆ */
+  --a-cv-shadow: var(--kr-card-shadow);                         /* ◆ ein Hauch unter der Kante */
+  --a-cv-hover-shadow: 0 0 0 1px var(--kr-line-strong), var(--kr-card-shadow);
+  --a-cv-header-border-color: var(--kr-line);
+  --a-cv-actions-border-color: var(--kr-line);
+  --a-cv-subtitle-text-color: var(--kr-muted);
+  --a-cv-subcontent-text-color: var(--kr-muted);
+  --a-cv-badge-background-color: var(--kr-soft);
+  --a-cv-badge-border-radius: var(--kr-r-pill);
+  --a-cv-icon-background-color: var(--kr-soft);                 /* Vita: Hex-Kopie */
+  --a-cv-icon-text-color: var(--kr-ink);
+  --a-cv-initials-background-color: var(--kr-soft);             /* Vita: Hex-Kopie */
+  --a-cv-initials-text-color: var(--kr-ink);
+  --a-cv-focus-border-color: var(--kr-focus-ring-color);        /* Vita: Hex-Kopie */
+  --ut-cardlist-box-shadow: none;
+  --ut-cardlist-border-radius: var(--kr-r-lg);
+
+  /* 14. Badges / Avatare --------------------------------------------------- */
+  --ut-badge-border-radius: var(--kr-r-pill);                   /* Etikett: Pillen */
+  --ut-avatar-border-radius: var(--kr-r-pill);
+
+  /* 15. Akzentpalette --u-color-1…45 (Charts, Avatare, Karten-Icons, u-colors).
+         1–15 aus den Kategorie-Tokens; 16–30 heller (60 % + Weiß, Text Tinte),
+         31–45 dunkler (55 % + Schwarz, Text Weiß) – so scheint keine Vita-Farbe durch. */
+  --u-color-1: var(--kr-cat-1);   --u-color-1-contrast: var(--kr-cat-1-on);
+  --u-color-2: var(--kr-cat-2);   --u-color-2-contrast: var(--kr-cat-2-on);
+  --u-color-3: var(--kr-cat-3);   --u-color-3-contrast: var(--kr-cat-3-on);
+  --u-color-4: var(--kr-cat-4);   --u-color-4-contrast: var(--kr-cat-4-on);
+  --u-color-5: var(--kr-cat-5);   --u-color-5-contrast: var(--kr-cat-5-on);
+  --u-color-6: var(--kr-cat-6);   --u-color-6-contrast: var(--kr-cat-6-on);
+  --u-color-7: var(--kr-cat-7);   --u-color-7-contrast: var(--kr-cat-7-on);
+  --u-color-8: var(--kr-cat-8);   --u-color-8-contrast: var(--kr-cat-8-on);
+  --u-color-9: var(--kr-cat-9);   --u-color-9-contrast: var(--kr-cat-9-on);
+  --u-color-10: var(--kr-cat-10); --u-color-10-contrast: var(--kr-cat-10-on);
+  --u-color-11: var(--kr-cat-11); --u-color-11-contrast: var(--kr-cat-11-on);
+  --u-color-12: var(--kr-cat-12); --u-color-12-contrast: var(--kr-cat-12-on);
+  --u-color-13: var(--kr-cat-13); --u-color-13-contrast: var(--kr-cat-13-on);
+  --u-color-14: var(--kr-cat-14); --u-color-14-contrast: var(--kr-cat-14-on);
+  --u-color-15: var(--kr-cat-15); --u-color-15-contrast: var(--kr-cat-15-on);
+  --u-color-16: color-mix(in srgb, var(--kr-cat-1) 60%, #fff);  --u-color-16-contrast: var(--kr-on-light);
+  --u-color-17: color-mix(in srgb, var(--kr-cat-2) 60%, #fff);  --u-color-17-contrast: var(--kr-on-light);
+  --u-color-18: color-mix(in srgb, var(--kr-cat-3) 60%, #fff);  --u-color-18-contrast: var(--kr-on-light);
+  --u-color-19: color-mix(in srgb, var(--kr-cat-4) 60%, #fff);  --u-color-19-contrast: var(--kr-on-light);
+  --u-color-20: color-mix(in srgb, var(--kr-cat-5) 60%, #fff);  --u-color-20-contrast: var(--kr-on-light);
+  --u-color-21: color-mix(in srgb, var(--kr-cat-6) 60%, #fff);  --u-color-21-contrast: var(--kr-on-light);
+  --u-color-22: color-mix(in srgb, var(--kr-cat-7) 60%, #fff);  --u-color-22-contrast: var(--kr-on-light);
+  --u-color-23: color-mix(in srgb, var(--kr-cat-8) 60%, #fff);  --u-color-23-contrast: var(--kr-on-light);
+  --u-color-24: color-mix(in srgb, var(--kr-cat-9) 60%, #fff);  --u-color-24-contrast: var(--kr-on-light);
+  --u-color-25: color-mix(in srgb, var(--kr-cat-10) 60%, #fff); --u-color-25-contrast: var(--kr-on-light);
+  --u-color-26: color-mix(in srgb, var(--kr-cat-11) 60%, #fff); --u-color-26-contrast: var(--kr-on-light);
+  --u-color-27: color-mix(in srgb, var(--kr-cat-12) 60%, #fff); --u-color-27-contrast: var(--kr-on-light);
+  --u-color-28: color-mix(in srgb, var(--kr-cat-13) 60%, #fff); --u-color-28-contrast: var(--kr-on-light);
+  --u-color-29: color-mix(in srgb, var(--kr-cat-14) 60%, #fff); --u-color-29-contrast: var(--kr-on-light);
+  --u-color-30: color-mix(in srgb, var(--kr-cat-15) 60%, #fff); --u-color-30-contrast: var(--kr-on-light);
+  --u-color-31: color-mix(in srgb, var(--kr-cat-1) 55%, #000);  --u-color-31-contrast: var(--kr-on-dark);
+  --u-color-32: color-mix(in srgb, var(--kr-cat-2) 55%, #000);  --u-color-32-contrast: var(--kr-on-dark);
+  --u-color-33: color-mix(in srgb, var(--kr-cat-3) 55%, #000);  --u-color-33-contrast: var(--kr-on-dark);
+  --u-color-34: color-mix(in srgb, var(--kr-cat-4) 55%, #000);  --u-color-34-contrast: var(--kr-on-dark);
+  --u-color-35: color-mix(in srgb, var(--kr-cat-5) 55%, #000);  --u-color-35-contrast: var(--kr-on-dark);
+  --u-color-36: color-mix(in srgb, var(--kr-cat-6) 55%, #000);  --u-color-36-contrast: var(--kr-on-dark);
+  --u-color-37: color-mix(in srgb, var(--kr-cat-7) 55%, #000);  --u-color-37-contrast: var(--kr-on-dark);
+  --u-color-38: color-mix(in srgb, var(--kr-cat-8) 55%, #000);  --u-color-38-contrast: var(--kr-on-dark);
+  --u-color-39: color-mix(in srgb, var(--kr-cat-9) 55%, #000);  --u-color-39-contrast: var(--kr-on-dark);
+  --u-color-40: color-mix(in srgb, var(--kr-cat-10) 55%, #000); --u-color-40-contrast: var(--kr-on-dark);
+  --u-color-41: color-mix(in srgb, var(--kr-cat-11) 55%, #000); --u-color-41-contrast: var(--kr-on-dark);
+  --u-color-42: color-mix(in srgb, var(--kr-cat-12) 55%, #000); --u-color-42-contrast: var(--kr-on-dark);
+  --u-color-43: color-mix(in srgb, var(--kr-cat-13) 55%, #000); --u-color-43-contrast: var(--kr-on-dark);
+  --u-color-44: color-mix(in srgb, var(--kr-cat-14) 55%, #000); --u-color-44-contrast: var(--kr-on-dark);
+  --u-color-45: color-mix(in srgb, var(--kr-cat-15) 55%, #000); --u-color-45-contrast: var(--kr-on-dark);
+
+  /* 16. Charts (Oracle JET) ------------------------------------------------ */
+  --oj-core-text-color-primary: var(--kr-ink);
+  --oj-core-text-color-secondary: var(--kr-muted);
+  --oj-heading-text-color: var(--kr-heading);
+  --oj-link-text-color: var(--kr-link-text);
+  --oj-core-divider-color: var(--kr-line);
+  --oj-popup-bg-color: var(--kr-surface-raised);
+  --oj-collection-bg-color: var(--kr-surface);
+  --oj-collection-header-bg-color: var(--kr-surface-sunken);
+  --oj-collection-free-space-bg-color: var(--kr-surface);
+  /* Datatip: Vita lässt die Textfarben schwarz – auf der inversen Tooltip-Fläche unlesbar */
+  --ojet-tooltip-primary-text-color: var(--kr-tooltip-text);
+  --ojet-tooltip-secondary-text-color: var(--kr-tooltip-text);
+  --ojet-tooltip-disabled-text-color: var(--kr-tooltip-text);
+
+  /* 17. Code (PrismJS) und Markdown ---------------------------------------- */
+  /* app_ui (hell) und Vita-Dark bringen die VS-Code-Paletten Light+/Dark+ mit (Violett, Navy,
+     Rot; dunkel Schlüsselwörter #C586C0 = ΔE00 9 neben dem Akzent-Text, Kommentar 4,2:1).
+     Hier: drei --kr-code-*-Töne, Kommentare gedämpfte Schrift, Namen in Tinte. Die abgeleiteten
+     Namen aus app_ui (--prism-selector/-keyword-control → keyword, -regex → string,
+     -decorator → class, -json-property → property) folgen von selbst. */
+  --prism-comment: var(--kr-muted);
+  --prism-keyword: var(--kr-code-keyword);
+  --prism-class: var(--kr-code-keyword);
+  --prism-namespace: var(--kr-code-keyword);
+  --prism-string: var(--kr-code-string);
+  --prism-number: var(--kr-code-number);
+  --prism-boolean: var(--kr-code-number);
+  --prism-constant: var(--kr-code-number);
+  --prism-function: var(--kr-ink);
+  --prism-builtin: var(--kr-ink);                               /* auch HTML-Tags */
+  --prism-literal: var(--kr-ink-2);
+  --prism-property: var(--kr-ink-2);                            /* auch HTML-Attribute */
+  --prism-variable: var(--kr-ink-2);
+  --prism-symbol: var(--kr-ink-2);                              /* auch URLs im Markdown-Editor */
+  --prism-interpolation: var(--kr-ink-2);
+  --prism-deleted: var(--kr-danger-text);
+
+  /* Markdown-Inhalte (.is-markdownified, Markdown-Vorschau): Überschriften auf der Skala statt
+     40/32/28/24/20/16 px – eine #-Überschrift im Feld darf nicht größer sein als der Seitentitel.
+     Der Chat (.a-ChatClient .is-markdownified) setzt eigene, kleinere Werte lokal. */
+  --a-md-h1-font-size: var(--kr-fs-xl);
+  --a-md-h1-line-height: var(--kr-lh-xl);
+  --a-md-h2-font-size: var(--kr-fs-lg);
+  --a-md-h2-line-height: var(--kr-lh-lg);
+  --a-md-h3-font-size: var(--kr-fs-md);
+  --a-md-h3-line-height: var(--kr-lh-md);
+  --a-md-h4-font-size: var(--kr-fs-sm);
+  --a-md-h4-line-height: var(--kr-lh-sm);
+  --a-md-h5-font-size: var(--kr-fs-xs);
+  --a-md-h5-line-height: var(--kr-lh-xs);
+  --a-md-h6-font-size: var(--kr-fs-xs);
+  --a-md-h6-line-height: var(--kr-lh-xs);
+  --a-md-blockquote-font-size: var(--kr-fs-lg);                 /* app_ui: 18 px */
+  --a-md-blockquote-line-height: var(--kr-lh-lg);
+  /* Vorschau-Panel und CodeMirror mit Feldpolster (app_ui: 8 px rundum) – Text steht wie im Feld */
+  --a-mdeditor-padding: var(--kr-control-pad-y) var(--kr-control-pad-x);
+}
+
+/* 18. Schwebende Ebenen: aktuelle Grundfläche ----------------------------------
+   Menüs (.a-Menu, auch Mega Menu), jQuery-UI-Dialoge (.ui-dialog: IR/IG-Dialoge, Popup-LOV,
+   Date-Picker- und Combobox-Popup, Inline-Dialoge, Drawer, Hülle der Seiten-Dialoge), das
+   Sortier-Widget der Spaltenköpfe (.a-IRR-sortWidget, hängt an <body>) und der Inhalt der
+   Seiten-Dialoge/-Drawer (eigenes iframe-Dokument) liegen auf --kr-surface-raised. Was „in der
+   Farbe des Grundes“ gezeichnet wird, folgt dort der schwebenden Fläche:
+     · --kr-ground        z. B. die Mitte des aktiven Wizard-Schritts im Modal-Wizard,
+     · --kr-focus-gap     die Lücke des Fokus-Doppelrings (sonst dunkel eine Region-Linie im Ring).
+   Abgeleitete Tokens werden auf dem Element aufgelöst, auf dem sie deklariert sind (:root) –
+   darum stehen die Lücke und die beiden Fokus-Schatten hier noch einmal. Die Formeln sind
+   dieselben wie in tokens/scale.css bzw. light/dark.css (check-tokens.mjs vergleicht sie).
+   Spezifität 0,1,0: Komponenten können einen eigenen Grund lokal setzen. */
+.a-Menu,
+.ui-dialog,
+.a-IRR-sortWidget,
+.t-Dialog-page,
+.t-Drawer-page {
+  --kr-ground: var(--kr-surface-raised);
+  --kr-focus-gap: var(--kr-ground);
+  --kr-focus-shadow: 0 0 0 var(--kr-focus-ring-offset) var(--kr-focus-gap), 0 0 0 calc(var(--kr-focus-ring-offset) + var(--kr-focus-ring-width)) var(--kr-focus-ring-color);
+  --kr-focus-shadow-inset: inset 0 0 0 var(--kr-focus-ring-width) var(--kr-focus-ring-color), inset 0 0 0 calc(var(--kr-focus-ring-width) + 1px) var(--kr-focus-gap);
+}
+
+/* Dichte für Touch (Tablets, Handschuhe im Außendienst): Bedienelemente und Zeilen 40 px.
+   Nur Token-Werte – die Hebel oben (Polster, Zellenhöhen) rechnen sich daraus neu. */
+@media (pointer: coarse) {
+  :root {
+    --kr-control-h: 2.5rem;
+    --kr-control-h-sm: 2rem;
+    --kr-control-h-lg: 3rem;
+    --kr-row-h: 2.5rem;
+    --kr-head-h: 2.5rem;
+    --kr-hit-min: 2.5rem;
+    --kr-checkbox-size: 1.25rem;
+  }
+}

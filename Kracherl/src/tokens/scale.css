@@ -1,0 +1,139 @@
+/* ==========================================================================
+   Kracherl – Tokens MODUSNEUTRAL (Maße, Schrift, Formen, Dichte, Fokus-Geometrie)
+   Gilt für hell, dunkel und auto gleichermaßen; wird von index.css als Erstes geladen.
+   Nur :root-Deklarationen eigener Tokens (--kr-*). Farben stehen in light.css/dark.css.
+   Abgeleitete Tokens (calc/var) werden auf :root aufgelöst: Wer einen Basis-Token lokal
+   ändert, muss die daraus abgeleiteten Hebel dort mitsetzen (siehe docs/ARCHITECTURE.md).
+   ========================================================================== */
+:root {
+  /* Schrift ---------------------------------------------------------------- */
+  /* Text: PT Sans (humanistisch, schmal – dichte Tabellen bleiben ruhig), nur 400 und 700.
+     Überschriften: Bitter (Slab-Serif, variable Achse 100–900) – Etikett-Schrift, 700/800. */
+  --kr-font: "Kracherl Text", "PT Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --kr-font-slab: "Kracherl Slab", "Bitter", "Roboto Slab", Rockwell, "Rockwell Nova", Georgia, serif;
+  --kr-font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --kr-fw-regular: 400;
+  --kr-fw-medium: 400;             /* Labels, Navigation: PT Sans kennt kein 500 – bewusst normal */
+  --kr-fw-semibold: 700;           /* Buttons, Tabellenköpfe, aktive Einträge */
+  --kr-fw-bold: 700;               /* <b>, <strong> */
+  --kr-fw-slab: 700;               /* Region-, Dialog-, Karten-Titel */
+  --kr-fw-slab-heavy: 800;         /* Seitentitel, Logo, Login */
+
+  /* Größen-Skala 12,5 · 13 · 14 · 15 · 18 · 22 · 32 -------------------------
+     PT Sans läuft klein und schmal: 15 px wirken wie 14 px einer breiten Grotesk. */
+  --kr-fs-xs: .78125rem;           /* 12,5  Klein: Hilfe, Badges, Zähler */
+  --kr-fs-head: .8125rem;          /* 13  Tabellenköpfe */
+  --kr-fs-sm: .875rem;             /* 14  Tabellenzellen, Labels, Breadcrumb, Menüs klein */
+  --kr-fs-md: .9375rem;            /* 15  UI, Fließtext, Felder, Buttons */
+  --kr-fs-lg: 1.125rem;            /* 18  Region-Titel (Slab) */
+  --kr-fs-xl: 1.375rem;            /* 22  Abschnitt (Content Block h2, Dialog groß) */
+  --kr-fs-2xl: 2rem;               /* 32  Seitentitel (Slab 800) */
+  --kr-lh-xs: 1rem;                /* zu 12,5 / 13 */
+  --kr-lh-sm: 1.25rem;             /* zu 14 (Tabellenzellen 14/20) */
+  --kr-lh-md: 1.375rem;            /* zu 15 */
+  --kr-lh-body: 1.5rem;            /* zu 15 im Fließtext (Regionen, Content Blocks) */
+  --kr-lh-lg: 1.5rem;              /* zu 18 */
+  --kr-lh-xl: 1.75rem;             /* zu 22 */
+  --kr-lh-2xl: 2.375rem;           /* zu 32 */
+  --kr-tracking-title: -.012em;    /* Seitentitel, Login-Titel (Slab) */
+  --kr-tracking-heading: -.004em;  /* Region-/Abschnittstitel (Slab) */
+  --kr-tracking-ui: .01em;         /* Buttons (fett, etikettenhaft gesperrt) */
+
+  /* Formen: Etikett ------------------------------------------------------- */
+  --kr-r-sm: .375rem;              /* 6  Checkbox, kleine Kacheln */
+  --kr-r-md: .625rem;              /* 10 Felder, Menüeinträge, Tabellen-Innenecken */
+  --kr-r-lg: 1rem;                 /* 16 Regionen, Karten, Menüs, Alerts */
+  --kr-r-xl: 1.5rem;               /* 24 Dialoge, Drawer, Login-Karte */
+  --kr-r-pill: 62rem;              /* Buttons, Badges, Nav-Etikett, Tabs, Chips */
+  --kr-r-dialog: 1.5rem;           /* = --kr-r-xl */
+
+  /* Geometrie: Band, Welle, Inhalt ---------------------------------------- */
+  --kr-header-h: 3.75rem;          /* Kopfband 60 px (statisch – nie per JS/Font verändern) */
+  --kr-brand-lh: 1.75rem;          /* feste Zeilenhöhe Logo/Branding: Font-Swap verschiebt nichts */
+  --kr-wave-h: .875rem;            /* Wellenkante unter dem Band (hängt über den Inhalt, zählt nicht zur Kopfhöhe) */
+  --kr-wave-w: 22.5rem;            /* Wellenlänge 360 px: lang und ruhig */
+  /* Die Welle: eine einzelne, einfarbige Wellenkante als Maske (Farbe = --kr-band) */
+  --kr-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='14' viewBox='0 0 360 14' preserveAspectRatio='none'%3E%3Cpath d='M0 0H360V2C270 2 270 14 180 14S90 2 0 2Z'/%3E%3C/svg%3E");
+  /* dieselbe Welle gespiegelt: eine Fläche, deren Oberkante die Welle ist (Login: der aufsteigende Grund) */
+  --kr-wave-rise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='14' viewBox='0 0 360 14' preserveAspectRatio='none'%3E%3Cpath d='M0 14H360V12C270 12 270 0 180 0S90 12 0 12Z'/%3E%3C/svg%3E");
+  --kr-content-pad-x: 2rem;        /* Innenabstand des Inhalts, waagerecht */
+  --kr-content-pad-y: 1.5rem;      /* Innenabstand des Inhalts, senkrecht */
+  --kr-title-pad-top: 1.75rem;     /* Title Bar oben: Luft unter der Welle */
+  --kr-nav-w: 16rem;               /* aufgeklappte Side-Navigation */
+  --kr-nav-rail-w: 4.25rem;        /* eingeklappte Icon-Leiste */
+  --kr-nav-inset: .625rem;         /* Einzug der Nav-Etiketten zur Spaltenkante */
+
+  /* Abstände (4er-Raster) -------------------------------------------------- */
+  --kr-space-1: .25rem;            /* 4 */
+  --kr-space-2: .5rem;             /* 8 */
+  --kr-space-3: .75rem;            /* 12 */
+  --kr-space-4: 1rem;              /* 16 */
+  --kr-space-5: 1.25rem;           /* 20 */
+  --kr-space-6: 1.5rem;            /* 24 */
+  --kr-space-8: 2rem;              /* 32 */
+  --kr-space-12: 3rem;             /* 48 */
+  --kr-region-gap: 1.5rem;         /* Abstand zwischen Regionen */
+  --kr-region-pad-x: 1.25rem;      /* Innenabstand der Region, waagerecht */
+  --kr-region-pad-y: 1rem;         /* Innenabstand der Region, senkrecht */
+
+  /* Dichte (Desktop 32 px; unter pointer: coarse 40 px – siehe bridge.css) --- */
+  --kr-control-h: 2rem;            /* Höhe Buttons, Felder, Selects, Pillen (inkl. Rand) */
+  --kr-control-h-sm: 1.5rem;       /* kleine Buttons (t-Button--small), Toolbar-Icons */
+  --kr-control-h-lg: 2.5rem;       /* große Buttons (t-Button--large), Login */
+  --kr-control-lh: 1.25rem;        /* Zeilenhöhe im Control */
+  --kr-control-pad-x: .75rem;      /* Innenabstand waagerecht (Felder); Buttons: Pille, +4 px */
+  --kr-control-pad-y: calc((var(--kr-control-h) - var(--kr-control-lh)) / 2);  /* inkl. 1 px Rand (app_ui-Konvention) */
+  --kr-row-h: 2.25rem;             /* Tabellenzeile 36 px inkl. Haarlinie */
+  --kr-row-lh: 1.25rem;            /* Zeilenhöhe in Zellen (14/20) */
+  --kr-row-pad-x: .75rem;          /* Zellen-Innenabstand waagerecht */
+  --kr-row-pad-y: calc((var(--kr-row-h) - var(--kr-row-lh) - 1px) / 2);        /* = 7,5 px */
+  --kr-head-h: 2.375rem;           /* Tabellenkopf 38 px */
+  --kr-hit-min: 1.5rem;            /* Mindest-Trefferfläche (WCAG 2.5.8); coarse: 2.5rem */
+  --kr-checkbox-size: 1.125rem;    /* Checkbox/Radio */
+
+  /* Linien-Geometrie ------------------------------------------------------ */
+  --kr-hairline: 1px;              /* Haarlinie: Zeilen, Trenner, Region-Kante */
+  --kr-head-rule-width: 1px;       /* Grundlinie unter Tabellenköpfen */
+  --kr-rule-strong: 2px;           /* kräftige Linie (Summenzeile, betonte Köpfe) */
+  --kr-mark-w: .1875rem;           /* Brause-Orange-Marke: Stärke (aktiver Tab, Wizard) */
+
+  /* Fokus-Geometrie (Farben: --kr-focus-ring-color / --kr-focus-gap) ------ */
+  --kr-focus-ring-width: 2px;
+  --kr-focus-ring-offset: 2px;
+  --kr-focus-outline: var(--kr-focus-ring-width) solid var(--kr-focus-ring-color);
+  /* Doppelring als Schatten (wo outline abgeschnitten würde): innen Grundfläche (--kr-focus-gap),
+     außen Orange. Beide Schatten stehen für schwebende Ebenen noch einmal in bridge.css §18. */
+  --kr-focus-shadow: 0 0 0 var(--kr-focus-ring-offset) var(--kr-focus-gap), 0 0 0 calc(var(--kr-focus-ring-offset) + var(--kr-focus-ring-width)) var(--kr-focus-ring-color);
+  /* nach innen (Zeilen, Zellen, Nav-Einträge in overflow-Containern) */
+  --kr-focus-shadow-inset: inset 0 0 0 var(--kr-focus-ring-width) var(--kr-focus-ring-color), inset 0 0 0 calc(var(--kr-focus-ring-width) + 1px) var(--kr-focus-gap);
+  /* Felder: Randfarbe = Ringfarbe + 1 px Schatten = 2 px Ring ohne Layoutsprung */
+  --kr-focus-field-shadow: 0 0 0 1px var(--kr-focus-ring-color);
+
+  /* Links (Farben in light/dark) ----------------------------------------- */
+  --kr-link-underline-width: 1px;
+  --kr-link-underline-width-hover: 2px;
+  --kr-link-underline-offset: .2em;
+
+  /* Pflichtfeld ----------------------------------------------------------- */
+  --kr-required-mark: "*";         /* in Textschrift, nicht als Icon */
+  --kr-required-gap: .25rem;       /* Abstand Label-Text → Markierung */
+
+  /* Bewegung -------------------------------------------------------------- */
+  --kr-duration: .14s;
+  --kr-ease: cubic-bezier(.2, 0, 0, 1);
+  --kr-rise: 14s;                  /* aufsteigende Blasen auf der Login-Seite (0 s = still) */
+}
+
+/* Mobil (< 640 px): schmalerer Innenabstand, flachere Welle ------------------ */
+@media (max-width: 639px) {
+  :root {
+    --kr-content-pad-x: .75rem;    /* 12 px – Inhaltsbreite bei 390 px: 366 px */
+    --kr-content-pad-y: 1rem;
+    --kr-title-pad-top: .375rem;   /* 6 px: hier zählt der Wellenstreifen (14 px) schon zur Kopfhöhe (shell.css §1) */
+    --kr-region-gap: 1rem;
+    --kr-region-pad-x: 1rem;
+    --kr-wave-w: 15rem;
+    --kr-fs-2xl: 1.625rem;         /* 26: lange Seitentitel passen auf 390 px */
+    --kr-lh-2xl: 2rem;
+  }
+}

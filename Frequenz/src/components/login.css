@@ -1,0 +1,138 @@
+/* ==========================================================================
+   Frequenz – Login
+   Die Anmeldung ist eine große, stark gerundete Karte (40 px) auf der weißen Seite:
+   oben ein Markenkopf mit App-Symbol und Titel in Weiß (800), darunter die graue Tafel
+   mit weißen Feldern und der Anmelde-Taste. Keine APEX-Hintergrundbilder.
+   Regeln: nur Tokens (--fq-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Lokale Tokens: --fq-c-login-pad (Innenabstand der Karte).
+   ========================================================================== */
+
+.t-PageBody--login {
+  --ut-login-page-background-color: var(--fq-surface);
+  --ut-login-region-background-color: var(--fq-panel);
+  --ut-login-region-filter: none;
+  --ut-login-region-border-width: 0px;
+  --ut-login-region-border-radius: var(--fq-r-hero);
+  --ut-login-region-box-shadow: none;
+  --ut-login-region-max-width: 30rem;
+  --ut-login-logo-size: 3rem;
+  --ut-login-logo-font-size: 1.75rem;
+  --ut-login-container-item-spacing: var(--fq-space-4);
+  --fq-c-login-pad: var(--fq-space-8);
+}
+@media (max-width: 639px) {
+  .t-PageBody--login {
+    --fq-c-login-pad: var(--fq-space-6);
+    --ut-login-region-border-radius: var(--fq-r-panel);
+  }
+}
+/* Hintergrund-Varianten: kein Bild, kein Verlauf – die weiße (dunkel: schwarze) Seite */
+.t-LoginPage--bg1,
+.t-LoginPage--bg2,
+.t-LoginPage--bg3 {
+  --ut-body-background-color: var(--fq-surface);
+}
+.t-LoginPage--bg1 .t-Login-bgImg,
+.t-LoginPage--bg2 .t-Login-bgImg,
+.t-LoginPage--bg3 .t-Login-bgImg,
+.t-LoginPage--bg1:before,
+.t-LoginPage--bg2:before,
+.t-LoginPage--bg3:before {
+  background-image: none;
+}
+
+/* Karte: Kopf und Körper teilen sich den Radius */
+.t-Login-region {
+  padding: 0 0 var(--fq-c-login-pad);
+  overflow: clip;
+}
+/* Kopf: Markenfläche, Symbol und Titel linksbündig in Weiß */
+.t-Login-header {
+  padding: var(--fq-c-login-pad) var(--fq-c-login-pad) var(--fq-space-6);
+  background-color: var(--fq-brand);
+  color: var(--fq-brand-on);
+  text-align: start;
+}
+/* App-Symbol: runde Kachel (Bild-Symbole behalten ihre Farben, Font-Symbole weiß auf
+   abgedunkelter Markenfarbe) */
+.t-Login-logo {
+  --ut-app-icon-background-color: var(--fq-wash-press);
+  --ut-app-icon-color: var(--fq-brand-on);
+  margin: 0 0 var(--fq-space-5);
+  border-radius: var(--fq-r-pill);
+}
+.t-Login-title {
+  font-size: var(--fq-fs-3xl);
+  line-height: var(--fq-lh-3xl);
+  font-weight: var(--fq-fw-heavy);
+  letter-spacing: var(--fq-tracking-title);
+  text-align: start;
+  margin: 0;
+}
+.t-Login-region--headerTitle .t-Login-header {
+  padding-block-start: var(--fq-c-login-pad);
+}
+/* ohne Kopf: der Körper beginnt mit vollem Polster */
+.t-Login-region--headerHidden .t-Login-body {
+  padding-block-start: var(--fq-c-login-pad);
+}
+/* Körper: graue Tafel, weiße Felder */
+.t-Login-body {
+  padding: var(--fq-space-6) var(--fq-c-login-pad) 0;
+}
+.t-Login-buttons,
+.t-Login-links,
+.t-Login-subRegions {
+  padding-inline: var(--fq-c-login-pad);
+}
+
+/* Anmelde-Button: groß (44 px, Touch 48 px) aus den Dichte-Tokens */
+.t-Login-buttons {
+  --a-button-padding-y: calc((var(--fq-control-h-lg) - var(--fq-control-lh)) / 2);
+  --a-button-font-size: var(--fq-fs-lg);
+  --a-button-line-height: var(--fq-control-lh);
+  --a-button-font-weight: var(--fq-fw-heavy);
+  padding-block-start: var(--fq-space-2);
+}
+
+/* Fehlerseite (Error Page Template, gleiches Login-Gerüst): die Meldung als große Tafel */
+.t-Login-containerBody > .t-Alert--wizard {
+  --ut-alert-background-color: var(--fq-panel);
+  --ut-alert-wizard-border-radius: var(--fq-r-hero);
+  --ut-alert-box-shadow: none;
+}
+
+/* Geteilte Ansicht: die Seite wird zur großen Markenfläche, die Anmeldung steht als weiße
+   (dunkel: schwarze) Spalte davor – zur Fläche hin stark gerundet. Der Kopf der Karte ist hier
+   nicht in der Markenfarbe, sondern Anthrazit auf Weiß: die Marke trägt die Fläche daneben.
+   Die Fläche ist --fq-brand-area: hell das Block-Magenta, dunkel ein tiefes Magenta (blendet nicht). */
+.t-LoginPage--split {
+  --ut-body-background-color: var(--fq-brand-area);
+}
+.t-LoginPage--split .t-Login-container {
+  background-color: var(--fq-surface);
+  box-shadow: none;
+  border-start-end-radius: var(--fq-r-hero);
+  border-end-end-radius: var(--fq-r-hero);
+}
+.u-RTL .t-LoginPage--split .t-Login-container {
+  border-start-end-radius: var(--fq-r-hero);
+  border-end-end-radius: var(--fq-r-hero);
+}
+.t-LoginPage--split .t-Login-region {
+  padding: 0;
+}
+.t-LoginPage--split .t-Login-header {
+  background-color: transparent;
+  color: var(--fq-ink);
+}
+.t-LoginPage--split .t-Login-logo {
+  --ut-app-icon-background-color: var(--fq-soft);
+  --ut-app-icon-color: var(--fq-ink);
+}
+@media (max-width: 639px) {
+  .t-LoginPage--split .t-Login-container {
+    max-width: none;
+    border-radius: 0;
+  }
+}

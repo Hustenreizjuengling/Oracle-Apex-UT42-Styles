@@ -1,0 +1,65 @@
+/* ==========================================================================
+   Passepartout – Tokens HELL
+   Nur eigene Tokens (--canvas-*). Das Mapping auf die UT- und APEX-Variablen steht in map.css,
+   die Komponentenregeln in theme.css – beide modusneutral.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: light;
+
+  /* Flächen -------------------------------------------------------------- */
+  --canvas-frame: #E8EBEF;             /* Passepartout: Seitengrund, Kopf, Navigation */
+  --canvas-frame-hover: rgb(21 24 28 / .06);
+  --canvas-frame-press: rgb(21 24 28 / .10);
+  --canvas-surface: #FFFFFF;           /* Leinwand */
+  --canvas-surface-sunken: #F5F6F8;    /* Hinweisblöcke, Tabellenkopf, Toolbars */
+  --canvas-surface-raised: #FFFFFF;    /* Menüs, Dialoge, Popups */
+  --canvas-field: #FFFFFF;             /* Eingabefelder */
+  --canvas-field-readonly: #F5F6F8;
+  --canvas-soft: #E8EBEF;              /* Sekundär-Button = Stück Rahmen */
+  --canvas-soft-hover: #DDE1E6;
+  --canvas-soft-press: #D2D7DD;
+  --canvas-hover: #F4F5F7;             /* Zeilen-Hover auf der Leinwand */
+  --canvas-scrim: rgb(14 16 19 / .38);
+
+  /* Text ------------------------------------------------------------------ */
+  --canvas-ink: #15181C;               /* Tusche 17.8:1 */
+  --canvas-ink-2: #2F353C;             /* Labels */
+  --canvas-muted: #59616B;             /* Graphit 6.3:1 */
+  --canvas-placeholder: #6B7380;       /* 4.8:1 */
+  --canvas-on-dark: #FFFFFF;
+
+  /* Linien ---------------------------------------------------------------- */
+  --canvas-line: #E3E6EA;              /* Haarlinie */
+  --canvas-line-2: #D3D8DE;            /* kräftigere Haarlinie (Tabellenkopf) */
+  --canvas-edge: #8A929C;              /* Feldkante 3.15:1 */
+  --canvas-edge-hover: #6B7380;
+
+  /* Akzent: Kartenmagenta ------------------------------------------------- */
+  --canvas-accent: #B0106E;
+  --canvas-accent-hover: #960C5D;
+  --canvas-accent-press: #7E0A4E;
+  --canvas-accent-on: #FFFFFF;         /* 6.7:1 */
+  --canvas-accent-text: #B0106E;       /* 6.7:1 auf Leinwand */
+  --canvas-accent-tint: #FBEAF3;       /* Auswahl-Fläche */
+  --canvas-accent-tint-2: #F6D3E6;
+  --canvas-accent-ring: rgb(176 16 110 / .20);
+
+  /* Status ---------------------------------------------------------------- */
+  --canvas-success: #1E7F4F;  --canvas-success-hover: #19704A; --canvas-success-on: #FFFFFF;
+  --canvas-success-text: #1E7F4F; --canvas-success-tint: #E7F3EC;
+  --canvas-warning: #E9A21B;  --canvas-warning-hover: #F0B23F; --canvas-warning-on: #15181C;
+  --canvas-warning-text: #8F5200; --canvas-warning-tint: #FDF3DC;
+  --canvas-danger: #C4331C;   --canvas-danger-hover: #AD2C18; --canvas-danger-on: #FFFFFF;
+  --canvas-danger-text: #B02E19; --canvas-danger-tint: #FBECE9;
+  --canvas-info: #3C6690;     --canvas-info-hover: #335879;   --canvas-info-on: #FFFFFF;
+  --canvas-info-text: #3C6690; --canvas-info-tint: #EAF0F6;
+
+  /* Tiefe ----------------------------------------------------------------- */
+  --canvas-canvas-shadow: 0 0 0 1px rgb(21 24 28 / .035);
+  --canvas-float-shadow: 0 16px 40px -12px rgb(16 20 26 / .22), 0 2px 6px rgb(16 20 26 / .06), 0 0 0 1px rgb(16 20 26 / .06);
+  --canvas-tooltip-bg: #15181C;
+  --canvas-tooltip-text: #FFFFFF;
+
+  /* Select-Pfeil (Graphit) */
+  --canvas-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M12 6l4 4 4-4' fill='none' stroke='%2359616B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}

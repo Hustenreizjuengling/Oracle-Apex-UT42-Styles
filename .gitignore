@@ -1,0 +1,6 @@
+node_modules/
+_reference/
+_tmp/
+# Theme-Export aus dem App Builder: enthält Kopien der Oracle-Templates
+Passepartout/install/passepartout-theme-export.sql
+*.log

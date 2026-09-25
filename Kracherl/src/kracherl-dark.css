@@ -1,0 +1,7 @@
+/* Kracherl Dark – Basis: Vita-Dark. Farb-Tokens dunkel, danach der modusneutrale Kern.
+   Der Druck ist immer hell: die hellen Farb-Tokens gelten zusätzlich unter „print“.
+   (Jede Datei nur EINMAL pro Bundle importieren – Lightning CSS legt doppelte Importe an
+   die Stelle des letzten Imports und entfernt dabei die Media-Bedingung.) */
+@import "./tokens/dark.css";
+@import "./tokens/light.css" print;
+@import "./index.css";

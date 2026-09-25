@@ -1,0 +1,154 @@
+/* ==========================================================================
+   Passer – Farb-Tokens DUNKEL „Nachtdruck“ (Basis Vita-Dark; im Auto-Style unter
+   prefers-color-scheme: dark)
+   Neonfarben auf tief eingefärbtem Indigo-Papier: Mint-Teal als Arbeitsfarbe, Pink als
+   Passer-Platte, Gelb als Marker. Die Druckfarben addieren sich (screen) statt sich zu
+   multiplizieren. Status-Flächen sind hell mit Tusche-Schrift – leuchtende Farbe auf
+   dunklem Grund, Text trotzdem mit hohem Kontrast.
+   Exakt dieselben Namen wie light.css; nur :root, nur Werte.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: dark;
+
+  /* Papier und Bögen ------------------------------------------------------ */
+  --pa-surface: #17172E;           /* Nachtpapier: tief indigo gefärbt */
+  --pa-sheet: #1E1E3A;             /* Bogen: Tabellen, Karten */
+  --pa-sheet-stripe: #22223F;      /* Zebra-Zeile auf dem Bogen */
+  --pa-surface-sunken: #0E0E20;    /* Rastertönung (tiefer): Code, Readonly, Segment-Spur */
+  --pa-surface-raised: #252545;    /* schwebend: Menüs, Dialoge, Popups */
+  --pa-raised-hover: #32325A;      /* Hover auf schwebender Fläche (1.25 schwebend) */
+  --pa-ground: var(--pa-surface);
+  --pa-hover: #222242;
+  --pa-press: #2A2A4E;
+  --pa-soft: #2A2A4C;              /* Sekundär-Fläche: heller als das Papier */
+  --pa-soft-hover: #333358;
+  --pa-soft-press: #3C3C63;
+  --pa-tint-hover: rgb(236 235 248 / .08);
+  --pa-tint-press: rgb(236 235 248 / .13);
+  --pa-field: #1E1E3A;             /* Felder: Bogen */
+  --pa-field-readonly: #141430;
+  --pa-scrim: rgb(6 6 18 / .66);
+
+  /* Kopf: Teal im Nachtdruck ---------------------------------------------- */
+  --pa-header-bg: #0D4448;         /* tiefes Teal (Text 9.2) */
+  --pa-header-text: #ECEBF8;
+  --pa-header-hover: #23555A;       /* = Papierlicht 10 % über dem Kopf, deckend: die Taste deckt das Raster ab (Text 7.1) */
+  --pa-header-press: #336066;       /* = Papierlicht 17 %, deckend (Text 5.9) */
+  --pa-header-plate: #FF5CB8;
+  --pa-header-dots: #84122A;         /* Halbton-Punkte im Kopf: im Überdruck (screen, 90 %) mit dem Teal rosa #7E5063 –
+                                      Kopfschrift über einem Punktkern 5.5 (tools/check-tokens.mjs, „Kopf-Raster“) */
+
+  /* Text ------------------------------------------------------------------ */
+  --pa-ink: #ECEBF8;               /* 14.9 Papier */
+  --pa-ink-2: #D2D1EA;
+  --pa-muted: #A9A8C8;             /* 7.6 Papier */
+  --pa-placeholder: #9C9BBE;       /* 6.0 im Feld */
+  --pa-disabled: #6F6E92;
+  --pa-on-dark: #FFFFFF;
+  --pa-on-light: #1E2049;
+
+  /* Linien ---------------------------------------------------------------- */
+  --pa-line-subtle: #262646;
+  --pa-line: #34345A;              /* Haarlinie */
+  --pa-line-strong: #4C4C78;
+  --pa-edge: #7E7DA2;              /* Feldkante (4.5 Papier, 4.1 Feld) */
+  --pa-edge-hover: #A9A8C8;
+  --pa-head-rule: #D2D1EA;
+
+  /* Arbeitsfarbe Mint-Teal ------------------------------------------------ */
+  --pa-accent: #3CCFC0;            /* Vollton, Tusche-Schrift darauf */
+  --pa-accent-hover: #5ADCCD;
+  --pa-accent-press: #7BE6D9;
+  --pa-accent-on: #111126;
+  --pa-accent-text: #5ADCCD;       /* 10.5 Papier */
+  --pa-accent-tint: #173F4A;       /* Auswahl-Fläche */
+  --pa-accent-tint-2: #1C5058;
+  --pa-accent-ring: rgb(90 220 205 / .30);
+
+  /* Passer-Platte: Fluoreszenz-Pink ---------------------------------------- */
+  --pa-plate: #FF5CB8;
+  --pa-overprint: screen;
+
+  /* Marker: Gelb ---------------------------------------------------------- */
+  --pa-marker: #FFE600;
+  --pa-marker-soft: #4A4418;       /* Marker nachts: dunkles Gelb, helle Tusche darauf */
+  --pa-marker-text: #111126;
+
+  /* Fokus ----------------------------------------------------------------- */
+  --pa-focus-ring-color: #5ADCCD;  /* 10.5 Papier, 7.8 schwebend */
+  --pa-focus-gap: var(--pa-ground);
+
+  /* Links ----------------------------------------------------------------- */
+  --pa-link-text: #ECEBF8;
+  --pa-link-underline: #7E7DA2;
+  --pa-link-underline-hover: #5ADCCD;
+
+  /* Textauswahl ----------------------------------------------------------- */
+  --pa-selection: #FFE600;
+  --pa-selection-text: #111126;
+
+  /* Pflichtfeld-Markierung ------------------------------------------------ */
+  --pa-required-color: #FF8F8A;
+
+  /* Status ---------------------------------------------------------------- */
+  --pa-success: #3FCB8E;
+  --pa-success-hover: #62D7A4;
+  --pa-success-on: #111126;
+  --pa-success-text: #5DD39A;
+  --pa-success-tint: #173A36;
+
+  --pa-warning: #FFC94D;
+  --pa-warning-hover: #FFD674;
+  --pa-warning-on: #111126;
+  --pa-warning-text: #FFCF62;
+  --pa-warning-tint: #3A3322;
+
+  --pa-danger: #F46A4E;            /* Rot-Orange: klar getrennt vom Pink der Platte und vom Mint (auch Protan) */
+  --pa-danger-hover: #FF826A;
+  --pa-danger-on: #111126;
+  --pa-danger-text: #FF8F8A;
+  --pa-danger-tint: #432234;
+
+  --pa-info: #B39AF2;
+  --pa-info-on: #111126;
+  --pa-info-text: #C4A8FF;
+  --pa-info-tint: #2D2552;
+
+  /* Code ------------------------------------------------------------------ */
+  --pa-code-keyword: #5ADCCD;
+  --pa-code-string: #5DD39A;
+  --pa-code-number: #FFCF62;
+
+  /* Tiefe ----------------------------------------------------------------- */
+  --pa-float-shadow: 0 0 0 1px rgb(236 235 248 / .12), .25rem .25rem 0 rgb(0 0 0 / .35), 0 14px 36px -12px rgb(0 0 0 / .7);
+  --pa-tooltip-bg: #ECEBF8;
+  --pa-tooltip-text: #17172E;
+
+  /* Scrollbars ------------------------------------------------------------ */
+  --pa-scrollbar-thumb: rgb(236 235 248 / .26);
+  --pa-scrollbar-track: transparent;
+
+  /* Druckbild ------------------------------------------------------------- */
+  --pa-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .925 0 0 0 0 .92 0 0 0 0 .97 .2 0 0 0 -.07'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+  --pa-halftone-ink: #FF5CB8;
+
+  /* Icons ----------------------------------------------------------------- */
+  --pa-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M12 6l4 4 4-4' fill='none' stroke='%23A9A8C8' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Kategorie-/Diagrammpalette: dieselben Druckfarben, für Nachtpapier aufgehellt */
+  --pa-cat-1: #3CCFC0;  --pa-cat-1-on: #111126;   /* Serie 1  Teal */
+  --pa-cat-2: #4FD08A;  --pa-cat-2-on: #111126;   /* Serie 9  Druckgrün */
+  --pa-cat-3: #C9A56B;  --pa-cat-3-on: #111126;   /* Serie 6  Mattgold */
+  --pa-cat-4: #CC3389;  --pa-cat-4-on: #FFFFFF;   /* Serie 2  Fluoreszenz-Pink */
+  --pa-cat-5: #FF8A57;  --pa-cat-5-on: #111126;   /* Serie 10 Orange */
+  --pa-cat-6: #93B86F;  --pa-cat-6-on: #111126;   /* Serie 12 Moos */
+  --pa-cat-7: #8C93F0;  --pa-cat-7-on: #111126;   /* Serie 3  Überdruck-Indigo (Teal × Pink) */
+  --pa-cat-8: #D37FA8;  --pa-cat-8-on: #111126;   /* Serie 7  Burgund */
+  --pa-cat-9: #FFC94D;  --pa-cat-9-on: #111126;   /* Serie 4  Sonnengelb */
+  --pa-cat-10: #FF9FB0; --pa-cat-10-on: #111126;  /* Serie 8  Koralle */
+  --pa-cat-11: #9AAABB; --pa-cat-11-on: #111126;  /* Serie 11 Schiefer */
+  --pa-cat-12: #C4B5F5; --pa-cat-12-on: #111126;  /* Serie 5  Violett */
+  --pa-cat-13: #4E9EA0; --pa-cat-13-on: #111126;  /* Tiefes Teal */
+  --pa-cat-14: #A9A8C8; --pa-cat-14-on: #111126;  /* Tusche 40 % */
+  --pa-cat-15: #7E7DA2; --pa-cat-15-on: #111126;  /* Tusche 70 % */
+}

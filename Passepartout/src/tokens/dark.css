@@ -1,0 +1,134 @@
+/* ==========================================================================
+   Passepartout – Farb-Tokens DUNKEL (Basis Vita-Dark; im Auto-Style unter prefers-color-scheme: dark)
+   Eigenständig gestaltet, nicht invertiert: Die Leinwand liegt deutlich HELLER als der fast
+   schwarze Rahmen (Erhebung = Licht; Leinwand/Rahmen 1.4:1), Magenta als Fläche satter, als Text
+   und Fokus heller. Status-Flächen sind hell mit dunkler Schrift – so bleibt der magentafarbene
+   Primär-Button (weiße Schrift) die einzige gesättigte dunkle Fläche.
+   Exakt dieselben Namen wie light.css; nur :root, nur Werte.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: dark;
+
+  /* Flächen -------------------------------------------------------------- */
+  --pp-frame: #0B0C0F;
+  --pp-frame-hover: rgb(237 239 242 / .07);
+  --pp-frame-press: rgb(237 239 242 / .11);
+  --pp-surface: #282C33;           /* Leinwand (1.40:1 gegen Rahmen; Ziel ≥ 1.3, ~1.4) */
+  --pp-surface-sunken: #22252B;
+  --pp-surface-raised: #30353D;
+  --pp-raised-hover: #3D424B;      /* Hover auf schwebender Fläche (1.22 schwebend; --pp-soft hätte 1.13, --pp-hover 1.02) */
+  --pp-ground: var(--pp-surface);
+  --pp-hover: #2F343B;
+  --pp-press: #363B43;
+  --pp-soft: #383D46;              /* Sekundär-Button, aktiver Tab: heller als die Leinwand */
+  --pp-soft-hover: #414751;
+  --pp-soft-press: #4A515C;
+  --pp-field: #1E2126;             /* Felder liegen als Vertiefung in der Leinwand */
+  --pp-field-readonly: #24282E;
+  --pp-scrim: rgb(0 0 0 / .6);
+
+  /* Text ------------------------------------------------------------------ */
+  --pp-ink: #EDEFF2;               /* 12.2 Leinwand, 17.0 Rahmen */
+  --pp-ink-2: #D4D8DE;
+  --pp-muted: #A7AFB9;             /* 6.3 Leinwand */
+  --pp-placeholder: #979FAA;       /* 6.0 im Feld */
+  --pp-disabled: #6E7681;
+  --pp-on-dark: #FFFFFF;
+  --pp-on-light: #15181C;
+
+  /* Linien ---------------------------------------------------------------- */
+  --pp-line-subtle: #353A41;
+  --pp-line: #434951;              /* Haarlinie (1.5 Leinwand) */
+  --pp-line-strong: #58606A;
+  --pp-edge: #7D8590;              /* Feldkante (3.8 Leinwand, 4.3 Feld) */
+  --pp-edge-hover: #9BA3AE;
+  --pp-head-rule: #C9CED5;
+
+  /* Akzent: Kartenmagenta ------------------------------------------------- */
+  --pp-accent: #C72A80;            /* Weiß darauf 5.2 */
+  --pp-accent-hover: #B5226F;
+  --pp-accent-press: #A01C63;
+  --pp-accent-on: #FFFFFF;
+  --pp-accent-text: #F07AB8;       /* 5.5 Leinwand, 4.8 schwebend */
+  --pp-accent-tint: #482C42;
+  --pp-accent-tint-2: #5B2B4C;
+  --pp-accent-ring: rgb(240 122 184 / .32);
+
+  /* Fokus ----------------------------------------------------------------- */
+  --pp-focus-ring-color: #F07AB8;  /* 5.5 Leinwand, 7.6 Rahmen, 4.3 Sekundär-Button */
+  --pp-focus-gap: var(--pp-ground);
+
+  /* Links ----------------------------------------------------------------- */
+  --pp-link-text: #EDEFF2;
+  --pp-link-underline: #7D8590;
+  --pp-link-underline-hover: #F07AB8;
+
+  /* Textauswahl ----------------------------------------------------------- */
+  --pp-selection: #6A2E57;
+  --pp-selection-text: #FFFFFF;
+
+  /* Pflichtfeld ----------------------------------------------------------- */
+  --pp-required-color: #FF9677;
+
+  /* Status (helle Flächen, dunkle Schrift) -------------------------------- */
+  --pp-success: #45B07C;
+  --pp-success-hover: #5BBE8D;
+  --pp-success-on: #15181C;
+  --pp-success-text: #6BCB9A;
+  --pp-success-tint: #26393A;
+
+  --pp-warning: #E9A21B;
+  --pp-warning-hover: #F2B544;
+  --pp-warning-on: #15181C;
+  --pp-warning-text: #F0B84E;
+  --pp-warning-tint: #3B372E;
+
+  --pp-danger: #EE6A48;            /* Tusche darauf 5.8 – orange-rot, heller als Magenta */
+  --pp-danger-hover: #F47F60;
+  --pp-danger-on: #15181C;
+  --pp-danger-text: #FF9677;
+  --pp-danger-tint: #413235;
+
+  --pp-info: #68B4B8;              /* Petrol hell (ΔE00 ≥ 17 zu APEX-Chartblau #309FDB) */
+  --pp-info-hover: #80C1C4;
+  --pp-info-on: #15181C;
+  --pp-info-text: #8DCBCD;
+  --pp-info-tint: #2A3C40;
+
+  /* Code: Syntax-Hervorhebung (Zuordnung: bridge.css §17) ------------------ */
+  --pp-code-keyword: #8DCBCD;      /* Petrol hell (7.7 Leinwand, 6.8 schwebend) */
+  --pp-code-string: #6BCB9A;       /* Grün hell (7.1 Leinwand, 6.3 schwebend) */
+  --pp-code-number: #F0B84E;       /* Ocker hell (7.8 Leinwand, 6.9 schwebend) */
+
+  /* Tiefe ----------------------------------------------------------------- */
+  --pp-canvas-shadow: 0 0 0 1px rgb(255 255 255 / .05);
+  --pp-float-shadow: 0 18px 44px -12px rgb(0 0 0 / .7), 0 0 0 1px rgb(255 255 255 / .08);
+  --pp-tooltip-bg: #EDEFF2;
+  --pp-tooltip-text: #15181C;
+
+  /* Scrollbars ------------------------------------------------------------ */
+  --pp-scrollbar-thumb: rgb(237 239 242 / .26);
+  --pp-scrollbar-thumb-hover: rgb(237 239 242 / .42);
+  --pp-scrollbar-track: transparent;
+
+  /* Icons ----------------------------------------------------------------- */
+  --pp-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M12 6l4 4 4-4' fill='none' stroke='%23A7AFB9' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Kategorie-/Diagrammpalette dunkel: gleiche Farbtöne, aufgehellt mit erhaltener
+     Helligkeitsstaffelung (alle >= 3.5:1 gegen die Leinwand), jede ≥ 20 ΔE00 vom Akzent. */
+  --pp-cat-1: #1C91A0;  --pp-cat-1-on: #15181C;   /* Petrol, ΔE00 15 zu APEX-Chartblau #309FDB */
+  --pp-cat-2: #AC9982;  --pp-cat-2-on: #15181C;
+  --pp-cat-3: #7FDCF0;  --pp-cat-3-on: #15181C;
+  --pp-cat-4: #F5AA3E;  --pp-cat-4-on: #15181C;
+  --pp-cat-5: #BFB0F5;  --pp-cat-5-on: #15181C;
+  --pp-cat-6: #6B9D55;  --pp-cat-6-on: #15181C;
+  --pp-cat-7: #4CB898;  --pp-cat-7-on: #15181C;
+  --pp-cat-8: #C2C67C;  --pp-cat-8-on: #15181C;
+  --pp-cat-9: #986CEA;  --pp-cat-9-on: #15181C;   /* Violett wie hell (ΔE00 ≥ 22 zum Akzent) */
+  --pp-cat-10: #A47672; --pp-cat-10-on: #15181C;  /* Rosenholz wie hell (ΔE00 ≥ 21 zum Akzent) */
+  --pp-cat-11: #F4B39E; --pp-cat-11-on: #15181C;
+  --pp-cat-12: #F06D4B; --pp-cat-12-on: #15181C;
+  --pp-cat-13: #4F8A96; --pp-cat-13-on: #15181C;
+  --pp-cat-14: #B9C3CE; --pp-cat-14-on: #15181C;
+  --pp-cat-15: #8D98A4; --pp-cat-15-on: #15181C;
+}

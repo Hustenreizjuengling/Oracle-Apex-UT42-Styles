@@ -1,0 +1,650 @@
+/* ==========================================================================
+   Passer – Brücke: --pa-* → Universal Theme (--ut-*), APEX (--a-*, --jui-*), JET (--oj-*)
+   Modusneutral: ausschließlich var()-Verweise auf eigene Tokens (keine Farbwerte), gilt für
+   hell, dunkel und auto. Enthält
+     · alle 102 Kern-Hebel aus _docs/ut-tokens.json (lever: true, Tier 1),
+     · alle :root-Hex-Kopien der Vita-Primärfarbe #056AC8 (hardcodedPrimary, ut-tokens.md §8.1,
+       _tmp/research/diff-vita-red.txt). Die Selektor-Kopien (Hot-Buttons, TreeNav Style B)
+       deklarieren components/buttons.css und components/shell.css mit gleicher Spezifität neu.
+     · die Dichte (32 px Desktop, 40 px bei pointer: coarse) und die Fokus-Hooks.
+   Reihenfolge der Abschnitte = Reihenfolge in docs/ARCHITECTURE.md.
+   ========================================================================== */
+:root {
+  /* 1. Typografie ---------------------------------------------------------- */
+  --a-base-font-family: var(--pa-font);                         /* ◆ */
+  --ut-base-font-family: var(--pa-font);
+  --a-base-font-family-mono: var(--pa-font-mono);               /* ◆ */
+  --a-base-font-family-serif: var(--pa-font);                   /* keine Serifenschrift im Theme */
+  --ut-alternate-heading-font-family: var(--pa-font);
+  --a-base-font-weight-normal: var(--pa-fw-regular);
+  --a-base-font-weight-semibold: var(--pa-fw-semibold);         /* ◆ */
+  --a-base-font-weight-bold: var(--pa-fw-bold);                 /* ◆ Hook */
+  --a-base-font-weight-heavy: 700;                              /* Achsen-Maximum (UT will 900) */
+  --ut-base-font-size: var(--pa-fs-md);                         /* body: 14 statt 16 px */
+
+  /* 2. Palette und Status (UT Core spiegelt auf --a-palette-*) ------------- */
+  --ut-palette-primary: var(--pa-accent);                       /* ◆ */
+  --ut-palette-primary-contrast: var(--pa-accent-on);           /* ◆ */
+  --ut-palette-primary-shade: var(--pa-accent-tint);            /* ◆ */
+  --ut-palette-primary-text: var(--pa-accent-text);             /* ◆ */
+  --ut-palette-primary-alt: var(--pa-accent-tint-2);            /* ◆ t-Button--primary */
+  --ut-palette-primary-alt-contrast: var(--pa-ink);             /* ◆ */
+  --ut-palette-primary-alt-shade: var(--pa-accent-tint);
+  --ut-palette-primary-alt-text: var(--pa-accent-text);
+  --ut-palette-success: var(--pa-success);                      /* ◆ */
+  --ut-palette-success-contrast: var(--pa-success-on);          /* ◆ */
+  --ut-palette-success-shade: var(--pa-success-tint);           /* ◆ */
+  --ut-palette-success-text: var(--pa-success-text);            /* ◆ */
+  --ut-palette-info: var(--pa-info);                            /* ◆ Vita: Hex-Kopie #056AC8 */
+  --ut-palette-info-contrast: var(--pa-info-on);                /* ◆ */
+  --ut-palette-info-shade: var(--pa-info-tint);                 /* ◆ */
+  --ut-palette-info-text: var(--pa-info-text);
+  --ut-palette-warning: var(--pa-warning);                      /* ◆ */
+  --ut-palette-warning-contrast: var(--pa-warning-on);          /* ◆ */
+  --ut-palette-warning-shade: var(--pa-warning-tint);           /* ◆ */
+  --ut-palette-warning-text: var(--pa-warning-text);            /* ◆ */
+  --ut-palette-danger: var(--pa-danger);                        /* ◆ */
+  --ut-palette-danger-contrast: var(--pa-danger-on);            /* ◆ */
+  --ut-palette-danger-shade: var(--pa-danger-tint);             /* ◆ */
+  --ut-palette-danger-text: var(--pa-danger-text);              /* ◆ */
+  --ut-palette-generic: var(--pa-soft);
+  --ut-palette-generic-contrast: var(--pa-ink);
+  --ut-palette-generic-shade: var(--pa-surface-sunken);
+  --ut-palette-generic-text: var(--pa-ink);
+
+  /* 3. Global: Links, Fokus, Text ----------------------------------------- */
+  --ut-link-text-color: var(--pa-link-text);                    /* ◆ Vita: Hex-Kopie */
+  --ut-link-text-decoration: underline;
+  --a-base-link-hover-text-color: var(--pa-link-text);
+  --ut-body-text-color: var(--pa-ink);                          /* ◆ */
+  /* EIN Fokus-System: Ringfarbe + Breite + Abstand aus den Tokens, überall ≥ 3:1 */
+  --ut-focus-outline-color: var(--pa-focus-ring-color);         /* ◆ Vita: Hex-Kopie */
+  --ut-focus-outline: var(--pa-focus-outline);                  /* Hook (*:focus in UT Core) */
+  --ut-focus-outline-offset: var(--pa-focus-ring-offset);       /* Hook */
+  --a-combo-select-focus-outline-color: var(--pa-focus-ring-color);
+  --a-combo-select-focus-border-color: var(--pa-focus-ring-color);
+  --a-combo-select-item-hover-background-color: var(--pa-soft);
+  --a-combo-select-item-preselected-background-color: var(--pa-soft);
+  --a-combo-select-item-preselected-hover-background-color: var(--pa-soft-hover);
+  --a-combo-select-item-focus-box-shadow: var(--pa-focus-shadow-inset);
+  --a-combo-select-focus-outline: var(--pa-focus-outline);
+  --a-combo-select-item-focus-outline-color: var(--pa-focus-ring-color);
+  --a-gv-focus-outline: var(--pa-focus-outline);                /* Hook: IR-Icon-Ansicht, Zellen */
+  --a-gv-focus-outline-offset: calc(-1 * var(--pa-focus-ring-width));
+  --a-cv-focus-outline: var(--pa-focus-outline);                /* Hook: Card-Volllink */
+  --a-cv-focus-outline-offset: var(--pa-focus-ring-offset);
+  --a-checkbox-outline-color: var(--pa-focus-ring-color);
+  --a-chat-transcript-outline-color: var(--pa-focus-ring-color);
+  --oj-core-focus-border-color: var(--pa-focus-ring-color);
+
+  /* 4. Generische Komponente (Fallback vieler Widgets) --------------------- */
+  --ut-component-background-color: var(--pa-sheet);             /* ◆ Bogen */
+  --ut-component-border-color: var(--pa-line);                  /* ◆ */
+  --ut-component-border-width: var(--pa-hairline);              /* ◆ */
+  --ut-component-border-radius: var(--pa-r-lg);                 /* ◆ */
+  --ut-component-box-shadow: var(--pa-float-shadow);            /* ◆ */
+  --ut-component-highlight-background-color: var(--pa-hover);   /* ◆ */
+  --ut-component-toolbar-background-color: var(--pa-surface-sunken); /* ◆ */
+  --ut-component-inner-border-color: var(--pa-line);            /* ◆ */
+  --ut-component-inner-border-width: var(--pa-hairline);
+  --ut-component-text-default-color: var(--pa-ink);             /* ◆ */
+  --ut-component-text-title-color: var(--pa-ink);               /* ◆ */
+  --ut-component-text-subtitle-color: var(--pa-ink-2);          /* ◆ */
+  --ut-component-text-muted-color: var(--pa-muted);             /* ◆ */
+  --ut-component-icon-background-color: var(--pa-soft);         /* ◆ Icon-Kacheln: neutral statt Akzent */
+  --ut-component-icon-color: var(--pa-ink);                     /* ◆ */
+  --ut-component-badge-background-color: var(--pa-soft);        /* ◆ */
+  --ut-component-badge-text-color: var(--pa-ink);               /* ◆ */
+  --ut-component-badge-border-radius: var(--pa-r-sm);           /* ◆ */
+  --ut-component-pre-background-color: var(--pa-surface-sunken);
+
+  /* 5. Schatten und Radien ------------------------------------------------ */
+  --ut-shadow-sm: none;                                         /* ◆ keine Deko-Schatten */
+  --ut-shadow-md: var(--pa-float-shadow);                       /* ◆ */
+  --ut-shadow-lg: var(--pa-float-shadow);                       /* ◆ */
+  --ut-border-radius-sm: var(--pa-r-sm);
+  --ut-border-radius-md: var(--pa-r-md);
+  --ut-border-radius-lg: var(--pa-r-lg);
+  --ut-border-radius: var(--pa-r-md);
+
+  /* 6. Shell: Papier, Kopf (Teal-Vollton), Navigation, Title Bar, Inhalt ----- */
+  --ut-body-background-color: var(--pa-surface);                /* ◆ Papier (Korn: shell.css) */
+  --ut-body-main-background-color: transparent;                 /* Papier des Seitengrunds scheint durch */
+  --ut-body-sidebar-background-color: transparent;
+  --ut-body-sidebar-text-color: var(--pa-ink);
+  --ut-body-sidebar-border-color: var(--pa-line);
+  --ut-body-actions-background-color: transparent;             /* Papier des Seitengrunds (mobil als Tafel: shell.css) */
+  --ut-body-actions-text-color: var(--pa-ink);
+  --ut-body-actions-border-width: 0px;
+  --ut-body-actionstoggle-background-color: var(--pa-sheet);
+  --ut-body-actionstoggle-hover-background-color: var(--pa-raised-hover);
+  --ut-body-actionstoggle-text-color: var(--pa-ink);
+  --ut-footer-background-color: transparent;
+  --ut-footer-border-color: var(--pa-line);
+  --ut-footer-text-color: var(--pa-muted);
+  --ut-login-page-background-color: var(--pa-surface);
+  --ut-login-region-background-color: var(--pa-sheet);
+
+  /* Kopf (Höhe statisch; Branding mit fester Zeilenhöhe, siehe base.css) */
+  --ut-header-height: var(--pa-header-h);
+  --ut-header-padding-x: .75rem;
+  --ut-header-item-spacing: var(--pa-space-2);
+  --ut-header-background-color: var(--pa-header-bg);            /* ◆ Vita: Hex-Kopie; Teal-Vollton */
+  --ut-header-text-color: var(--pa-header-text);                /* ◆ */
+  --ut-header-border-color: transparent;                        /* ◆ */
+  --ut-header-border-width: 0px;
+  --ut-header-box-shadow: none;                                 /* ◆ */
+  --ut-logo-font-size: 1.1875rem;                               /* 19 px Plakat-Logo (opsz folgt) */
+  --ut-logo-line-height: var(--pa-brand-lh);
+  --ut-logo-font-weight: var(--pa-fw-display);
+  --ut-logo-text-color: var(--pa-header-text);
+  --ut-navbar-button-badge-background-color: var(--pa-header-text);  /* Zähler auf dem Kopf: Papier mit Tusche */
+  --ut-navbar-button-badge-text-color: var(--pa-on-light);
+  --ut-header-menubar-background-color: var(--pa-header-bg);    /* ◆ */
+  --ut-header-menubar-item-text-color: var(--pa-header-text);   /* ◆ */
+  --ut-header-menubar-item-border-color: transparent;
+  --ut-header-menubar-item-current-background-color: var(--pa-surface); /* ◆ aktueller Eintrag = Papier (shell.css) */
+  --ut-header-menubar-item-current-text-color: var(--pa-ink);   /* ◆ */
+  --ut-header-menubar-item-split-border-color: transparent;
+  --ut-header-menubar-item-split-icon-color: var(--pa-header-text);
+  --ut-navtabs-background-color: var(--pa-header-bg);
+  --ut-navtabs-text-color: var(--pa-header-text);
+  --ut-navtabs-item-border-color: transparent;
+  --ut-navtabs-item-active-background-color: var(--pa-surface);
+  --ut-navtabs-item-active-text-color: var(--pa-ink);
+  --ut-navtabs-item-active-highlight-color: transparent;
+
+  /* Navigation (Tree Nav auf dem Papier, Haarlinie zum Inhalt) */
+  --ut-nav-width: var(--pa-nav-w);
+  --ut-nav-collapsed-icon-width: var(--pa-nav-rail-w);
+  --ut-body-nav-background-color: transparent;                  /* ◆ Papier des Seitengrunds */
+  --ut-body-nav-text-color: var(--pa-ink);                      /* ◆ */
+  --ut-body-nav-border-width: 1px;
+  --ut-body-nav-border-color: var(--pa-line);
+  --ut-body-nav-scrollbar-thumb-background-color: var(--pa-scrollbar-thumb);
+  --ut-body-nav-scrollbar-track-background-color: var(--pa-scrollbar-track);
+  --a-treeview-node-selected-background-color: transparent;     /* ◆ Druckmarke zeichnet shell.css */
+  --a-treeview-node-selected-text-color: var(--pa-ink);         /* ◆ */
+  --a-treeview-node-selected-icon-color: var(--pa-ink);
+  --a-treeview-node-focused-background-color: transparent;
+  --a-treeview-node-focused-text-color: var(--pa-ink);
+  --a-treeview-node-focused-shadow: var(--pa-focus-shadow-inset);
+  --a-treeview-node-hover-background-color: var(--pa-tint-hover);
+  --a-treeview-node-icon-color: var(--pa-ink-2);
+  --ut-treeview-badge-background-color: var(--pa-ink);          /* Vita: Hex-Kopie; Zähler in Tusche wie Navbar/Button */
+  --ut-treeview-badge-text-color: var(--pa-surface);
+
+  /* Title Bar / Breadcrumb (liegt auf dem Papier) */
+  --ut-body-title-background-color: var(--pa-surface);          /* ◆ Papier (Korn: shell.css) */
+  --ut-body-title-text-color: var(--pa-ink);                    /* ◆ */
+  --ut-body-title-box-shadow: none;                             /* ◆ */
+  --ut-body-title-border-width: 0px;
+  --ut-body-title-border-color: var(--pa-line);
+  --ut-body-title-backdrop-filter: none;
+  --ut-breadcrumb-padding-x: var(--pa-page-pad-x);
+  --ut-breadcrumb-padding-y: var(--pa-page-pad-y);
+  --ut-breadcrumb-item-text-color: var(--pa-muted);             /* ◆ */
+  --ut-breadcrumb-item-font-size: var(--pa-fs-sm);
+  --ut-breadcrumb-item-line-height: var(--pa-lh-sm);
+  --ut-breadcrumb-item-font-weight: var(--pa-fw-medium);
+  --ut-breadcrumb-item-active-text-color: var(--pa-ink);
+  --ut-breadcrumb-item-sep-opacity: 1;
+  --ut-breadcrumb-item-sep-spacing: .625rem;
+  --ut-breadcrumb-title-font-size: var(--pa-fs-2xl);
+  --ut-breadcrumb-title-line-height: var(--pa-lh-2xl);         /* Seitentitel 30/36 */
+  --ut-breadcrumb-title-font-weight: var(--pa-fw-display);
+
+  /* Inhalt */
+  --ut-body-content-padding-x: var(--pa-page-pad-x);
+  --ut-body-content-padding-y: var(--pa-page-pad-y);
+  --ut-xs-body-content-padding-x: var(--pa-page-pad-x);         /* < 640 px folgt scale.css */
+  --ut-xs-body-content-padding-y: var(--pa-page-pad-y);
+  --ut-xs-breadcrumb-padding-x: var(--pa-page-pad-x);
+
+  /* 7. Regionen: flach, Titel + Haarlinie --------------------------------- */
+  --ut-region-background-color: transparent;                    /* ◆ */
+  --ut-region-text-color: var(--pa-ink);                        /* ◆ */
+  --ut-region-header-background-color: transparent;             /* ◆ */
+  --ut-region-header-text-color: var(--pa-ink);                 /* ◆ */
+  --ut-region-border-color: transparent;                        /* ◆ Hook */
+  --ut-region-border-width: 0px;
+  --ut-region-border-radius: var(--pa-r-lg);                    /* ◆ */
+  --ut-region-box-shadow: none;                                 /* ◆ */
+  --ut-region-header-border-width: var(--pa-hairline);
+  --ut-region-header-border-color: var(--pa-line);
+  --ut-region-header-padding-x: 0rem;
+  --ut-region-header-padding-y: .625rem;
+  --ut-region-header-font-size: var(--pa-fs-lg);
+  --ut-region-header-line-height: var(--pa-lh-lg);
+  --ut-region-body-padding-x: 0rem;
+  --ut-region-body-padding-y: var(--pa-space-4);
+  --ut-region-buttons-padding-x: 0rem;
+  --ut-region-font-size: var(--pa-fs-md);
+  --ut-region-line-height: var(--pa-lh-body);
+  --ut-region-margin: var(--pa-region-gap);
+  --ut-region-hideshow-header-padding-x: 0rem;
+
+  --ut-content-block-shadow-background-color: var(--pa-surface-sunken);
+  --ut-content-block-light-background-color: var(--pa-surface);
+  --ut-content-block-border-color: transparent;
+  --ut-content-block-font-size: var(--pa-fs-md);
+  --ut-content-block-line-height: var(--pa-lh-body);
+
+  --ut-button-region-border-radius: var(--pa-r-lg);
+  --ut-button-region-border-color: var(--pa-line);
+  --ut-button-region-box-shadow: none;
+  --ut-button-region-background-color: transparent;
+
+  --ut-alert-horizontal-border-radius: var(--pa-r-lg);
+  --ut-alert-wizard-border-radius: var(--pa-r-lg);
+  --ut-alert-box-shadow: none;
+  --ut-alert-border-color: var(--pa-line);
+
+  --ut-hero-region-icon-border-radius: var(--pa-r-lg);
+  --ut-wizard-header-background-color: transparent;
+  /* --ut-wizard-border-radius: wirkungslos (UT Core deklariert keinen Radius für .t-Wizard) – Radius in regions.css */
+  --ut-wp-marker-color: var(--pa-line-strong);
+  --ut-wp-track-color: var(--pa-line-strong);
+  --ut-linkslist-hover-background-color: var(--pa-hover);
+  --ut-linkslist-arrow-color: var(--pa-muted);
+  --ut-comment-chat-background-color: var(--pa-surface-sunken);
+  --ut-comment-chat-active-background-color: var(--pa-soft);
+  --ut-carousel-nav-background-color: var(--pa-line-strong);
+  --ut-carousel-nav-selected-background-color: var(--pa-ink);   /* UT Core liest "selected", nicht "active" */
+
+  /* 8. Tabs / Region Display Selector (aktiver Reiter: Bogen mit Teal-Marke) - */
+  --ut-tabs-item-text-color: var(--pa-muted);
+  --ut-tabs-item-active-text-color: var(--pa-ink);
+  --ut-tabs-item-active-background-color: var(--pa-soft);
+  --ut-tabs-item-active-highlight-color: transparent;
+  --ut-tabs-item-hint-highlight-color: transparent;
+  --ut-tabs-item-hint-highlight-width: 0px;
+  --ut-tabs-item-hover-background-color: var(--pa-hover);
+  --ut-tabs-item-font-size: var(--pa-fs-md);
+  --ut-tabs-item-line-height: var(--pa-lh-md);
+  --ut-tabs-item-font-weight: var(--pa-fw-medium);
+  --ut-tabs-item-active-font-weight: var(--pa-fw-semibold);
+
+  /* 9. Buttons (32 px: Polster inkl. 1 px Rand, app_ui-Konvention) --------- */
+  --a-button-border-radius: var(--pa-r-md);                     /* ◆ */
+  --a-button-padding-y: var(--pa-control-pad-y);
+  --a-button-padding-x: calc(var(--pa-control-pad-x) + 2px);
+  --a-button-font-size: var(--pa-fs-md);
+  --a-button-line-height: var(--pa-control-lh);
+  --a-button-font-weight: var(--pa-fw-medium);
+  --a-button-gap-x: var(--pa-space-2);
+  --a-button-icon-spacing: var(--pa-space-2);
+  --a-button-background-color: var(--pa-sheet);                 /* ◆ Sekundär = Bogen mit Kontur */
+  --a-button-text-color: var(--pa-ink);                         /* ◆ */
+  --a-button-border-color: var(--pa-line-strong);               /* ◆ */
+  --a-button-shadow: none;                                      /* ◆ */
+  --a-button-hover-background-color: var(--pa-raised-hover);    /* ◆ */
+  --a-button-hover-text-color: var(--pa-ink);
+  --a-button-hover-border-color: var(--pa-edge);
+  --a-button-hover-shadow: none;
+  --a-button-active-background-color: var(--pa-soft-hover);     /* ◆ */
+  --a-button-active-border-color: var(--pa-edge);
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--pa-raised-hover);
+  --a-button-focus-border-color: var(--pa-line-strong);         /* ◆ Fokus zeigt der Ring, nicht die Kante */
+  --a-button-focus-shadow: none;
+  --a-button-count-background-color: var(--pa-ink);             /* Vita: Hex-Kopie (26.1); Zähler in Tusche */
+  --a-button-count-text-color: var(--pa-sheet);
+
+  /* 10. Formulare (32 px) ------------------------------------------------- */
+  --a-field-input-background-color: var(--pa-field);            /* ◆ */
+  --a-field-input-text-color: var(--pa-ink);                    /* ◆ */
+  --a-field-input-border-color: var(--pa-edge);                 /* ◆ */
+  --a-field-input-border-width: 1px;
+  --a-field-input-border-style: solid;
+  --a-field-input-border-radius: var(--pa-r-md);                /* ◆ */
+  --a-field-input-padding-y: var(--pa-control-pad-y);
+  --a-field-input-padding-x: var(--pa-control-pad-x);
+  --a-field-input-font-size: var(--pa-fs-md);
+  --a-field-input-line-height: var(--pa-control-lh);
+  --a-field-input-hover-background-color: var(--pa-field);
+  --a-field-input-hover-border-color: var(--pa-edge-hover);
+  --a-field-input-focus-background-color: var(--pa-field);      /* ◆ */
+  --a-field-input-focus-border-color: var(--pa-focus-ring-color); /* ◆ Vita: Hex-Kopie */
+  --a-field-input-focus-text-color: var(--pa-ink);
+  --a-field-placeholder-text-color: var(--pa-placeholder);
+  --a-field-placeholder-opacity: 1;
+  --a-field-select-background-image: var(--pa-select-arrow);
+  --a-filedrop-border-radius: var(--pa-r-lg);
+  --a-filedrop-progress-background-color: var(--pa-line);
+  --a-filedrop-progress-bar-background-color: var(--pa-ink);
+  --a-filedrop-icon-action-background-color: var(--pa-field);     /* Vita-Dark: hart #000 */
+
+  /* Prozentbalken (Items + Reports): Daten, keine Aktion → Kategorie-Farbe statt Arbeitsfarbe */
+  --a-percent-chart-background-color: var(--pa-soft);
+  --a-percent-chart-bar-background-color: var(--pa-cat-1);
+  --a-percent-chart-bar-text-color: var(--pa-cat-1-on);
+  --ut-field-label-text-color: var(--pa-ink-2);                 /* ◆ */
+  --ut-field-label-font-size: var(--pa-fs-sm);
+  --ut-field-label-line-height: var(--pa-lh-sm);
+  --ut-field-label-font-weight: var(--pa-fw-medium);
+  --ut-field-input-focus-icon-color: var(--pa-accent-text);     /* Vita: Hex-Kopie */
+  --ut-field-fl-input-focus-icon-background-color: var(--pa-accent-tint); /* Vita: Hex-Kopie */
+  --ut-field-fl-input-focus-icon-color: var(--pa-accent-text);
+  --ut-field-input-icon-color: var(--pa-muted);
+  --ut-prepost-text-color: var(--pa-muted);
+  --a-form-required-asterisk-text-color: var(--pa-required-color);
+  --a-form-error-text-color: var(--pa-danger-text);
+  --ut-field-inline-help-text-color: var(--pa-muted);
+  --ut-pillbutton-padding-y: var(--pa-control-pad-y);
+  --ut-pillbutton-padding-x: .625rem;
+  --ut-pillbutton-font-size: var(--pa-fs-sm);
+  --ut-pillbutton-line-height: var(--pa-control-lh);             /* Pill-Gruppen = Control-Höhe */
+
+  --a-checkbox-size: var(--pa-checkbox-size);
+  --a-checkbox-icon-size: .8125rem;
+  --a-checkbox-border-radius: var(--pa-r-sm);
+  --a-checkbox-background-color: var(--pa-field);
+  --a-checkbox-border-color: var(--pa-edge);                    /* ◆ */
+  --a-checkbox-hover-background-color: var(--pa-hover);
+  --a-checkbox-checked-background-color: var(--pa-accent-text); /* ◆ Vita: Hex-Kopie; Akzent als Text-/Kantenton: dunkel ≥ 3:1 (WCAG 1.4.11) */
+  --a-checkbox-checked-text-color: var(--pa-sheet);
+  --a-checkbox-text-color: var(--pa-accent-on);
+  --a-checkbox-label-font-size: var(--pa-fs-sm);
+  --a-checkbox-label-spacing-x: var(--pa-space-2);
+  --a-cr-checkbox-background-color: var(--pa-field);
+
+  --a-switch-background-color: var(--pa-edge);
+  --a-switch-checked-background-color: var(--pa-accent-text);   /* dunkel ≥ 3:1 gegen Papier */
+  --a-switch-checked-hover-background-color: var(--pa-accent-text);
+  --a-switch-toggle-background-color: var(--pa-sheet);
+  --a-switch-toggle-checked-background-color: var(--pa-sheet);
+  --a-switch-width: 2.5rem;
+  --a-switch-toggle-width: 1.125rem;
+  --a-switch-toggle-height: 1.125rem;
+  --a-switch-padding-y: .1875rem;
+  --a-switch-padding-x: .1875rem;
+
+  --a-starrating-stars-fg-color: var(--pa-accent-text);
+  --a-starrating-stars-bg-color: var(--pa-edge);                 /* leere Sterne ≥ 3:1 */
+
+  --a-chip-border-radius: var(--pa-r-sm);
+  --a-chip-font-size: var(--pa-fs-sm);
+  --a-chip-line-height: 1.125rem;
+  --a-chip-hover-background-color: var(--pa-hover);
+  --a-chip-active-background-color: var(--pa-soft);
+  --a-chip-applied-background-color: var(--pa-soft);
+  --a-chip-applied-hover-background-color: var(--pa-soft-hover);
+  --a-chip-remove-hover-background-color: var(--pa-tint-hover);
+  --a-chip-remove-active-background-color: var(--pa-tint-press);
+  --a-combo-select-item-selected-background-color: var(--pa-accent-tint);
+  --a-popuplov-chip-background-color: var(--pa-soft);
+
+  /* Date Picker */
+  --a-datepicker-background-color: var(--pa-surface-raised);
+  --a-datepicker-border-radius: var(--pa-r-lg);
+  --a-datepicker-header-background-color: var(--pa-surface-raised);
+  --a-datepicker-calendar-background-color: var(--pa-surface-raised);
+  --a-datepicker-border-color: var(--pa-line);
+  --a-datepicker-calendar-title-background-color: transparent;
+  --a-datepicker-calendar-header-background-color: transparent;
+  --a-datepicker-calendar-header-text-color: var(--pa-muted);
+  --a-datepicker-calendar-day-hover-background-color: var(--pa-raised-hover); /* Popup = schwebende Fläche */
+  --a-datepicker-calendar-day-selected-background-color: var(--pa-accent);
+  --a-datepicker-calendar-day-selected-text-color: var(--pa-accent-on);
+  --a-datepicker-calendar-day-selected-border-color: var(--pa-accent);
+  --a-datepicker-calendar-day-current-background-color: transparent;
+  --a-datepicker-calendar-day-current-text-color: var(--pa-accent-text);
+  --a-datepicker-calendar-day-current-border-color: var(--pa-accent-text);
+  --a-datepicker-calendar-week-background-color: transparent;
+  --a-datepicker-footer-background-color: transparent;
+  --a-datepicker-footer-border-color: var(--pa-line);
+
+  /* 11. Menüs, Dialoge, Tooltips ------------------------------------------ */
+  --a-menu-background-color: var(--pa-surface-raised);          /* ◆ */
+  --a-menu-text-color: var(--pa-ink);                           /* ◆ */
+  --a-menu-border-color: var(--pa-line);
+  --a-menu-border-radius: var(--pa-r-lg);
+  --a-menu-shadow: var(--pa-float-shadow);
+  --a-menu-padding-y: .375rem;
+  --a-menu-padding-x: .375rem;
+  --a-menu-item-border-radius: .375rem;
+  --a-menu-font-size: var(--pa-fs-md);
+  --a-menu-focused-background-color: var(--pa-raised-hover);    /* ◆ Vita: Hex-Kopie; Hover auf schwebender Fläche (auch IconList, Popup-LOV-Links, JET, CKEditor) */
+  --a-menu-focused-text-color: var(--pa-ink);                   /* ◆ */
+
+  --jui-dialog-background-color: var(--pa-surface-raised);
+  --jui-dialog-text-color: var(--pa-ink);
+  --jui-dialog-border-radius: var(--pa-r-dialog);
+  --jui-dialog-shadow: var(--pa-float-shadow);
+  --jui-dialog-titlebar-background-color: transparent;
+  --jui-dialog-titlebar-text-color: var(--pa-ink);
+  --jui-dialog-titlebar-border-color: var(--pa-line);
+  --jui-dialog-titlebar-padding-y: var(--pa-space-3);
+  --jui-dialog-font-size: var(--pa-fs-md);                      /* Vita: 12 px */
+  --jui-dialog-titlebar-padding-x: var(--pa-space-5);
+  --jui-dialog-title-font-size: var(--pa-fs-lg);
+  --jui-dialog-title-font-weight: var(--pa-fw-semibold);
+  --jui-dialog-buttonpane-background-color: transparent;
+  --jui-dialog-buttonpane-border-color: var(--pa-line);
+  --jui-overlay-background-color: var(--pa-scrim);
+  --jui-tooltip-background-color: var(--pa-tooltip-bg);
+  --jui-tooltip-text-color: var(--pa-tooltip-text);
+  --jui-tooltip-border-color: transparent;
+  --jui-tooltip-border-radius: .375rem;
+  --a-tooltip-background-color: var(--pa-tooltip-bg);
+  --a-tooltip-text-color: var(--pa-tooltip-text);
+
+  /* 12. Reports / IR / IG (Zeile 34 px, Kopf 36 px, Haarlinien) ------------ */
+  --a-gv-background-color: var(--pa-sheet);                     /* ◆ Bogen */
+  --a-gv-border-color: var(--pa-line);
+  --a-gv-font-size: var(--pa-fs-sm);
+  --a-gv-line-height: var(--pa-row-lh);
+  --a-gv-cell-height: var(--pa-row-h);                          /* Hook */
+  --a-gv-cell-padding-y: var(--pa-row-pad-y);
+  --a-gv-cell-padding-x: var(--pa-row-pad-x);
+  --a-gv-header-cell-height: var(--pa-head-h);                  /* Hook */
+  --a-gv-header-cell-padding-x: var(--pa-row-pad-x);
+  --a-gv-cell-border-color: var(--pa-line);                     /* ◆ */
+  --a-gv-header-cell-border-color: var(--pa-line);              /* ◆ */
+  --a-gv-header-background-color: var(--pa-sheet);              /* ◆ Kopf auf dem Bogen, Tusche-Linie darunter */
+  --a-gv-header-text-color: var(--pa-ink);                      /* Tabellenköpfe in Tusche (reports.css) */
+  --a-gv-row-hover-background-color: var(--pa-hover);
+  --a-gv-selected-background-color: var(--pa-accent-tint);
+  --a-gv-selected-text-color: var(--pa-ink);
+  --a-gv-deleted-background-color: var(--pa-surface-sunken);
+  --a-gv-grandtotal-background-color: var(--pa-surface-sunken);
+  --a-gv-row-disabled-background-color: var(--pa-surface-sunken);
+  --a-gv-pagination-button-selected-background-color: var(--pa-soft);               /* aktive Seite = Rastertönung */
+  --a-gv-pagination-button-selected-text-color: var(--pa-ink);
+  --a-toolbar-background-color: transparent;
+  --a-toolbar-border-color: var(--pa-line);
+  --a-toolbar-sep-border-color: var(--pa-line);
+  --a-report-controls-cell-label-background-color: var(--pa-sheet);
+  --a-report-controls-cell-label-text-color: var(--pa-ink);
+  --a-splitter-bar-background-color: var(--pa-surface-sunken);
+  --a-resultsitem-background-color: var(--pa-sheet);
+  --a-resultsitem-badge-background-color: var(--pa-soft);
+  --ut-resultsregion-background-color: var(--pa-sheet);
+  --ut-resultsregion-search-background-color: var(--pa-surface-sunken);
+  --ut-resultsregion-search-border-color: var(--pa-line);
+  --a-kb-shortcut-background-color: var(--pa-soft);
+  --a-kb-shortcut-border-color: var(--pa-line-strong);
+
+  --ut-report-cell-border-color: var(--pa-line);
+  --ut-report-cell-hover-background-color: var(--pa-hover);
+  --ut-report-cell-alt-background-color: var(--pa-sheet-stripe);
+  --ut-report-header-background-color: var(--pa-sheet);
+  --ut-report-header-cell-background-color: var(--pa-sheet);
+  --ut-report-header-cell-font-weight: var(--pa-fw-semibold);
+  --ut-report-header-cell-font-size: var(--pa-fs-head);
+  --ut-report-header-cell-padding-y: calc((var(--pa-head-h) - var(--pa-lh-xs) - var(--pa-head-rule-width)) / 2);
+  --ut-report-header-cell-padding-x: var(--pa-row-pad-x);
+  --ut-report-cell-font-size: var(--pa-fs-sm);
+  --ut-report-cell-line-height: var(--pa-row-lh);
+  --ut-report-cell-padding-y: var(--pa-row-pad-y);
+  --ut-report-cell-padding-x: var(--pa-row-pad-x);
+
+  /* 13. Cards -------------------------------------------------------------- */
+  --a-cv-background-color: var(--pa-sheet);                     /* ◆ Bogen */
+  --a-cv-border-color: var(--pa-line);                          /* ◆ */
+  --a-cv-border-radius: var(--pa-r-lg);                         /* ◆ */
+  --a-cv-shadow: none;                                          /* ◆ */
+  --a-cv-hover-shadow: 0 0 0 1px var(--pa-edge);
+  --a-cv-header-border-color: var(--pa-line);
+  --a-cv-actions-border-color: var(--pa-line);
+  --a-cv-subtitle-text-color: var(--pa-muted);
+  --a-cv-subcontent-text-color: var(--pa-muted);
+  --a-cv-badge-background-color: var(--pa-soft);
+  --a-cv-badge-border-radius: var(--pa-r-sm);
+  --a-cv-icon-background-color: var(--pa-soft);                 /* Vita: Hex-Kopie */
+  --a-cv-icon-text-color: var(--pa-ink);
+  --a-cv-initials-background-color: var(--pa-soft);             /* Vita: Hex-Kopie */
+  --a-cv-initials-text-color: var(--pa-ink);
+  --a-cv-focus-border-color: var(--pa-focus-ring-color);        /* Vita: Hex-Kopie */
+  --ut-cardlist-box-shadow: none;
+  --ut-cardlist-border-radius: var(--pa-r-lg);
+
+  /* 14. Badges / Avatare --------------------------------------------------- */
+  --ut-badge-border-radius: var(--pa-r-sm);
+  --ut-avatar-border-radius: var(--pa-r-md);
+
+  /* 15. Akzentpalette --u-color-1…45 (Charts, Avatare, Karten-Icons, u-colors).
+         1–15 aus den Kategorie-Tokens; 16–30 heller (60 % + Weiß, Text Tusche),
+         31–45 dunkler (55 % + Schwarz, Text Weiß) – so scheint keine Vita-Farbe durch. */
+  --u-color-1: var(--pa-cat-1);   --u-color-1-contrast: var(--pa-cat-1-on);
+  --u-color-2: var(--pa-cat-2);   --u-color-2-contrast: var(--pa-cat-2-on);
+  --u-color-3: var(--pa-cat-3);   --u-color-3-contrast: var(--pa-cat-3-on);
+  --u-color-4: var(--pa-cat-4);   --u-color-4-contrast: var(--pa-cat-4-on);
+  --u-color-5: var(--pa-cat-5);   --u-color-5-contrast: var(--pa-cat-5-on);
+  --u-color-6: var(--pa-cat-6);   --u-color-6-contrast: var(--pa-cat-6-on);
+  --u-color-7: var(--pa-cat-7);   --u-color-7-contrast: var(--pa-cat-7-on);
+  --u-color-8: var(--pa-cat-8);   --u-color-8-contrast: var(--pa-cat-8-on);
+  --u-color-9: var(--pa-cat-9);   --u-color-9-contrast: var(--pa-cat-9-on);
+  --u-color-10: var(--pa-cat-10); --u-color-10-contrast: var(--pa-cat-10-on);
+  --u-color-11: var(--pa-cat-11); --u-color-11-contrast: var(--pa-cat-11-on);
+  --u-color-12: var(--pa-cat-12); --u-color-12-contrast: var(--pa-cat-12-on);
+  --u-color-13: var(--pa-cat-13); --u-color-13-contrast: var(--pa-cat-13-on);
+  --u-color-14: var(--pa-cat-14); --u-color-14-contrast: var(--pa-cat-14-on);
+  --u-color-15: var(--pa-cat-15); --u-color-15-contrast: var(--pa-cat-15-on);
+  --u-color-16: color-mix(in srgb, var(--pa-cat-1) 60%, #fff);  --u-color-16-contrast: var(--pa-on-light);
+  --u-color-17: color-mix(in srgb, var(--pa-cat-2) 60%, #fff);  --u-color-17-contrast: var(--pa-on-light);
+  --u-color-18: color-mix(in srgb, var(--pa-cat-3) 60%, #fff);  --u-color-18-contrast: var(--pa-on-light);
+  --u-color-19: color-mix(in srgb, var(--pa-cat-4) 60%, #fff);  --u-color-19-contrast: var(--pa-on-light);
+  --u-color-20: color-mix(in srgb, var(--pa-cat-5) 60%, #fff);  --u-color-20-contrast: var(--pa-on-light);
+  --u-color-21: color-mix(in srgb, var(--pa-cat-6) 60%, #fff);  --u-color-21-contrast: var(--pa-on-light);
+  --u-color-22: color-mix(in srgb, var(--pa-cat-7) 60%, #fff);  --u-color-22-contrast: var(--pa-on-light);
+  --u-color-23: color-mix(in srgb, var(--pa-cat-8) 60%, #fff);  --u-color-23-contrast: var(--pa-on-light);
+  --u-color-24: color-mix(in srgb, var(--pa-cat-9) 60%, #fff);  --u-color-24-contrast: var(--pa-on-light);
+  --u-color-25: color-mix(in srgb, var(--pa-cat-10) 60%, #fff); --u-color-25-contrast: var(--pa-on-light);
+  --u-color-26: color-mix(in srgb, var(--pa-cat-11) 60%, #fff); --u-color-26-contrast: var(--pa-on-light);
+  --u-color-27: color-mix(in srgb, var(--pa-cat-12) 60%, #fff); --u-color-27-contrast: var(--pa-on-light);
+  --u-color-28: color-mix(in srgb, var(--pa-cat-13) 60%, #fff); --u-color-28-contrast: var(--pa-on-light);
+  --u-color-29: color-mix(in srgb, var(--pa-cat-14) 60%, #fff); --u-color-29-contrast: var(--pa-on-light);
+  --u-color-30: color-mix(in srgb, var(--pa-cat-15) 60%, #fff); --u-color-30-contrast: var(--pa-on-light);
+  --u-color-31: color-mix(in srgb, var(--pa-cat-1) 55%, #000);  --u-color-31-contrast: var(--pa-on-dark);
+  --u-color-32: color-mix(in srgb, var(--pa-cat-2) 55%, #000);  --u-color-32-contrast: var(--pa-on-dark);
+  --u-color-33: color-mix(in srgb, var(--pa-cat-3) 55%, #000);  --u-color-33-contrast: var(--pa-on-dark);
+  --u-color-34: color-mix(in srgb, var(--pa-cat-4) 55%, #000);  --u-color-34-contrast: var(--pa-on-dark);
+  --u-color-35: color-mix(in srgb, var(--pa-cat-5) 55%, #000);  --u-color-35-contrast: var(--pa-on-dark);
+  --u-color-36: color-mix(in srgb, var(--pa-cat-6) 55%, #000);  --u-color-36-contrast: var(--pa-on-dark);
+  --u-color-37: color-mix(in srgb, var(--pa-cat-7) 55%, #000);  --u-color-37-contrast: var(--pa-on-dark);
+  --u-color-38: color-mix(in srgb, var(--pa-cat-8) 55%, #000);  --u-color-38-contrast: var(--pa-on-dark);
+  --u-color-39: color-mix(in srgb, var(--pa-cat-9) 55%, #000);  --u-color-39-contrast: var(--pa-on-dark);
+  --u-color-40: color-mix(in srgb, var(--pa-cat-10) 55%, #000); --u-color-40-contrast: var(--pa-on-dark);
+  --u-color-41: color-mix(in srgb, var(--pa-cat-11) 55%, #000); --u-color-41-contrast: var(--pa-on-dark);
+  --u-color-42: color-mix(in srgb, var(--pa-cat-12) 55%, #000); --u-color-42-contrast: var(--pa-on-dark);
+  --u-color-43: color-mix(in srgb, var(--pa-cat-13) 55%, #000); --u-color-43-contrast: var(--pa-on-dark);
+  --u-color-44: color-mix(in srgb, var(--pa-cat-14) 55%, #000); --u-color-44-contrast: var(--pa-on-dark);
+  --u-color-45: color-mix(in srgb, var(--pa-cat-15) 55%, #000); --u-color-45-contrast: var(--pa-on-dark);
+
+  /* 16. Charts (Oracle JET) ------------------------------------------------ */
+  --oj-core-text-color-primary: var(--pa-ink);
+  --oj-core-text-color-secondary: var(--pa-muted);
+  --oj-heading-text-color: var(--pa-ink);
+  --oj-link-text-color: var(--pa-link-text);
+  --oj-core-divider-color: var(--pa-line);
+  --oj-popup-bg-color: var(--pa-surface-raised);
+  --oj-collection-bg-color: var(--pa-sheet);
+  --oj-collection-header-bg-color: var(--pa-surface-sunken);
+  --oj-collection-free-space-bg-color: var(--pa-sheet);
+  /* Datatip: Vita lässt die Textfarben schwarz – auf der inversen Tooltip-Fläche unlesbar */
+  --ojet-tooltip-primary-text-color: var(--pa-tooltip-text);
+  --ojet-tooltip-secondary-text-color: var(--pa-tooltip-text);
+  --ojet-tooltip-disabled-text-color: var(--pa-tooltip-text);
+
+  /* 17. Code (PrismJS) und Markdown ---------------------------------------- */
+  /* app_ui (hell) und Vita-Dark bringen die VS-Code-Paletten Light+/Dark+ mit (Violett, Navy,
+     Rot; dunkel Schlüsselwörter #C586C0 = ΔE00 9 neben dem Akzent-Text, Kommentar 4,2:1).
+     Hier: drei --pa-code-*-Töne, Kommentare Nebenschrift, Namen in Tusche. Die abgeleiteten
+     Namen aus app_ui (--prism-selector/-keyword-control → keyword, -regex → string,
+     -decorator → class, -json-property → property) folgen von selbst. */
+  --prism-comment: var(--pa-muted);
+  --prism-keyword: var(--pa-code-keyword);
+  --prism-class: var(--pa-code-keyword);
+  --prism-namespace: var(--pa-code-keyword);
+  --prism-string: var(--pa-code-string);
+  --prism-number: var(--pa-code-number);
+  --prism-boolean: var(--pa-code-number);
+  --prism-constant: var(--pa-code-number);
+  --prism-function: var(--pa-ink);
+  --prism-builtin: var(--pa-ink);                               /* auch HTML-Tags */
+  --prism-literal: var(--pa-ink-2);
+  --prism-property: var(--pa-ink-2);                            /* auch HTML-Attribute */
+  --prism-variable: var(--pa-ink-2);
+  --prism-symbol: var(--pa-ink-2);                              /* auch URLs im Markdown-Editor */
+  --prism-interpolation: var(--pa-ink-2);
+  --prism-deleted: var(--pa-danger-text);
+
+  /* Markdown-Inhalte (.is-markdownified, Markdown-Vorschau): Überschriften auf der Skala statt
+     40/32/28/24/20/16 px – eine #-Überschrift im Feld darf nicht größer sein als der Seitentitel.
+     Der Chat (.a-ChatClient .is-markdownified) setzt eigene, kleinere Werte lokal. */
+  --a-md-h1-font-size: var(--pa-fs-xl);
+  --a-md-h1-line-height: var(--pa-lh-xl);
+  --a-md-h2-font-size: var(--pa-fs-lg);
+  --a-md-h2-line-height: var(--pa-lh-lg);
+  --a-md-h3-font-size: var(--pa-fs-md);
+  --a-md-h3-line-height: var(--pa-lh-md);
+  --a-md-h4-font-size: var(--pa-fs-sm);
+  --a-md-h4-line-height: var(--pa-lh-sm);
+  --a-md-h5-font-size: var(--pa-fs-xs);
+  --a-md-h5-line-height: var(--pa-lh-xs);
+  --a-md-h6-font-size: var(--pa-fs-xs);
+  --a-md-h6-line-height: var(--pa-lh-xs);
+  --a-md-blockquote-font-size: var(--pa-fs-lg);                 /* app_ui: 18 px */
+  --a-md-blockquote-line-height: var(--pa-lh-lg);
+  /* Vorschau-Panel und CodeMirror mit Feldpolster (app_ui: 8 px rundum) – Text steht wie im Feld */
+  --a-mdeditor-padding: var(--pa-control-pad-y) var(--pa-control-pad-x);
+}
+
+/* 18. Schwebende Ebenen: aktuelle Grundfläche ----------------------------------
+   Menüs (.a-Menu, auch Mega Menu), jQuery-UI-Dialoge (.ui-dialog: IR/IG-Dialoge, Popup-LOV,
+   Date-Picker- und Combobox-Popup, Inline-Dialoge, Drawer, Hülle der Seiten-Dialoge), das
+   Sortier-Widget der Spaltenköpfe (.a-IRR-sortWidget, hängt an <body>) und der Inhalt der
+   Seiten-Dialoge/-Drawer (eigenes iframe-Dokument) liegen auf --pa-surface-raised. Was „in der
+   Farbe des Grundes“ gezeichnet wird, folgt dort der schwebenden Fläche:
+     · --pa-ground        z. B. die Mitte des aktiven Wizard-Schritts im Modal-Wizard,
+     · --pa-focus-gap     die Lücke des Fokus-Doppelrings (sonst dunkel eine Papier-Linie im Ring).
+   Abgeleitete Tokens werden auf dem Element aufgelöst, auf dem sie deklariert sind (:root) –
+   darum stehen die Lücke und die beiden Fokus-Schatten hier noch einmal. Die Formeln sind
+   dieselben wie in tokens/scale.css bzw. light/dark.css (check-tokens.mjs vergleicht sie).
+   Spezifität 0,1,0: Komponenten können einen eigenen Grund lokal setzen. */
+.a-Menu,
+.ui-dialog,
+.a-IRR-sortWidget,
+.t-Dialog-page,
+.t-Drawer-page {
+  --pa-ground: var(--pa-surface-raised);
+  --pa-focus-gap: var(--pa-ground);
+  --pa-focus-shadow: 0 0 0 var(--pa-focus-ring-offset) var(--pa-focus-gap), 0 0 0 calc(var(--pa-focus-ring-offset) + var(--pa-focus-ring-width)) var(--pa-focus-ring-color);
+  --pa-focus-shadow-inset: inset 0 0 0 var(--pa-focus-ring-width) var(--pa-focus-ring-color), inset 0 0 0 calc(var(--pa-focus-ring-width) + 1px) var(--pa-focus-gap);
+}
+
+/* Dichte für Touch (Tablets, Handschuhe im Außendienst): Bedienelemente und Zeilen 40 px.
+   Nur Token-Werte – die Hebel oben (Polster, Zellenhöhen) rechnen sich daraus neu. */
+@media (pointer: coarse) {
+  :root {
+    --pa-control-h: 2.5rem;
+    --pa-control-h-sm: 2rem;
+    --pa-control-h-lg: 3rem;
+    --pa-row-h: 2.5rem;
+    --pa-head-h: 2.5rem;
+    --pa-hit-min: 2.5rem;
+    --pa-checkbox-size: 1.25rem;
+  }
+}

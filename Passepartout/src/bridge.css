@@ -1,0 +1,650 @@
+/* ==========================================================================
+   Passepartout – Brücke: --pp-* → Universal Theme (--ut-*), APEX (--a-*, --jui-*), JET (--oj-*)
+   Modusneutral: ausschließlich var()-Verweise auf eigene Tokens (keine Farbwerte), gilt für
+   hell, dunkel und auto. Enthält
+     · alle 102 Kern-Hebel aus _docs/ut-tokens.json (lever: true, Tier 1),
+     · alle :root-Hex-Kopien der Vita-Primärfarbe #056AC8 (hardcodedPrimary, ut-tokens.md §8.1,
+       _tmp/research/diff-vita-red.txt). Die Selektor-Kopien (Hot-Buttons, TreeNav Style B)
+       deklarieren components/buttons.css und components/shell.css mit gleicher Spezifität neu.
+     · die Dichte (32 px Desktop, 40 px bei pointer: coarse) und die Fokus-Hooks.
+   Reihenfolge der Abschnitte = Reihenfolge in docs/ARCHITECTURE.md.
+   ========================================================================== */
+:root {
+  /* 1. Typografie ---------------------------------------------------------- */
+  --a-base-font-family: var(--pp-font);                         /* ◆ */
+  --ut-base-font-family: var(--pp-font);
+  --a-base-font-family-mono: var(--pp-font-mono);               /* ◆ */
+  --a-base-font-family-serif: var(--pp-font);                   /* keine Serifenschrift im Theme */
+  --ut-alternate-heading-font-family: var(--pp-font);
+  --a-base-font-weight-normal: var(--pp-fw-regular);
+  --a-base-font-weight-semibold: var(--pp-fw-semibold);         /* ◆ */
+  --a-base-font-weight-bold: var(--pp-fw-bold);                 /* ◆ Hook */
+  --a-base-font-weight-heavy: 700;                              /* Achsen-Maximum (UT will 900) */
+  --ut-base-font-size: var(--pp-fs-md);                         /* body: 14 statt 16 px */
+
+  /* 2. Palette und Status (UT Core spiegelt auf --a-palette-*) ------------- */
+  --ut-palette-primary: var(--pp-accent);                       /* ◆ */
+  --ut-palette-primary-contrast: var(--pp-accent-on);           /* ◆ */
+  --ut-palette-primary-shade: var(--pp-accent-tint);            /* ◆ */
+  --ut-palette-primary-text: var(--pp-accent-text);             /* ◆ */
+  --ut-palette-primary-alt: var(--pp-accent-tint-2);            /* ◆ t-Button--primary */
+  --ut-palette-primary-alt-contrast: var(--pp-ink);             /* ◆ */
+  --ut-palette-primary-alt-shade: var(--pp-accent-tint);
+  --ut-palette-primary-alt-text: var(--pp-accent-text);
+  --ut-palette-success: var(--pp-success);                      /* ◆ */
+  --ut-palette-success-contrast: var(--pp-success-on);          /* ◆ */
+  --ut-palette-success-shade: var(--pp-success-tint);           /* ◆ */
+  --ut-palette-success-text: var(--pp-success-text);            /* ◆ */
+  --ut-palette-info: var(--pp-info);                            /* ◆ Vita: Hex-Kopie #056AC8 */
+  --ut-palette-info-contrast: var(--pp-info-on);                /* ◆ */
+  --ut-palette-info-shade: var(--pp-info-tint);                 /* ◆ */
+  --ut-palette-info-text: var(--pp-info-text);
+  --ut-palette-warning: var(--pp-warning);                      /* ◆ */
+  --ut-palette-warning-contrast: var(--pp-warning-on);          /* ◆ */
+  --ut-palette-warning-shade: var(--pp-warning-tint);           /* ◆ */
+  --ut-palette-warning-text: var(--pp-warning-text);            /* ◆ */
+  --ut-palette-danger: var(--pp-danger);                        /* ◆ */
+  --ut-palette-danger-contrast: var(--pp-danger-on);            /* ◆ */
+  --ut-palette-danger-shade: var(--pp-danger-tint);             /* ◆ */
+  --ut-palette-danger-text: var(--pp-danger-text);              /* ◆ */
+  --ut-palette-generic: var(--pp-soft);
+  --ut-palette-generic-contrast: var(--pp-ink);
+  --ut-palette-generic-shade: var(--pp-surface-sunken);
+  --ut-palette-generic-text: var(--pp-ink);
+
+  /* 3. Global: Links, Fokus, Text ----------------------------------------- */
+  --ut-link-text-color: var(--pp-link-text);                    /* ◆ Vita: Hex-Kopie */
+  --ut-link-text-decoration: underline;
+  --a-base-link-hover-text-color: var(--pp-link-text);
+  --ut-body-text-color: var(--pp-ink);                          /* ◆ */
+  /* EIN Fokus-System: Ringfarbe + Breite + Abstand aus den Tokens, überall ≥ 3:1 */
+  --ut-focus-outline-color: var(--pp-focus-ring-color);         /* ◆ Vita: Hex-Kopie */
+  --ut-focus-outline: var(--pp-focus-outline);                  /* Hook (*:focus in UT Core) */
+  --ut-focus-outline-offset: var(--pp-focus-ring-offset);       /* Hook */
+  --a-combo-select-focus-outline-color: var(--pp-focus-ring-color);
+  --a-combo-select-focus-border-color: var(--pp-focus-ring-color);
+  --a-combo-select-item-hover-background-color: var(--pp-soft);
+  --a-combo-select-item-preselected-background-color: var(--pp-soft);
+  --a-combo-select-item-preselected-hover-background-color: var(--pp-soft-hover);
+  --a-combo-select-item-focus-box-shadow: var(--pp-focus-shadow-inset);
+  --a-combo-select-focus-outline: var(--pp-focus-outline);
+  --a-combo-select-item-focus-outline-color: var(--pp-focus-ring-color);
+  --a-gv-focus-outline: var(--pp-focus-outline);                /* Hook: IR-Icon-Ansicht, Zellen */
+  --a-gv-focus-outline-offset: calc(-1 * var(--pp-focus-ring-width));
+  --a-cv-focus-outline: var(--pp-focus-outline);                /* Hook: Card-Volllink */
+  --a-cv-focus-outline-offset: var(--pp-focus-ring-offset);
+  --a-checkbox-outline-color: var(--pp-focus-ring-color);
+  --a-chat-transcript-outline-color: var(--pp-focus-ring-color);
+  --oj-core-focus-border-color: var(--pp-focus-ring-color);
+
+  /* 4. Generische Komponente (Fallback vieler Widgets) --------------------- */
+  --ut-component-background-color: var(--pp-surface);           /* ◆ */
+  --ut-component-border-color: var(--pp-line);                  /* ◆ */
+  --ut-component-border-width: var(--pp-hairline);              /* ◆ */
+  --ut-component-border-radius: var(--pp-r-lg);                 /* ◆ */
+  --ut-component-box-shadow: var(--pp-float-shadow);            /* ◆ */
+  --ut-component-highlight-background-color: var(--pp-hover);   /* ◆ */
+  --ut-component-toolbar-background-color: var(--pp-surface-sunken); /* ◆ */
+  --ut-component-inner-border-color: var(--pp-line);            /* ◆ */
+  --ut-component-inner-border-width: var(--pp-hairline);
+  --ut-component-text-default-color: var(--pp-ink);             /* ◆ */
+  --ut-component-text-title-color: var(--pp-ink);               /* ◆ */
+  --ut-component-text-subtitle-color: var(--pp-ink-2);          /* ◆ */
+  --ut-component-text-muted-color: var(--pp-muted);             /* ◆ */
+  --ut-component-icon-background-color: var(--pp-soft);         /* ◆ Icon-Kacheln: neutral statt Akzent */
+  --ut-component-icon-color: var(--pp-ink);                     /* ◆ */
+  --ut-component-badge-background-color: var(--pp-soft);        /* ◆ */
+  --ut-component-badge-text-color: var(--pp-ink);               /* ◆ */
+  --ut-component-badge-border-radius: var(--pp-r-sm);           /* ◆ */
+  --ut-component-pre-background-color: var(--pp-surface-sunken);
+
+  /* 5. Schatten und Radien ------------------------------------------------ */
+  --ut-shadow-sm: none;                                         /* ◆ keine Deko-Schatten */
+  --ut-shadow-md: var(--pp-float-shadow);                       /* ◆ */
+  --ut-shadow-lg: var(--pp-float-shadow);                       /* ◆ */
+  --ut-border-radius-sm: var(--pp-r-sm);
+  --ut-border-radius-md: var(--pp-r-md);
+  --ut-border-radius-lg: var(--pp-r-lg);
+  --ut-border-radius: var(--pp-r-md);
+
+  /* 6. Shell: Rahmen, Kopf, Navigation, Title Bar, Inhalt ------------------ */
+  --ut-body-background-color: var(--pp-frame);                  /* ◆ Rahmen */
+  --ut-body-main-background-color: var(--pp-surface);           /* Leinwand */
+  --ut-body-sidebar-background-color: transparent;
+  --ut-body-sidebar-text-color: var(--pp-ink);
+  --ut-body-sidebar-border-color: var(--pp-line);
+  --ut-body-actions-background-color: var(--pp-frame);
+  --ut-body-actions-text-color: var(--pp-ink);
+  --ut-body-actions-border-width: 0px;
+  --ut-body-actionstoggle-background-color: var(--pp-frame);
+  --ut-body-actionstoggle-hover-background-color: var(--pp-soft-hover);
+  --ut-body-actionstoggle-text-color: var(--pp-ink);
+  --ut-footer-background-color: transparent;
+  --ut-footer-border-color: var(--pp-line);
+  --ut-footer-text-color: var(--pp-muted);
+  --ut-login-page-background-color: var(--pp-frame);
+  --ut-login-region-background-color: var(--pp-surface);
+
+  /* Kopf (Höhe statisch; Branding mit fester Zeilenhöhe, siehe base.css) */
+  --ut-header-height: var(--pp-header-h);
+  --ut-header-padding-x: .875rem;
+  --ut-header-item-spacing: var(--pp-space-2);
+  --ut-header-background-color: var(--pp-frame);                /* ◆ Vita: Hex-Kopie */
+  --ut-header-text-color: var(--pp-ink);                        /* ◆ */
+  --ut-header-border-color: transparent;                        /* ◆ */
+  --ut-header-border-width: 0px;
+  --ut-header-box-shadow: none;                                 /* ◆ */
+  --ut-logo-font-size: var(--pp-fs-lg);
+  --ut-logo-line-height: var(--pp-brand-lh);
+  --ut-logo-font-weight: var(--pp-fw-semibold);
+  --ut-logo-text-color: var(--pp-ink);
+  --ut-navbar-button-badge-background-color: var(--pp-ink);          /* Zähler: Tusche, Magenta bleibt der Aktion vorbehalten */
+  --ut-navbar-button-badge-text-color: var(--pp-surface);
+  --ut-header-menubar-background-color: var(--pp-frame);        /* ◆ */
+  --ut-header-menubar-item-text-color: var(--pp-ink-2);         /* ◆ */
+  --ut-header-menubar-item-border-color: transparent;
+  --ut-header-menubar-item-current-background-color: var(--pp-surface); /* ◆ Lasche */
+  --ut-header-menubar-item-current-text-color: var(--pp-ink);   /* ◆ */
+  --ut-header-menubar-item-split-border-color: transparent;
+  --ut-header-menubar-item-split-icon-color: var(--pp-muted);
+  --ut-navtabs-background-color: var(--pp-frame);
+  --ut-navtabs-text-color: var(--pp-ink-2);
+  --ut-navtabs-item-border-color: transparent;
+  --ut-navtabs-item-active-background-color: var(--pp-surface);
+  --ut-navtabs-item-active-text-color: var(--pp-ink);
+  --ut-navtabs-item-active-highlight-color: var(--pp-accent);
+
+  /* Navigation (Tree Nav auf dem Rahmen) */
+  --ut-nav-width: var(--pp-nav-w);
+  --ut-nav-collapsed-icon-width: var(--pp-nav-rail-w);
+  --ut-body-nav-background-color: var(--pp-frame);              /* ◆ */
+  --ut-body-nav-text-color: var(--pp-ink);                      /* ◆ */
+  --ut-body-nav-border-width: 0px;
+  --ut-body-nav-border-color: transparent;
+  --ut-body-nav-scrollbar-thumb-background-color: var(--pp-scrollbar-thumb);
+  --ut-body-nav-scrollbar-track-background-color: var(--pp-scrollbar-track);
+  --a-treeview-node-selected-background-color: transparent;     /* ◆ Lasche zeichnet shell.css */
+  --a-treeview-node-selected-text-color: var(--pp-ink);         /* ◆ */
+  --a-treeview-node-selected-icon-color: var(--pp-ink);
+  --a-treeview-node-focused-background-color: transparent;
+  --a-treeview-node-focused-text-color: var(--pp-ink);
+  --a-treeview-node-focused-shadow: var(--pp-focus-shadow-inset);
+  --a-treeview-node-hover-background-color: var(--pp-frame-hover);
+  --a-treeview-node-icon-color: var(--pp-ink-2);
+  --ut-treeview-badge-background-color: var(--pp-ink);          /* Vita: Hex-Kopie; Zähler in Tusche wie Navbar/Button */
+  --ut-treeview-badge-text-color: var(--pp-surface);
+
+  /* Title Bar / Breadcrumb (liegt auf der Leinwand) */
+  --ut-body-title-background-color: var(--pp-surface);          /* ◆ */
+  --ut-body-title-text-color: var(--pp-ink);                    /* ◆ */
+  --ut-body-title-box-shadow: none;                             /* ◆ */
+  --ut-body-title-border-width: 0px;
+  --ut-body-title-border-color: var(--pp-line);
+  --ut-body-title-backdrop-filter: none;
+  --ut-breadcrumb-padding-x: var(--pp-canvas-pad-x);
+  --ut-breadcrumb-padding-y: var(--pp-canvas-pad-y);
+  --ut-breadcrumb-item-text-color: var(--pp-muted);             /* ◆ */
+  --ut-breadcrumb-item-font-size: var(--pp-fs-sm);
+  --ut-breadcrumb-item-line-height: var(--pp-lh-sm);
+  --ut-breadcrumb-item-font-weight: var(--pp-fw-medium);
+  --ut-breadcrumb-item-active-text-color: var(--pp-ink);
+  --ut-breadcrumb-item-sep-opacity: 1;
+  --ut-breadcrumb-item-sep-spacing: .625rem;
+  --ut-breadcrumb-title-font-size: var(--pp-fs-2xl);
+  --ut-breadcrumb-title-line-height: var(--pp-lh-2xl);         /* Seitentitel 28/34 */
+  --ut-breadcrumb-title-font-weight: var(--pp-fw-semibold);
+
+  /* Inhalt der Leinwand */
+  --ut-body-content-padding-x: var(--pp-canvas-pad-x);
+  --ut-body-content-padding-y: var(--pp-canvas-pad-y);
+  --ut-xs-body-content-padding-x: var(--pp-canvas-pad-x);       /* < 640 px folgt scale.css */
+  --ut-xs-body-content-padding-y: var(--pp-canvas-pad-y);
+  --ut-xs-breadcrumb-padding-x: var(--pp-canvas-pad-x);
+
+  /* 7. Regionen: flach, Titel + Haarlinie --------------------------------- */
+  --ut-region-background-color: transparent;                    /* ◆ */
+  --ut-region-text-color: var(--pp-ink);                        /* ◆ */
+  --ut-region-header-background-color: transparent;             /* ◆ */
+  --ut-region-header-text-color: var(--pp-ink);                 /* ◆ */
+  --ut-region-border-color: transparent;                        /* ◆ Hook */
+  --ut-region-border-width: 0px;
+  --ut-region-border-radius: var(--pp-r-lg);                    /* ◆ */
+  --ut-region-box-shadow: none;                                 /* ◆ */
+  --ut-region-header-border-width: var(--pp-hairline);
+  --ut-region-header-border-color: var(--pp-line);
+  --ut-region-header-padding-x: 0rem;
+  --ut-region-header-padding-y: .625rem;
+  --ut-region-header-font-size: var(--pp-fs-lg);
+  --ut-region-header-line-height: var(--pp-lh-lg);
+  --ut-region-body-padding-x: 0rem;
+  --ut-region-body-padding-y: var(--pp-space-4);
+  --ut-region-buttons-padding-x: 0rem;
+  --ut-region-font-size: var(--pp-fs-md);
+  --ut-region-line-height: var(--pp-lh-body);
+  --ut-region-margin: var(--pp-region-gap);
+  --ut-region-hideshow-header-padding-x: 0rem;
+
+  --ut-content-block-shadow-background-color: var(--pp-surface-sunken);
+  --ut-content-block-light-background-color: var(--pp-surface);
+  --ut-content-block-border-color: transparent;
+  --ut-content-block-font-size: var(--pp-fs-md);
+  --ut-content-block-line-height: var(--pp-lh-body);
+
+  --ut-button-region-border-radius: var(--pp-r-lg);
+  --ut-button-region-border-color: var(--pp-line);
+  --ut-button-region-box-shadow: none;
+  --ut-button-region-background-color: transparent;
+
+  --ut-alert-horizontal-border-radius: var(--pp-r-lg);
+  --ut-alert-wizard-border-radius: var(--pp-r-lg);
+  --ut-alert-box-shadow: none;
+  --ut-alert-border-color: var(--pp-line);
+
+  --ut-hero-region-icon-border-radius: var(--pp-r-lg);
+  --ut-wizard-header-background-color: transparent;
+  /* --ut-wizard-border-radius: wirkungslos (UT Core deklariert keinen Radius für .t-Wizard) – Radius in regions.css */
+  --ut-wp-marker-color: var(--pp-line-strong);
+  --ut-wp-track-color: var(--pp-line-strong);
+  --ut-linkslist-hover-background-color: var(--pp-hover);
+  --ut-linkslist-arrow-color: var(--pp-muted);
+  --ut-comment-chat-background-color: var(--pp-surface-sunken);
+  --ut-comment-chat-active-background-color: var(--pp-soft);
+  --ut-carousel-nav-background-color: var(--pp-line-strong);
+  --ut-carousel-nav-selected-background-color: var(--pp-ink);   /* UT Core liest "selected", nicht "active" */
+
+  /* 8. Tabs / Region Display Selector (aktive Lasche = Rahmen-Grau) ------- */
+  --ut-tabs-item-text-color: var(--pp-muted);
+  --ut-tabs-item-active-text-color: var(--pp-ink);
+  --ut-tabs-item-active-background-color: var(--pp-soft);
+  --ut-tabs-item-active-highlight-color: transparent;
+  --ut-tabs-item-hint-highlight-color: transparent;
+  --ut-tabs-item-hint-highlight-width: 0px;
+  --ut-tabs-item-hover-background-color: var(--pp-hover);
+  --ut-tabs-item-font-size: var(--pp-fs-md);
+  --ut-tabs-item-line-height: var(--pp-lh-md);
+  --ut-tabs-item-font-weight: var(--pp-fw-medium);
+  --ut-tabs-item-active-font-weight: var(--pp-fw-semibold);
+
+  /* 9. Buttons (32 px: Polster inkl. 1 px Rand, app_ui-Konvention) --------- */
+  --a-button-border-radius: var(--pp-r-md);                     /* ◆ */
+  --a-button-padding-y: var(--pp-control-pad-y);
+  --a-button-padding-x: calc(var(--pp-control-pad-x) + 2px);
+  --a-button-font-size: var(--pp-fs-md);
+  --a-button-line-height: var(--pp-control-lh);
+  --a-button-font-weight: var(--pp-fw-medium);
+  --a-button-gap-x: var(--pp-space-2);
+  --a-button-icon-spacing: var(--pp-space-2);
+  --a-button-background-color: var(--pp-soft);                  /* ◆ Sekundär = Stück Rahmen */
+  --a-button-text-color: var(--pp-ink);                         /* ◆ */
+  --a-button-border-color: transparent;                         /* ◆ */
+  --a-button-shadow: none;                                      /* ◆ */
+  --a-button-hover-background-color: var(--pp-soft-hover);      /* ◆ */
+  --a-button-hover-text-color: var(--pp-ink);
+  --a-button-hover-border-color: transparent;
+  --a-button-hover-shadow: none;
+  --a-button-active-background-color: var(--pp-soft-press);     /* ◆ */
+  --a-button-active-border-color: transparent;
+  --a-button-active-shadow: none;
+  --a-button-focus-background-color: var(--pp-soft-hover);
+  --a-button-focus-border-color: transparent;                   /* ◆ Fokus zeigt der Ring, nicht die Kante */
+  --a-button-focus-shadow: none;
+  --a-button-count-background-color: var(--pp-ink);             /* Vita: Hex-Kopie (26.1); Zähler in Tusche */
+  --a-button-count-text-color: var(--pp-surface);
+
+  /* 10. Formulare (32 px) ------------------------------------------------- */
+  --a-field-input-background-color: var(--pp-field);            /* ◆ */
+  --a-field-input-text-color: var(--pp-ink);                    /* ◆ */
+  --a-field-input-border-color: var(--pp-edge);                 /* ◆ */
+  --a-field-input-border-width: 1px;
+  --a-field-input-border-style: solid;
+  --a-field-input-border-radius: var(--pp-r-md);                /* ◆ */
+  --a-field-input-padding-y: var(--pp-control-pad-y);
+  --a-field-input-padding-x: var(--pp-control-pad-x);
+  --a-field-input-font-size: var(--pp-fs-md);
+  --a-field-input-line-height: var(--pp-control-lh);
+  --a-field-input-hover-background-color: var(--pp-field);
+  --a-field-input-hover-border-color: var(--pp-edge-hover);
+  --a-field-input-focus-background-color: var(--pp-field);      /* ◆ */
+  --a-field-input-focus-border-color: var(--pp-focus-ring-color); /* ◆ Vita: Hex-Kopie */
+  --a-field-input-focus-text-color: var(--pp-ink);
+  --a-field-placeholder-text-color: var(--pp-placeholder);
+  --a-field-placeholder-opacity: 1;
+  --a-field-select-background-image: var(--pp-select-arrow);
+  --a-filedrop-border-radius: var(--pp-r-lg);
+  --a-filedrop-progress-background-color: var(--pp-line);
+  --a-filedrop-progress-bar-background-color: var(--pp-ink);
+  --a-filedrop-icon-action-background-color: var(--pp-field);     /* Vita-Dark: hart #000 */
+
+  /* Prozentbalken (Items + Reports): Daten, keine Aktion → Kategorie-Farbe statt Magenta */
+  --a-percent-chart-background-color: var(--pp-soft);
+  --a-percent-chart-bar-background-color: var(--pp-cat-1);
+  --a-percent-chart-bar-text-color: var(--pp-cat-1-on);
+  --ut-field-label-text-color: var(--pp-ink-2);                 /* ◆ */
+  --ut-field-label-font-size: var(--pp-fs-sm);
+  --ut-field-label-line-height: var(--pp-lh-sm);
+  --ut-field-label-font-weight: var(--pp-fw-medium);
+  --ut-field-input-focus-icon-color: var(--pp-accent-text);     /* Vita: Hex-Kopie */
+  --ut-field-fl-input-focus-icon-background-color: var(--pp-accent-tint); /* Vita: Hex-Kopie */
+  --ut-field-fl-input-focus-icon-color: var(--pp-accent-text);
+  --ut-field-input-icon-color: var(--pp-muted);
+  --ut-prepost-text-color: var(--pp-muted);
+  --a-form-required-asterisk-text-color: var(--pp-required-color);
+  --a-form-error-text-color: var(--pp-danger-text);
+  --ut-field-inline-help-text-color: var(--pp-muted);
+  --ut-pillbutton-padding-y: var(--pp-control-pad-y);
+  --ut-pillbutton-padding-x: .625rem;
+  --ut-pillbutton-font-size: var(--pp-fs-sm);
+  --ut-pillbutton-line-height: var(--pp-control-lh);             /* Pill-Gruppen = Control-Höhe */
+
+  --a-checkbox-size: var(--pp-checkbox-size);
+  --a-checkbox-icon-size: .8125rem;
+  --a-checkbox-border-radius: var(--pp-r-sm);
+  --a-checkbox-background-color: var(--pp-field);
+  --a-checkbox-border-color: var(--pp-edge);                    /* ◆ */
+  --a-checkbox-hover-background-color: var(--pp-hover);
+  --a-checkbox-checked-background-color: var(--pp-accent-text); /* ◆ Vita: Hex-Kopie; Akzent als Text-/Kantenton: dunkel ≥ 3:1 (WCAG 1.4.11) */
+  --a-checkbox-checked-text-color: var(--pp-surface);
+  --a-checkbox-text-color: var(--pp-accent-on);
+  --a-checkbox-label-font-size: var(--pp-fs-sm);
+  --a-checkbox-label-spacing-x: var(--pp-space-2);
+  --a-cr-checkbox-background-color: var(--pp-field);
+
+  --a-switch-background-color: var(--pp-edge);
+  --a-switch-checked-background-color: var(--pp-accent-text);   /* dunkel ≥ 3:1 gegen Leinwand */
+  --a-switch-checked-hover-background-color: var(--pp-accent-text);
+  --a-switch-toggle-background-color: var(--pp-surface);
+  --a-switch-toggle-checked-background-color: var(--pp-surface);
+  --a-switch-width: 2.5rem;
+  --a-switch-toggle-width: 1.125rem;
+  --a-switch-toggle-height: 1.125rem;
+  --a-switch-padding-y: .1875rem;
+  --a-switch-padding-x: .1875rem;
+
+  --a-starrating-stars-fg-color: var(--pp-accent-text);
+  --a-starrating-stars-bg-color: var(--pp-edge);                 /* leere Sterne ≥ 3:1 */
+
+  --a-chip-border-radius: var(--pp-r-sm);
+  --a-chip-font-size: var(--pp-fs-sm);
+  --a-chip-line-height: 1.125rem;
+  --a-chip-hover-background-color: var(--pp-hover);
+  --a-chip-active-background-color: var(--pp-soft);
+  --a-chip-applied-background-color: var(--pp-soft);
+  --a-chip-applied-hover-background-color: var(--pp-soft-hover);
+  --a-chip-remove-hover-background-color: var(--pp-frame-hover);
+  --a-chip-remove-active-background-color: var(--pp-frame-press);
+  --a-combo-select-item-selected-background-color: var(--pp-accent-tint);
+  --a-popuplov-chip-background-color: var(--pp-soft);
+
+  /* Date Picker */
+  --a-datepicker-background-color: var(--pp-surface-raised);
+  --a-datepicker-border-radius: var(--pp-r-lg);
+  --a-datepicker-header-background-color: var(--pp-surface-raised);
+  --a-datepicker-calendar-background-color: var(--pp-surface-raised);
+  --a-datepicker-border-color: var(--pp-line);
+  --a-datepicker-calendar-title-background-color: transparent;
+  --a-datepicker-calendar-header-background-color: transparent;
+  --a-datepicker-calendar-header-text-color: var(--pp-muted);
+  --a-datepicker-calendar-day-hover-background-color: var(--pp-raised-hover); /* Popup = schwebende Fläche */
+  --a-datepicker-calendar-day-selected-background-color: var(--pp-accent);
+  --a-datepicker-calendar-day-selected-text-color: var(--pp-accent-on);
+  --a-datepicker-calendar-day-selected-border-color: var(--pp-accent);
+  --a-datepicker-calendar-day-current-background-color: transparent;
+  --a-datepicker-calendar-day-current-text-color: var(--pp-accent-text);
+  --a-datepicker-calendar-day-current-border-color: var(--pp-accent-text);
+  --a-datepicker-calendar-week-background-color: transparent;
+  --a-datepicker-footer-background-color: transparent;
+  --a-datepicker-footer-border-color: var(--pp-line);
+
+  /* 11. Menüs, Dialoge, Tooltips ------------------------------------------ */
+  --a-menu-background-color: var(--pp-surface-raised);          /* ◆ */
+  --a-menu-text-color: var(--pp-ink);                           /* ◆ */
+  --a-menu-border-color: var(--pp-line);
+  --a-menu-border-radius: var(--pp-r-lg);
+  --a-menu-shadow: var(--pp-float-shadow);
+  --a-menu-padding-y: .375rem;
+  --a-menu-padding-x: .375rem;
+  --a-menu-item-border-radius: .375rem;
+  --a-menu-font-size: var(--pp-fs-md);
+  --a-menu-focused-background-color: var(--pp-raised-hover);    /* ◆ Vita: Hex-Kopie; Hover auf schwebender Fläche (auch IconList, Popup-LOV-Links, JET, CKEditor) */
+  --a-menu-focused-text-color: var(--pp-ink);                   /* ◆ */
+
+  --jui-dialog-background-color: var(--pp-surface-raised);
+  --jui-dialog-text-color: var(--pp-ink);
+  --jui-dialog-border-radius: var(--pp-r-dialog);
+  --jui-dialog-shadow: var(--pp-float-shadow);
+  --jui-dialog-titlebar-background-color: transparent;
+  --jui-dialog-titlebar-text-color: var(--pp-ink);
+  --jui-dialog-titlebar-border-color: var(--pp-line);
+  --jui-dialog-titlebar-padding-y: var(--pp-space-3);
+  --jui-dialog-font-size: var(--pp-fs-md);                      /* Vita: 12 px */
+  --jui-dialog-titlebar-padding-x: var(--pp-space-5);
+  --jui-dialog-title-font-size: var(--pp-fs-lg);
+  --jui-dialog-title-font-weight: var(--pp-fw-semibold);
+  --jui-dialog-buttonpane-background-color: transparent;
+  --jui-dialog-buttonpane-border-color: var(--pp-line);
+  --jui-overlay-background-color: var(--pp-scrim);
+  --jui-tooltip-background-color: var(--pp-tooltip-bg);
+  --jui-tooltip-text-color: var(--pp-tooltip-text);
+  --jui-tooltip-border-color: transparent;
+  --jui-tooltip-border-radius: .375rem;
+  --a-tooltip-background-color: var(--pp-tooltip-bg);
+  --a-tooltip-text-color: var(--pp-tooltip-text);
+
+  /* 12. Reports / IR / IG (Zeile 34 px, Kopf 36 px, Haarlinien) ------------ */
+  --a-gv-background-color: var(--pp-surface);                   /* ◆ */
+  --a-gv-border-color: var(--pp-line);
+  --a-gv-font-size: var(--pp-fs-sm);
+  --a-gv-line-height: var(--pp-row-lh);
+  --a-gv-cell-height: var(--pp-row-h);                          /* Hook */
+  --a-gv-cell-padding-y: var(--pp-row-pad-y);
+  --a-gv-cell-padding-x: var(--pp-row-pad-x);
+  --a-gv-header-cell-height: var(--pp-head-h);                  /* Hook */
+  --a-gv-header-cell-padding-x: var(--pp-row-pad-x);
+  --a-gv-cell-border-color: var(--pp-line);                     /* ◆ */
+  --a-gv-header-cell-border-color: var(--pp-line);              /* ◆ */
+  --a-gv-header-background-color: var(--pp-surface);            /* ◆ offene Tabelle: kein Kopfbalken */
+  --a-gv-header-text-color: var(--pp-ink);                      /* Tabellenköpfe in Tusche (reports.css) */
+  --a-gv-row-hover-background-color: var(--pp-hover);
+  --a-gv-selected-background-color: var(--pp-accent-tint);
+  --a-gv-selected-text-color: var(--pp-ink);
+  --a-gv-deleted-background-color: var(--pp-surface-sunken);
+  --a-gv-grandtotal-background-color: var(--pp-surface-sunken);
+  --a-gv-row-disabled-background-color: var(--pp-surface-sunken);
+  --a-gv-pagination-button-selected-background-color: var(--pp-soft);               /* aktive Seite = Stück Rahmen */
+  --a-gv-pagination-button-selected-text-color: var(--pp-ink);
+  --a-toolbar-background-color: transparent;
+  --a-toolbar-border-color: var(--pp-line);
+  --a-toolbar-sep-border-color: var(--pp-line);
+  --a-report-controls-cell-label-background-color: var(--pp-surface);
+  --a-report-controls-cell-label-text-color: var(--pp-ink);
+  --a-splitter-bar-background-color: var(--pp-surface-sunken);
+  --a-resultsitem-background-color: var(--pp-surface);
+  --a-resultsitem-badge-background-color: var(--pp-soft);
+  --ut-resultsregion-background-color: var(--pp-surface);
+  --ut-resultsregion-search-background-color: var(--pp-surface-sunken);
+  --ut-resultsregion-search-border-color: var(--pp-line);
+  --a-kb-shortcut-background-color: var(--pp-soft);
+  --a-kb-shortcut-border-color: var(--pp-line-strong);
+
+  --ut-report-cell-border-color: var(--pp-line);
+  --ut-report-cell-hover-background-color: var(--pp-hover);
+  --ut-report-cell-alt-background-color: var(--pp-surface-sunken);
+  --ut-report-header-background-color: var(--pp-surface);
+  --ut-report-header-cell-background-color: var(--pp-surface);
+  --ut-report-header-cell-font-weight: var(--pp-fw-semibold);
+  --ut-report-header-cell-font-size: var(--pp-fs-head);
+  --ut-report-header-cell-padding-y: calc((var(--pp-head-h) - var(--pp-lh-xs) - var(--pp-head-rule-width)) / 2);
+  --ut-report-header-cell-padding-x: var(--pp-row-pad-x);
+  --ut-report-cell-font-size: var(--pp-fs-sm);
+  --ut-report-cell-line-height: var(--pp-row-lh);
+  --ut-report-cell-padding-y: var(--pp-row-pad-y);
+  --ut-report-cell-padding-x: var(--pp-row-pad-x);
+
+  /* 13. Cards -------------------------------------------------------------- */
+  --a-cv-background-color: var(--pp-surface);                   /* ◆ */
+  --a-cv-border-color: var(--pp-line);                          /* ◆ */
+  --a-cv-border-radius: var(--pp-r-lg);                         /* ◆ */
+  --a-cv-shadow: none;                                          /* ◆ */
+  --a-cv-hover-shadow: 0 0 0 1px var(--pp-line-strong);
+  --a-cv-header-border-color: var(--pp-line);
+  --a-cv-actions-border-color: var(--pp-line);
+  --a-cv-subtitle-text-color: var(--pp-muted);
+  --a-cv-subcontent-text-color: var(--pp-muted);
+  --a-cv-badge-background-color: var(--pp-soft);
+  --a-cv-badge-border-radius: var(--pp-r-sm);
+  --a-cv-icon-background-color: var(--pp-soft);                 /* Vita: Hex-Kopie */
+  --a-cv-icon-text-color: var(--pp-ink);
+  --a-cv-initials-background-color: var(--pp-soft);             /* Vita: Hex-Kopie */
+  --a-cv-initials-text-color: var(--pp-ink);
+  --a-cv-focus-border-color: var(--pp-focus-ring-color);        /* Vita: Hex-Kopie */
+  --ut-cardlist-box-shadow: none;
+  --ut-cardlist-border-radius: var(--pp-r-lg);
+
+  /* 14. Badges / Avatare --------------------------------------------------- */
+  --ut-badge-border-radius: var(--pp-r-sm);
+  --ut-avatar-border-radius: var(--pp-r-md);
+
+  /* 15. Akzentpalette --u-color-1…45 (Charts, Avatare, Karten-Icons, u-colors).
+         1–15 aus den Kategorie-Tokens; 16–30 heller (60 % + Weiß, Text Tusche),
+         31–45 dunkler (55 % + Schwarz, Text Weiß) – so scheint keine Vita-Farbe durch. */
+  --u-color-1: var(--pp-cat-1);   --u-color-1-contrast: var(--pp-cat-1-on);
+  --u-color-2: var(--pp-cat-2);   --u-color-2-contrast: var(--pp-cat-2-on);
+  --u-color-3: var(--pp-cat-3);   --u-color-3-contrast: var(--pp-cat-3-on);
+  --u-color-4: var(--pp-cat-4);   --u-color-4-contrast: var(--pp-cat-4-on);
+  --u-color-5: var(--pp-cat-5);   --u-color-5-contrast: var(--pp-cat-5-on);
+  --u-color-6: var(--pp-cat-6);   --u-color-6-contrast: var(--pp-cat-6-on);
+  --u-color-7: var(--pp-cat-7);   --u-color-7-contrast: var(--pp-cat-7-on);
+  --u-color-8: var(--pp-cat-8);   --u-color-8-contrast: var(--pp-cat-8-on);
+  --u-color-9: var(--pp-cat-9);   --u-color-9-contrast: var(--pp-cat-9-on);
+  --u-color-10: var(--pp-cat-10); --u-color-10-contrast: var(--pp-cat-10-on);
+  --u-color-11: var(--pp-cat-11); --u-color-11-contrast: var(--pp-cat-11-on);
+  --u-color-12: var(--pp-cat-12); --u-color-12-contrast: var(--pp-cat-12-on);
+  --u-color-13: var(--pp-cat-13); --u-color-13-contrast: var(--pp-cat-13-on);
+  --u-color-14: var(--pp-cat-14); --u-color-14-contrast: var(--pp-cat-14-on);
+  --u-color-15: var(--pp-cat-15); --u-color-15-contrast: var(--pp-cat-15-on);
+  --u-color-16: color-mix(in srgb, var(--pp-cat-1) 60%, #fff);  --u-color-16-contrast: var(--pp-on-light);
+  --u-color-17: color-mix(in srgb, var(--pp-cat-2) 60%, #fff);  --u-color-17-contrast: var(--pp-on-light);
+  --u-color-18: color-mix(in srgb, var(--pp-cat-3) 60%, #fff);  --u-color-18-contrast: var(--pp-on-light);
+  --u-color-19: color-mix(in srgb, var(--pp-cat-4) 60%, #fff);  --u-color-19-contrast: var(--pp-on-light);
+  --u-color-20: color-mix(in srgb, var(--pp-cat-5) 60%, #fff);  --u-color-20-contrast: var(--pp-on-light);
+  --u-color-21: color-mix(in srgb, var(--pp-cat-6) 60%, #fff);  --u-color-21-contrast: var(--pp-on-light);
+  --u-color-22: color-mix(in srgb, var(--pp-cat-7) 60%, #fff);  --u-color-22-contrast: var(--pp-on-light);
+  --u-color-23: color-mix(in srgb, var(--pp-cat-8) 60%, #fff);  --u-color-23-contrast: var(--pp-on-light);
+  --u-color-24: color-mix(in srgb, var(--pp-cat-9) 60%, #fff);  --u-color-24-contrast: var(--pp-on-light);
+  --u-color-25: color-mix(in srgb, var(--pp-cat-10) 60%, #fff); --u-color-25-contrast: var(--pp-on-light);
+  --u-color-26: color-mix(in srgb, var(--pp-cat-11) 60%, #fff); --u-color-26-contrast: var(--pp-on-light);
+  --u-color-27: color-mix(in srgb, var(--pp-cat-12) 60%, #fff); --u-color-27-contrast: var(--pp-on-light);
+  --u-color-28: color-mix(in srgb, var(--pp-cat-13) 60%, #fff); --u-color-28-contrast: var(--pp-on-light);
+  --u-color-29: color-mix(in srgb, var(--pp-cat-14) 60%, #fff); --u-color-29-contrast: var(--pp-on-light);
+  --u-color-30: color-mix(in srgb, var(--pp-cat-15) 60%, #fff); --u-color-30-contrast: var(--pp-on-light);
+  --u-color-31: color-mix(in srgb, var(--pp-cat-1) 55%, #000);  --u-color-31-contrast: var(--pp-on-dark);
+  --u-color-32: color-mix(in srgb, var(--pp-cat-2) 55%, #000);  --u-color-32-contrast: var(--pp-on-dark);
+  --u-color-33: color-mix(in srgb, var(--pp-cat-3) 55%, #000);  --u-color-33-contrast: var(--pp-on-dark);
+  --u-color-34: color-mix(in srgb, var(--pp-cat-4) 55%, #000);  --u-color-34-contrast: var(--pp-on-dark);
+  --u-color-35: color-mix(in srgb, var(--pp-cat-5) 55%, #000);  --u-color-35-contrast: var(--pp-on-dark);
+  --u-color-36: color-mix(in srgb, var(--pp-cat-6) 55%, #000);  --u-color-36-contrast: var(--pp-on-dark);
+  --u-color-37: color-mix(in srgb, var(--pp-cat-7) 55%, #000);  --u-color-37-contrast: var(--pp-on-dark);
+  --u-color-38: color-mix(in srgb, var(--pp-cat-8) 55%, #000);  --u-color-38-contrast: var(--pp-on-dark);
+  --u-color-39: color-mix(in srgb, var(--pp-cat-9) 55%, #000);  --u-color-39-contrast: var(--pp-on-dark);
+  --u-color-40: color-mix(in srgb, var(--pp-cat-10) 55%, #000); --u-color-40-contrast: var(--pp-on-dark);
+  --u-color-41: color-mix(in srgb, var(--pp-cat-11) 55%, #000); --u-color-41-contrast: var(--pp-on-dark);
+  --u-color-42: color-mix(in srgb, var(--pp-cat-12) 55%, #000); --u-color-42-contrast: var(--pp-on-dark);
+  --u-color-43: color-mix(in srgb, var(--pp-cat-13) 55%, #000); --u-color-43-contrast: var(--pp-on-dark);
+  --u-color-44: color-mix(in srgb, var(--pp-cat-14) 55%, #000); --u-color-44-contrast: var(--pp-on-dark);
+  --u-color-45: color-mix(in srgb, var(--pp-cat-15) 55%, #000); --u-color-45-contrast: var(--pp-on-dark);
+
+  /* 16. Charts (Oracle JET) ------------------------------------------------ */
+  --oj-core-text-color-primary: var(--pp-ink);
+  --oj-core-text-color-secondary: var(--pp-muted);
+  --oj-heading-text-color: var(--pp-ink);
+  --oj-link-text-color: var(--pp-link-text);
+  --oj-core-divider-color: var(--pp-line);
+  --oj-popup-bg-color: var(--pp-surface-raised);
+  --oj-collection-bg-color: var(--pp-surface);
+  --oj-collection-header-bg-color: var(--pp-surface-sunken);
+  --oj-collection-free-space-bg-color: var(--pp-surface);
+  /* Datatip: Vita lässt die Textfarben schwarz – auf der inversen Tooltip-Fläche unlesbar */
+  --ojet-tooltip-primary-text-color: var(--pp-tooltip-text);
+  --ojet-tooltip-secondary-text-color: var(--pp-tooltip-text);
+  --ojet-tooltip-disabled-text-color: var(--pp-tooltip-text);
+
+  /* 17. Code (PrismJS) und Markdown ---------------------------------------- */
+  /* app_ui (hell) und Vita-Dark bringen die VS-Code-Paletten Light+/Dark+ mit (Violett, Navy,
+     Rot; dunkel Schlüsselwörter #C586C0 = ΔE00 9 neben dem Akzent-Text, Kommentar 4,2:1).
+     Hier: drei --pp-code-*-Töne, Kommentare Graphit, Namen in Tusche. Die abgeleiteten
+     Namen aus app_ui (--prism-selector/-keyword-control → keyword, -regex → string,
+     -decorator → class, -json-property → property) folgen von selbst. */
+  --prism-comment: var(--pp-muted);
+  --prism-keyword: var(--pp-code-keyword);
+  --prism-class: var(--pp-code-keyword);
+  --prism-namespace: var(--pp-code-keyword);
+  --prism-string: var(--pp-code-string);
+  --prism-number: var(--pp-code-number);
+  --prism-boolean: var(--pp-code-number);
+  --prism-constant: var(--pp-code-number);
+  --prism-function: var(--pp-ink);
+  --prism-builtin: var(--pp-ink);                               /* auch HTML-Tags */
+  --prism-literal: var(--pp-ink-2);
+  --prism-property: var(--pp-ink-2);                            /* auch HTML-Attribute */
+  --prism-variable: var(--pp-ink-2);
+  --prism-symbol: var(--pp-ink-2);                              /* auch URLs im Markdown-Editor */
+  --prism-interpolation: var(--pp-ink-2);
+  --prism-deleted: var(--pp-danger-text);
+
+  /* Markdown-Inhalte (.is-markdownified, Markdown-Vorschau): Überschriften auf der Skala statt
+     40/32/28/24/20/16 px – eine #-Überschrift im Feld darf nicht größer sein als der Seitentitel.
+     Der Chat (.a-ChatClient .is-markdownified) setzt eigene, kleinere Werte lokal. */
+  --a-md-h1-font-size: var(--pp-fs-xl);
+  --a-md-h1-line-height: var(--pp-lh-xl);
+  --a-md-h2-font-size: var(--pp-fs-lg);
+  --a-md-h2-line-height: var(--pp-lh-lg);
+  --a-md-h3-font-size: var(--pp-fs-md);
+  --a-md-h3-line-height: var(--pp-lh-md);
+  --a-md-h4-font-size: var(--pp-fs-sm);
+  --a-md-h4-line-height: var(--pp-lh-sm);
+  --a-md-h5-font-size: var(--pp-fs-xs);
+  --a-md-h5-line-height: var(--pp-lh-xs);
+  --a-md-h6-font-size: var(--pp-fs-xs);
+  --a-md-h6-line-height: var(--pp-lh-xs);
+  --a-md-blockquote-font-size: var(--pp-fs-lg);                 /* app_ui: 18 px */
+  --a-md-blockquote-line-height: var(--pp-lh-lg);
+  /* Vorschau-Panel und CodeMirror mit Feldpolster (app_ui: 8 px rundum) – Text steht wie im Feld */
+  --a-mdeditor-padding: var(--pp-control-pad-y) var(--pp-control-pad-x);
+}
+
+/* 18. Schwebende Ebenen: aktuelle Grundfläche ----------------------------------
+   Menüs (.a-Menu, auch Mega Menu), jQuery-UI-Dialoge (.ui-dialog: IR/IG-Dialoge, Popup-LOV,
+   Date-Picker- und Combobox-Popup, Inline-Dialoge, Drawer, Hülle der Seiten-Dialoge), das
+   Sortier-Widget der Spaltenköpfe (.a-IRR-sortWidget, hängt an <body>) und der Inhalt der
+   Seiten-Dialoge/-Drawer (eigenes iframe-Dokument) liegen auf --pp-surface-raised. Was „in der
+   Farbe des Grundes“ gezeichnet wird, folgt dort der schwebenden Fläche:
+     · --pp-ground        z. B. die Mitte des aktiven Wizard-Schritts im Modal-Wizard,
+     · --pp-focus-gap     die Lücke des Fokus-Doppelrings (sonst dunkel eine Leinwand-Linie im Ring).
+   Abgeleitete Tokens werden auf dem Element aufgelöst, auf dem sie deklariert sind (:root) –
+   darum stehen die Lücke und die beiden Fokus-Schatten hier noch einmal. Die Formeln sind
+   dieselben wie in tokens/scale.css bzw. light/dark.css (check-tokens.mjs vergleicht sie).
+   Spezifität 0,1,0: Komponenten können einen eigenen Grund lokal setzen. */
+.a-Menu,
+.ui-dialog,
+.a-IRR-sortWidget,
+.t-Dialog-page,
+.t-Drawer-page {
+  --pp-ground: var(--pp-surface-raised);
+  --pp-focus-gap: var(--pp-ground);
+  --pp-focus-shadow: 0 0 0 var(--pp-focus-ring-offset) var(--pp-focus-gap), 0 0 0 calc(var(--pp-focus-ring-offset) + var(--pp-focus-ring-width)) var(--pp-focus-ring-color);
+  --pp-focus-shadow-inset: inset 0 0 0 var(--pp-focus-ring-width) var(--pp-focus-ring-color), inset 0 0 0 calc(var(--pp-focus-ring-width) + 1px) var(--pp-focus-gap);
+}
+
+/* Dichte für Touch (Tablets, Handschuhe im Außendienst): Bedienelemente und Zeilen 40 px.
+   Nur Token-Werte – die Hebel oben (Polster, Zellenhöhen) rechnen sich daraus neu. */
+@media (pointer: coarse) {
+  :root {
+    --pp-control-h: 2.5rem;
+    --pp-control-h-sm: 2rem;
+    --pp-control-h-lg: 3rem;
+    --pp-row-h: 2.5rem;
+    --pp-head-h: 2.5rem;
+    --pp-hit-min: 2.5rem;
+    --pp-checkbox-size: 1.25rem;
+  }
+}

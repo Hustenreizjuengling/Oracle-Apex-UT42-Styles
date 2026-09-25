@@ -1,0 +1,69 @@
+/* ==========================================================================
+   Nonius · Tokens „Nacht“ (dunkel) – Nachtmodus für den Außendienst.
+   Eigene Flächenlogik: die Anzeige liegt TIEFER als das Gehäuse (eingelassenes Display),
+   gedämpftes Weiß statt Reinweiß, Signalamber auch als Fokusring.
+   ========================================================================== */
+@import "./tokens-map.css";
+
+:root {
+  --ut-color-scheme: dark;
+
+  /* Flächen */
+  --precision-page: #171a1e;          /* Nachtgrund */
+  --precision-display: #131619;       /* Anzeigen: tiefer als das Gehäuse */
+  --precision-housing: #21262b;       /* Gehäuse */
+  --precision-housing-2: #2a3036;
+  --precision-housing-3: #333a41;
+  --precision-raise: #1b1f24;         /* Hover auf Anzeige */
+  --precision-zebra: #15181c;
+
+  /* Schrift */
+  --precision-ink: #dde1e6;           /* Leuchtschrift 13.3:1 auf Nachtgrund */
+  --precision-ink-2: #c3c9d0;
+  --precision-muted: #9ea6b0;         /* 6.2:1 auf Gehäuse */
+
+  /* Linien */
+  --precision-line: #2e343a;
+  --precision-line-soft: #252a30;
+  --precision-line-button: #464e57;
+  --precision-line-control: #6b747f;  /* 3.2:1 auf Gehäuse, 3.8:1 auf Anzeige */
+  --precision-tick: #3a4148;
+  --precision-tick-major: #6b747f;
+
+  /* Signal */
+  --precision-signal: #f2b418;        /* Signalamber 8.2:1 auf Gehäuse */
+  --precision-signal-hover: #ffc53d;
+  --precision-signal-active: #d99f0b;
+  --precision-signal-edge: #f2b418;
+  --precision-on-signal: #131619;
+  --precision-signal-tint: #3a321b;   /* Auswahl */
+  --precision-signal-ink: #f2b418;    /* Signal als Text ist im Dunkeln lesbar */
+
+  /* Fokus: Amberring */
+  --precision-focus: #f2b418;
+  --precision-focus-halo: transparent;
+
+  /* Status */
+  --precision-success: #3fb37a;
+  --precision-success-fill: #1e7c4b;
+  --precision-success-tint: #16291f;
+  --precision-warning: #f08a3e;
+  --precision-warning-fill: #b8570a;
+  --precision-warning-tint: #2e2115;
+  --precision-danger: #f0645f;
+  --precision-danger-fill: #c0262d;
+  --precision-danger-tint: #331c1d;
+  --precision-info: #8fa6bf;
+  --precision-info-fill: #4a5d72;
+  --precision-info-tint: #1e2833;
+  --precision-on-status: #ffffff;
+
+  --precision-switch-off: #4b535c;
+  --precision-overlay: rgba(0, 0, 0, .6);
+  --precision-tooltip-bg: #333a41;
+  --precision-tooltip-text: #eef0f3;
+
+  --precision-shadow-float: 0 16px 40px -12px rgba(0, 0, 0, .7), 0 0 0 1px rgba(255, 255, 255, .06);
+
+  --precision-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M11 6l5 5 5-5' fill='none' stroke='%239ea6b0' stroke-width='1.5'/%3E%3C/svg%3E");
+}

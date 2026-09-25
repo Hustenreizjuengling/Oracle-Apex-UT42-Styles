@@ -1,0 +1,71 @@
+/* ==========================================================================
+   Nonius · Tokens „Tag“ (hell) – nur Werte der --precision-*-Tokens.
+   Das Mapping auf --ut-* bzw. --a-* steht modusneutral in tokens-map.css.
+   ========================================================================== */
+@import "./tokens-map.css";
+
+:root {
+  --ut-color-scheme: light;
+
+  /* Flächen: Papier (Anzeige) – Gehäuse (Rahmen, Einschübe) */
+  --precision-page: #ffffff;          /* Papier: Arbeitsfläche */
+  --precision-display: #ffffff;       /* Anzeigen: Felder, Tabellen, Karten, Dialoge */
+  --precision-housing: #f3f4f6;       /* Gehäuse: Header, Navigation, Regionen, Werkzeugleisten */
+  --precision-housing-2: #e8eaed;     /* Gehäuse gedrückt / Hover auf Gehäuse */
+  --precision-housing-3: #dcdfe3;     /* Gehäuse aktiv */
+  --precision-raise: #f7f8f9;         /* Hover auf Anzeige (Tabellenzeile) */
+  --precision-zebra: #fafbfb;         /* Zebra, kaum sichtbar */
+
+  /* Schrift */
+  --precision-ink: #16191d;           /* Tusche 17.6:1 */
+  --precision-ink-2: #353b42;         /* Labels, Navigation 11.6:1 */
+  --precision-muted: #59626c;         /* Skala 6.2:1 */
+
+  /* Linien */
+  --precision-line: #d9dde2;          /* Haarlinie */
+  --precision-line-soft: #e6e9ec;     /* Zeilenlinien */
+  --precision-line-button: #bcc2c9;   /* Kontur normaler Tasten */
+  --precision-line-control: #858d97;  /* Feldrahmen 3.0:1 auf Gehäuse, 3.4:1 auf Papier */
+  --precision-tick: #c4c9cf;          /* Teilstriche der Skala */
+  --precision-tick-major: #858d97;    /* Hauptstriche der Skala */
+
+  /* Signal – die eine Akzentfarbe */
+  --precision-signal: #f5b700;        /* Signalgelb */
+  --precision-signal-hover: #ffc629;
+  --precision-signal-active: #e2a800;
+  --precision-signal-edge: #d29c00;   /* Kante der gelben Taste auf Papier */
+  --precision-on-signal: #16191d;     /* Tusche auf Gelb 9.8:1 */
+  --precision-signal-tint: #fff1c2;   /* Auswahl (Textmarker) */
+  --precision-signal-ink: #16191d;    /* „Signal als Text“: auf Papier nicht lesbar → Tusche + gelbe Unterstreichung */
+
+  /* Fokus: Doppelring – gelber Kern, Tusche außen */
+  --precision-focus: #16191d;
+  --precision-focus-halo: #f5b700;
+
+  /* Status (Funktion, nie Deko) */
+  --precision-success: #1c7a4a;       /* 5.3:1 */
+  --precision-success-fill: #1c7a4a;
+  --precision-success-tint: #e8f4ec;
+  --precision-warning: #a34d08;       /* Warnorange als Text 5.9:1 */
+  --precision-warning-fill: #b8570a;  /* weiß darauf 4.8:1 */
+  --precision-warning-tint: #fbeede;
+  --precision-danger: #c0262d;        /* 5.9:1 */
+  --precision-danger-fill: #c0262d;
+  --precision-danger-tint: #fbe8e8;
+  --precision-info: #4a5d72;          /* Schiefer 6.8:1 */
+  --precision-info-fill: #4a5d72;
+  --precision-info-tint: #eaeff4;
+  --precision-on-status: #ffffff;
+
+  /* Nav-Aus-Schalter, Overlay, Tooltip */
+  --precision-switch-off: #9aa1a9;
+  --precision-overlay: rgba(22, 25, 29, .45);
+  --precision-tooltip-bg: #16191d;
+  --precision-tooltip-text: #ffffff;
+
+  /* Schwebende Ebenen – der einzige Schatten */
+  --precision-shadow-float: 0 12px 32px -12px rgba(22, 25, 29, .28), 0 0 0 1px rgba(22, 25, 29, .06);
+
+  /* Select-Pfeil (Farbe steckt im SVG) */
+  --precision-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M11 6l5 5 5-5' fill='none' stroke='%2359626c' stroke-width='1.5'/%3E%3C/svg%3E");
+}

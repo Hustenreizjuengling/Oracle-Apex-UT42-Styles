@@ -1,0 +1,16 @@
+/* ==========================================================================
+   Frequenz – Tokens DRUCK (wird von index.css mit Media „print“ geladen)
+   Der Druck ist immer hell: frequenz-dark.css lädt zusätzlich tokens/light.css unter
+   „print“ (Light braucht es nicht, Auto bleibt über „screen and (…dark)“ im Druck hell);
+   diese Datei nimmt danach Schatten und Tafelgrund weg. Nur :root, nur Werte.
+   Der Markenblock bleibt als Marke stehen (Browser drucken Hintergründe nur auf Wunsch).
+   ========================================================================== */
+:root {
+  --fq-panel: #FFFFFF;             /* Tafeln drucken als Weiß – Gliederung über Titel und Linien */
+  --fq-surface-sunken: #FFFFFF;
+  --fq-header-shadow: none;
+  --fq-card-shadow: none;
+  --fq-float-shadow: none;
+  --fq-scrim: transparent;
+  --fq-page-pad-x: 0px;
+}

@@ -1,0 +1,838 @@
+/* ==========================================================================
+   Kracherl – Formulare
+   Felder, Labels, Pflicht, Checkbox/Radio/Switch, LOVs, Date Picker, Datei, RTE, Validierung.
+   Regeln: nur Tokens (--kr-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+   Leitlinie: Ein Feld ist EINE Kante (--kr-edge) in der Region. Knöpfe im Feld (Popup LOV,
+   Kalender, Farbe, Passwort, Auswahlpfeil) sind Teil dieser Kante – ohne Trennstrich.
+   Fokus eines Feldes = Kante in Ringfarbe + 1 px Schatten (= 2 px Ring, kein Layoutsprung).
+   ========================================================================== */
+
+/* 1. Feld-Container und Labels ------------------------------------------- */
+
+/* Label mittig zur ersten Feldzeile (Feld = --kr-c-field-h, Label-Zeile = --ut-field-label-line-height),
+   Hilfe- und Fehlertext in der Klein-Stufe statt 11 px */
+.t-Form-fieldContainer {
+  --kr-c-field-h: var(--kr-control-h);      /* Feldhöhe der aktuellen Größe (large/xlarge s. §7) */
+  --ut-field-label-padding-y: calc((var(--kr-c-field-h) - var(--ut-field-label-line-height)) / 2);
+  --ut-field-assistance-font-size: var(--kr-fs-xs);
+  --ut-field-assistance-line-height: var(--kr-lh-xs);
+  --ut-field-assistance-margin-y: var(--kr-space-1);
+  --ut-field-inline-help-font-size: var(--kr-fs-xs);
+  --ut-field-inline-help-line-height: var(--kr-lh-xs);
+  --ut-field-inline-help-spacing: var(--kr-space-1);
+  --ut-field-inline-help-text-color: var(--kr-muted);
+}
+/* Labels oben: kleiner Abstand Label → Feld */
+.t-Form--labelsAbove .t-Form-fieldContainer,
+.t-Form-fieldContainer--stacked {
+  --ut-field-label-padding-y: var(--kr-space-1);
+}
+/* Mobil (UT: Labels über dem Feld): Label nah am eigenen Feld */
+@media (max-width: 639px) {
+  .t-Form-fieldContainer {
+    --ut-field-label-padding-y: var(--kr-space-1);
+  }
+}
+/* Labels immer linksbündig (UT: rechtsbündig; die Template Option „Label Alignment: Right“
+   ist der UT-Standard ohne eigene Klasse und entfällt damit bewusst) */
+.t-Form-labelContainer {
+  text-align: start;
+}
+/* Items in Unterregionen ohne Template (<div id="R…" class="">): UT gleicht das Label-Polster
+   nur bei direkten Kindern von .col aus (.col > .t-Form-fieldContainer). Sonst beginnt das
+   linksbündige Label 8 px rechts vom Text der Region. :where() = Spezifität wie UT (0,2,0). */
+.col > :where(div:not([class]), div[class=""]) > .t-Form-fieldContainer {
+  margin-inline-start: calc(var(--ut-grid-gutter-width, .5rem) * -1);
+  margin-inline-end: calc(var(--ut-grid-gutter-width, .5rem) * -1);
+  max-width: none;
+}
+.t-Form-inlineHelp {
+  color: var(--kr-muted);
+}
+/* Pre-/Post-Text: Klein-Stufe, gedämpfte Schrift */
+.t-Form-itemText {
+  font-size: var(--kr-fs-sm);
+  color: var(--ut-prepost-text-color);
+}
+.t-Form-fieldContainer--preTextBlock .t-Form-itemText--pre,
+.t-Form-fieldContainer--postTextBlock .t-Form-itemText--post {
+  background-color: var(--kr-surface-sunken);
+}
+/* Angesetzter Knopf im Post-Text (t-Button--pillEnd, z. B. Icon-Picker): Feldende in Feldhöhe,
+   Radius des Feldes; das Feld davor verliert seine Endecken (logisch → RTL automatisch) */
+.t-Form-itemText--post > .t-Button--pillEnd {
+  --a-button-padding-y: calc((var(--kr-c-field-h) - var(--a-button-line-height)) / 2);
+  --a-button-border-radius: var(--a-field-input-border-radius);
+}
+.apex-item-text:has(+ .t-Form-itemText--post > .t-Button--pillEnd) {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+/* 2. Pflichtfeld: Sternchen in Textschrift, Danger-Text-Farbe, kein Vita-Dreieck ---------- */
+.t-Form-fieldContainer.is-required .t-Form-label:before {
+  content: none;
+  display: none;
+}
+.t-Form-fieldContainer.is-required .t-Form-label:after {
+  content: var(--kr-required-mark);
+  display: inline;
+  margin-inline-start: var(--kr-required-gap);
+  font-family: inherit !important;          /* gegen UT Core „apex-core-font“ !important */
+  font-weight: var(--kr-fw-semibold);
+  color: var(--kr-required-color);
+}
+/* Floating Label: Dreieck in der Feldecke weg, Sternchen hinter dem Label */
+.t-Form-fieldContainer--floatingLabel.is-required .t-Form-itemRequired-marker:before {
+  content: none;
+  display: none;
+}
+.t-Form-fieldContainer--floatingLabel.is-required .t-Form-label:before {
+  display: none;
+}
+.t-Form-fieldContainer--floatingLabel.is-required .t-Form-label:after {
+  display: inline;
+}
+/* Einzel-Checkbox: Sternchen hinter dem Checkbox-Label */
+.apex-item-wrapper--single-checkbox.is-required .apex-item-single-checkbox:after {
+  content: var(--kr-required-mark);
+  font-family: inherit !important;          /* gegen UT Core „apex-core-font“ !important */
+  font-size: var(--a-checkbox-label-font-size);
+  font-weight: var(--kr-fw-semibold);
+  line-height: var(--a-checkbox-size);
+  color: var(--kr-required-color);
+  margin-inline-start: calc(var(--kr-required-gap) - var(--a-checkbox-label-spacing-x));
+}
+
+/* 3. Fokus der Felder (EIN System) ----------------------------------------
+   Felder zeigen Fokus als Kante in --kr-focus-ring-color (UT: --a-field-input-focus-border-color)
+   plus 1 px Schatten derselben Farbe – zusammen 2 px, ohne Layoutsprung. Der UT-Umriss
+   (--ut-focus-outline) ist nur auf den Feldern selbst aus; Buttons, Checkboxen, Kalendertage
+   usw. im Feld-Container behalten den normalen Ring. Wie UT auf :focus (nicht nur
+   :focus-visible), weil Kante und Schatten ein Feldzustand sind, der immer zusammen erscheint. */
+.apex-item-text,
+.apex-item-select,
+.apex-item-textarea,
+.apex-item-multi,
+.apex-item-comboselect,
+.u-TF-item--text,
+.u-TF-item--select,
+select.listmanager,
+select.group_selectlist,
+.apex-item-group--popup-lov,
+.apex-item-group--color-picker,
+.apex-item-group--rich-text-editor,
+.apex-item-wrapper.is-readonly .js-accessible-readonly {
+  --ut-focus-outline: none;
+}
+.apex-item-text:focus,
+.apex-item-select:focus,
+.apex-item-textarea:focus,
+.u-TF-item--text:focus,
+.u-TF-item--select:focus,
+select.listmanager:focus,
+select.group_selectlist:focus,
+.apex-item-multi:focus-within,
+.apex-item-wrapper.is-readonly .js-accessible-readonly:focus-within {
+  --a-field-input-state-shadow: var(--kr-focus-field-shadow);
+}
+/* Fehlerhaftes Feld mit Fokus: Brause-Orange (Fokus) und Himbeerrot (Fehler) liegen bei Deuteranopie
+   und Tritanopie nah beieinander (check-tokens.mjs: „Danger vs --kr-mark“). Der Fokus unterscheidet
+   sich deshalb über die FORM: Die rote Fehlerkante bleibt, der Fokus kommt als abgesetzter Ring dazu
+   (2 px Orange mit 2 px Abstand – der Ring der Buttons). Normaler Feld-Fokus = dicke orange Kante
+   ohne Abstand, Fehler ohne Fokus = dünne rote Kante. Zusammengesetzte Felder: Ring um das Ganze (4a/4b). */
+.apex-item-text.apex-page-item-error:focus,
+.apex-item-select.apex-page-item-error:focus,
+.apex-item-textarea.apex-page-item-error:focus,
+.u-TF-item--text.apex-page-item-error:focus,
+.u-TF-item--select.apex-page-item-error:focus,
+select.listmanager.apex-page-item-error:focus,
+select.group_selectlist.apex-page-item-error:focus,
+.apex-item-multi.apex-page-item-error:focus-within {
+  --a-field-input-state-border-color: var(--ut-palette-danger);
+  --a-field-input-state-shadow: none;
+  outline: var(--kr-focus-outline);
+  outline-offset: var(--kr-focus-ring-offset);
+}
+:is(.apex-item-group--popup-lov, .apex-item-group--password, .apex-item-group--color-picker, .apex-item-datepicker--popup, a-color-picker, .apex-item-comboselect) .apex-page-item-error:focus {
+  outline: none;                            /* den Ring zeichnet das ganze Feld */
+}
+/* Natives Datums-/Zeitfeld: das aktive Segment (tt/mm/jjjj, hh:mm) in der Textauswahl-Farbe
+   statt der System-Farbe Highlight (Chrome: sattes Blau). Chrome 153 trifft das Segment nur
+   noch mit :focus-within (:focus am Pseudo-Element greift für Autoren-CSS nicht mehr). */
+input::-webkit-datetime-edit-day-field:focus-within,
+input::-webkit-datetime-edit-month-field:focus-within,
+input::-webkit-datetime-edit-year-field:focus-within,
+input::-webkit-datetime-edit-week-field:focus-within,
+input::-webkit-datetime-edit-hour-field:focus-within,
+input::-webkit-datetime-edit-minute-field:focus-within,
+input::-webkit-datetime-edit-second-field:focus-within,
+input::-webkit-datetime-edit-millisecond-field:focus-within,
+input::-webkit-datetime-edit-ampm-field:focus-within,
+input::-webkit-datetime-edit-day-field:focus,
+input::-webkit-datetime-edit-month-field:focus,
+input::-webkit-datetime-edit-year-field:focus,
+input::-webkit-datetime-edit-week-field:focus,
+input::-webkit-datetime-edit-hour-field:focus,
+input::-webkit-datetime-edit-minute-field:focus,
+input::-webkit-datetime-edit-second-field:focus,
+input::-webkit-datetime-edit-millisecond-field:focus,
+input::-webkit-datetime-edit-ampm-field:focus {
+  background-color: var(--kr-selection);
+  color: var(--kr-selection-text);
+  border-radius: 2px;
+}
+
+/* 4. Zusammengesetzte Felder: ein Feld, eine Kante ------------------------ */
+
+/* 4a. Select One / Select Many / Combobox (a-select, a-combobox) */
+.apex-item-comboselect {
+  --a-combo-select-focus-border-color: var(--a-field-input-focus-border-color);
+  --a-combo-select-focus-outline: none;
+}
+.apex-item-comboselect.has-focus,
+.apex-item-comboselect:focus-within {
+  --a-field-input-state-shadow: var(--kr-focus-field-shadow);
+}
+/* die innere Eingabe zeichnet weder Ring noch eigene Fläche (Fläche trägt .apex-item-comboselect) */
+.apex-item-comboselect .apex-item-text {
+  box-shadow: none;
+  background-color: transparent;
+}
+/* Feldfläche auch hinter dem Pfeil (dunkel sonst Region-Streifen = „Trenner“) */
+a-select .apex-item-comboselect,
+a-combobox .apex-item-comboselect {
+  background-color: var(--a-field-input-state-background-color, var(--a-field-input-background-color));
+}
+/* Chips-Eingabe in Feldmaß (sonst 28 px statt --kr-control-h); Chips im Feld = Lavendel-Pille ohne Kante */
+a-select,
+a-combobox {
+  --a-chip-input-font-size: var(--a-field-input-font-size);
+  --a-chip-input-line-height: var(--a-field-input-line-height);
+  --a-chip-border-color: transparent;
+  --a-chip-background-color: var(--kr-soft);
+  --a-chip-hover-background-color: var(--kr-soft-hover);
+}
+.a-Chip--input {
+  --a-chip-background-color: transparent;
+  --a-chip-hover-background-color: transparent;
+}
+/* Auswahlliste (Combobox/Select One/Many): Zeile wie Menüeintrag, Fokus als Ring nach innen */
+.a-ComboSelect-item {
+  --a-combo-select-item-hover-background-color: var(--kr-soft);
+  --a-combo-select-item-preselected-background-color: var(--kr-soft);
+  --a-combo-select-item-preselected-hover-background-color: var(--kr-soft-hover);
+  --a-combo-select-item-focus-box-shadow: var(--kr-focus-shadow-inset);
+  border-radius: var(--a-menu-item-border-radius);
+}
+.a-ComboSelect-item.is-focused {
+  outline: none;                            /* app_ui: 1 px Linie – ersetzt durch den Innenring */
+}
+.a-ComboSelect-action {
+  --a-comboselect-action-background-color: var(--kr-accent-text);
+  --a-comboselect-action-text-color: var(--kr-surface);
+}
+/* Fehler: Select One/Combobox lesen die Kante aus --a-combo-select-* (UT färbt nur --a-field-input-state-*) */
+.apex-item-wrapper--combobox-one .apex-item-comboselect:has(.apex-page-item-error),
+.apex-item-wrapper--select-one .apex-item-comboselect:has(.apex-page-item-error) {
+  --a-combo-select-border-color: var(--ut-palette-danger);
+}
+/* … mit Fokus: rote Kante bleibt, abgesetzter Ring (§3) */
+.apex-item-comboselect:is(.has-focus, :focus-within):is(.apex-page-item-error, :has(.apex-page-item-error)) {
+  --a-combo-select-focus-border-color: var(--ut-palette-danger);
+  --a-field-input-state-border-color: var(--ut-palette-danger);
+  --a-field-input-state-shadow: none;
+  outline: var(--kr-focus-outline);
+  outline-offset: var(--kr-focus-ring-offset);
+}
+/* Combobox: kein Strich vor dem Pfeil */
+.apex-item-wrapper--combobox-one .a-Button--comboSelect {
+  --a-button-border-color: transparent;
+}
+
+/* 4b. Popup LOV, Date Picker, Color Picker, Passwort: Eingabe + Knopf = ein Feld */
+.apex-item-group--popup-lov,
+.apex-item-group--password,
+.apex-item-group--color-picker,
+.apex-item-datepicker--popup,
+a-color-picker {
+  border-radius: var(--a-field-input-border-radius);
+  background-color: var(--a-field-input-background-color);   /* keine Naht bei 125/150 % Zoom */
+  transition: box-shadow var(--kr-duration) var(--kr-ease);
+}
+.apex-item-group--password .apex-item-text,
+.apex-item-datepicker--popup .apex-item-text,
+a-color-picker .apex-item-text {
+  box-shadow: none;
+}
+/* Keine Innenkante: Eingabe ohne Endkante, Knopf ohne Startkante, bündig (keine Gehrungskerbe) */
+.apex-item-group--popup-lov .apex-item-popup-lov:not(:last-child),
+.apex-item-group--popup-lov .apex-item-multi:not(:last-child),
+.apex-item-password:has(+ .t-Button),
+.apex-item-datepicker:has(+ .a-Button),
+.apex-item-color-picker:has(+ .a-Button) {
+  border-inline-end-width: 0;
+}
+.apex-item-group--popup-lov .a-Button--popupLOV,
+.apex-item-group--password .t-Button--passwordVisibility,
+.apex-item-datepicker--popup .a-Button--calendar,
+a-color-picker .a-Button--colorPicker {
+  border-inline-start-width: 0;
+  margin-inline-start: 0;
+}
+/* Hover: die ganze Kante reagiert, nicht nur die Hälfte unter dem Zeiger */
+.apex-item-group--popup-lov:hover,
+.apex-item-group--password:hover,
+.apex-item-group--color-picker:hover,
+.apex-item-datepicker--popup:hover,
+a-color-picker:hover {
+  --a-field-input-border-color: var(--a-field-input-hover-border-color);
+}
+/* Fokus: Ring um das ganze Feld */
+.apex-item-group--popup-lov:focus-within,
+.apex-item-group--password:has(.apex-item-password:focus),
+.apex-item-group--color-picker:has(.apex-item-text:focus),
+.apex-item-datepicker--popup:has(.apex-item-datepicker:focus),
+a-color-picker:has(.apex-item-text:focus) {
+  --a-field-input-border-color: var(--a-field-input-focus-border-color);
+  --a-button-state-border-color: var(--a-field-input-focus-border-color);
+  box-shadow: var(--kr-focus-field-shadow);
+}
+/* … mit Fehler: rote Kante bleibt, der Fokus ist der abgesetzte Ring (§3) */
+.apex-item-group--popup-lov:focus-within:has(.apex-page-item-error),
+.apex-item-group--password:has(.apex-item-password.apex-page-item-error:focus),
+.apex-item-group--color-picker:has(.apex-item-text.apex-page-item-error:focus),
+.apex-item-datepicker--popup:has(.apex-item-datepicker.apex-page-item-error:focus),
+a-color-picker:has(.apex-item-text.apex-page-item-error:focus) {
+  --a-field-input-border-color: var(--ut-palette-danger);
+  --a-button-state-border-color: var(--ut-palette-danger);
+  box-shadow: none;
+  outline: var(--kr-focus-outline);
+  outline-offset: var(--kr-focus-ring-offset);
+}
+/* Passwort-Auge ist selbst fokussierbar: Ring nach innen, im Feld */
+.t-Button--passwordVisibility {
+  --ut-focus-outline-offset: calc(-1 * var(--kr-focus-ring-width));
+}
+/* Fehler: UT färbt nur „+ .a-Button“ mit – das Auge ist ein t-Button und behielte die graue
+   Kante (zweifarbiges Feld). Fokus im Feld hat weiter Vorrang (§3, Spezifität 0,4,0). */
+.apex-item-text.apex-page-item-error + .t-Button--passwordVisibility {
+  --a-button-state-border-color: var(--ut-palette-danger);
+}
+
+/* 5. Checkbox, Radio, Switch, Pillen ------------------------------------- */
+
+/* Häkchen/Punkt ausgestanzt: Fläche --kr-accent-text, Zeichen in Grundfarbe.
+   Hell identisch mit --kr-accent/Weiß; dunkel ≥ 4,8 : 1 zur Umgebung (--kr-accent nur 2,7 : 1). */
+.u-checkbox,
+.u-radio {
+  --a-checkbox-checked-background-color: var(--kr-accent-text);
+  --a-checkbox-checked-text-color: var(--kr-surface);
+}
+/* Kästchen = label::before. UT Core zeichnet den Ring dort schon bei :focus (auch Maus);
+   der Hook wird deshalb am Kästchen selbst aus- und nur bei Tastatur eingeschaltet.
+   (Am ::before, nicht am label: Pillen-Labels sind auch .u-radio – deren Ring gehört buttons.css.) */
+.u-checkbox:before,
+.u-radio:before {
+  --ut-focus-outline: none;
+  border-width: 1.5px;
+}
+.u-checkbox:focus-visible:before,
+.u-radio:focus-visible:before,
+input:focus-visible + .u-checkbox:before,
+input:focus-visible + .u-radio:before,
+.apex-item-checkbox input:focus-visible + label:before,
+.apex-item-radio input:focus-visible + label:before,
+.apex-item-single-checkbox input:focus-visible + label:before {
+  --ut-focus-outline: var(--kr-focus-outline);
+  --ut-focus-outline-offset: var(--kr-focus-ring-offset);
+}
+/* Erste Option auf die Mitte der ersten Feldzeile (UT: Option = .25rem Rand + Kästchen) */
+.apex-item-group--rc {
+  padding-block-start: calc((var(--kr-c-field-h) - var(--a-checkbox-size)) / 2 - .25rem);
+}
+/* gewählte Option: mittel statt fett (die Markierung trägt das Kästchen) */
+.apex-item-group--rc input:checked + label,
+.apex-item-single-checkbox input:checked + label {
+  font-weight: var(--kr-fw-medium);
+}
+
+/* Switch: ruhig, ohne Innenschatten; Knopf in Grundfarbe (dunkel: ausgestanzt) */
+.a-Switch {
+  --a-switch-shadow: none;
+  --a-switch-focused-shadow: none;
+  --a-switch-checked-background-color: var(--kr-accent-text);
+  --a-switch-checked-hover-background-color: var(--kr-accent-text);
+  --a-switch-toggle-background-color: var(--kr-surface);
+  --a-switch-toggle-hover-background-color: var(--kr-surface);
+  --a-switch-toggle-active-background-color: var(--kr-surface);
+  --a-switch-toggle-checked-background-color: var(--kr-surface);
+  --a-switch-toggle-checked-hover-background-color: var(--kr-surface);
+  --a-switch-toggle-checked-active-background-color: var(--kr-surface);
+  position: relative;
+  min-block-size: var(--kr-hit-min);
+}
+/* ganzer Schalter klickbar (UT: nur der Knopf) */
+.a-Switch input[type=checkbox] {
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+.a-Switch-toggle {
+  --ut-focus-outline: none;
+}
+.a-Switch input[type=checkbox]:focus-visible + .a-Switch-toggle {
+  --ut-focus-outline: var(--kr-focus-outline);
+  --ut-focus-outline-offset: var(--kr-focus-ring-offset);
+}
+.t-Form-itemWrapper .a-Switch {
+  align-self: center;
+  min-block-size: var(--kr-c-field-h);
+}
+.t-Form-fieldContainer--floatingLabel .t-Form-itemWrapper .a-Switch {
+  align-self: auto;
+  min-block-size: 0;
+}
+
+/* Radio-Gruppe als Buttons / Ja-Nein-Pille: Gestalt und Fokus in buttons.css (§8);
+   hier nur: kein Options-Versatz (s. o.) für die Segmentleiste */
+.t-Form-fieldContainer--radioButtonGroup .apex-item-group--rc {
+  padding-block-start: 0;
+}
+
+/* Native Controls ohne UT-Vorlage: Akzent statt Browser-Blau */
+:where(input[type=checkbox], input[type=radio], input[type=range], progress, meter) {
+  accent-color: var(--kr-accent-text);
+}
+
+/* 6. Floating Labels ------------------------------------------------------
+   Feld = Label-Zeile (16) + Text-Zeile (20) + Polster aus der Dichte: 48 px, Touch 56 px. */
+.t-Form-fieldContainer--floatingLabel {
+  --a-field-input-padding-y: var(--kr-control-pad-y);
+  --a-field-input-padding-x: var(--kr-control-pad-x);
+  --ut-field-input-icon-padding-x: var(--kr-control-pad-x);
+  --ut-field-label-font-size: var(--kr-fs-md);
+  --ut-field-fl-label-font-size: var(--kr-fs-xs);
+  --ut-field-fl-label-line-height: var(--kr-lh-xs);
+  --ut-field-label-text-color: var(--kr-muted);
+}
+/* Icon im Feld (z. B. Suchfeld): Teil der Feldfläche – kein Vita-Icon-Fach mit Trennstrich
+   (Ruhe) und keine eigene Fläche (Fokus). Den Fokus zeigen Kante und Icon-Farbe. */
+.t-Form-fieldContainer--floatingLabel.apex-item-wrapper--has-icon {
+  --ut-field-input-icon-border: none;
+  --ut-field-input-icon-background-color: transparent;
+}
+/* Beschriftung über Radio-/Checkbox-Gruppen (kein Feldrahmen): umbrechen statt „…“.
+   UT legt das Label absolut über die Gruppe (nowrap + Ellipse) und schiebt die Gruppe um genau
+   eine Label-Zeile nach unten – 12 px (Vita 11) schneidet in schmalen Spalten ab (1206).
+   Hier liegt das Label im Fluss in einer eigenen Grid-Zeile über der Gruppe; Höhe einzeilig
+   = UT-Versatz (Polster oben + Zeile, unten 0) → einzeilige Labels stehen pixelgleich.
+   Ohne Hilfe-Knopf: der sitzt bei UT in der Label-Zeile (Pill-Gruppe mit eigenem Versatz). */
+.t-Form-fieldContainer--floatingLabel.apex-item-wrapper--radiogroup:where(:not(.has-helpbutton)),
+.t-Form-fieldContainer--floatingLabel.apex-item-wrapper--checkbox:where(:not(.has-helpbutton)) {
+  --ut-field-fl-label-offset: 0px;
+  grid-template-areas: "pretext label" "pretext field";
+}
+.t-Form-fieldContainer--floatingLabel.apex-item-wrapper--radiogroup:where(:not(.has-helpbutton)) .t-Form-labelContainer,
+.t-Form-fieldContainer--floatingLabel.apex-item-wrapper--checkbox:where(:not(.has-helpbutton)) .t-Form-labelContainer {
+  grid-area: label;
+}
+.t-Form-fieldContainer--floatingLabel.apex-item-wrapper--radiogroup:where(:not(.has-helpbutton)) .t-Form-label,
+.t-Form-fieldContainer--floatingLabel.apex-item-wrapper--checkbox:where(:not(.has-helpbutton)) .t-Form-label {
+  display: block;
+  position: relative;
+  white-space: normal;
+  padding-block-end: 0;
+}
+
+/* Switch kennt UT im Floating-Label nur mit Wert: Label immer oben (sonst liegt es auf dem Schalter) */
+.t-Form-fieldContainer--floatingLabel.apex-item-wrapper--yes-no .t-Form-label {
+  font-size: var(--ut-field-fl-label-font-size);
+  padding-block-start: calc(var(--a-field-input-padding-y) - var(--a-field-input-border-width));
+}
+
+/* 7. Größen: Large 40 px, X Large 48 px (Touch +8) ------------------------ */
+.t-Form--large .t-Form-fieldContainer,
+.t-Form-fieldContainer.t-Form-fieldContainer--large {
+  --kr-c-field-h: var(--kr-control-h-lg);
+}
+.t-Form--xlarge .t-Form-fieldContainer,
+.t-Form-fieldContainer.t-Form-fieldContainer--xlarge {
+  --kr-c-field-h: calc(var(--kr-control-h-lg) + var(--kr-space-2));
+}
+.t-Form--large,
+.t-Form-fieldContainer--large {
+  --ut-field-label-font-size: var(--kr-fs-md);
+  --ut-field-label-line-height: var(--kr-lh-md);
+  --a-field-input-font-size: var(--kr-fs-lg);
+  --a-field-input-line-height: var(--kr-lh-lg);
+  --a-field-input-padding-y: calc((var(--kr-control-h-lg) - var(--kr-lh-lg)) / 2);
+  --a-field-input-padding-x: var(--kr-control-pad-x);
+  --ut-field-input-icon-padding-x: var(--kr-control-pad-x);
+  --ut-field-input-icon-padding-y: calc((var(--kr-control-h-lg) - 1rem) / 2);
+  --a-checkbox-size: 1.25rem;
+  --a-checkbox-icon-size: .9375rem;
+  --a-checkbox-label-font-size: var(--kr-fs-md);
+  --a-checkbox-label-line-height: var(--kr-lh-md);
+  --ut-pillbutton-padding-y: calc((var(--kr-control-h-lg) - var(--kr-control-lh)) / 2);
+  --ut-pillbutton-padding-x: var(--kr-space-3);
+  --ut-pillbutton-font-size: var(--kr-fs-md);
+  --ut-pillbutton-line-height: var(--kr-control-lh);
+  --a-popuplov-chip-font-size: var(--kr-fs-md);
+  --a-popuplov-chip-line-height: var(--kr-lh-md);
+  --a-switch-width: 3rem;
+  --a-switch-padding-y: .1875rem;
+  --a-switch-padding-x: .1875rem;
+  --a-switch-toggle-width: 1.375rem;
+  --a-switch-toggle-height: 1.375rem;
+}
+.t-Form--large .t-Form-itemText,
+.t-Form-fieldContainer--large .t-Form-itemText {
+  line-height: var(--kr-lh-lg);
+  font-size: var(--kr-fs-md);
+}
+.t-Form--large .t-Form-itemWrapper .a-Button,
+.t-Form--large .t-Form-itemWrapper .t-Form-helpButton,
+.t-Form--large .apex-item-file--native::-webkit-file-upload-button,
+.t-Form-fieldContainer--large .t-Form-itemWrapper .a-Button,
+.t-Form-fieldContainer--large .t-Form-itemWrapper .t-Form-helpButton,
+.t-Form-fieldContainer--large .apex-item-file--native::-webkit-file-upload-button {
+  --a-button-padding-y: calc((var(--kr-control-h-lg) - 1rem) / 2);
+  --a-button-padding-x: var(--kr-space-3);
+  --a-icon-size: 1rem;
+}
+.t-Form--xlarge,
+.t-Form-fieldContainer--xlarge {
+  --ut-field-label-font-size: var(--kr-fs-lg);
+  --ut-field-label-line-height: var(--kr-lh-lg);
+  --a-field-input-font-size: var(--kr-fs-lg);
+  --a-field-input-line-height: var(--kr-lh-lg);
+  --a-field-input-padding-y: calc((var(--kr-control-h-lg) + var(--kr-space-2) - var(--kr-lh-lg)) / 2);
+  --a-field-input-padding-x: var(--kr-space-4);
+  --ut-field-input-icon-padding-x: var(--kr-space-3);
+  --ut-field-input-icon-padding-y: calc((var(--kr-control-h-lg) + var(--kr-space-2) - 1rem) / 2);
+  --a-checkbox-size: 1.5rem;
+  --a-checkbox-icon-size: 1.125rem;
+  --a-checkbox-label-font-size: var(--kr-fs-lg);
+  --a-checkbox-label-line-height: var(--kr-lh-lg);
+  --ut-pillbutton-padding-y: calc((var(--kr-control-h-lg) + var(--kr-space-2) - var(--kr-lh-lg)) / 2);
+  --ut-pillbutton-padding-x: var(--kr-space-4);
+  --ut-pillbutton-font-size: var(--kr-fs-lg);
+  --ut-pillbutton-line-height: var(--kr-lh-lg);
+  --a-popuplov-chip-font-size: var(--kr-fs-lg);
+  --a-popuplov-chip-line-height: var(--kr-lh-lg);
+  --a-switch-width: 3.5rem;
+  --a-switch-padding-y: .25rem;
+  --a-switch-padding-x: .25rem;
+  --a-switch-toggle-width: 1.625rem;
+  --a-switch-toggle-height: 1.625rem;
+}
+.t-Form--xlarge .t-Form-itemText,
+.t-Form-fieldContainer--xlarge .t-Form-itemText {
+  line-height: var(--kr-lh-lg);
+  font-size: var(--kr-fs-lg);
+}
+.t-Form--xlarge .t-Form-itemWrapper .a-Button,
+.t-Form--xlarge .t-Form-itemWrapper .t-Form-helpButton,
+.t-Form--xlarge .apex-item-file--native::-webkit-file-upload-button,
+.t-Form-fieldContainer--xlarge .t-Form-itemWrapper .a-Button,
+.t-Form-fieldContainer--xlarge .t-Form-itemWrapper .t-Form-helpButton,
+.t-Form-fieldContainer--xlarge .apex-item-file--native::-webkit-file-upload-button {
+  --a-button-padding-y: calc((var(--kr-control-h-lg) + var(--kr-space-2) - 1rem) / 2);
+  --a-button-padding-x: var(--kr-space-4);
+  --a-icon-size: 1rem;
+}
+/* Floating Label in Large / X Large */
+.t-Form-fieldContainer--floatingLabel.t-Form-fieldContainer--large,
+.t-Form--large .t-Form-fieldContainer--floatingLabel {
+  --ut-field-label-font-size: var(--kr-fs-lg);
+  --a-field-input-padding-x: var(--kr-control-pad-x);
+  --a-field-input-padding-y: var(--kr-space-2);
+  --ut-field-fl-label-line-height: var(--kr-lh-xs);
+  --ut-field-fl-label-font-size: var(--kr-fs-xs);
+}
+.t-Form-fieldContainer--floatingLabel.t-Form-fieldContainer--xlarge,
+.t-Form--xlarge .t-Form-fieldContainer--floatingLabel {
+  --ut-field-label-font-size: var(--kr-fs-lg);
+  --a-field-input-padding-x: var(--kr-space-4);
+  --a-field-input-padding-y: .625rem;
+  --ut-field-fl-label-line-height: var(--kr-lh-sm);
+  --ut-field-fl-label-font-size: var(--kr-fs-sm);
+  --ut-field-input-icon-padding-x: var(--kr-space-3);
+}
+
+/* 8. Validierung, Hilfe, Readonly, Display Only ---------------------------- */
+.t-Form-error {
+  color: var(--a-form-error-text-color);
+  font-weight: var(--kr-fw-medium);
+}
+/* Hilfe-Knopf: quadratisch in Feldhöhe */
+.t-Form-itemWrapper .t-Form-helpButton {
+  --a-button-padding-y: calc((var(--kr-c-field-h) - 1rem) / 2);
+  --a-button-padding-x: calc((var(--kr-c-field-h) - 1rem) / 2);
+  margin-inline-start: var(--kr-space-1);
+}
+/* Schreibgeschützt: abgesenkte Fläche, zarte durchgehende Kante statt Vita-Strichelung */
+.apex-item-wrapper.is-readonly .js-accessible-readonly {
+  --a-field-input-background-color: var(--kr-field-readonly);
+  --a-field-input-hover-background-color: var(--kr-field-readonly);
+  --a-field-input-border-color: var(--kr-line-strong);
+  --a-field-input-hover-border-color: var(--kr-line-strong);
+  --a-field-input-state-border-style: solid;
+}
+.apex-item-display-only {
+  color: var(--kr-ink);
+  word-break: normal;              /* UT Core: break-all – trennt auch mitten im Wort („Display Only Ite|m“) */
+  overflow-wrap: anywhere;         /* Werte ohne Leerzeichen (IDs, URLs) brechen weiterhin um */
+}
+/* Floating Label, Display Only: Kasten wie Readonly statt Vita-Strichelung */
+.t-Form-fieldContainer--floatingLabel .apex-item-display-only {
+  border-style: solid;
+  border-color: var(--kr-line-strong);
+  background-color: var(--kr-field-readonly);
+}
+
+/* 9. Date Picker (Popup + Inline) ----------------------------------------- */
+.a-DatePicker {
+  --a-datepicker-calendar-day-spacing: var(--kr-space-1);
+  --a-datepicker-calendar-day-font-weight: var(--kr-fw-regular);
+  --a-datepicker-calendar-header-font-weight: var(--kr-fw-medium);
+  --a-datepicker-monthpicker-select-font-weight: var(--kr-fw-semibold);
+  border-radius: var(--kr-r-lg);
+}
+.a-DatePicker-calendar td > span {
+  font-variant-numeric: tabular-nums;
+}
+.a-DatePicker-calendar td.is-current,
+.a-DatePicker-calendar td.is-selected {
+  --a-datepicker-calendar-day-font-weight: var(--kr-fw-semibold);
+}
+/* Heute = getönte Fläche (kein Kreis – der Kreis ist dem Tastaturfokus vorbehalten) */
+.a-DatePicker {
+  --a-datepicker-calendar-day-current-background-color: var(--kr-accent-tint);
+  --a-datepicker-calendar-day-current-text-color: var(--kr-accent-text);
+  --a-datepicker-calendar-day-current-border-color: transparent;
+}
+/* Inline-Kalender liegt in der Region: Feldfläche statt schwebender Fläche */
+.a-DatePicker-inline {
+  --a-datepicker-background-color: var(--kr-field);
+  --a-datepicker-header-background-color: var(--kr-field);
+  --a-datepicker-calendar-background-color: var(--kr-field);
+}
+/* … und steht in der Feldspalte, die bei aufgeklappter Navigation oft nur ~230 px breit ist
+   (1601: 234 px). UT schneidet überstehende Spalten ab (overflow: hidden) – der Samstag fehlte,
+   Jahr und ‹ lagen übereinander. Darum kompakter als das Popup: Tage mit 2 px Abstand (UT-Wert),
+   Kopf mit 4 px Rand, Monat/Jahr in UI-Größe, Monatsknöpfe 4 px kleiner als die Control-Höhe.
+   So passen Kopf und sieben Spalten in ~230 px; noch schmaler bricht der Kopf um. */
+.a-DatePicker-inline {
+  --a-datepicker-calendar-day-spacing: 2px;
+  --a-datepicker-calendar-header-padding-x: 2px;   /* Wochentage: sonst bestimmt „Wed“ + 2 × 8 px die Spaltenbreite */
+  --a-datepicker-header-padding-x: var(--kr-space-1);
+  --a-datepicker-monthpicker-select-font-size: var(--kr-fs-md);
+}
+.a-DatePicker-inline .a-DatePicker-header {
+  flex-wrap: wrap;
+  row-gap: var(--kr-space-1);
+}
+/* Tastaturfokus auf dem Tag: Ring des Systems statt Browser-Blau */
+.a-DatePicker-calendar td:focus-visible > span {
+  outline: var(--kr-focus-outline);
+  outline-offset: 1px;
+}
+/* Monat/Jahr: eigener Pfeil (wie Select-Listen) statt Font-APEX-Doppelpfeil */
+.a-DatePicker-month:after,
+.a-DatePicker-year:after,
+.a-DatePicker-timeHours:after,
+.a-DatePicker-timeMinutes:after,
+.a-DatePicker-timeAmPm:after {
+  content: "";
+  justify-self: end;
+  inline-size: 1rem;
+  block-size: 1rem;
+  background-image: var(--kr-select-arrow);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 2rem 1rem;
+}
+.a-DatePicker-nav {
+  --a-button-text-color: var(--kr-ink);
+  --a-button-hover-background-color: var(--kr-soft);
+}
+/* Monatsknöpfe ‹ ›: quadratisch in Control-Höhe (32, Touch 40) – im Popup wie inline.
+   UT: .t-Form-itemWrapper .a-Button (4/8 px → 36×28), Large/X Large §7 (0,3,0) → hier 0,3,0. */
+.a-DatePicker-header .a-Button.a-DatePicker-nav {
+  --a-icon-size: var(--kr-control-lh);
+  --a-button-padding-y: calc((var(--kr-control-h) - var(--a-icon-size)) / 2);
+  --a-button-padding-x: calc((var(--kr-control-h) - var(--a-icon-size)) / 2);
+}
+.a-DatePicker-inline .a-DatePicker-header .a-Button.a-DatePicker-nav {
+  --a-button-padding-y: calc((var(--kr-control-h) - var(--kr-space-1) - var(--a-icon-size)) / 2);   /* 28 px, Touch 36 px */
+  --a-button-padding-x: calc((var(--kr-control-h) - var(--kr-space-1) - var(--a-icon-size)) / 2);
+}
+/* Tastaturfokus: UT gibt den Knöpfen tabindex="-1" (Pfeiltasten im Kalender) – UT Core
+   ([tabindex="-1"] { outline: none }) und base.css lassen den Ring dort weg. Hier der Ring des
+   Systems über die Hooks, wie an Monat, Jahr, Tag und „Clear“. */
+.a-DatePicker-nav:focus-visible {
+  outline: var(--ut-focus-outline, var(--kr-focus-outline));
+  outline-offset: var(--ut-focus-outline-offset, var(--kr-focus-ring-offset));
+}
+/* Aktionen im Fuß (Clear, Today, Done): Control-Höhe statt 28 px */
+.a-DatePicker-footer .a-DatePicker-actions .a-Button {
+  --a-button-padding-y: var(--kr-control-pad-y);
+  --a-button-padding-x: calc(var(--kr-control-pad-x) + 2px);
+}
+.a-DatePicker--today {
+  color: var(--kr-accent-text);
+}
+/* Tag unter Hover: Text ausdrücklich in Tinte auf --kr-soft (UT erbt die Farbe nur, weil der
+   Hover-Hebel leer ist) – „heute“ verliert dabei nie den Kontrast (hell 14,9, dunkel 9,5 : 1) */
+.a-DatePicker {
+  --a-datepicker-calendar-day-hover-text-color: var(--kr-ink);
+}
+
+/* 10. Popup-LOV-Suchdialog ------------------------------------------------ */
+.a-PopupLOV-searchBar {
+  --a-popuplov-search-bar-padding-y: var(--kr-space-3);
+  --a-popuplov-search-bar-padding-x: var(--kr-space-3);
+}
+/* Ergebniszeilen wie die Combobox-Liste (§4a): eingerückt, Menü-Radius, Fokus als Innenring
+   (die Liste scrollt und schneidet einen äußeren Ring ab) */
+.a-PopupLOV-results {
+  --a-iconlist-item-border-radius: var(--a-menu-item-border-radius);
+}
+.a-PopupLOV-results .a-IconList {
+  padding: var(--kr-space-1);
+}
+.a-PopupLOV-results .a-IconList-item {
+  --ut-focus-outline: none;
+}
+.a-PopupLOV-results .a-IconList-item:focus-visible {
+  box-shadow: var(--kr-focus-shadow-inset);
+}
+.a-PopupLOV-searchBar .apex-item-text.a-PopupLOV-search:focus {
+  box-shadow: var(--kr-focus-field-shadow);
+}
+
+/* 11. Datei, Markdown, Rich Text, Sterne, Prozent, Shuttle, List Manager ------ */
+
+/* List Manager (Tabellen-Layout): Eingabe darf schrumpfen – sonst 390 px Überlauf */
+.apex-item-fieldset--list-manager table {
+  max-inline-size: 100%;
+}
+.apex-item-fieldset--list-manager .apex-item-group--popup-lov .apex-item-text {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+/* Hinzufügen/Entfernen in Feldhöhe der aktuellen Größe (32/40/48, Touch +8).
+   UT Core .t-Form-itemWrapper .a-Button (0,2,0) setzt .25rem, Large/X Large §7 (0,3,0) rechnen
+   mit 1rem statt der Zeilenhöhe → hier 0,3,0 nach §7. */
+.t-Form-fieldContainer .t-Form-itemWrapper .a-Button--listManager {
+  --a-button-padding-y: calc((var(--kr-c-field-h) - var(--a-button-line-height)) / 2);
+  --a-button-padding-x: calc(var(--kr-control-pad-x) + 2px);
+}
+
+/* Shuttle: Icon-Knöpfe quadratisch in Trefferflächen-Größe (24, Touch 40) statt 48×24 */
+.t-Form-itemWrapper .apex-item-group--shuttle .a-Button--shuttle {
+  --a-button-padding-y: calc((var(--kr-hit-min) - var(--a-icon-size, 1rem)) / 2);
+  --a-button-padding-x: calc((var(--kr-hit-min) - var(--a-icon-size, 1rem)) / 2);
+}
+.apex-item-group--shuttle .a-Button--shuttle .a-Icon {
+  margin: 0;                                /* app_ui: 0 + Icon-Abstand je Seite (→ 48 px breit) */
+}
+
+/* File Drop: Fortschritt in Tinte statt Schwarz-Transparenz (dunkel unsichtbar) */
+.a-FileDrop {
+  --a-filedrop-progress-background-color: var(--kr-line);
+  --a-filedrop-progress-bar-background-color: var(--kr-ink);
+  --a-filedrop-icon-action-background-color: var(--kr-field);
+  --a-filedrop-icon-action-border-color: var(--kr-line-strong);
+}
+/* Inline (Feld „Choose File“): Maß und Radius eines Feldes. Die große Dropzone behält --kr-r-lg;
+   das Icon-Fach (16 px + 2 × 4 px) würde das Feld sonst auf 36 px (Touch 44) strecken. */
+.a-FileDrop--inline {
+  --a-filedrop-border-radius: var(--a-field-input-border-radius);
+}
+.a-FileDrop--inline .a-FileDrop-icon {
+  padding-block: 0;
+}
+
+/* Markdown: Werkzeugleiste ohne Kasten über dem Feld */
+.a-MDEditor .a-Toolbar {
+  padding: 0 0 var(--kr-space-2);
+  background-color: transparent;
+  border-color: transparent;
+}
+/* … Knöpfe einheitlich in Control-Höhe (32, Touch 40): Text über das Polster, Icon-Knöpfe über
+   die Mindesthöhe (Inhalt = Icon statt Zeile) und quadratisch. 0,3,0 schlägt UT (0,2,0) und §7. */
+.a-MDEditor .a-Toolbar .a-Button {
+  --a-button-padding-y: calc((var(--kr-control-h) - var(--a-button-line-height)) / 2);
+  --a-button-padding-x: calc(var(--kr-control-pad-x) + 2px);
+  min-block-size: var(--kr-control-h);
+}
+.a-MDEditor .a-Toolbar .a-Button--noLabel {
+  --a-button-padding-x: calc((var(--kr-control-h) - var(--a-icon-size, 1rem)) / 2);
+}
+.a-MDEditor-toolbar + .a-MDEditor-content {
+  margin-block-start: 0;
+}
+.a-MDEditor-previewPanel,
+.a-MDEditor .CodeMirror {
+  border-radius: var(--a-field-input-border-radius);
+}
+.a-MDEditor-previewPanel:focus-visible,
+.a-MDEditor-previewPanel.CodeMirror-focused,
+.a-MDEditor .CodeMirror:focus-visible,
+.a-MDEditor .CodeMirror.CodeMirror-focused {
+  box-shadow: var(--kr-focus-field-shadow);
+  outline: none;
+}
+.a-MDEditor .a-MDEditor-live:focus-within {
+  outline: none;                            /* Fokus zeigt das Feld darin (s. 3) */
+}
+
+/* Rich Text Editor (CKEditor 5): UT setzt --ck-* auf body – dort ergänzen */
+body {
+  --ck-border-radius: var(--kr-r-md);
+  --ck-font-face: var(--kr-font);
+  --ck-color-focus-border: var(--kr-focus-ring-color);
+  --ck-color-focus-outer-shadow: var(--kr-accent-ring);
+  --ck-focus-ring: 1px solid var(--kr-focus-ring-color);
+  --ck-color-base-active: var(--kr-accent);
+  --ck-color-base-active-focus: var(--kr-accent-hover);
+  --ck-color-button-action-background: var(--kr-accent);
+  --ck-color-button-action-hover-background: var(--kr-accent-hover);
+  --ck-color-button-action-active-background: var(--kr-accent-press);
+  --ck-color-button-action-text: var(--kr-accent-on);
+  --ck-color-button-on-color: var(--kr-ink);
+  --ck-color-link-default: var(--kr-link-text);
+  --ck-color-link-selected-background: var(--kr-accent-tint);
+  --ck-color-link-fake-selection: var(--kr-selection);
+  --ck-color-widget-hover-border: var(--kr-line-strong);
+  --ck-color-widget-blurred-border: var(--kr-line-strong);
+  --ck-color-widget-editable-focus-background: var(--kr-field);
+}
+body .ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-focused {
+  --ut-focus-outline: none;
+  --a-field-input-state-shadow: var(--kr-focus-field-shadow);
+}
+.apex-item-group--rich-text-editor:focus-within {
+  box-shadow: var(--kr-focus-field-shadow);
+  border-radius: var(--a-field-input-border-radius);
+}
+
+/* Star Rating: Wert im Akzent-Text, leere Sterne mit Feldkante (≥ 3 : 1) */
+.a-StarRating {
+  --a-starrating-stars-fg-color: var(--kr-mark);                 /* Brause-Orange: warm, ≥ 3:1 hell und dunkel */
+  --a-starrating-stars-bg-color: var(--kr-edge);
+}
+
+/* Prozentgrafik (Item): Datenfarbe 1 statt Primärfarbe */
+.apex-item-wrapper--pct-graph {
+  --a-percent-chart-background-color: var(--kr-soft);
+  --a-percent-chart-border-color: transparent;
+  --a-percent-chart-border-radius: var(--kr-r-sm);
+  --a-percent-chart-bar-background-color: var(--kr-cat-1);
+  --a-percent-chart-bar-text-color: var(--kr-cat-1-on);
+  --a-percent-chart-bar-border-color: transparent;
+  --a-percent-chart-bar-border-radius: var(--kr-r-sm);
+}

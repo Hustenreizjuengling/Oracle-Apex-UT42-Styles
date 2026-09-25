@@ -1,0 +1,1375 @@
+/* ==========================================================================
+   Veedel – Reports
+   Classic Report, Interactive Report, Interactive Grid, Pagination, u-Report
+   (Reflow, Column Toggle), List View, Value Attribute Pairs.
+   Regeln: nur Tokens (--ve-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+
+   Tabellen-DNA (gilt für alle Tabellen): offene Tabelle ohne Außenrahmen und
+   ohne Kopfstreifen – der Kopf steht auf der Fläche, 12,5 px / 700 in Nachtblau,
+   darunter eine kräftige 2-px-Grundlinie in Nachtblau; Zeilen 36 px (Touch 44 px)
+   mit Haarlinien; Zahlen in Tabellenziffern. Aktive Seite = blauer Block (--ve-accent).
+   ========================================================================== */
+
+/* 1. Gemeinsame Tabellen-DNA ------------------------------------------------ */
+.t-Report,
+.a-IRR,
+.a-IG,
+.a-GV,
+.u-Report {
+  --ve-c-table-head-bg: var(--ve-surface);
+  --ve-c-table-head-text: var(--ve-ink);
+  --ve-c-table-rule: var(--ve-head-rule-width) solid var(--ve-head-rule);
+  font-variant-numeric: tabular-nums;
+}
+.t-Report-report,
+.a-IRR-table,
+.a-GV-table {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 2. Classic Report --------------------------------------------------------- */
+.t-Report {
+  --ve-c-report-head-rule: var(--ve-head-rule-width);
+  --ut-report-header-cell-background-color: transparent;
+  --ut-report-header-cell-line-height: var(--ve-lh-xs);
+  --ut-report-pagination-font-size: var(--ve-fs-sm);
+  --ut-report-pagination-line-height: var(--ve-lh-sm);
+  --ut-report-pagination-link-border-radius: var(--ve-r-md);
+  --ut-report-pagination-link-padding-y: calc((var(--ve-control-h-sm) - var(--ve-lh-sm)) / 2);
+  --ut-report-pagination-link-padding-x: var(--ve-space-2);
+  --ut-report-pagination-link-text-color: var(--ve-ink);
+  --ut-report-pagination-link-hover-background-color: var(--ve-hover);
+  --ut-report-pagination-link-hover-text-color: var(--ve-accent-text);
+  --ut-report-pagination-padding-y: var(--ve-space-2);
+  --ut-report-pagination-padding-x: 0;
+}
+.t-Report--noBorders {
+  --ve-c-report-head-rule: 0px;
+}
+/* Kopf: Nachtblau, fett, Grundlinie statt Kopfstreifen */
+.t-Report-colHead {
+  color: var(--ve-c-table-head-text);
+  font-size: var(--ve-fs-head);
+  font-weight: var(--ve-fw-bold);
+  letter-spacing: 0;
+  border-block-start-width: 0;
+  border-block-end: var(--ve-c-report-head-rule) solid var(--ve-head-rule);
+}
+.t-Report-colHead a,
+.t-Report-colHead .u-Report-sortHeading {
+  color: inherit;
+  text-decoration: none;
+}
+.t-Report-colHead a:hover {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--ve-link-underline-hover);
+  text-decoration-thickness: var(--ve-link-underline-width);
+  text-underline-offset: var(--ve-link-underline-offset);
+}
+.t-Report-colHead .u-Report-sortIcon {
+  color: var(--ve-muted);
+}
+.t-Report-cell {
+  color: var(--ve-ink);
+}
+/* offene Tabelle: keine Außenkanten; Standard nur waagerechte Haarlinien
+   („Vertical Only“ bleibt senkrecht, „No Borders“ ohne Linien) */
+.t-Report-report {
+  border-style: hidden;
+}
+.t-Report:not(.t-Report--verticalBorders) .t-Report-cell,
+.t-Report:not(.t-Report--verticalBorders) .t-Report-colHead {
+  border-inline-width: 0;
+}
+/* Abschluss-Haarlinie unter der letzten Zeile (die versteckte Tabellenkante nimmt sie weg) */
+:where(.t-Report:not(.t-Report--noBorders, .t-Report--verticalBorders)) .t-Report-tableWrap {
+  border-block-end: var(--ve-hairline) solid var(--ut-report-cell-border-color);
+}
+/* fixierter Kopf (theme42.js klont den Kopf): deckend auf der Fläche */
+.t-Report .t-fht-thead {
+  background-color: var(--ve-surface);
+}
+.t-fht-thead.is-stuck {
+  box-shadow: none;
+}
+/* Pagination: Zahlen in Nachtblau, Hover = Blau */
+.t-Report-paginationText {
+  color: var(--ve-muted);
+}
+.t-Report-paginationText b,
+.t-Report-paginationText strong {
+  font-weight: var(--ve-fw-bold);
+}
+.t-Report-pagination .t-Report-paginationLink {
+  --a-button-font-size: var(--ve-fs-sm);
+  --a-button-line-height: var(--ve-lh-sm);
+  color: var(--ve-ink);
+}
+.t-Report-links {
+  color: var(--ve-muted);
+  border-inline-width: 0;
+}
+
+/* 3. Interactive Report ----------------------------------------------------- */
+/* UT Core setzt Zellpolster lokal (.5rem/.75rem) – hier die Dichte-Tokens */
+.a-IRR {
+  --a-gv-border-width: 0;
+  --a-gv-border-radius: 0;
+  --a-gv-cell-padding-y: var(--ve-row-pad-y);
+  --a-gv-cell-padding-x: var(--ve-row-pad-x);
+  --a-gv-header-cell-padding-x: var(--ve-row-pad-x);
+  --a-gv-header-cell-padding-y: calc((var(--ve-head-h) - var(--ve-lh-xs) - var(--ve-head-rule-width)) / 2);
+  --a-gv-header-cell-font-size: var(--ve-fs-head);
+  --a-gv-header-cell-line-height: var(--ve-lh-xs);
+  --a-gv-header-cell-font-weight: var(--ve-fw-bold);
+  --a-gv-aggregate-background-color: transparent;
+  --a-toolbar-sep-border-width: 0;
+  --a-irr-item-spacing: var(--ve-space-2);
+}
+
+/* 3.1 Toolbar: ruhig, ohne Fläche und ohne Trennstriche */
+.a-IRR-toolbar {
+  background-color: transparent;
+  border-block-end-width: 0;
+  padding-inline: 0;
+  padding-block: 0 var(--ve-space-3);
+}
+.a-IRR-controlGroup {
+  border-inline-end-width: 0;
+}
+/* Suche darf schrumpfen (app_ui: flex-shrink 0, Leiste clippt mit overflow:hidden → „Go“ abgeschnitten) */
+.a-IRR-controlGroup--search {
+  flex-shrink: 1;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+/* Buttons „rechts der Suchleiste“ stehen auf der ersten Zeile, nicht mittig zwischen zwei Zeilen */
+.a-IRR-buttons {
+  align-self: flex-start;
+}
+
+/* Ansichtswechsel (Bericht | Group By | Pivot | Diagramm) als Segment-Leiste:
+   aktive Ansicht = blauer Block mit weißem Icon, übrige in Grau auf der Fläche */
+.a-IRR-views {
+  display: inline-flex;
+  block-size: var(--ve-control-h);
+  border: var(--ve-hairline) solid var(--ve-line-strong);
+  border-radius: var(--ve-r-md);
+  overflow: clip;
+}
+.a-IRR-views .a-IRR-button--views {
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-text-color: var(--ve-muted);
+  --a-button-hover-background-color: var(--ve-hover);
+  --a-button-hover-text-color: var(--ve-ink);
+  --a-button-border-radius: 0;
+  --a-button-shadow: none;
+  --a-button-padding-y: 0px;
+  --a-button-padding-x: var(--ve-space-3);
+  block-size: 100%;
+  margin: 0;
+}
+.a-IRR-views .a-IRR-button--views.is-active {
+  --a-button-background-color: var(--ve-accent);
+  --a-button-hover-background-color: var(--ve-accent-hover);
+  --a-button-text-color: var(--ve-accent-on);
+  --a-button-hover-text-color: var(--ve-accent-on);
+}
+.a-IRR-views .a-IRR-button--views:focus-visible {
+  outline: none;
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+
+/* 3.2 Suche als EIN Feld: Spaltenwahl | Eingabe | Go */
+.a-IRR-search {
+  --ut-focus-outline: none;
+  --ve-c-search-h: var(--ve-control-h);
+  flex-grow: 0;
+  flex-shrink: 1;
+  min-inline-size: 0;
+  block-size: var(--ve-c-search-h);
+  border: var(--ve-hairline) solid var(--a-field-input-border-color);
+  border-radius: var(--ve-r-field);
+  background-color: var(--ve-field);
+  overflow: clip;
+  transition: border-color var(--ve-duration) var(--ve-ease), box-shadow var(--ve-duration) var(--ve-ease);
+}
+.a-IRR-search:hover {
+  border-color: var(--ve-edge-hover);
+}
+.a-IRR-search:has(.a-IRR-search-field:focus) {
+  border-color: var(--ve-focus-ring-color);
+  box-shadow: var(--ve-focus-field-shadow);
+}
+.a-IRR-search .a-IRR-button--colSearch,
+.a-IRR-search .a-IRR-button--search {
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-text-color: var(--ve-muted);
+  --a-button-hover-background-color: var(--ve-hover);
+  --a-button-hover-border-color: transparent;
+  --a-button-hover-text-color: var(--ve-ink);
+  --a-button-active-background-color: var(--ve-press);
+  --a-button-focus-background-color: var(--ve-hover);
+  --a-button-border-radius: 0;
+  --a-button-shadow: none;
+  --a-button-padding-y: 0px;
+  block-size: 100%;
+  border-radius: 0;
+}
+.a-IRR-search .a-IRR-button--colSearch {
+  --a-button-padding-x: var(--ve-space-2);
+  gap: 0;
+}
+.a-IRR-search .a-IRR-button--colSearch:focus-visible,
+.a-IRR-search .a-IRR-button--search:focus-visible {
+  outline: none;
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+.a-IRR-search .a-IRR-button--search {
+  --a-button-font-weight: var(--ve-fw-semibold);
+  --a-button-text-color: var(--ve-ink);
+  --a-button-padding-x: var(--ve-space-3);
+  box-shadow: inset var(--ve-hairline) 0 0 var(--ve-line);
+}
+.u-RTL .a-IRR-search .a-IRR-button--search {
+  box-shadow: inset calc(-1 * var(--ve-hairline)) 0 0 var(--ve-line);
+}
+/* Tastatur-Fokus auf „Go“ auch in RTL (die RTL-Trennlinie hat dieselbe Spezifität wie der Ring oben) */
+.a-IRR-search .a-IRR-button--search:focus-visible {
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+.a-IRR-search .a-IRR-colSelector,
+.a-IRR-search .a-IRR-searchButtonContainer {
+  block-size: 100%;
+}
+.a-IRR-search .a-IRR-searchFieldContainer {
+  min-inline-size: 0;
+  margin-inline: 0;
+}
+.a-IRR-search .a-IRR-search-field {
+  inline-size: var(--ve-c-search-w, 15rem);
+  min-inline-size: 0;
+  block-size: 100%;
+  align-self: stretch;
+  padding-block: 0;
+  padding-inline: var(--ve-space-1) var(--ve-space-2);
+  border-width: 0;
+  border-radius: 0;
+  background-color: transparent;
+  color: var(--ve-ink);
+  font-size: var(--ve-fs-md);
+  line-height: var(--ve-control-lh);
+  outline: none;
+  box-shadow: none;
+}
+.a-IRR-search .a-IRR-search-field::placeholder {
+  color: var(--ve-placeholder);
+}
+.a-IRR-clearButton {
+  color: var(--ve-muted);
+}
+.a-IRR-clearButton:hover {
+  color: var(--ve-ink);
+}
+
+/* 3.3 Spaltenkopf */
+.a-IRR-header {
+  background-color: var(--ve-c-table-head-bg);
+  color: var(--ve-c-table-head-text);
+  border-inline-width: 0;
+  border-block-start-width: 0;
+  border-block-end: var(--ve-c-table-rule);
+}
+.a-IRR-header:hover {
+  background-color: var(--ve-hover);
+}
+.a-IRR-header.is-active,
+.a-GV-header.is-active {
+  background-color: var(--ve-hover);
+  color: var(--ve-ink);
+}
+.a-IRR-headerLink,
+.a-IRR-headerLabel {
+  color: inherit;
+  font-size: var(--ve-fs-head);
+  font-weight: var(--ve-fw-bold);
+  line-height: var(--ve-lh-xs);
+}
+.a-IRR-headerLink {
+  --ut-focus-outline: none;
+}
+.a-IRR-headerLink:hover {
+  color: inherit;
+}
+.a-IRR-headerLink:focus-visible,
+.a-IRR-headerLink.has-focus {
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+.a-IRR-headerSort {
+  color: var(--ve-muted);
+}
+/* Control-Break-Kopf (Gruppenzeile): Zwischenüberschrift statt grauer Balken */
+.a-IRR-header--group {
+  background-color: var(--ve-c-table-head-bg);
+  color: var(--ve-ink);
+  border-block-start: var(--ve-rule-strong) solid var(--ve-line);
+  border-block-end: var(--ve-hairline) solid var(--ve-line);
+  font-size: var(--ve-fs-sm);
+  font-weight: var(--ve-fw-semibold);
+  padding: var(--ve-space-4) var(--ve-row-pad-x) var(--ve-space-2);
+}
+.a-IRR-header--group:hover {
+  background-color: var(--ve-c-table-head-bg);
+}
+/* Pivot-Köpfe (app_ui hart #F8F8F8, auch im Dunkeln) */
+.a-IRR-header--pivotRow,
+.a-IRR-header--pivotColumn,
+.a-IRR-header--pivotRow:hover,
+.a-IRR-header--pivotColumn:hover {
+  background-color: var(--ve-c-table-head-bg);
+  color: var(--ve-c-table-head-text);
+}
+/* Zeilenköpfe der Pivot-Ansicht stehen im Tabellenkörper: Zeilenlinie statt Nachtblau-Grundlinie */
+.a-IRR-header--pivotRow,
+.a-IRR-table .a-IRR-header--pivotRow {
+  border-block-end: var(--ve-hairline) solid var(--ve-line);
+  border-inline-end: 0;
+  text-align: start;
+}
+.a-IRR-header--pivotColumn {
+  border-block-end: var(--ve-hairline) solid var(--ve-line);
+}
+
+/* 3.4 Zellen */
+.a-IRR-table td {
+  color: var(--ve-ink);
+  border-inline-width: 0;
+  border-color: var(--ve-line);
+}
+.a-IRR-table .a-IRR-header {
+  border-inline-width: 0;
+}
+.a-IRR-aggregate {
+  background-color: transparent;
+  font-weight: var(--ve-fw-semibold);
+  border-block-start: var(--ve-rule-strong) solid var(--ve-line-strong);
+}
+.a-IRR-table tr.is-focused,
+.a-IRR-iconViewTable td.is-focused {
+  outline: none;
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+.a-IRR-tableContainer .js-stickyTableHeader.is-stuck {
+  box-shadow: none;
+}
+.a-IRR-rowSelector label {
+  color: var(--ve-muted);
+}
+
+/* 3.5 Pagination: eckig statt rund, Hover = Blau-Tönung (app_ui: 100 %, #4696fc) */
+.a-IRR-paginationWrap {
+  color: var(--ve-muted);
+  font-size: var(--ve-fs-sm);
+  line-height: var(--ve-lh-sm);
+  padding-inline: 0;
+}
+.a-IRR-paginationWrap--bottom {
+  border-block-start-color: var(--ve-line);
+}
+.a-IRR-pagination-label {
+  color: var(--ve-muted);
+}
+.a-IRR-button.a-IRR-button--pagination {
+  --a-button-border-radius: var(--ve-r-md);
+  --a-button-padding-y: calc((var(--ve-control-h-sm) - var(--ve-lh-sm)) / 2);
+  --a-button-padding-x: calc((var(--ve-control-h-sm) - var(--ve-lh-sm)) / 2);
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-text-color: var(--ve-ink);
+  --a-button-shadow: none;
+  min-inline-size: var(--ve-hit-min);
+  min-block-size: var(--ve-hit-min);
+  justify-content: center;
+}
+.a-IRR-button.a-IRR-button--pagination:hover {
+  background-color: var(--ve-hover);
+  color: var(--ve-accent-text);
+}
+.a-IRR-button.a-IRR-button--pagination:active {
+  background-color: var(--ve-press);
+}
+
+/* 3.6 Sortier-Widget (Spaltenkopf-Menü, hängt an <body>) */
+.a-IRR-sortWidget {
+  border-radius: var(--ve-r-lg);
+  overflow: clip;
+}
+.a-IRR-sortWidget-help {
+  background-color: transparent;
+  color: var(--ve-muted);
+}
+.a-IRR-sortWidget-searchIcon,
+.a-IRR-sortWidget-searchLabel:before {
+  color: var(--ve-muted);
+}
+.a-IRR-sortWidget-search > .a-IRR-sortWidget-searchField,
+.a-IRR-sortWidget-search > .a-IRR-sortWidget-searchField[type=text] {
+  --ut-focus-outline: none;
+  color: var(--ve-ink);
+  background-color: var(--a-field-input-background-color);
+}
+/* Das Suchfeld ist so breit wie das Widget (overflow: clip): der äußere Ring bliebe nur als
+   zwei Balken über und unter dem Feld stehen – Ring nach innen, geschlossen. Im IG bekommt
+   das Feld beim Öffnen per Klick den Fokus (Textfeld = immer :focus-visible). */
+.a-IRR-sortWidget-search > .a-IRR-sortWidget-searchField:focus-visible {
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+
+/* 3.7 Single-Row-Ansicht (app_ui hart #F8F8F8/#FCFCFC/#E8E8E8) */
+.a-IRR-singleRow-link {
+  --ut-focus-outline: none;              /* Fokus zeigt der Innenring unten (sonst Doppelring) */
+  background-color: transparent;
+  border-block-color: var(--ve-line);
+  color: var(--ve-ink);
+}
+.a-IRR-singleRow-link:hover {
+  background-color: var(--ve-hover);
+}
+.a-IRR-singleRow-link .a-Icon {
+  color: var(--ve-muted);
+}
+.a-IRR-singleRow-link:focus-visible {
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+.a-IRR-singleRow-name {
+  background-color: transparent;
+  color: var(--ve-muted);
+  font-weight: var(--ve-fw-medium);
+  border-inline-end-width: 0;
+}
+.a-IRR-singleRow-name,
+.a-IRR-singleRow-value {
+  font-size: var(--ve-fs-sm);
+  line-height: var(--ve-lh-sm);
+  padding: var(--ve-row-pad-y) var(--ve-row-pad-x);
+  border-block-end-color: var(--ve-line);
+}
+.a-IRR-singleRow-title {
+  font-size: var(--ve-fs-sm);
+  line-height: var(--ve-lh-sm);
+}
+.a-IRR-singleRow-link {
+  padding: var(--ve-space-3) var(--ve-row-pad-x) var(--ve-space-2);
+  font-weight: var(--ve-fw-semibold);
+}
+.a-IRR-viewOption label {
+  font-size: var(--ve-fs-sm);
+  color: var(--ve-ink);
+}
+.a-IRR-singleRow-value {
+  color: var(--ve-ink);
+}
+.a-IRR-singleRow-row:hover .a-IRR-singleRow-name,
+.a-IRR-singleRow-row:hover .a-IRR-singleRow-value {
+  background-color: var(--ve-hover);
+}
+
+/* 3.8 Dialoge des IR (Filter, Highlight, Compute, Sort, Download …)
+   Typ-Auswahl (Spalte/Zeile, Diagrammtyp, Format) als Segment-Leiste:
+   Auswahl = Blau-Tönung mit feiner Kante in Markenblau (Vita: 2-px-Balken oben) */
+.a-IRR-radioIconList,
+.a-IRR-dialog--download,
+.a-IRR-dialog--subscription {
+  --a-iconlist-item-background-color: transparent;
+  --a-iconlist-item-text-color: var(--ve-muted);
+  --a-iconlist-item-hover-text-color: var(--ve-ink);
+  --a-iconlist-item-hover-background-color: var(--ve-hover);
+  --a-iconlist-item-selected-text-color: var(--ve-accent-text);
+  --a-iconlist-item-selected-background-color: var(--ve-accent-tint);
+}
+.a-IRR-radioIconList {
+  border: var(--ve-hairline) solid var(--ve-line);
+  border-radius: var(--ve-r-md);
+  overflow: clip;
+}
+/* Segment-Leiste eingerückt statt wie Vitas Tab-Leiste von Dialogkante zu Dialogkante:
+   bündig mit den Feldern (Dialog-Inhalt 16 px) bzw. im Download-/Abo-Formular (8 px Polster)
+   mit dem Text „Choose report format“ (12 px) und den Footer-Buttons */
+.a-IRR-radioIconList {
+  margin-inline: var(--ve-space-4);
+}
+.a-IRR-dialog--download .a-IconList,
+.a-IRR-dialog--subscription .a-IconList {
+  margin-inline: var(--ve-space-3);
+}
+/* Download/Abo: keine Linie unter „Choose report format“ – sie läge doppelt auf der Leistenkante */
+.a-IRR-dialog--download .a-IRR-dialogInfo:first-child,
+.a-IRR-dialog--subscription .a-IRR-dialogInfo:first-child {
+  border-block-end-width: 0;
+}
+.a-IRR-radioIconList-item,
+.a-IRR-radioIconList-item input[type=radio] + label,
+.a-IRR-dialog--download .a-IconList-item,
+.a-IRR-dialog--subscription .a-IconList-item {
+  box-shadow: none;
+}
+.a-IRR-radioIconList-item + .a-IRR-radioIconList-item,
+.a-IRR-iconList-item + .a-IRR-iconList-item {
+  border-inline-start-color: var(--ve-line);
+}
+.u-RTL .a-IRR-radioIconList-item + .a-IRR-radioIconList-item,
+.u-RTL .a-IRR-iconList-item + .a-IRR-iconList-item {
+  border-inline-start-color: var(--ve-line);
+}
+.a-IRR-radioIconList-item input[type=radio]:checked + label,
+.a-IRR-dialog--download .a-IconList-item.is-selected,
+.a-IRR-dialog--subscription .a-IconList-item.is-selected {
+  box-shadow: inset 0 0 0 var(--ve-hairline) var(--ve-accent-text);
+  font-weight: var(--ve-fw-semibold);
+}
+.a-IRR-radioIconList-item input[type=radio]:focus-visible + label {
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+.a-IRR-dialog--download .a-IconList,
+.a-IRR-dialog--subscription .a-IconList {
+  border: var(--ve-hairline) solid var(--ve-line);
+  border-radius: var(--ve-r-md);
+  overflow: clip;
+}
+/* Formatkacheln (Pfeiltasten): die Liste clippt – Ring nach innen statt zwei Seitenbalken */
+.a-IRR-dialog--download .a-IconList-item,
+.a-IRR-dialog--subscription .a-IconList-item {
+  --ut-focus-outline-offset: calc(-1 * var(--ve-focus-ring-width));
+}
+.a-IRR-dialogInfo:first-child {
+  border-block-end-color: var(--ve-line);
+}
+.a-IRR-dialogRow--header,
+.a-IRR-dialogList a {
+  color: var(--ve-ink);
+}
+/* Einträge der Dialoglisten: EIN Innenring nur bei Tastatur (app_ui: 1-px-Innenkante schon
+   bei Maus-Fokus; der globale Außenring würde von der scrollenden Liste seitlich abgeschnitten) */
+.a-IRR-dialogList a {
+  --ut-focus-outline: none;
+}
+.a-IRR-dialogList a:hover {
+  background-color: var(--ve-hover);
+  color: var(--ve-ink) !important;
+}
+.a-IRR-dialogList a:focus {
+  box-shadow: none;
+}
+.a-IRR-dialogList a:focus-visible {
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+/* Listen-Felder (Spalten-Shuttle, Column Aliases, Functions, Keypad): Beschriftung wie jedes
+   Feld-Label darüber statt grauem Vita-Kopfstreifen; die Liste darunter ist ein Feld mit
+   Feldkante und Feldradius (vorher drei Radien und zwei Kantenfarben in einem Kasten) */
+.a-IRR-dialogListContainer .u-Form-label {
+  background-color: transparent;
+  border-width: 0;
+  border-radius: 0;
+  margin-block-end: 0;
+  padding-inline: 0;
+  text-align: start;
+}
+.a-IRR-dialogListContainer select,
+.a-IRR-dialogListContainer .a-IRR-dialogList {
+  border-radius: var(--a-field-input-border-radius);
+}
+.a-IRR-dialogListContainer .a-IRR-dialogList {
+  border-color: var(--a-field-input-border-color);
+}
+/* Knöpfe neben Dialogfeldern (▾ Werteliste, Farbwähler, Kalender): app_ui setzt sie fest auf
+   24 px (height, padding 4px) – die Felder sind 36 px (Touch 44 px) hoch */
+.a-IRR-lovItem .a-Button--menu,
+.a-IRR-lovItem .a-Button--colorPicker,
+.a-IRR-lovItem .a-Button--calendar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  block-size: auto;
+  min-block-size: var(--ve-control-h);
+  padding-block: 0;
+  padding-inline: calc(var(--ve-space-2) - var(--ve-hairline));
+}
+/* Farbwähler und Datumsfeld: Eingabe + Knopf = ein Feld wie auf Formularseiten (forms.css) –
+   Eingabe ohne Endkante und End-Radien, Knopf bündig (app_ui: 2px Abstand mit !important;
+   gleiche Spezifität 0,3,1 wie die u-Form-Feldregel von app_ui) */
+.a-IRR-lovItem input.apex-item-color-picker:has(+ .a-Button),
+.a-IRR-lovItem input.apex-item-datepicker:has(+ .a-Button) {
+  border-inline-end-width: 0;
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+.a-IRR-lovItem .a-Button--colorPicker,
+.a-IRR-lovItem .a-Button--calendar {
+  margin-inline-start: 0 !important;
+}
+.a-IRR-dialogTable .a-IRR-key .nolink,
+.a-IRR-dialog-tableContainer .calculator .nolink {
+  background-color: var(--ve-soft);
+  box-shadow: none;
+  color: var(--ve-ink);
+  border-radius: var(--ve-r-sm);
+}
+.a-IRR-dialogTable .a-IRR-key .nolink:hover,
+.a-IRR-dialog-tableContainer .calculator .nolink:hover {
+  background-color: var(--ve-soft-hover);
+  box-shadow: none;
+}
+.a-IRR-dialogTable .a-IRR-key .nolink:active {
+  background-color: var(--ve-soft-press);
+  box-shadow: none;
+}
+.a-IRR-dialog-tableContainer {
+  border-color: var(--ve-line);
+  background-color: var(--ve-surface-sunken);
+  border-radius: var(--ve-r-md);
+}
+.a-IRR-dialog-tableContainer table.calculator td {
+  border-block-end-color: var(--ve-line);
+}
+.a-IRR-highlightPreview,
+.a-IRR-lovItem .colorpreview,
+.a-IRR-colorSamples a {
+  box-shadow: inset 0 0 0 var(--ve-hairline) var(--ve-line-strong);
+}
+
+/* 4. Interactive Grid ------------------------------------------------------- */
+.a-IG {
+  --a-gv-border-width: 0;
+  --a-gv-header-background-color: var(--ve-c-table-head-bg);
+  --a-gv-header-text-color: var(--ve-c-table-head-text);
+  --a-gv-header-cell-font-size: var(--ve-fs-head);
+  --a-gv-header-cell-line-height: var(--ve-lh-xs);
+  --a-gv-header-cell-font-weight: var(--ve-fw-bold);
+  --a-gv-header-cell-padding-y: 0px;
+  --a-gv-footer-padding-x: var(--ve-row-pad-x);   /* Fuß fluchtet mit dem Text der Zellen (12 px) */
+  --a-gv-row-disabled-background-color: var(--ve-surface-sunken);
+  --a-gv-aggregate-background-color: transparent;
+  --a-toolbar-sep-border-width: 0;
+}
+/* Auswahl in IG und IR: kräftigere Blau-Tönung. --ve-accent-tint liegt hell nur 1,1 : 1
+   über der Fläche und kaum vom Zeilen-Hover (--ve-hover) zu unterscheiden. Bewusst keine
+   Marke am Zeilenanfang: bei eingefrorenen Spalten stünde sie doppelt (fester und scrollender
+   Teil) und kollidierte mit dem Innenring der Fokuszelle. Ausgewählte Zeilen, Zellen
+   (Zellauswahl) und Spaltenköpfe lesen alle --a-gv-selected-background-color. */
+.a-IG,
+.a-GV,
+.a-IRR {
+  --a-gv-selected-background-color: var(--ve-accent-tint-2);
+}
+
+/* 4.1 Toolbar (deckend, weil sie beim Scrollen klebt) */
+.a-IG-header {
+  background-color: var(--a-gv-background-color);
+  border-block-end-width: 0;
+  padding: 0 0 var(--ve-space-1);
+}
+.a-IG-header .a-Toolbar-group {
+  border-inline-end-width: 0;
+  padding-inline-end: 0;
+  margin-inline-end: var(--ve-space-2);
+}
+.a-IG-header .a-Toolbar-group:last-child {
+  margin-inline-end: 0;
+}
+
+/* 4.2 Suche als EIN Feld (statt Kasten im Kasten): Spaltenwahl | Eingabe | Go */
+.a-Toolbar-group--search.a-Toolbar-group--together {
+  --ut-focus-outline: none;
+  align-items: stretch;
+  min-inline-size: 0;
+  block-size: var(--ve-control-h);
+  border: var(--ve-hairline) solid var(--a-field-input-border-color);
+  border-radius: var(--ve-r-field);
+  background-color: var(--ve-field);
+  overflow: clip;
+  transition: border-color var(--ve-duration) var(--ve-ease), box-shadow var(--ve-duration) var(--ve-ease);
+}
+.a-Toolbar-group--search.a-Toolbar-group--together:hover {
+  border-color: var(--ve-edge-hover);
+}
+.a-Toolbar-group--search.a-Toolbar-group--together:has(.a-Toolbar-inputText:focus) {
+  border-color: var(--ve-focus-ring-color);
+  box-shadow: var(--ve-focus-field-shadow);
+}
+.a-Toolbar-group--search.a-Toolbar-group--together .a-Button {
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-text-color: var(--ve-muted);
+  --a-button-hover-background-color: var(--ve-hover);
+  --a-button-hover-border-color: transparent;
+  --a-button-hover-text-color: var(--ve-ink);
+  --a-button-active-background-color: var(--ve-press);
+  --a-button-focus-background-color: var(--ve-hover);
+  --a-button-border-radius: 0;
+  --a-button-shadow: none;
+  --a-button-padding-y: 0px;
+  block-size: auto;
+  border-radius: 0;
+  margin: 0;
+}
+/* Spaltenfilter-Knopf (Lupe + Pfeil): seitliches Polster wie in der IR-Suche (8 px) */
+.a-Toolbar-group--search.a-Toolbar-group--together .a-Button--noLabel {
+  --a-button-padding-x: var(--ve-space-2);
+}
+.a-Toolbar-group--search.a-Toolbar-group--together .a-Button:focus-visible {
+  outline: none;
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+.a-Toolbar-group--search.a-Toolbar-group--together .a-Button[data-action=search] {
+  --a-button-font-weight: var(--ve-fw-semibold);
+  --a-button-text-color: var(--ve-ink);
+  --a-button-padding-x: var(--ve-space-3);
+  box-shadow: inset var(--ve-hairline) 0 0 var(--ve-line);
+}
+.u-RTL .a-Toolbar-group--search.a-Toolbar-group--together .a-Button[data-action=search] {
+  box-shadow: inset calc(-1 * var(--ve-hairline)) 0 0 var(--ve-line);
+}
+/* Tastatur-Fokus auf „Go“: die Trennlinie oben (gleiche Spezifität, später) überschrieb sonst den Ring */
+.a-Toolbar-group--search.a-Toolbar-group--together .a-Button[data-action=search]:focus-visible {
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+.a-Toolbar-group--search.a-Toolbar-group--together .a-Toolbar-inputText {
+  inline-size: var(--ve-c-search-w, 15rem);
+  min-inline-size: 0;
+  block-size: auto;
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--ve-space-1) var(--ve-space-2);
+  border-width: 0;
+  border-radius: 0;
+  background-color: transparent;
+  color: var(--ve-ink);
+  font-size: var(--ve-fs-md);
+  line-height: var(--ve-control-lh);
+  outline: none;
+  box-shadow: none;
+}
+.a-Toolbar-group--search.a-Toolbar-group--together .a-Toolbar-inputText::placeholder {
+  color: var(--ve-placeholder);
+}
+
+/* 4.3 Kopf: kräftige Grundlinie in Nachtblau statt Kopfstreifen, keine senkrechten Linien */
+.a-GV-hdr .a-GV-w-hdr .a-GV-table,
+.a-GV-hdr .a-GV-w-frozen .a-GV-table {
+  border-block-end: var(--ve-c-table-rule);
+}
+.a-GV-table {
+  box-shadow: none;
+}
+.a-GV-header,
+.a-GV-headerGroup {
+  border-inline-width: 0;
+  border-block-end-width: 0;
+}
+.u-RTL .a-GV-header,
+.u-RTL .a-GV-headerGroup {
+  border-inline-width: 0;
+}
+.a-GV-headerGroup {
+  border-block-end: var(--ve-hairline) solid var(--ve-line);
+}
+.a-GV-headerLabel {
+  color: inherit;
+  font-weight: var(--ve-fw-bold);
+}
+.a-GV-header:hover {
+  background-color: var(--ve-hover);
+}
+.a-GV-hdr--fixed:after {
+  background-image: none;
+}
+/* Sortier-Knöpfe beim Überfahren (Theme-Standard hart #F4F4F4/#707070/#E0E0E0):
+   zwei kleine neutrale Kästchen übereinander, passen in die 40-px-Kopfzeile */
+.a-GV-columnControls {
+  padding: var(--ve-space-1) var(--ve-space-1);
+  gap: 2px;
+}
+.a-GV-columnControls .a-Button {
+  --a-button-line-height: 1rem;
+  --a-icon-size: .75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 0;
+  block-size: calc((var(--ve-head-h) - var(--ve-space-2) - 2px) / 2);
+  inline-size: var(--ve-space-5);
+  background-color: var(--ve-soft);
+  color: var(--ve-ink-2);
+  border-radius: var(--ve-r-sm);
+}
+.a-GV-columnControls .a-Button:hover {
+  background-color: var(--ve-soft-hover);
+  color: var(--ve-ink);
+}
+.a-GV-columnControls .a-Button.is-active {
+  background-color: var(--ve-soft-press);
+  color: var(--ve-ink);
+  border-color: transparent;
+}
+/* Spalte ziehen */
+.a-GV-header-dragHelper {
+  color: var(--ve-ink);
+  background-color: var(--ve-surface-raised);
+  border-color: var(--ve-line-strong);
+}
+.a-GV-header-dragHelper.ui-draggable-dragging {
+  --a-gv-header-drag-helper-background-color: var(--ve-surface-raised);
+  --a-gv-header-drag-helper-border-color: var(--ve-focus-ring-color);
+  --a-gv-header-drag-helper-shadow: var(--ve-float-shadow);
+}
+.a-GV-colMoveMarker {
+  background-color: var(--ve-focus-ring-color);
+}
+
+/* 4.4 Zellen: nur waagerechte Haarlinien */
+.a-GV-cell {
+  border-inline-width: 0;
+}
+.u-RTL .a-GV-cell {
+  border-inline-width: 0;
+}
+.a-GV-rowHeader,
+.a-GV-selHeader {
+  border-inline-width: 0;
+}
+/* eingefrorene Spalten: Kante als Haarlinie in Grau statt 3–4 px Balken */
+.a-GV-w-frozen .a-GV-table {
+  border-inline-end: var(--ve-hairline) solid var(--ve-line-strong);
+}
+.u-RTL .a-GV-w-frozen .a-GV-table {
+  border-inline-end: var(--ve-hairline) solid var(--ve-line-strong);
+  border-inline-start-width: 0;
+}
+/* Fokus-Zelle: EIN Fokus-System (Theme-Standard: 1 px Primärfarbe, dunkel < 3:1) */
+.a-GV-table .a-GV-cell.is-focused,
+.a-GV-table .a-GV-header.is-focused,
+.a-GV-table .a-GV-headerGroup.is-focused,
+.a-GV-table .a-GV-controlBreakHeader.is-focused {
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+.a-GV-table .a-GV-cell.is-drop-target {
+  box-shadow: var(--ve-focus-shadow-inset);
+}
+.a-GV-table .a-GV-cell.is-drop-mode-insert {
+  box-shadow: inset 0 var(--ve-focus-ring-width) 0 0 var(--ve-focus-ring-color);
+}
+/* aktive (bearbeitete) Zelle und Editor */
+.a-GV-table .a-GV-cell.is-active {
+  background-color: var(--ve-field);
+}
+.a-GV-cell .a-GV-columnItem input:not([type=radio]):not([type=checkbox]):focus,
+.a-GV-cell .a-GV-columnItem select[size="1"]:focus {
+  background-color: var(--ve-field);
+  box-shadow: inset 0 0 0 var(--ve-focus-ring-width) var(--ve-focus-ring-color);
+}
+.a-GV-dataEntryMode--row.a-GV--editMode .a-GV-cell.is-active {
+  background-color: var(--ve-field);
+  border-block-color: var(--ve-focus-ring-color);
+}
+.a-GV-dataEntryMode--row.a-GV--editMode .a-GV-cell.is-active:nth-of-type(2) {
+  border-inline-start: var(--ve-hairline) solid var(--ve-focus-ring-color);
+}
+.a-GV-dataEntryMode--row.a-GV--editMode .a-GV-cell.is-active:nth-last-of-type(1) {
+  border-inline-end: var(--ve-hairline) solid var(--ve-focus-ring-color);
+}
+.a-GV-floatingItem:not(.is-expanded) {
+  background-color: var(--ve-field);
+  box-shadow: inset 0 0 0 var(--ve-focus-ring-width) var(--ve-focus-ring-color);
+}
+.a-GV-floatingItem.is-expanded {
+  background-color: var(--ve-surface-raised);
+  border-color: var(--ve-focus-ring-color);
+  box-shadow: var(--ve-float-shadow);
+}
+.a-GV-floatingItem.is-expanded .a-GV-expandCollapse {
+  background-color: var(--ve-soft);
+  color: var(--ve-ink);
+}
+/* schreibgeschützt im Edit-Modus */
+.a-GV--editMode .a-GV-row.is-readonly .a-GV-cell,
+.a-GV--editMode .a-GV-cell.is-readonly {
+  background-color: var(--ve-field-readonly);
+  color: var(--ve-muted);
+}
+/* geändert: wie die Fläche geänderter Zeilen (Info-Tönung) */
+.a-GV-cell.is-changed:not(.is-active):before,
+.a-GV-row.is-updated .a-GV-selHeader:before {
+  color: var(--ve-info);
+}
+.a-GV--editMode .a-GV-header.is-required:before {
+  color: var(--ve-required-color);
+}
+/* Fehler/Warnung in der Zelle: Status-Textfarben (Fläche --ve-danger wäre als Text zu hell) */
+.a-GV-cell.is-error:not(.is-active),
+.a-GV-cell.is-error:not(.is-active):before {
+  color: var(--ve-danger-text);
+}
+.a-GV-cell.is-warning:not(.is-active),
+.a-GV-cell.is-warning:not(.is-active):before {
+  color: var(--ve-warning-text);
+}
+.a-GV-table tr.is-deleted .a-GV-cell {
+  color: var(--ve-muted);
+}
+/* Control Break (Vita hart whitesmoke/#252729) */
+.a-GV-table th.a-GV-controlBreakHeader {
+  background-color: var(--ve-c-table-head-bg);
+  border-color: var(--ve-line);
+  border-inline-width: 0;
+  border-block-start: var(--ve-rule-strong) solid var(--ve-line);
+  color: var(--ve-ink);
+  font-weight: var(--ve-fw-semibold);
+  block-size: var(--ve-row-h);
+  padding-inline: var(--ve-row-pad-x);
+}
+.a-GV-controlBreakHeader .a-Button {
+  --a-button-text-color: var(--ve-muted);
+  --a-button-hover-text-color: var(--ve-ink);
+  --a-button-hover-background-color: var(--ve-hover);
+}
+/* Aggregat- und Summenzeile: Nachtblau-Linie statt grauer Fläche */
+.is-aggregate .a-GV-cell {
+  background-color: transparent;
+  font-weight: var(--ve-fw-semibold);
+}
+.is-aggregate .a-GV-rowHeader {
+  color: var(--ve-muted);
+}
+.a-GV-row.is-grandTotal .a-GV-cell {
+  border-block-start: var(--ve-rule-strong) solid var(--ve-line-strong);
+  font-weight: var(--ve-fw-semibold);
+}
+.is-grandTotal {
+  background-color: var(--a-gv-grandtotal-background-color);
+}
+.a-GV-rownum,
+.a-GV-status {
+  color: var(--ve-muted);
+}
+
+/* 4.5 Footer und Pagination */
+.a-GV-footer {
+  background-color: var(--a-gv-background-color);
+  border-block-start-color: var(--ve-line);
+  color: var(--ve-muted);
+  font-size: var(--ve-fs-sm);
+  line-height: var(--ve-lh-sm);
+  font-variant-numeric: tabular-nums;
+}
+/* GridView-Pagination (IG und Card-Region-Footer .a-TMV--cards .a-GV-footer):
+   aktive Seite = blauer Block mit weißer fetter Zahl (Vita-Dark: weiß auf #E0E0E0) */
+.a-GV-pagination {
+  --a-gv-pagination-button-selected-background-color: var(--ve-accent);
+  --a-gv-pagination-button-selected-text-color: var(--ve-accent-on);
+  --a-gv-pagination-button-hover-background-color: var(--ve-hover);
+  --a-gv-pagination-button-hover-text-color: var(--ve-accent-text);
+  --a-gv-pagination-button-text-color: var(--ve-ink);
+  --a-gv-pagination-button-border-radius: var(--ve-r-sm);
+  --a-gv-pagination-button-min-width: var(--ve-hit-min);
+  --a-gv-pagination-button-padding-y: calc((var(--ve-control-h-sm) - var(--ve-lh-sm)) / 2);
+  --a-gv-pagination-button-padding-x: var(--ve-space-1);
+}
+/* schmale Viewports: Seitenleiste bricht um statt aus dem Footer zu laufen */
+.a-GV-footer {
+  flex-wrap: wrap;
+  row-gap: var(--ve-space-1);
+}
+.a-GV-pagination {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  row-gap: var(--ve-space-1);
+}
+/* Touch: die Knöpfe sind 44 px groß und brauchen keine Lücke (UT 4 px). Ohne sie passen am Phone
+   (390 px) Nav-Knöpfe und fünf Seiten trotz 12-px-Innenabstand des Fußes in eine Zeile */
+@media (pointer: coarse) {
+  .a-GV-pagination {
+    --a-gv-pagination-button-gap-x: 0px;
+  }
+}
+.a-GV-pageButton {
+  font-size: var(--ve-fs-sm);
+  line-height: var(--ve-lh-sm);
+  min-block-size: var(--ve-hit-min);
+}
+.a-GV-pageSelector-item.is-selected .a-GV-pageButton {
+  font-weight: var(--ve-fw-semibold);
+}
+.a-GV-pageButton--nav {
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-text-color: var(--ve-ink);
+  --a-button-shadow: none;
+}
+.a-GV-pageButton--nav:disabled {
+  --a-button-text-color: var(--ve-disabled);
+}
+.a-GV-pageRange {
+  color: var(--ve-muted);
+}
+/* Pagination der Template Components (Timeline, Media List, Content Row …): dieselbe Sprache
+   wie IG/Cards – Chevrons in Nachtblau ohne Fläche, 28 px (Touch 36 px), deaktiviert in
+   --ve-disabled; Seitenbereich in Grau 13/20 (sonst Standard-Button mit Blau-Kontur) */
+.a-TMV-pagination {
+  gap: var(--ve-space-2);
+}
+.a-TMV-pageButton--nav {
+  --a-button-background-color: transparent;
+  --a-button-border-color: transparent;
+  --a-button-text-color: var(--ve-ink);
+  --a-button-hover-background-color: var(--ve-hover);
+  --a-button-hover-border-color: transparent;
+  --a-button-hover-text-color: var(--ve-ink);
+  --a-button-active-background-color: var(--ve-press);
+  --a-button-active-border-color: transparent;
+  --a-button-focus-background-color: var(--ve-hover);
+  --a-button-focus-border-color: transparent;
+  --a-button-shadow: none;
+  --a-button-border-radius: var(--ve-r-md);
+  --a-button-font-size: var(--ve-fs-sm);
+  --a-button-line-height: var(--ve-lh-sm);
+  --a-button-padding-y: calc((var(--ve-control-h-sm) - var(--ve-lh-sm)) / 2);
+  --a-button-padding-x: var(--ve-space-1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--ve-hit-min);
+  min-block-size: var(--ve-hit-min);
+}
+.a-TMV-pageButton--nav:disabled {
+  --a-button-text-color: var(--ve-disabled);
+}
+.a-TMV-pageRange {
+  color: var(--ve-muted);
+  font-size: var(--ve-fs-sm);
+  line-height: var(--ve-lh-sm);
+}
+
+/* 4.6 IG-Dialoge (Theme-Standard/app_ui hart #FAFAFA, #404040, #FFF, #C0C0C0, #F4F4F4, #D0D0D0) */
+.a-IG-dialog-side {
+  background-color: var(--ve-surface-sunken);
+  border-color: var(--ve-line);
+}
+.a-IG-dialog-side .a-Toolbar {
+  border-color: var(--ve-line);
+}
+.a-IG-dialog-list-item {
+  border-block-end-color: var(--ve-line-subtle);
+}
+.a-IG-dialog-list-item:hover {
+  background-color: var(--ve-hover);
+}
+.a-IG-dialog-list-item.is-active {
+  background-color: var(--ve-accent-tint);
+}
+.a-IG-dialog-list-link {
+  color: var(--ve-ink);
+}
+.a-IG-dialog-label-checkbox {
+  background-color: var(--ve-field);
+  border-color: var(--ve-edge);
+  box-shadow: none;
+}
+.a-IG-dialog-label-checkbox:before {
+  color: var(--ve-accent-on);
+}
+.a-IG-dialog-label-checkbox:active {
+  background-color: var(--ve-press);
+}
+/* Fokus: Theme-Standard färbt schon bei Maus-Fokus die Kante #4696fc mit blauem Halo –
+   neutralisieren (vor :checked, damit die Auswahlkante gewinnt), Ring nur bei Tastatur */
+.a-IG-dialog-input-checkbox:focus + .a-IG-dialog-label-checkbox {
+  border-color: var(--ve-edge);
+  box-shadow: none;
+}
+.a-IG-dialog-input-checkbox:checked + .a-IG-dialog-label-checkbox {
+  background-color: var(--ve-accent);
+  border-color: var(--ve-accent);
+}
+.a-IG-dialog-input-checkbox:focus-visible + .a-IG-dialog-label-checkbox {
+  box-shadow: var(--ve-focus-shadow);
+}
+.a-IG-dialog-toolbar--primary .a-Toolbar-buttonGroup .a-Toolbar-input:checked + .a-Toolbar-button {
+  background-color: var(--ve-soft);
+  border-color: transparent;
+  border-block-end-color: transparent;
+  color: var(--ve-ink);
+}
+.a-IG-dialog-buttonGroup .a-IG-dialog-input:checked + .a-IG-dialog-button {
+  background-color: var(--ve-soft-press);
+  box-shadow: none;
+  color: var(--ve-ink);
+}
+.a-Button.a-IG-dialog-button {
+  background-color: var(--ve-soft);
+  box-shadow: none;
+  color: var(--ve-ink);
+}
+
+/* 4.7 Splitter (IG-Dialoge; Theme-Standard hell #EAEAEA, Fokus #399BEA) */
+.a-Splitter-barH,
+.a-Splitter-barV {
+  --a-splitter-bar-background-color: var(--ve-surface-sunken);
+  --a-splitter-bar-border-color: var(--ve-line);
+  --a-splitter-bar-hover-background-color: var(--ve-soft);
+  --a-splitter-bar-active-background-color: var(--ve-soft);
+  --a-splitter-bar-focus-background-color: var(--ve-soft);
+  --a-splitter-bar-focus-border-color: var(--ve-focus-ring-color);
+  --a-splitter-thumb-background-color: var(--ve-surface-raised);
+  --a-splitter-thumb-border-color: var(--ve-line-strong);
+  --a-splitter-thumb-arrow-color: var(--ve-ink);
+  --a-splitter-thumb-hover-background-color: var(--ve-soft-hover);
+  --a-splitter-thumb-hover-border-color: var(--ve-edge-hover);
+  --a-splitter-thumb-focus-background-color: var(--ve-focus-ring-color);
+  --a-splitter-thumb-focus-border-color: var(--ve-focus-ring-color);
+  --a-splitter-thumb-focus-arrow-color: var(--ve-focus-gap);
+  --a-splitter-thumb-focus-hover-background-color: var(--ve-focus-ring-color);
+}
+
+/* 5. Report-Controls (Filter-Chips IR/IG): neutral statt bunt -------------- */
+/* Leiste ohne Trennstrich; Chips passen sich dem Text an (UT: feste 300 px) */
+.a-IRR-controlsContainer,
+.a-IG-controlsContainer {
+  --a-report-controls-border-width: 0;
+  --a-report-controls-padding-x: 0;
+  --a-report-controls-padding-y: 0;
+  --a-report-controls-item-spacing: var(--ve-space-1);
+  --a-report-controls-cell-spacing: var(--ve-space-2);
+  --a-report-controls-cell-border-radius: var(--ve-r-md);
+  --a-report-controls-cell-label-width: auto;
+  --a-report-controls-cell-label-border-color: var(--ve-line-strong);
+  padding-block-end: var(--ve-space-3);
+  font-size: var(--ve-fs-sm);
+  line-height: var(--ve-lh-sm);
+}
+.a-IG-controlsContainer {
+  padding-block-start: var(--ve-space-1);
+}
+.a-IRR-controlsLabel,
+.a-IG-controlsLabel {
+  color: var(--ve-ink);
+}
+.a-IRR-controlPanel {
+  border-block-end-color: var(--ve-line);
+}
+.a-IG-reportSummary-item--savedReport, .a-IG-controls-item--savedReport, .a-IRR-reportSummary-item--savedReport, .a-IRR-controls-item--savedReport,
+.a-IG-reportSummary-item--search, .a-IG-controls-item--search, .a-IRR-reportSummary-item--search, .a-IRR-controls-item--search,
+.a-IG-reportSummary-item--filter, .a-IG-controls-item--filter, .a-IRR-reportSummary-item--filter, .a-IRR-controls-item--filter,
+.a-IG-reportSummary-item--controlBreak, .a-IG-controls-item--controlBreak, .a-IRR-reportSummary-item--controlBreak, .a-IRR-controls-item--controlBreak,
+.a-IG-reportSummary-item--groupBy, .a-IG-controls-item--groupBy, .a-IRR-reportSummary-item--groupBy, .a-IRR-controls-item--groupBy,
+.a-IG-reportSummary-item--aggregate, .a-IG-controls-item--aggregate, .a-IRR-reportSummary-item--aggregate, .a-IRR-controls-item--aggregate,
+.a-IG-reportSummary-item--highlight, .a-IG-controls-item--highlight, .a-IRR-reportSummary-item--highlight, .a-IRR-controls-item--highlight,
+.a-IG-reportSummary-item--flashback, .a-IG-controls-item--flashback, .a-IRR-reportSummary-item--flashback, .a-IRR-controls-item--flashback,
+.a-IG-reportSummary-item--chart, .a-IG-controls-item--chart, .a-IRR-reportSummary-item--chart, .a-IRR-controls-item--chart,
+.a-IG-reportSummary-item--pivot, .a-IG-controls-item--pivot, .a-IRR-reportSummary-item--pivot, .a-IRR-controls-item--pivot,
+.a-IG-reportSummary-item--invalidSettings, .a-IG-controls-item--invalidSettings, .a-IRR-reportSummary-item--invalidSettings, .a-IRR-controls-item--invalidSettings,
+.a-IG-reportSummary-item--inactiveSettings, .a-IG-controls-item--inactiveSettings, .a-IRR-reportSummary-item--inactiveSettings, .a-IRR-controls-item--inactiveSettings {
+  --a-report-controls-cell-label-icon-background-color: var(--ve-soft);
+  --a-report-controls-cell-label-icon-text-color: var(--ve-ink);
+  --a-report-controls-cell-label-hover-background-color: var(--ve-hover);
+}
+.a-IG-button.a-IG-button--remove:hover,
+.a-IRR-button.a-IRR-button--remove:hover {
+  --a-button-text-color: var(--ve-danger-text);
+}
+
+/* 6. u-Report: Reflow, Column Toggle (app_ui hart #FFF/#FAFAFA/#404040) ------ */
+.u-Report {
+  --a-gv-cell-font-size: var(--ve-fs-sm);
+  --a-gv-cell-line-height: var(--ve-row-lh);
+  --a-gv-header-cell-font-size: var(--ve-fs-head);
+  --a-gv-header-cell-line-height: var(--ve-lh-xs);
+  --a-gv-header-cell-font-weight: var(--ve-fw-bold);
+  --a-gv-header-cell-padding-y: calc((var(--ve-head-h) - var(--ve-lh-xs) - var(--ve-head-rule-width)) / 2);
+  --a-gv-header-cell-height: var(--ve-head-h);
+  /* Zellen und Kopf deckend in der Fläche des Umfelds: Region, im Dialog die Dialogfläche
+     (--ut-component-background-color, overlays.css) – wie UT Core, nicht transparent */
+  --ve-c-table-head-bg: var(--ut-component-background-color);
+  --ut-report-header-background-color: var(--ve-c-table-head-bg);
+  --ut-report-header-text-color: var(--ve-c-table-head-text);
+  --ut-report-cell-background-color: var(--ut-component-background-color);
+  --ut-report-cell-text-color: var(--ve-ink);
+  --ut-report-cell-stripe-background-color: var(--ve-surface-sunken);
+  --a-gv-border-color: var(--ve-line);
+}
+/* Auch die Zeile trägt die Zellfläche: App-/Seiten-CSS, das die Zellen transparent macht und
+   der Tabelle einen hellen Grund gibt (UT-Doku: .dm-Report--doc { background: #fff },
+   td { background-color: transparent }), ließe im Dunkeln hellen Text auf Weiß stehen.
+   Zeilen liegen im Tabellen-Stapel über der Tabelle, Zellfarben der App bleiben darüber. */
+.u-Report tr {
+  background-color: var(--ut-report-cell-background-color);
+}
+.u-Report td,
+.u-Report th {
+  border-inline-width: 0;
+  border-color: var(--ve-line);
+}
+.u-Report th {
+  font-size: var(--ve-fs-head);
+  font-weight: var(--ve-fw-bold);
+}
+.u-Report thead th,
+.u-Report .u-Report-header {
+  border-block-end: var(--ve-c-table-rule);
+}
+.u-Report td {
+  color: var(--ve-ink);
+}
+.u-Report th[scope=rowgroup] {
+  background-color: var(--ve-c-table-head-bg);
+}
+.u-Report th[scope=row] {
+  background-color: var(--ut-report-cell-background-color);
+}
+/* ohne Zebra (app_ui hart #FAFAFA/#FFF): gerade Zeilen wie alle anderen */
+.u-Report tr:nth-child(even) td,
+.u-Report tr:nth-child(even) th[scope=row],
+.a-Table.u-Report tr:nth-child(even) td,
+.a-Table.u-Report tr:nth-child(even) th[scope=row],
+.u-Report--staticBG tr:nth-child(even) td,
+.u-Report--staticBG tr:nth-child(even) th[scope=row] {
+  background-color: var(--ut-report-cell-background-color);
+}
+.a-Table.u-Report.table-stripe tr:nth-child(even) td,
+.a-Table.u-Report.table-stripe tr:nth-child(even) th[scope=row] {
+  background-color: var(--ut-report-cell-stripe-background-color);
+}
+.a-Table.u-Report.table-stroke td,
+.a-Table.u-Report.table-stroke th {
+  border-color: var(--ve-line);
+}
+.a-Table.u-Report thead th,
+.a-Table.u-Report.table-stroke thead th {
+  border-block-end: var(--ve-c-table-rule);
+}
+/* Reflow (schmal): Spaltenname vor dem Wert als graues Label */
+.a-Table-cellLabel {
+  color: var(--ve-muted);
+  font-weight: var(--ve-fw-medium);
+}
+
+/* 7. List View (jQuery-Mobile-Liste; app_ui hart rgba(0,0,0,…)) ------------- */
+.a-ListView.ui-listview-inset {
+  border-color: var(--ve-line);
+  border-radius: var(--ve-r-lg);
+}
+/* Trenner = Zwischenüberschrift auf der Fläche (Grau 13/600, Haarlinie darunter,
+   Luft darüber), kein grauer Kopfstreifen (UT: --ut-component-toolbar-background-color) */
+.a-ListView-divider {
+  background-color: transparent;
+  border-block-end-color: var(--ve-line);
+  color: var(--ve-muted);
+  font-size: var(--ve-fs-sm);
+  line-height: var(--ve-lh-sm);
+  font-weight: var(--ve-fw-semibold);
+  padding-block-start: var(--ve-space-4);
+}
+.a-ListView-item {
+  border-block-end-color: var(--ve-line);
+}
+.a-ListView-item .fa {
+  color: var(--ve-muted);
+}
+/* Einträge sind so breit wie der Regionsinhalt (bodyWrap clippt, Scroll Body scrollt):
+   Ring nach innen, sonst blieben nur zwei waagerechte Linien auf den Nachbar-Haarlinien */
+.a-ListView-item .ui-btn {
+  --ut-focus-outline-offset: calc(-1 * var(--ve-focus-ring-width));
+  color: var(--ve-ink);
+  min-block-size: var(--ve-row-h);
+}
+.a-ListView-item .ui-btn:hover {
+  background-color: var(--ve-hover);
+}
+.a-ListView-item.has-link.has-alt .ui-btn + .ui-btn,
+.a-ListView-item .ui-btn + .ui-btn-icon-notext {
+  border-inline-start-color: var(--ve-line);
+}
+.a-ListView-item .ui-btn + .ui-btn-icon-notext:before {
+  background-color: var(--ve-soft);
+}
+.a-ListView-item .ui-li-aside {
+  color: var(--ve-muted);
+}
+.a-ListView-item .ui-li-count {
+  background-color: var(--ve-soft);
+  box-shadow: none;
+  color: var(--ve-ink);
+}
+.a-ListView-searchbar input {
+  border-color: var(--a-field-input-border-color);
+}
+.a-ListView-searchbar + .a-ListView {
+  border-block-start-color: var(--ve-line);
+}
+
+/* 8. Value Attribute Pairs: graues Label, Wert in Nachtblau, Zeilenmaß der Tabellen -- */
+.t-AVPList {
+  --ut-avp-border-color: var(--ve-line);
+  --ut-avp-label-text-color: var(--ve-muted);
+  --ut-avp-value-text-color: var(--ve-ink);
+  --ut-avp-font-size: var(--ve-fs-sm);
+  --ut-avp-line-height: var(--ve-row-lh);
+  --ut-avp-padding-y: var(--ve-row-pad-y);
+  --ut-avp-padding-x: var(--ve-row-pad-x);
+  font-variant-numeric: tabular-nums;
+}
+.t-AVPList-label {
+  font-weight: var(--ve-fw-medium);
+}
+
+/* Reflow gestapelt (< 560 px): Label | Wert als Zeile; Flex macht die (per !important
+   gesetzte) Spaltenausrichtung u-tC/u-tR wirkungslos, die Werte fluchten links */
+@media (max-width: 559px) {
+  .a-Table--reflow.ui-responsive td,
+  .a-Table--reflow.ui-responsive th {
+    display: flex;
+    align-items: baseline;
+    gap: var(--ve-space-3);
+    min-block-size: var(--ve-row-h);
+  }
+  .a-Table--reflow.ui-responsive td .a-Table-cellLabel,
+  .a-Table--reflow.ui-responsive th .a-Table-cellLabel {
+    flex: 0 0 30%;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    text-align: start;
+  }
+}
+
+/* 9. Mobil: Suchfelder brechen sauber um statt überzulaufen --------------- */
+@media (max-width: 767px) {
+  .a-IRR-search {
+    flex: 1 1 100%;
+  }
+  .a-IRR-search .a-IRR-searchFieldContainer {
+    flex: 1 1 auto;
+  }
+  .a-IRR-search .a-IRR-search-field {
+    inline-size: 100%;
+  }
+}
+@media (max-width: 640px) {
+  .a-IG-header .a-Toolbar-groupContainer--start {
+    flex: 1 1 100%;
+    min-inline-size: 0;
+  }
+  .a-Toolbar-group--search.a-Toolbar-group--together {
+    flex: 1 1 100%;
+    margin-inline-end: 0;
+  }
+  .a-Toolbar-group--search.a-Toolbar-group--together .a-Toolbar-inputText {
+    flex: 1 1 auto;
+    inline-size: auto;
+  }
+}

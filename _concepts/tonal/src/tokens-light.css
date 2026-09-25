@@ -1,0 +1,80 @@
+/* ==========================================================================
+   Loden – Tokens HELL (Basis: Vita)
+   Nur Werte der eigenen semantischen Tokens (--tonal-*) und die wenigen
+   modusabhängigen UT-Schalter. Das Mapping auf die UT- und APP_UI-Tokens steht in map.css,
+   die Komponentenregeln in theme.css – beide modusunabhängig.
+   Farbfamilie: OKLCH-Farbton 162° („Loden“); Kontraste siehe CONCEPT.md.
+   ========================================================================== */
+:root {
+  --ut-color-scheme: light;
+
+  /* --- Tonale Ebenen (vom Rahmen zum Feld) -------------------------------- */
+  --tonal-frame: #DBE9E2;          /* Flechte – Header, Side-Nav, Login */
+  --tonal-sheet: #F9FDFB;          /* Kreide – Arbeitsbogen */
+  --tonal-panel: #EBF3EE;          /* Filz – Regionen, Karten */
+  --tonal-panel-2: #E6F0EA;        /* Filz 2 – Tabellenkopf, Toolbars, Badges */
+  --tonal-field: #DEE9E3;          /* gefüllte Felder */
+  --tonal-field-hover: #D6E3DC;
+  --tonal-float: #F9FDFB;          /* schwebende Flächen: Menüs, Dialoge, Popups */
+
+  /* --- Linien --------------------------------------------------------------- */
+  --tonal-line: #D8E2DD;           /* Haarlinien in Tabellen, Trenner */
+  --tonal-line-strong: #C9D4CE;
+  --tonal-outline: #707E77;        /* Feld-Unterkante, Outline-Buttons (≥3:1) */
+
+  /* --- Text ----------------------------------------------------------------- */
+  --tonal-text: #141D18;           /* Tinte */
+  --tonal-text-muted: #4D5952;
+  --tonal-text-inverse: #F1F7F3;
+
+  /* --- Primär (Loden) ------------------------------------------------------- */
+  --tonal-primary: #305A46;
+  --tonal-primary-hover: #244C39;
+  --tonal-primary-active: #1D4030;
+  --tonal-on-primary: #FFFFFF;
+  --tonal-primary-container: #A8DCC1;   /* Salbei */
+  --tonal-primary-container-hover: #9ED4B8;
+  --tonal-on-primary-container: #0A2E1F;
+  --tonal-primary-soft: #D9EFE3;        /* Auswahl, „heute“, Prozentbalken-Grund */
+  --tonal-link: #265C44;
+  --tonal-focus: #305A46;
+
+  /* --- Tonale (sekundäre) Buttons ------------------------------------------ */
+  --tonal-secondary: #D5E6DD;
+  --tonal-secondary-hover: #CBDFD4;
+  --tonal-secondary-active: #C0D7CA;
+  --tonal-on-secondary: #14261D;
+
+  /* --- Zustandsschleier ---------------------------------------------------- */
+  --tonal-hover: rgb(20 29 24 / .06);
+  --tonal-pressed: rgb(20 29 24 / .10);
+  --tonal-scrim: rgb(12 22 17 / .38);
+
+  /* --- Status --------------------------------------------------------------- */
+  --tonal-success: #30752A;  --tonal-on-success: #FFFFFF;  --tonal-success-container: #D6F1D2;  --tonal-success-text: #235B1E;
+  --tonal-warning: #F2B036;  --tonal-on-warning: #141D18;  --tonal-warning-container: #FEEDC9;  --tonal-warning-text: #875814;
+  --tonal-danger:  #BA2B28;  --tonal-on-danger:  #FFFFFF;  --tonal-danger-container:  #FFE3DF;  --tonal-danger-text:  #A52A26;
+  --tonal-info:    #2F698F;  --tonal-on-info:    #FFFFFF;  --tonal-info-container:    #DDEEFB;  --tonal-info-text:    #255B7D;
+
+  /* --- Schalter ------------------------------------------------------------- */
+  --tonal-switch-track: #707E77;
+  --tonal-switch-thumb: #FFFFFF;
+  --tonal-switch-thumb-on: #FFFFFF;
+
+  /* --- Schatten (nur für schwebende Flächen) ------------------------------- */
+  --tonal-shadow-float: 0 1px 2px rgb(16 40 28 / .10), 0 10px 28px -6px rgb(16 40 28 / .22);
+  --tonal-shadow-dialog: 0 2px 6px rgb(16 40 28 / .10), 0 24px 56px -12px rgb(16 40 28 / .30);
+
+  /* --- Auswahlpfeil der Select-Listen (Farbe = Nebentext) ------------------ */
+  --tonal-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 16'%3E%3Cpath d='M11.5 6l4.5 4.5L20.5 6' fill='none' stroke='%234D5952' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* --- Akzentpalette (Charts, Karten, Avatare; Serienfolge 1,4,7,9,12,…) ---- */
+  --tonal-accent-1: #429E7F;  --tonal-accent-2: #259D9D;  --tonal-accent-3: #709859;
+  --tonal-accent-4: #AC833E;  --tonal-accent-5: #3498B6;  --tonal-accent-6: #948E40;
+  --tonal-accent-7: #598FC5;  --tonal-accent-8: #B97A4D;  --tonal-accent-9: #C07366;
+  --tonal-accent-10: #BD7082; --tonal-accent-11: #B073A3; --tonal-accent-12: #997BBB;
+  --tonal-accent-13: #7985C7; --tonal-accent-14: #789284; --tonal-accent-15: #768F9C;
+  --tonal-accent-on: #0F1A14;
+  --tonal-accent-light-mix: white;   /* Richtung für --u-color-16..30 */
+  --tonal-accent-dark-mix: #0F1A14;  /* Richtung für --u-color-31..45 */
+}

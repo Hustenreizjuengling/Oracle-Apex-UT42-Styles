@@ -1,0 +1,470 @@
+/* ==========================================================================
+   Frequenz – Overlays
+   Menüs, Dialoge, Drawer, Popups, Tooltips, Meldungen.
+   Regeln: nur Tokens (--fq-*, gemappte --ut-/--a-*), modusneutral, kein @layer.
+
+   Idee: Alles, was schwebt, ist eine weiße (dunkel: graue) Karte mit weichem Schatten –
+   Fläche --fq-surface-raised, Schatten --fq-float-shadow, keine Kopfstreifen. Radien:
+   Menüs/Popups an Bedienelementen --fq-r-box (10), Dialoge --fq-r-card (16), Drawer
+   bündig am Rand mit gerundeter Innenseite. Schließen-Knöpfe rund.
+   Akzent nur für Checked (Menü-Häkchen/-Radio) und die Status-Symbole der Meldungen.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Menüs (a-Menu: Actions-, Navigation-Bar-, IR/IG-, Kontextmenüs)
+   Zeilen = Controlhöhe (36 px, Touch 44 px), Hover/Fokus = --fq-raised-hover,
+   Tastaturfokus zusätzlich mit Innenring (Hintergrund allein < 3 : 1).
+   -------------------------------------------------------------------------- */
+.a-Menu {
+  --a-menu-line-height: var(--fq-lh-md);
+  --a-menu-icon-size: 1rem;
+  --a-menu-icon-spacing-y: calc((var(--fq-control-h) - var(--a-menu-icon-size)) / 2);
+  --a-menu-item-height: var(--fq-control-h);
+  --a-menu-sep-border-color: var(--fq-line);
+  --a-menu-sep-spacing-y: var(--fq-space-1);
+  --a-menu-accel-text-color: var(--fq-muted);
+  --a-menu-default-accel-text-color: var(--fq-muted);
+  --a-menu-focused-accel-text-color: var(--fq-muted);
+  --a-menu-expanded-accel-text-color: var(--fq-muted);
+  --a-menu-accel-font-size: var(--fq-fs-sm);
+  --a-menu-disabled-focused-background-color: var(--fq-hover);
+  --a-menu-scroll-button-background-color: var(--fq-surface-sunken);
+  --a-menu-callout-border-radius: .125rem;
+}
+.a-Menu .a-Menu-hSeparator {
+  border-color: var(--fq-line-subtle);
+}
+.a-Menu-accel {
+  margin-inline-start: var(--fq-space-6);
+  font-variant-numeric: tabular-nums;
+}
+/* Tastaturfokus: Innenring am Eintrag (a-Menu-label hat outline:none !important) */
+.a-Menu-inner:has(.a-Menu-label:focus-visible) {
+  border-radius: var(--a-menu-item-border-radius);
+  box-shadow: var(--fq-focus-shadow-inset);
+}
+/* Checked (Toggle/Radio) = Auswahl → Akzent */
+.a-Menu-statusCol .icon-menu-check,
+.a-Menu-statusCol .icon-menu-radio {
+  color: var(--fq-accent);
+}
+/* Menüs aus Menüleisten ohne Callout: schweben mit Abstand, voll gerundet
+   (Vita: an die Leiste angesetzt, obere Ecken eckig, ohne Oberkante) */
+.a-Menu--top:not(.has-callout) > .a-Menu-content {
+  margin-block-start: var(--fq-space-1);
+  border-block-start: var(--a-menu-border-width, 1px) solid var(--a-menu-border-color);
+  border-start-start-radius: var(--a-menu-border-radius);
+  border-start-end-radius: var(--a-menu-border-radius);
+}
+
+/* --------------------------------------------------------------------------
+   2. Menüleiste als Liste (List Template „Menu Bar“, .t-MenuBar.a-MenuBar)
+   Vita/Vita-Dark: graue Leiste #f0f0f0 mit Trennern (dunkel: weiße Schrift darauf).
+   Frequenz: keine Leiste, fette Einträge auf der Seite, Haarlinie darunter; aktuell in
+   Akzent, aufgeklappt mit weicher Fläche. Header-Top-Nav macht shell.css.
+   -------------------------------------------------------------------------- */
+.t-MenuBar {
+  --a-menubar-background-color: transparent;
+  --a-menubar-item-background-color: transparent;
+  --a-menubar-item-text-color: var(--fq-ink);
+  --a-menubar-item-border-width: 0px;
+  --a-menubar-item-border-color: transparent;
+  --a-menubar-item-border-radius: var(--fq-r-item);
+  --a-menubar-item-current-background-color: transparent;
+  --a-menubar-item-current-text-color: var(--fq-accent-text);
+  --a-menubar-item-split-border-color: transparent;
+  --a-menubar-item-split-icon-color: var(--fq-muted);
+  --a-menubar-item-split-icon-spacing: var(--fq-space-2);
+  --a-menubar-item-padding-y: calc((var(--fq-control-h) - var(--fq-control-lh)) / 2);
+  --a-menubar-item-padding-x: var(--fq-control-pad-x);
+  --a-menubar-item-line-height: var(--fq-control-lh);
+  --a-menubar-item-font-size: var(--fq-fs-md);
+  --a-menubar-item-font-weight: var(--fq-fw-bold);
+  /* Leiste schneidet ab (a-MenuBar--overflow): Ring innen am ganzen Eintrag statt am Label */
+  --ut-focus-outline: none;
+  padding-block-end: var(--fq-space-1);
+  border-block-end: var(--fq-hairline) solid var(--fq-line-subtle);
+}
+.t-MenuBar > ul {
+  gap: var(--fq-space-1);
+}
+.t-MenuBar .a-MenuBar-item {
+  transition: background-color var(--fq-duration) var(--fq-ease);
+}
+.t-MenuBar .a-MenuBar-item.is-focused {
+  --a-menubar-item-background-color: var(--fq-hover);
+  --a-menubar-item-text-color: var(--fq-ink);
+}
+.t-MenuBar .a-MenuBar-item.is-expanded {
+  --a-menubar-item-background-color: var(--fq-soft);
+  --a-menubar-item-text-color: var(--fq-ink);
+}
+.t-MenuBar .a-MenuBar-item.a-Menu--current {
+  --a-menubar-item-font-weight: var(--fq-fw-heavy);
+}
+.t-MenuBar .a-MenuBar-item:has(> .a-MenuBar-label:focus-visible) {
+  box-shadow: var(--fq-focus-shadow-inset);
+}
+.t-MenuBar .a-MenuBar-item.a-Menu--split > .a-Menu-subMenuCol {
+  padding-inline-start: 0;
+}
+
+/* --------------------------------------------------------------------------
+   3. Dialoge (jQuery UI .ui-dialog: Seiten-Dialog, Inline Dialog/Popup/Drawer,
+   Hilfe, apex.message.alert/confirm, Popup LOV, Date Picker)
+   Rahmen in der Elternseite; Inhalt der Seiten-Dialoge im iframe (Abschnitt 5).
+   Titel 20/28 in 800 für alle Dialoge und Drawer, auch den Wizard; Popups: 16/24.
+   -------------------------------------------------------------------------- */
+.ui-dialog {
+  --jui-dialog-font-size: var(--fq-fs-md);
+  --jui-dialog-line-height: var(--fq-lh-body);
+  --jui-dialog-border-width: 0px;
+  --jui-dialog-titlebar-padding-y: var(--fq-space-4);
+  --jui-dialog-titlebar-border-width: 0px;
+  --jui-dialog-title-font-size: var(--fq-fs-xl);
+  --jui-dialog-title-line-height: var(--fq-lh-xl);
+  --jui-dialog-title-close-width: var(--fq-control-h);
+  --jui-dialog-title-close-height: var(--fq-control-h);
+  --jui-dialog-title-close-border-width: 0px;
+  --jui-dialog-title-close-border-radius: var(--fq-r-pill);
+  --jui-dialog-title-close-icon-size: 1rem;
+  --jui-dialog-buttonpane-content-padding-y: var(--fq-space-4);
+  --jui-dialog-buttonpane-content-padding-x: var(--fq-space-6);
+  --ut-dialog-region-padding-y: var(--fq-space-4);
+  --ut-dialog-region-padding-x: var(--fq-space-6);
+  --a-help-dialog-padding-y: var(--fq-space-1);
+  --a-help-dialog-padding-x: var(--fq-space-6);
+  --a-help-dialog-base-line-height: var(--fq-lh-body);
+  --a-alert-message-font-size: var(--fq-fs-md);
+  --a-alert-message-line-height: var(--fq-lh-body);
+  --a-alert-message-title-font-size: var(--fq-fs-lg);
+  --a-alert-message-title-line-height: var(--fq-lh-lg);
+  --a-alert-message-title-font-weight: var(--fq-fw-heavy);
+  --a-alert-message-icon-size: 1.5rem;
+  --a-alert-message-icon-spacing: var(--fq-space-4);
+}
+/* Hilfe: unten wie seitlich Luft (a-help-dialog-padding-y gilt oben und unten) */
+.ui-dialog--helpDialog .apex-help-dialog {
+  padding-block-end: var(--fq-space-5);
+}
+/* Symbolfarben der Meldungsdialoge in Status-Textfarbe (≥ 4,5 : 1 auf der Fläche) */
+.ui-dialog--danger {
+  --a-alert-message-icon-color: var(--fq-danger-text);
+}
+.ui-dialog--warning {
+  --a-alert-message-icon-color: var(--fq-warning-text);
+}
+.ui-dialog--success {
+  --a-alert-message-icon-color: var(--fq-success-text);
+}
+.ui-dialog--info,
+.ui-dialog--information {
+  --a-alert-message-icon-color: var(--fq-info-text);
+}
+.ui-dialog .ui-dialog-title {
+  letter-spacing: var(--fq-tracking-heading);
+}
+/* Schließen/Wiederherstellen: runder Icon-Button (Vita: Rahmen-Kästchen) */
+.ui-dialog-titlebar-close,
+.ui-dialog-titlebar-restore {
+  --a-button-background-color: transparent;
+  --a-button-text-color: var(--fq-ink);
+  --a-button-border-color: transparent;
+  --a-button-hover-background-color: var(--fq-raised-hover);
+  --a-button-hover-text-color: var(--fq-ink);
+  --a-button-hover-border-color: transparent;
+  --a-button-active-background-color: var(--fq-soft-hover);
+  --a-button-active-text-color: var(--fq-ink);
+  --a-button-active-border-color: transparent;
+  --a-button-focus-background-color: var(--fq-raised-hover);
+  --a-button-focus-text-color: var(--fq-ink);
+  --a-button-focus-border-color: transparent;
+  --a-button-border-radius: var(--fq-r-pill);
+}
+.ui-dialog-titlebar-close {
+  margin-inline-end: calc((var(--fq-control-h) - var(--jui-dialog-title-close-icon-size)) / -2 + var(--fq-space-1));
+}
+/* Popups an Bedienelementen (Inline Popup, Popup LOV, Date Picker): Menü-Radius,
+   kompakter Titel */
+.ui-dialog--popup {
+  --jui-dialog-border-radius: var(--fq-r-box);
+  --jui-dialog-title-font-size: var(--fq-fs-lg);
+  --jui-dialog-title-line-height: var(--fq-lh-lg);
+}
+/* Bündig am Fensterrand (Phone: jQuery setzt left:0 und max-width:100% inline, ohne
+   !important nicht einrückbar): waagerechter Radius 0 – gerade Außenkanten statt einer
+   Rundung an der Bildschirmkante, in der der Scrim durchscheint. Radius = Abstand zum
+   Rand (100vw − Breite) × 8, höchstens der Dialog-Radius: frei schwebende Dialoge
+   bleiben rund. Drawer behalten ihre Rundung (Abschnitt 4, !important gegen UT). */
+.ui-dialog {
+  border-radius: min(var(--jui-dialog-border-radius), max(0px, (100vw - 100%) * 8)) / var(--jui-dialog-border-radius);
+}
+/* Popups tragen rundum 11 px Außenabstand für die Callout-Spitze; APEX rechnet ihn bei
+   schmalem Fenster nicht in die Breite ein (390 px: 380 + 2 × 11), jQuery schiebt das
+   Popup dann an eine Kante (links 0, rechts 10 px). Gedeckelt passt es samt Außenabstand
+   ins Fenster und bleibt an seinem Auslöser ausgerichtet. */
+.ui-dialog--popup {
+  max-width: calc(100% - 2 * var(--fq-space-3));
+}
+/* apex.message.alert/confirm: kompakte Karte, Buttons ohne Trennlinie */
+.ui-dialog.ui-dialog--notification,
+.ui-dialog.ui-dialog--notificationLarge {
+  --jui-dialog-content-padding-y: var(--fq-space-6);
+  --jui-dialog-content-padding-x: var(--fq-space-6);
+  --jui-dialog-buttonpane-border-width: 0px;
+  --jui-dialog-buttonpane-content-padding-y: var(--fq-space-4);
+  --jui-dialog-buttonpane-content-padding-x: var(--fq-space-6);
+}
+.ui-dialog.ui-dialog--notification .ui-dialog-buttonpane,
+.ui-dialog.ui-dialog--notificationLarge .ui-dialog-buttonpane {
+  padding-block-start: 0;
+}
+/* Inline-Dialog-/Drawer-Regionen: Buttonleiste als Haarlinie, keine Kasten-Ecken */
+.t-DialogRegion-buttons .t-ButtonRegion,
+.t-Dialog-footer .t-ButtonRegion,
+.t-Drawer-footer .t-ButtonRegion,
+.t-DrawerRegion-buttons .t-ButtonRegion {
+  --ut-button-region-padding: var(--fq-space-3);
+  border-radius: 0;
+}
+/* Buttons bündig mit Titel und Inhalt (24 px vom Rand) */
+.t-DialogRegion-buttons .t-ButtonRegion-col--left .t-ButtonRegion-buttons,
+.t-DrawerRegion-buttons .t-ButtonRegion-col--left .t-ButtonRegion-buttons,
+.t-Dialog-footer .t-ButtonRegion-col--left .t-ButtonRegion-buttons,
+.t-Drawer-footer .t-ButtonRegion-col--left .t-ButtonRegion-buttons {
+  padding-inline: var(--fq-space-6) 0;
+}
+.t-DialogRegion-buttons .t-ButtonRegion-col--right .t-ButtonRegion-buttons,
+.t-DrawerRegion-buttons .t-ButtonRegion-col--right .t-ButtonRegion-buttons,
+.t-Dialog-footer .t-ButtonRegion-col--right .t-ButtonRegion-buttons,
+.t-Drawer-footer .t-ButtonRegion-col--right .t-ButtonRegion-buttons {
+  padding-inline: 0 var(--fq-space-6);
+}
+
+/* --------------------------------------------------------------------------
+   4. Drawer (Page Drawer, Inline Drawer): Karte bündig am Fensterrand
+   UT erzwingt Maße, Lage und Radius 0 mit !important. Frequenz lässt sie am Rand und
+   rundet nur die Innenseite (zum Inhalt hin) – dieselben !important-Deklarationen,
+   gleiche Selektoren (ARCHITECTURE §5.3).
+   -------------------------------------------------------------------------- */
+.ui-dialog.t-Drawer--pullOutEnd,
+.ui-dialog.t-Dialog--pullOutRight {
+  border-radius: var(--fq-r-card) 0 0 var(--fq-r-card) !important;
+}
+.ui-dialog.t-Drawer--pullOutStart,
+.ui-dialog.t-Dialog--pullOutLeft {
+  border-radius: 0 var(--fq-r-card) var(--fq-r-card) 0 !important;
+}
+.u-RTL .ui-dialog.t-Drawer--pullOutEnd,
+.u-RTL .ui-dialog.t-Dialog--pullOutRight {
+  border-radius: 0 var(--fq-r-card) var(--fq-r-card) 0 !important;
+}
+.u-RTL .ui-dialog.t-Drawer--pullOutStart,
+.u-RTL .ui-dialog.t-Dialog--pullOutLeft {
+  border-radius: var(--fq-r-card) 0 0 var(--fq-r-card) !important;
+}
+.ui-dialog.t-Drawer--pullOutBottom {
+  border-radius: var(--fq-r-card) var(--fq-r-card) 0 0 !important;
+}
+.ui-dialog.t-Drawer--pullOutTop {
+  border-radius: 0 0 var(--fq-r-card) var(--fq-r-card) !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Inhalt der Seiten-Dialoge/-Drawer (eigenes iframe-Dokument)
+   Dieselbe Fläche wie die Karte der Elternseite (keine Farbkante im Dunkeln),
+   Innenabstand = Titelzeile (24 px), Buttonleiste mit Haarlinie.
+   Regionabstand in Dialogen/Drawern/Inline-Dialogen 16 px statt 32 px (Seite), die
+   letzte Region endet ohne Außenabstand: unten dieselbe Luft wie oben (Innenabstand).
+   Letzte Region = letzte ihrer Art in der Spalte der letzten Zeile (hinter ihr steht
+   ein <script>, :last-child greift nicht). Template-Option „Bottom Margin“ (u-margin-*,
+   !important in UT-Core) gewinnt weiterhin.
+   -------------------------------------------------------------------------- */
+.t-Dialog-page,
+.t-Drawer-page {
+  --ut-body-background-color: var(--fq-surface-raised);
+  --ut-component-background-color: var(--fq-surface-raised);
+  --ut-dialog-padding-y: var(--fq-space-4);
+  --ut-dialog-padding-x: var(--fq-space-6);
+  --ut-region-margin: var(--fq-space-4);
+}
+.t-DialogRegion-body,
+.t-DrawerRegion-body {
+  --ut-region-margin: var(--fq-space-4);
+}
+:where(.t-Dialog-body, .t-Drawer-body, .t-DialogRegion-body, .t-DrawerRegion-body) :where(.row:last-child > .col) > .t-Region:last-of-type {
+  margin-block-end: 0;
+}
+.t-Dialog--noPadding,
+.t-Drawer--noPadding,
+.t-PageBody--noContentPadding {
+  --ut-dialog-padding-y: 0;
+  --ut-dialog-padding-x: 0;
+}
+
+/* --------------------------------------------------------------------------
+   6. Seitenmeldungen (apex.message: Erfolg, Fehler) – t-Alert--page
+   Vita: volle Status-Fläche (Fehler = gelbe Warnung), schwarzer runder Schließen-
+   Knopf auf der Ecke. Frequenz: schwebende weiße Karte, Status-Symbol auf rundem
+   Grund in der Statusfarbe (wie die Alert-Region), runder Schließen-Knopf in der Karte.
+   Sitzt unter dem Kopf (verdeckt nie die Navigation-Bar) – bei Top-Navigation
+   unter der Menüleiste: --js-sticky-top = Höhe von #t_Header (theme42.js, nur
+   gelesen; vor js-ready 0 → mindestens --fq-header-h).
+   -------------------------------------------------------------------------- */
+.t-Alert--page {
+  --ut-alert-offset: var(--fq-space-4);
+  --ut-alert-type-border-radius: var(--fq-r-card);
+  --ut-alert-box-shadow: var(--fq-float-shadow);
+  --ut-alert-icon-size: 1rem;
+  --ut-alert-icon-padding: var(--fq-space-4);
+  max-width: 30rem;
+}
+.t-PageBody .t-Alert--page {
+  top: calc(max(var(--js-sticky-top, 0px), var(--fq-header-h)) + var(--fq-space-2));
+}
+.t-Alert--page .t-Alert-icon {
+  align-items: flex-start;
+  padding-block: calc(var(--fq-space-4) + (var(--fq-lh-md) - 1.75rem) / 2);
+  padding-inline: var(--fq-space-4) var(--fq-space-3);
+}
+/* Kein Spaltenabstand: .t-Alert-header ist hier leer (nur ein u-vh-h2), die Lücke
+   aus regions.css (.t-Alert--horizontal .t-Alert-content) schöbe den Text 4 px unter
+   Symbol und Schließen-Knopf. Titel → Liste trägt .a-Notification-list (margin 4 px). */
+.t-Alert--page .t-Alert-content {
+  padding-block: var(--fq-space-4);
+  padding-inline: 0;
+  gap: 0;
+}
+.t-Alert--page .t-Alert-body {
+  margin-block: 0;
+}
+.t-Alert--page .t-Alert-title {
+  --ut-alert-title-font-size: var(--fq-fs-md);
+  --ut-alert-title-line-height: var(--fq-lh-md);
+  font-weight: var(--fq-fw-bold);
+  padding-block: 0;
+  margin-inline-end: 0;
+}
+.t-Alert--page.t-Alert--success .t-Alert-title {
+  padding-block: 0;
+}
+.t-Alert--page.t-Alert--success {
+  --ut-alert-type-background-color: var(--fq-surface-raised);
+  --ut-alert-type-text-color: var(--fq-ink);
+  --fq-c-alert-disc: var(--fq-success);
+  --fq-c-alert-disc-on: var(--fq-success-on);
+}
+.t-Alert--page.t-Alert--warning {
+  --ut-alert-type-background-color: var(--fq-surface-raised);
+  --ut-alert-type-text-color: var(--fq-ink);
+  --fq-c-alert-disc: var(--fq-warning);
+  --fq-c-alert-disc-on: var(--fq-warning-on);
+  --ut-notification-title-font-weight: var(--fq-fw-bold);
+  --ut-notification-title-line-height: var(--fq-lh-md);
+  --ut-notification-item-line-height: var(--fq-lh-md);
+}
+/* APEX zeigt Seitenfehler im Warn-Template: mit Fehlerliste (.a-Notification--error)
+   → Fehler-Tönung; echte Warnungen bleiben Warnung. Nur hier, regions.css überlässt
+   t-Alert--page dieser Datei. */
+.t-Alert--page.t-Alert--warning:has(.a-Notification--error) {
+  --fq-c-alert-disc: var(--fq-danger);
+  --fq-c-alert-disc-on: var(--fq-danger-on);
+}
+.t-Alert--page .t-Alert-icon .t-Icon {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  color: var(--fq-c-alert-disc-on);
+}
+.t-Alert--page .a-Notification-item:before {
+  margin-block: calc((var(--fq-lh-md) - .25rem) / 2);
+}
+.t-Alert--page a {
+  text-decoration-color: var(--fq-link-underline);
+  text-underline-offset: var(--fq-link-underline-offset);
+}
+.t-Alert--page a:hover {
+  text-decoration-color: var(--fq-link-underline-hover);
+}
+.t-Alert--page .t-Alert-buttons {
+  align-items: flex-start;
+  padding-block-start: calc(var(--fq-space-4) + (var(--fq-lh-md) - var(--fq-hit-min)) / 2);
+  padding-inline: var(--fq-space-2) var(--fq-space-3);
+}
+/* Schließen: runder Icon-Button in der Karte (Vita: schwarzer Kreis auf der Ecke) */
+.t-Alert--page .t-Button.t-Button--closeAlert {
+  --a-button-border-radius: var(--fq-r-pill);
+  --a-button-padding-y: 0;
+  --a-button-padding-x: 0;
+  position: static;
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--fq-hit-min);
+  block-size: var(--fq-hit-min);
+  min-inline-size: var(--fq-hit-min);
+  min-block-size: var(--fq-hit-min);
+  padding: 0;
+  background-color: transparent;
+  color: var(--fq-ink-2);
+  border-color: transparent;
+}
+.u-RTL .t-Alert--page .t-Button.t-Button--closeAlert {
+  left: auto;
+}
+.t-Alert--page .t-Button.t-Button--closeAlert:hover {
+  transform: none;
+  background-color: var(--fq-wash-hover);
+  color: var(--fq-ink);
+}
+.t-Alert--page .t-Button.t-Button--closeAlert:active {
+  transform: none;
+  background-color: var(--fq-wash-press);
+}
+
+/* --------------------------------------------------------------------------
+   7. Tooltips: jQuery UI (.ui-tooltip), IG (.a-GV-tooltip), JET-Datatip
+   Invertierte Fläche (--fq-tooltip-bg/-text). Vita-Dark: weiß.
+   -------------------------------------------------------------------------- */
+.ui-tooltip {
+  --jui-tooltip-padding: var(--fq-space-1) var(--fq-space-2);
+  --jui-tooltip-border-width: 0px;
+  --jui-tooltip-shadow: var(--fq-float-shadow);
+  --jui-widget-shadow: var(--fq-float-shadow);
+  --jui-tooltip-maxwidth: 20rem;
+  --a-tooltip-font-size: var(--fq-fs-xs);
+  --a-tooltip-line-height: var(--fq-lh-xs);
+  font-size: var(--fq-fs-sm);
+  line-height: var(--fq-lh-sm);
+}
+/* JET-Datatip (Charts): Vita lässt die Schrift schwarz – auf der invertierten
+   Fläche im hellen Modus unlesbar. Beschriftung = gedämpfte Tooltip-Schrift. */
+.oj-dvt-datatip {
+  --fq-c-tip-muted: color-mix(in srgb, var(--fq-tooltip-text) 72%, var(--fq-tooltip-bg));
+  --ojet-tooltip-primary-text-color: var(--fq-tooltip-text);
+  --ojet-tooltip-secondary-text-color: var(--fq-c-tip-muted);
+  --ojet-tooltip-disabled-text-color: var(--fq-c-tip-muted);
+  border-radius: var(--jui-tooltip-border-radius);
+  box-shadow: var(--fq-float-shadow);
+}
+
+/* --------------------------------------------------------------------------
+   8. Busy: Spinner (u-Processing) und Warte-Schleier (apex.widget.waitPopup)
+   Vita: schwarzer Kreis, weißer Schleier – auch im Dunkeln. Frequenz:
+   Spinner in der Akzentfarbe auf schwebender Karte, Schleier = durchscheinende Seite.
+   -------------------------------------------------------------------------- */
+.u-Processing {
+  --a-spinner-color: var(--fq-accent);
+  --a-spinner-border-color: var(--fq-line-subtle);
+  --a-spinner-border-width: .1875rem;
+  --a-spinner-container-background-color: var(--fq-surface-raised);
+  --a-spinner-container-shadow: var(--fq-float-shadow);
+  --a-spinner-container-backdrop-filter: none;
+  --a-spinner-cell-refresh-background-color: var(--fq-wash-hover);
+}
+.u-Processing--inline {
+  --a-spinner-container-background-color: transparent;
+  --a-spinner-container-shadow: none;
+  --a-spinner-border-width: .125rem;
+}
+.apex_wait_overlay {
+  --ut-overlay-background-color: color-mix(in srgb, var(--fq-surface) 60%, transparent);
+}
